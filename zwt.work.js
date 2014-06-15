@@ -45,6 +45,26 @@
      * Zwt.extend({name: 'moe'}, {age: 50}); => {name: 'moe', age: 50}
      */
     Zwt.extend = function(a){if(typeOf(a)!=='object')return a;each(slice.call(arguments,1),function(b){for(var c in b){a[c]=b[c]}});return a};
+    /**
+     * @description 通过原型继承创建一个新对象
+     * @method inherit
+     * @param {Object} target 继承对象
+     * @returns {*}
+     * @example
+     * var target = {x:'dont change me'};var newObject = Zwt.inherit(target); =>  index.html:140
+     * dont change me
+     */
+    function inherit(target){
+        if (target == null) throw TypeError();
+        if (Object.create)
+            return Object.create(target);
+        var type = typeof target;
+        if (type !== 'object' && type !== 'function') throw TypeError();
+        function fn(){};
+        fn.prototype = target;
+        return new fn();
+    }
+    Zwt.inherit = inherit;
     if (typeof /./ !== 'function') {
         /**
          * @description 如果object是一个参数对象，返回true
@@ -307,7 +327,7 @@
      * @example
      *     Zwt.pad(5, 3, '0', false, 10); => '005'
      */
-    function pad(a,b,c,d,e,f){var g=a.toString(e||10),h='',i=b;if(f&&f.prefix){i=b-f.prefix.length;if(i<0){throw new Error('n too small')}};c=c||'0';while(g.length<i){if(!d){g=c+g}else{g+=c}};return f.prefix+g}
+    function pad(a,b,c,d,e,f){var g=a.toString(e||10),h='',i=b;if(f&&f.prefix){i=b-f.prefix.length;h=f.prefix;if(i<0){throw new Error('n too small')}};c=c||'0';while(g.length<i){if(!d){g=c+g}else{g+=c}};return h+g}
     Zwt.pad = pad;
     /**
      * @description 格式化字符串，类似于模板引擎，但轻量级无逻辑

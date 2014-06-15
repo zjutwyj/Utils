@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="ddd"/>
+    <script src="../source/js/jquery.min.js"></script>
+    <script src="../../zwt.source.js"></script>
+</head>
+<body>
+<a href="javascript:void(0);">dfdf</a>
+<div id="demo" class="aa">
+    <div>ssss</div>
+</div>
+
+<script type="text/javascript">
+    'use script';
+ var a = [1, 2, 3];
+switch (a.length){
+    case 1 :
+        break;
+    case 2 :
+        break;
+    default :
+}
+    var w = a
+ function b(){
+     try{
+         a: for(var j = 0, len = a.length; j < len; j++){
+             b:  for (var i = 0, len = a.length; i < len; i++){
+                 if(i === 0){
+                     throw new Error('the i is 0');
+                     return i;
+                 };
+                 //sfsdfsdf
+             }
+         }
+     }catch(e){
+        console.log(e);
+     }
+
+
+ }
+
+
+
+console.log(b());
+
+    var i = 0;
+    while(i < 3){
+        console.log(a[i]);
+        i++;
+    }
+    /*do{
+        console.log(a[i]);
+        i++;
+    }while(i < 3);*/
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    var str = "adadfdfseffserfefsefseetsdg";
+    var obj = {};
+    var arr = str.split('');
+    for(var i = 0, len = arr.length; i < len; i++){
+        if (arr[i] in obj){
+            obj[arr[i]]++;
+        } else{
+            obj[arr[i]] = 1;
+        }
+    }
+    console.log(obj);
+</script>
+<script type="text/javascript">
+    var str = "adadfdfseffserfefsefseetsdg";
+    var arr = [];
+    var i = 0;
+    while (str.charAt(0)) {
+        arr[i] = str.charAt(0) + "=" + (str.split(str.charAt(0)).length - 1);
+        str = str.split(str.charAt(0)).join("");
+        i++;
+    }
+    console.log(arr)
+</script>
+
+
+</body>
+</html>

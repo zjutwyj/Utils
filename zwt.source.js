@@ -54,8 +54,8 @@
      * @param {*} obj 遍历对象
      * @param {}
      * @example
-     * _.each([1, 2, 3], alert); => alerts each number in turn...
-     * _.each({one: 1, two: 2, three: 3}, alert); => alerts each number value in turn...
+     * Zwt.each([1, 2, 3], alert); => alerts each number in turn...
+     * Zwt.each({one: 1, two: 2, three: 3}, alert); => alerts each number value in turn...
      */
     function each(obj, callback, context) {
         var i, length, first = false, last = false;
@@ -95,6 +95,27 @@
         });
         return obj;
     };
+    /**
+     * @description 通过原型继承创建一个新对象
+     * @method inherit
+     * @param {Object} target 继承对象
+     * @returns {*}
+     * @example
+     * var target = {x:'dont change me'};var newObject = Zwt.inherit(target); =>  index.html:140
+     * dont change me
+     */
+    function inherit(target){
+        if (target == null) throw TypeError();
+        if (Object.create)
+            return Object.create(target);
+        var type = typeof target;
+        if (type !== 'object' && type !== 'function') throw TypeError();
+        function fn(){};
+        fn.prototype = target;
+        return new fn();
+    }
+    Zwt.inherit = inherit;
+
     if (typeof /./ !== 'function') {
         /**
          * @description 如果object是一个参数对象，返回true
@@ -492,6 +513,7 @@
         var str = target.toString(radix || 10), prefix = '', length = n;
         if (opts && opts.prefix){
             length = n - opts.prefix.length;
+            prefix = opts.prefix;
             if (length < 0){throw new Error('n too small');}
         }
         filling = filling || '0';
@@ -502,7 +524,7 @@
                 str += filling;
             }
         }
-        return opts.prefix + str;
+        return prefix + str;
     }
     Zwt.pad = pad;
     /**

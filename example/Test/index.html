@@ -3,8 +3,8 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>zwt</title>
-    <script type="text/javascript" src="../../bower_components/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="../../util.min.js"></script>
+    <script type="text/javascript" src="../source/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../zwt.source.js"></script>
     <style>
         #gird {width: 100%; list-style: none; margin: 0; padding: 0; }
         #gird li { width: 200px; height:180px;overflow:hidden; float: left; margin-right: 10px; margin-bottom:10px; padding: 0; }
@@ -134,6 +134,11 @@
         }
     });
     console.log(str3 + '}');
+    // inherit
+    var target = {x: 'dont change me'};
+    var newObject = Zwt.inherit(target);
+    console.log("\n// inherit\nvar target = {x:'dont change me'};var newObject = Zwt.inherit(target); => ");
+    console.log(newObject.x);
 
     console.log("\n");
 </script>
