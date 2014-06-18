@@ -282,6 +282,33 @@
 
     // StringUtils =============================================================================================================================================
     /**
+     * @description 转换成小写字母
+     * @method lowercase
+     * @param {String} string 原字符串
+     * @returns {string}
+     * @author wyj on 14/6/17
+     * @example
+     *  Zwt.lowercase("LE"); => le
+     */
+    function lowercase(string){
+        return typeOf(string) === 'string' ? string.toLowerCase() : string;
+    }
+    Zwt.lowercase = lowercase;
+    /**
+     * @description 转换成大写字母
+     * @method uppercase
+     * @param {String} string 原字符串
+     * @returns {string}
+     * @author wyj on 14/6/17
+     * @example
+     *  Zwt.lowercase("le"); => LE
+     */
+    function uppercase(string){
+        return typeOf(string) === 'string' ? string.toUpperCase() : string;
+    }
+    Zwt.uppercase = uppercase;
+
+    /**
      * @description 二分法将一个字符串重复自身N次
      * @method repeat
      * @param {String} target 原字符串
@@ -422,6 +449,23 @@
         }
     }
     Zwt.cutByte = cutByte;
+    /**
+     * @dexcription 替换指定的html标签, 当第3个参数为true时， 删除该标签并删除标签里的内容
+     * @method stripTabName
+     * @param {String} target 目标字符串
+     * @param {String} tagName 标签名称
+     * @param {String} deep 是否删除标签内的内容
+     * @returns {string}
+     * @method wyj on 14/6/18
+     * @example
+     * Zwt.stripTagName("<script>a</script>", "script", true)=> ''
+     * Zwt.stripTagName("<script>a</script>", "script", false)=> 'a'
+     */
+    function stripTagName(target, tagName, deep){
+        var pattern = deep ? "<" + tagName + "[^>]*>([\\S\\s]*?)<\\\/" + tagName + ">" : "<\/?" + tagName + "[^>]*>";
+        return String(target || '').replace(new RegExp(pattern, 'img'), '');
+    }
+    Zwt.stripTagName = stripTagName;
     /**
      * @description 移除字符串中所有的script标签。弥补stripTags 方法的缺陷。此方法应在stripTags之前调用
      * @method stripScripts
@@ -1229,7 +1273,26 @@
     }
     Zwt.clearAllNode = clearAllNode;
 
-
+    // BrowerUtils
+    /**
+     * @description 判断是否是IE浏览器，并返回版本号
+     * @method msie
+     * @returns {mise}
+     * @author wyj on 14/6/17
+     * @example
+     * Zwt.msie(); => 7
+     */
+    function msie(){
+        var msie = parseInt((/msie (\d+)/.exec(lowercase(navigator.userAgent)) || [])[1], 10);
+        if (isNaN(msie)) {
+            msie = parseInt((/trident\/.*; rv:(\d+)/.exec(lowercase(navigator.userAgent)) || [])[1], 10);
+        }
+        if (isNaN(msie)){
+            msie = false;
+        }
+        return msie;
+    }
+    Zwt.msie = msie;
 
 
 

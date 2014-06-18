@@ -34,6 +34,8 @@
 <!-- 字符串工具集 -->
 <script type="text/javascript">
     console.log("【StringUtils】");
+    console.log('Zwt.lowercase("LE"); => ' + Zwt.lowercase('LE'));
+    console.log('Zwt.uppercase("le"); => ' + Zwt.uppercase('le'));
     console.log('Zwt.repeat("ru by",2) => ' + Zwt.repeat('ru by',2));
     console.log('Zwt.contains("aaaaa", "aa") => ' +Zwt.contains("aaaaa", "aa"));
     console.log("Zwt.startsWidth('aaa', 'aa', true); => " + Zwt.startsWidth('aaa', 'aa', true));
@@ -41,8 +43,10 @@
     console.log("Zwt.byteLen('sfasf我'， 2); => " + Zwt.byteLen('sfasf我', 2));
     console.log("Zwt.truncate('aaaaaa', 4, '...'); => " + Zwt.truncate('aaaaaa', 4, '...'));
     console.log("Zwt.cutByte('aaaaa', 4, '...'); => " + Zwt.cutByte('aaaaaa', 4, '...'));
-    console.log('Zwt.stripScripts("a</scripts>"); => ' + Zwt.stripScripts("a</scripts>"));
-    console.log("Zwt.stripTags('aadivbb</div>'); => " + Zwt.stripTags('aadivbb</div>'));
+    console.log('Zwt.stripTagName("' +Zwt.unescapeHTML("&lt;script&gt;a&lt;/script&gt;") + '", "script", true)=> ' + "'" + Zwt.stripTagName(Zwt.unescapeHTML("&lt;script type='text/javascript'&gt;a&lt;/script&gt;"), 'script', true) + "'");
+    console.log('Zwt.stripTagName("' +Zwt.unescapeHTML("&lt;script&gt;a&lt;/script&gt;") + '", "script", false)=> ' + "'" + Zwt.stripTagName(Zwt.unescapeHTML("&lt;script type='text/javascript'&gt;a&lt;/script&gt;"), 'script', false) + "'");
+    console.log('Zwt.stripScripts("&lt;script&gt;a&lt;/script&gt;"); => ' + Zwt.stripScripts(Zwt.unescapeHTML("&lt;script&gt;a&lt;/script&gt;")));
+    console.log('Zwt.stripTags("<div>aadivbb</div>"); => ' + Zwt.stripTags("<div>aadivbb</div>"));
     console.log("Zwt.escapeHTML('<'); => " + Zwt.escapeHTML('<'));
     console.log("Zwt.unescapeHTML('&lt;'); => " + Zwt.unescapeHTML('&lt;'));
     console.log("Zwt.escapeRegExp('aaa/[abc]/'); => " + Zwt.escapeRegExp('aaa/[abc]/'));
@@ -265,6 +269,11 @@
         }
     })
     console.log("// getCache\nZwt.getCache('uId', object, {area : 'dd'}); =>" + session.cache.dd['uId']['name']);
+</script>
+<!--BrowerUtils-->
+<script type="text/javascript">
+    console.log("【BrowerUtils】");
+    console.log("Zwt.msie(); => " + Zwt.msie());
 </script>
 </body>
 </html>
