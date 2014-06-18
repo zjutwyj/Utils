@@ -1,4 +1,4 @@
-(function() {
+;(function() {'use strict';
     var root = this;
     // 系统原型方法
     var slice = Array.prototype.slice, push = Array.prototype.push, toString = Object.prototype.toString,
@@ -720,7 +720,7 @@
 
 
 
-        predicate = lookupIterator(predicate, context);
+        var predicate = lookupIterator(predicate, context);
         each(collection, function(value, index, list) {
             if (predicate(value, index, list)) results.push(value);
         });
@@ -1001,7 +1001,7 @@
             // 判断是否有下级元素
             if (navlist.length > 0) {
                 item.hasChild = true;
-                arguments.callee(navlist, totalList, options);
+                bulidSubNode(navlist, totalList, options);
             } else {
                 item.hasChild = false;
                 item.cates = [];
@@ -1031,7 +1031,7 @@
             space = space + "|-";
             rootlist[i][opts['name']] = space + rootlist[i][opts['name']];
             if (rootlist[i].hasChild) {
-                arguments.callee(rootlist[i].cates, zoom = z + 2, opts);
+                bulidSelectNode(rootlist[i].cates, zoom = z + 2, opts);
             }
         }
     }
@@ -1204,7 +1204,7 @@
             selector = "."+ $.trim(className).split(" ")[0];
         } else{
             selector = getTagName(target);
-            selector = arguments.callee(target.parentNode) + " " + selector;
+            selector = getSelector(target.parentNode) + " " + selector;
         }
         return isModule ?  selector : '#' + $(target).parents('.moveChild:first').attr('id') + ' ' + selector;
     }
