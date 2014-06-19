@@ -404,9 +404,9 @@
      *     Zwt.truncate('aaaaaa', 4, '...'); => 'aaa...'
      */
     function truncate(target, length, truncation){
-        length = length || 30;
-        truncation = truncation === void(0) ? '...' : truncation;
-        return target.length > length ? (target.slice(0, length = truncation.length) + truncation) : String(target);
+        length = length || 30
+        truncation = truncation === void(0) ? "..." : truncation
+        return target.length > length ? target.slice(0, length - truncation.length) + truncation : String(target);
     }
     Zwt.truncate = truncate;
     /**
@@ -630,7 +630,7 @@
                 break;
             }
         }
-        return whitespace.indexOf(str.charAt(0)) === -1 ? (str) : '';
+        return whitespace.lastIndexOf(str.charAt(str.length-1)) === -1 ? (str) : '';
     }
     Zwt.rtrim = rtrim;
     /**
@@ -660,17 +660,17 @@
     Zwt.trim = trim;
     /**
      * @description 去除字符串中的所有空格
-     * @method allTrim
+     * @method deepTrim
      * @param {String} str 原字符串
      * @returns {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
      *     Zwt.allTrim('a b c'); => 'abc'
      */
-    function allTrim(str){
+    function deepTrim(str){
         return str.toString().replace(/\s*/gm, '');
     }
-    Zwt.allTrim = allTrim;
+    Zwt.deepTrim = deepTrim;
     // ArrayUtils ===============================================================================================================================================
     /**
      * @description 根据索引值移除数组元素
