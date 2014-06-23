@@ -43,35 +43,12 @@ function nextUid() {
   uid.unshift('0');
   return uid.join('');
 }
-function setHashKey(obj, h) {
-  if (h) {
-    obj.$$hashKey = h;
-  }
-  else {
-    delete obj.$$hashKey;
-  }
-}
-function extend(dst) {
-  var h = dst.$$hashKey;
-  forEach(arguments, function(obj){
-    if (obj !== dst) {
-      forEach(obj, function(value, key){
-        dst[key] = value;
-      });
-    }
-  });
 
-  setHashKey(dst,h);
-  return dst;
-}
-
-function int(str) {
-  return parseInt(str, 10);
-}
 
 
 function inherit(parent, extra) {
-  return extend(new (extend(function() {}, {prototype:parent}))(), extra);
+  return extend(new (extend(
+      function() {}, {prototype:parent}))(), extra);
 }
 function noop() {}
 noop.$inject = [];
@@ -87,25 +64,7 @@ function isWindow(obj) {
 function isScope(obj) {
   return obj && obj.$evalAsync && obj.$watch;
 }
-function isFile(obj) {
-  return toString.call(obj) === '[object File]';
-}
-function isBlob(obj) {
-  return toString.call(obj) === '[object Blob]';
-}
-function isBoolean(value) {
-  return typeof value === 'boolean';
-}
-var trim = (function() {
-  if (!String.prototype.trim) {
-    return function(value) {
-      return isString(value) ? value.replace(/^\s\s*/, '').replace(/\s\s*$/, '') : value;
-    };
-  }
-  return function(value) {
-    return isString(value) ? value.trim() : value;
-  };
-})();
+
 function isElement(node) {
   return !!(node &&
     (node.nodeName  // we are a direct element
@@ -135,17 +94,7 @@ function map(obj, iterator, context) {
   });
   return results;
 }
-function size(obj, ownPropsOnly) {
-  var count = 0, key;
-  if (isArray(obj) || isString(obj)) {
-    return obj.length;
-  } else if (isObject(obj)){
-    for (key in obj)
-      if (!ownPropsOnly || obj.hasOwnProperty(key))
-        count++;
-  }
-  return count;
-}
+
 function includes(array, obj) {
   return indexOf(array, obj) != -1;
 }

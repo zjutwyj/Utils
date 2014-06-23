@@ -191,7 +191,7 @@
     function typeOf(target){
         var _type = {"undefined" : "undefined", "number": "number", "boolean": "boolean", "string": "string",
             "[object Function]" : "function", "[object RegExp]" : "regexp", "[object Array]" : "array",
-            "[object Date]" : "date", "[object Error]" : "error" };
+            "[object Date]" : "date", "[object Error]" : "error" ,"[object File]":"file", "[object Blob]":"blob"};
         return _type[typeof target] || _type[toString.call(target)] || (target ? "object" : "null");
     }
     Zwt.typeOf = typeOf;
@@ -519,6 +519,7 @@
      *     Zwt.unescapeHTML('&lt;'); => '<'
      */
     function unescapeHTML(target){
+        target = target || '';
         return target.replace(/&amp;/mg, '&')
             .replace(/&lt;/mg, '<')
             .replace(/&gt;/mg, '>')
@@ -1040,16 +1041,18 @@
     /**
      * @description 获取浏览器参数列表
      * @method getUrlParam
-     * @param name 参数名称
+     * @param {String} name 参数名称
+     * @param {String} url 指定URL
      * @returns {String} 不存在返回NULL
      * @author wyj on 14-04-26
      * @example
      *      (function($, Zwt){ $.getUrlParam = Zwt.getUrlParam;})(jQuery, Zwt);
      *      console.log($.getUrlParam('name'));
      */
-    function getUrlParam(name){
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"),
-            r = window.location.search.substr(1).match(reg);
+    function getUrlParam(name, url){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var path = url.substring(url.indexOf('?'), url.length) || window.location.search;
+        var r = path.substr(1).match(reg);
         if (r!=null) return unescape(r[2]); return null;
     }
     Zwt.getUrlParam = getUrlParam;
