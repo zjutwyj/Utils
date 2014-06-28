@@ -1217,6 +1217,7 @@
                 item.cates = [];
             }
         }
+        return rootlist;
     }
     Zwt.bulidSubNode = bulidSubNode;
     /**
@@ -1244,6 +1245,7 @@
                 bulidSelectNode(rootlist[i].cates, zoom = z + 2, opts);
             }
         }
+        return rootlist;
     }
     Zwt.bulidSelectNode = bulidSelectNode;
     // PaginationUtils
