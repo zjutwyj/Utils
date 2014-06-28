@@ -121,3 +121,9 @@ QUnit.test("Zwt.deepTrim('a b c'); => ", function(assert){
     assert.equal(result,'abc', "Zwt.deepTrim('a b c'); => " + Zwt.deepTrim('a b c'));
 });
 
+QUnit.test("Zwt.nextUid()", function(assert){
+    var result = Zwt.nextUid();
+    assert.equal(result, '001', result);
+    var result2 = Zwt.nextUid();
+    assert.equal(result2, '002', result2);
+});

@@ -19,37 +19,7 @@ var /** holds major version number for IE or NaN for real browsers */
     nodeName_,
     uid               = ['0', '0', '0'];
 
-function reverseParams(iteratorFn) {
-  return function(value, key) { iteratorFn(key, value); };
-}
-function nextUid() {
-  var index = uid.length;
-  var digit;
 
-  while(index) {
-    index--;
-    digit = uid[index].charCodeAt(0);
-    if (digit == 57 /*'9'*/) {
-      uid[index] = 'A';
-      return uid.join('');
-    }
-    if (digit == 90  /*'Z'*/) {
-      uid[index] = '0';
-    } else {
-      uid[index] = String.fromCharCode(digit + 1);
-      return uid.join('');
-    }
-  }
-  uid.unshift('0');
-  return uid.join('');
-}
-
-
-
-function inherit(parent, extra) {
-  return extend(new (extend(
-      function() {}, {prototype:parent}))(), extra);
-}
 function noop() {}
 noop.$inject = [];
 
@@ -58,24 +28,10 @@ identity.$inject = [];
 
 
 function valueFn(value) {return function() {return value;};}
-function isWindow(obj) {
-  return obj && obj.document && obj.location && obj.alert && obj.setInterval;
-}
 function isScope(obj) {
   return obj && obj.$evalAsync && obj.$watch;
 }
 
-function isElement(node) {
-  return !!(node &&
-    (node.nodeName  // we are a direct element
-    || (node.prop && node.attr && node.find)));  // we have an on and find method part of jQuery API
-}
-function makeMap(str){
-  var obj = {}, items = str.split(","), i;
-  for ( i = 0; i < items.length; i++ )
-    obj[ items[i] ] = true;
-  return obj;
-}
 if (msie < 9) {
   nodeName_ = function(element) {
     element = element.nodeName ? element : element[0];
@@ -87,93 +43,7 @@ if (msie < 9) {
     return element.nodeName ? element.nodeName : element[0].nodeName;
   };
 }
-function map(obj, iterator, context) {
-  var results = [];
-  forEach(obj, function(value, index, list) {
-    results.push(iterator.call(context, value, index, list));
-  });
-  return results;
-}
 
-function includes(array, obj) {
-  return indexOf(array, obj) != -1;
-}
-function indexOf(array, obj) {
-  if (array.indexOf) return array.indexOf(obj);
-  for (var i = 0; i < array.length; i++) {
-    if (obj === array[i]) return i;
-  }
-  return -1;
-}
-function arrayRemove(array, value) {
-  var index = indexOf(array, value);
-  if (index >=0)
-    array.splice(index, 1);
-  return value;
-}
-function isLeafNode (node) {
-  if (node) {
-    switch (node.nodeName) {
-    case "OPTION":
-    case "PRE":
-    case "TITLE":
-      return true;
-    }
-  }
-  return false;
-}
-function copy(source, destination){
-  if (isWindow(source) || isScope(source)) {
-    throw ngMinErr('cpws',
-      "Can't copy! Making copies of Window or Scope instances is not supported.");
-  }
-
-  if (!destination) {
-    destination = source;
-    if (source) {
-      if (isArray(source)) {
-        destination = copy(source, []);
-      } else if (isDate(source)) {
-        destination = new Date(source.getTime());
-      } else if (isRegExp(source)) {
-        destination = new RegExp(source.source);
-      } else if (isObject(source)) {
-        destination = copy(source, {});
-      }
-    }
-  } else {
-    if (source === destination) throw ngMinErr('cpi',
-      "Can't copy! Source and destination are identical.");
-    if (isArray(source)) {
-      destination.length = 0;
-      for ( var i = 0; i < source.length; i++) {
-        destination.push(copy(source[i]));
-      }
-    } else {
-      var h = destination.$$hashKey;
-      forEach(destination, function(value, key){
-        delete destination[key];
-      });
-      for ( var key in source) {
-        destination[key] = copy(source[key]);
-      }
-      setHashKey(destination,h);
-    }
-  }
-  return destination;
-}
-function shallowCopy(src, dst) {
-  dst = dst || {};
-
-  for(var key in src) {
-    // shallowCopy is only ever called by $compile nodeLinkFn, which has control over src
-    // so we don't need to worry about using our custom hasOwnProperty here
-    if (src.hasOwnProperty(key) && !(key.charAt(0) === '$' && key.charAt(1) === '$')) {
-      dst[key] = src[key];
-    }
-  }
-  return dst;
-}
 function equals(o1, o2) {
   if (o1 === o2) return true;
   if (o1 === null || o2 === null) return false;
@@ -221,14 +91,6 @@ function csp() {
       !!(document.querySelector('[ng-csp]') || document.querySelector('[data-ng-csp]')));
 }
 
-
-function concat(array1, array2, index) {
-  return array1.concat(slice.call(array2, index));
-}
-
-function sliceArgs(args, startIndex) {
-  return slice.call(args, startIndex || 0);
-}
 /* jshint +W101 */
 function bind(self, fn) {
   var curryArgs = arguments.length > 2 ? sliceArgs(arguments, 2) : [];

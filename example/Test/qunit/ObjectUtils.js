@@ -18,3 +18,41 @@ QUnit.test("Zwt.inherit", function(assert){
 
     assert.equal(newObject.x, target.x , "newObject inherit from target!");
 });
+
+QUnit.test("Zwt.typeOf", function(assert){
+    var obj = {};
+    var type = Zwt.typeOf(obj);
+    assert.equal(type, 'object', 'passed!');
+});
+
+QUnit.test("Zwt.hasKey", function(assert){
+    var obj = {
+        name: 1
+    };
+    var has = Zwt.hasKey(obj, 'name');
+    assert.equal(has, true, 'passed!');
+});
+
+QUnit.test("Zwt.hashKey", function(assert){
+    var obj = {};
+    var value = Zwt.hashKey(obj);
+    assert.equal(value, 'object:003', "passed!");
+});
+
+QUnit.test("Zwt.isEmpty", function(assert){
+    var obj = {};
+    var result = Zwt.isEmpty(obj);
+    assert.ok(result, "passed!");
+    var list = [];
+    var result2 = Zwt.isEmpty(list);
+    assert.ok(result2, "passed!");
+    var str = '';
+    var result3 = Zwt.isEmpty(str);
+    assert.ok(result3, "passed!");
+    var fn = function(){}
+    var result4 = Zwt.isEmpty(fn);
+    assert.ok(result4, "passed!");
+    var obj1 = {name:1};
+    var result5 = Zwt.isEmpty(obj1);
+    assert.ok(!result5, "passed!");
+});

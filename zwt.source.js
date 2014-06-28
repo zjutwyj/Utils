@@ -7,6 +7,9 @@
     var nativeIsArray = Array.isArray, nativeKeys = Object.keys, nativeBind = Object.prototype.bind;
     var whitespace = ' \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\n\
         \u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000';
+    var uid = ['0', '0', '0'];
+    var urlParsingNode = document.createElement("a");
+    var originUrl = urlResolve(window.location.href, true);
     // 创建Zwt对象
     var Zwt = function(obj) {
         if (obj instanceof Zwt) return obj;
@@ -23,7 +26,16 @@
     } else {
         root.Zwt = Zwt;
     }
-    // 回调封装
+    function identity(value) {
+        return value;
+    }
+    Zwt.identity = identity;
+    var lookupIterator = function(value, context, argCount) {
+        if (value == null) return Zwt.identity;
+        if (Zwt.isFunction(value)) return createCallback(value, context, argCount);
+        if (typeOf(value) === 'object') return matches(value);
+        return property(value);
+    };
     var createCallback = function(func, context, argCount) {
         if (!context) return func;
         switch (argCount == null ? 3 : argCount) {
@@ -44,7 +56,6 @@
             return func.apply(this, arguments);
         };
     };
-
     /**
      * @description 遍历数据或对象。如果传递了context参数，则把callback绑定到context对象上。
      * 如果list是数组，callback的参数是：(element, list, index, first, last)。
@@ -87,24 +98,27 @@
      * Zwt.extend({name: 'moe'}, {age: 50}); => {name: 'moe', age: 50}
      */
     Zwt.extend = function(obj) {
+        var h = obj.$$hashKey;
         if (typeOf(obj) !== 'object') return obj;
         each(slice.call(arguments, 1), function(source) {
             for (var prop in source) {
                 obj[prop] = source[prop];
             }
         });
+        setHashKey(obj,h);
         return obj;
     };
     /**
      * @description 通过原型继承创建一个新对象
      * @method inherit
      * @param {Object} target 继承对象
+     * @param {Object} extra 额外对象
      * @returns {*}
      * @example
      * var target = {x:'dont change me'};var newObject = Zwt.inherit(target); =>  index.html:140
      * dont change me
      */
-    function inherit(target){
+    function inherit(target, extra){
         if (target == null) throw TypeError();
         if (Object.create)
             return Object.create(target);
@@ -196,6 +210,55 @@
     }
     Zwt.typeOf = typeOf;
     /**
+     * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined)
+     * @param value
+     * @returns {boolean}
+     * @author wyj on 14/6/26
+     * @example
+     */
+    function isEmpty(value) {
+        var result = true;
+        if (!value) return result;
+        var className = toString.call(value),
+            length = value.length;
+        if ((className == '[object Array]' || className == '[object String]' || className == '[object Arguments]' ) ||
+            (className == '[object Object]' && typeof length == 'number' && Zwt.isFunction(value.splice))) {
+            return !length;
+        }
+        each(value, function() {
+            return (result = false);
+        });
+        return result;
+    }
+    Zwt.isEmpty = isEmpty;
+    /**
+     * @description 返回值函数
+     * @method valueFn
+     * @param value
+     * @returns {Function}
+     * @author wyj on 14/6/26
+     * @example
+     *
+     */
+    function valueFn(value) {
+        return function() {
+            return value;
+        };
+    }
+    Zwt.valueFn = valueFn;
+    /**
+     * @dexcription 反转key value  用于forEach
+     * @method reverseParams
+     * @param {Function} iteratorFn
+     * @returns {Function}
+     * @author wyj on 14/6/26
+     * @example
+     */
+    function reverseParams(iteratorFn) {
+        return function(value, key) { iteratorFn(key, value); };
+    }
+    Zwt.reverseParams = reverseParams;
+    /**
      * @description [2]判断对象是否含有某个键 不是原型对象
      * @method hasKey
      * @param {Object} obj 检测对象
@@ -210,6 +273,43 @@
         return obj != null && hasOwnProperty.call(obj, key);
     }
     Zwt.hasKey = hasKey;
+    /**
+     * @description 计算hash值
+     * @method hashKey
+     * @param obj
+     * @returns {string}
+     * @author wyj on 14/6/25
+     * @example
+     * var value = Zwt.hashKey(obj); => 'object:001'
+     */
+    function hashKey(obj) {
+        var objType = typeof obj, key;
+        if (objType == 'object' && obj !== null) {
+            if (typeof (key = obj.$$hashKey) == 'function') {
+                key = obj.$$hashKey();
+            } else if (key === undefined) {
+                key = obj.$$hashKey = nextUid();
+            }
+        } else {
+            key = obj;
+        }
+        return objType + ':' + key;
+    }
+    Zwt.hashKey = hashKey;
+    /**
+     * @description 设置hashKey
+     * @param obj
+     * @param h
+     */
+    function setHashKey(obj, h) {
+        if (h) {
+            obj.$$hashKey = h;
+        }
+        else {
+            delete obj.$$hashKey;
+        }
+    }
+    Zwt.setHashKey = setHashKey;
     /**
      * @description [3]过滤对象字段
      * @method pick
@@ -239,7 +339,6 @@
         return result;
     }
     Zwt.pick = pick;
-
     /**
      * @description 获取对象属性值
      * @param key
@@ -251,14 +350,6 @@
         };
     }
     Zwt.property = property;
-
-    function adapter(obj, context, argCount) {
-        if (obj == null) { return function(obj) {return obj;};}
-        if (typeOf(obj) === 'function') return createCallback(obj, context, argCount);
-        //if (typeOf(obj) === 'object') return _.matches(obj);
-        return property(obj);
-    }
-    Zwt.adapter = adapter;
     /**
      * @description 避免在 ms 段时间内，多次执行func。常用 resize、scoll、mousemove等连续性事件中
      * @method delay
@@ -281,6 +372,34 @@
     Zwt.delay = delay;
 
     // StringUtils =============================================================================================================================================
+    /**
+     * @description 产生唯一身份标识， 如'012ABC', 若为数字较容易数字溢出
+     * @method nextUid
+     * @returns {string}
+     * @author wyj on 14/6/23
+     * @example
+     * var uid = Zwt.nextUid(); => '001'
+     */
+    function nextUid() {
+        var index = uid.length, digit;
+        while (index) {
+            index--;
+            digit = uid[index].charCodeAt(0);
+            if (digit == 57 /*'9'*/) {
+                uid[index] = 'A';
+                return uid.join('');
+            }
+            if (digit == 90  /*'Z'*/) {
+                uid[index] = '0';
+            } else {
+                uid[index] = String.fromCharCode(digit + 1);
+                return uid.join('');
+            }
+        }
+        uid.unshift('0');
+        return uid.join('');
+    }
+    Zwt.nextUid = nextUid;
     /**
      * @description 转换成小写字母
      * @method lowercase
@@ -688,6 +807,24 @@
     }
     Zwt.removeAt = removeAt;
     /**
+     * @description 删除数组中的元素
+     * @method arrayRemove
+     * @param {Array} array 目标数组
+     * @param {*} value 删除元素
+     * @returns {*}
+     * @author wyj on 14/6/23
+     * @example
+     * var list = ['a', 'b', 'b'];
+     * var result = Zwt.arrayRemove(list, 'a'); => ['a', 'b']
+     */
+    function arrayRemove(array, value){
+        var index = indexOf(array, value);
+        if (index !== -1)
+            array.splice(index, 1);
+        return value;
+    }
+    Zwt.arrayRemove = arrayRemove;
+    /**
      * @description 获取对象的所有KEY值
      * @method keys
      * @param {Object} obj 目标对象
@@ -705,6 +842,23 @@
     }
     Zwt.keys = keys;
     /**
+     * @description 用来辨别 给定的对象是否匹配指定键/值属性的列表
+     * @method matches
+     * @param attrs
+     * @returns {Function}
+     * @author wyj on 14/6/26
+     * @example
+     */
+    function matches(attrs) {
+        return function(obj) {
+            if (obj == null) return isEmpty(attrs);
+            if (obj === attrs) return true;
+            for (var key in attrs) if (attrs[key] !== obj[key]) return false;
+            return true;
+        };
+    }
+    Zwt.matches = matches;
+    /**
      * @description 数组过滤
      * @method filter
      * @param {Array} collection 数组
@@ -715,17 +869,14 @@
      *
      *
      */
-    function filter(collection, callback, thisArgs){
-        var result = [];
+    function filter(collection, callback, context){
+        var results = [];
         if (!collection) return result;
-
-
-
-        var predicate = lookupIterator(predicate, context);
+        var predicate = lookupIterator(callback, context);
         each(collection, function(value, index, list) {
             if (predicate(value, index, list)) results.push(value);
         });
-        return result;
+        return results;
     }
     Zwt.filter = filter;
 
@@ -853,6 +1004,64 @@
         }
     }
     Zwt.arrayInsert = arrayInsert;
+    /**
+     * @description 遍历MAP对象
+     * @method map
+     * @param {Array} obj
+     * @param iterator
+     * @param context
+     * @returns {Array}
+     * @author wyj on 14/6/23
+     * @example
+     * var list = [1, 2, 3];
+     * var result = Zwt.map(list, function(value, index, list){
+     *      value = value + 1;
+     * });
+     */
+    function map(obj, iterator, context) {
+        var results = [];
+        if (obj === null) return results;
+        each(obj, function(value, index, list) {
+            results.push(iterator.call(context, value, index, list));
+        });
+        return results;
+    }
+    Zwt.map = map;
+    /**
+     * @description 字符串转化成MAP对象，以逗号隔开， 用于FORM表单
+     * @method makeMap
+     * @param str
+     * @returns {{}}
+     * @author wyj on 14/6/23
+     * @example
+     * var object = Zwt.makeMap("a, aa, aaa"); => {"a":true, "aa": true, "aaa": true}
+     */
+    function makeMap(str){
+        var obj = {}, items = str.split(","), i;
+        for ( i = 0; i < items.length; i++ )
+            obj[ items[i] ] = true;
+        return obj;
+    }
+    Zwt.makeMap = makeMap;
+    /**
+     * @description 判断元素是否存在于数组中
+     * @method indesOf
+     * @param array
+     * @param obj
+     * @returns {*}
+     * @author wyj on 14/6/23
+     * @example
+     * var list = ['a', 'b'];
+     * var has = Zwt.indexOf('b'); => 1
+     */
+    function indexOf(array, obj) {
+        if (array.indexOf) return array.indexOf(obj);
+        for (var i = 0; i < array.length; i++) {
+            if (obj === array[i]) return i;
+        }
+        return -1;
+    }
+    Zwt.indexOf = indexOf;
 
 
     // ImageUtils ==============================================================================================================================================
@@ -1037,25 +1246,6 @@
         }
     }
     Zwt.bulidSelectNode = bulidSelectNode;
-    // UrlUtils
-    /**
-     * @description 获取浏览器参数列表
-     * @method getUrlParam
-     * @param {String} name 参数名称
-     * @param {String} url 指定URL
-     * @returns {String} 不存在返回NULL
-     * @author wyj on 14-04-26
-     * @example
-     *      (function($, Zwt){ $.getUrlParam = Zwt.getUrlParam;})(jQuery, Zwt);
-     *      console.log($.getUrlParam('name'));
-     */
-    function getUrlParam(name, url){
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-        var path = url.substring(url.indexOf('?'), url.length) || window.location.search;
-        var r = path.substr(1).match(reg);
-        if (r!=null) return unescape(r[2]); return null;
-    }
-    Zwt.getUrlParam = getUrlParam;
     // PaginationUtils
     /**
      * @description 获取最大页数
@@ -1178,7 +1368,6 @@
         var data = ctx.cache[opts.area][uId];
         if ( !data ) {
             data = ctx.cache[opts.area][uId] = opts.getData.call(null, data);
-            console.log('【Cache】data: '+uId + ' is cached !');
         }
         return data;
     }
@@ -1296,7 +1485,54 @@
         return msie;
     }
     Zwt.msie = msie;
-
+    /**
+     * @description 获取浏览器参数列表
+     * @method getUrlParam
+     * @param {String} name 参数名称
+     * @param {String} url 指定URL
+     * @returns {String} 不存在返回NULL
+     * @author wyj on 14-04-26
+     * @example
+     *      (function($, Zwt){ $.getUrlParam = Zwt.getUrlParam;})(jQuery, Zwt);
+     *      console.log($.getUrlParam('name'));
+     */
+    function getUrlParam(name, url){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var path = url.substring(url.indexOf('?'), url.length) || window.location.search;
+        var r = path.substr(1).match(reg);
+        if (r!=null) return unescape(r[2]); return null;
+    }
+    Zwt.getUrlParam = getUrlParam;
+    /**
+     * @description 过滤地址
+     * @method urlResolve
+     * @param {String} url
+     * @returns  {*}
+     * @author wyj on 14/6/26
+     * @example
+     *
+     */
+    function urlResolve(url) {
+        var href = url;
+        if (msie()) {
+            urlParsingNode.setAttribute("href", href);
+            href = urlParsingNode.href;
+        }
+        urlParsingNode.setAttribute('href', href);
+        return {
+            href: urlParsingNode.href,
+            protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+            host: urlParsingNode.host,
+            search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+            hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+            hostname: urlParsingNode.hostname,
+            port: urlParsingNode.port,
+            pathname: (urlParsingNode.pathname.charAt(0) === '/')
+                ? urlParsingNode.pathname
+                : '/' + urlParsingNode.pathname
+        };
+    }
+    Zwt.urlResolve = urlResolve;
 
 
 

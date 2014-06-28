@@ -55,3 +55,37 @@ QUnit.test("Zwt.hasKey", function(assert){
     var result  = Zwt.hasKey(object1, 'name');
     assert.ok(result,'Zwt.hasKey(object1, "name"); => true');
 });
+
+QUnit.test("Zwt.makeMap", function(assert){
+    var map = Zwt.makeMap("a,a,aa,a,ah,a");
+    assert.deepEqual(map, { "a": true, "aa": true, "ah": true }, 'passed!');
+});
+
+QUnit.test("Zwt.indexOf", function(assert){
+    var list = ['a', 'b'];
+    var has = Zwt.indexOf(list, 'b');
+    assert.equal(has, 1, "passed!");
+});
+
+QUnit.test("Zwt.arrayRemove", function(assert){
+    var list = ['a', 'b', 'b'];
+    var result = Zwt.arrayRemove(list, 'b');
+    assert.deepEqual(list, ['a', 'b'], 'passed!');
+});
+
+QUnit.test("Zwt.map", function(assert){
+    var list = [1, 2, 3];
+    var result = Zwt.map(list, function(value, list, index){
+        list[index] = list[index] + 1;
+    });
+    assert.deepEqual(result, [2, 3, 4], 'passed!');
+});
+QUnit.test("Zwt.filter", function(assert){
+    var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
+    var result = Zwt.filter(list, function(item){
+        return item.name.indexOf('b') > -1;
+    });
+    assert.deepEqual(result, [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ], 'passed!');
+    var result2 = Zwt.filter(list, {"name": "bb", "address": "zjut"});
+    assert.deepEqual(result2, [ { "address": "zjut", "name":  "bb" } ], "passed!");
+});

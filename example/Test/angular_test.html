@@ -2,13 +2,21 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>angular_test</title>
+    <title>angular-custom</title>
 </head>
-<body ng-app="ngApp">
-<div>ngApp</div>
-
-<script type="text/javascript" src="../source/js/jquery.min.js"></script>
-<script type="text/javascript" src="../../zwt.source.js"></script>
-<script type="text/javascript" src="../../angular.js"></script>
+<body  id="ng-app" class="ng-app:ngApp" ng-app="ngApp" >
+<div ng-controller="TestCtrl" id="demo" class="aa">
+    <div>{{name}}</div>
+</div>
+<script src="../source/js/jquery.min.js"></script>
+<script src="../../zwt.source.js"></script>
+<script src="../../angular-custom.js"></script>
+<!--<script src="../source/js/angular-1.2.15.js"></script>-->
+<script type="text/javascript">
+    var app = angular.module('ngApp', []);
+    function TestCtrl($scope){
+        $scope.name = "a";
+    }
+</script>
 </body>
 </html>
