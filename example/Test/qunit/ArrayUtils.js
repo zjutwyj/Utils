@@ -76,7 +76,7 @@ QUnit.test("Zwt.arrayRemove", function(assert){
 QUnit.test("Zwt.map", function(assert){
     var list = [1, 2, 3];
     var result = Zwt.map(list, function(value, list, index){
-        list[index] = list[index] + 1;
+        return list[index] + 1;
     });
     assert.deepEqual(result, [2, 3, 4], 'passed!');
 });
@@ -88,4 +88,18 @@ QUnit.test("Zwt.filter", function(assert){
     assert.deepEqual(result, [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ], 'passed!');
     var result2 = Zwt.filter(list, {"name": "bb", "address": "zjut"});
     assert.deepEqual(result2, [ { "address": "zjut", "name":  "bb" } ], "passed!");
+});
+
+QUnit.test("Zwt.findIndex", function(assert){
+    var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
+    var index = Zwt.findIndex(list, {name: 'aa'});
+    assert.equal(index, 0, 'test object : passed!');
+
+    var index2 =  Zwt.findIndex(list, function(item){
+        return item.name === 'aa';
+    });
+    assert.equal(index2, 0, 'test function: passed!');
+
+    var index3 = Zwt.findIndex(list, {name:'bb', address:'zjut'});
+    assert.equal(index3, 3, 'test multi params of  object : passed!');
 });

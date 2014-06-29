@@ -866,8 +866,10 @@
      * @param args
      * @author wyj on 14/6/6
      * @example
-     *
-     *
+     * var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
+     * var result = Zwt.filter(list, function(item){
+     *   return item.name.indexOf('b') > -1;
+     * }); => [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ]
      */
     function filter(collection, callback, context){
         var results = [];
@@ -879,6 +881,33 @@
         return results;
     }
     Zwt.filter = filter;
+
+    /**
+     * description 数组中查找符合条件的索引值
+     * @param array
+     * @param {Function} callback 回调函数
+     * @param {Object} context 上下文
+     * @returns {number}
+     * @author wyj on 14/6/29
+     * @example
+     * var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
+     * var index = Zwt.findIndex(list, {name: 'aa'}); => 0
+     * var index2 =  Zwt.findIndex(list, function(item){
+     *   return item.name === 'aa';
+     * });
+     */
+    function findIndex(array, callback, context) {
+        var index = -1,
+            length = array ? array.length : 0;
+        callback = lookupIterator(callback, context);
+        while (++index < length) {
+            if (callback(array[index], index, array)) {
+                return index;
+            }
+        }
+        return -1;
+    }
+    Zwt.findIndex = findIndex;
 
 
     /**
@@ -1007,22 +1036,22 @@
     /**
      * @description 遍历MAP对象
      * @method map
-     * @param {Array} obj
-     * @param iterator
-     * @param context
-     * @returns {Array}
+     * @param {Array} obj 目标数组
+     * @param callback 回调函数
+     * @param context 上下文
+     * @returns {Array} 返回数组
      * @author wyj on 14/6/23
      * @example
      * var list = [1, 2, 3];
-     * var result = Zwt.map(list, function(value, index, list){
-     *      value = value + 1;
-     * });
+     * var result = Zwt.map(list, function(value, list, index){
+     *      return list[index] + 1;
+     * }); => [2, 3, 4]
      */
-    function map(obj, iterator, context) {
+    function map(obj, callback, context) {
         var results = [];
         if (obj === null) return results;
         each(obj, function(value, index, list) {
-            results.push(iterator.call(context, value, index, list));
+            results.push(callback.call(context, value, index, list));
         });
         return results;
     }
