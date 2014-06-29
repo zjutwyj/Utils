@@ -2,30 +2,28 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
-    <script type="text/javascript" src="../source/js/lodash.js"></script>
+    <title>单元测试</title>
+    <link rel="stylesheet" href="qunit/qunit-1.14.0.css">
 </head>
 <body  id="ng-app" class="ng-app:ngApp" ng-app="ngApp" >
 <div ng-controller="TestCtrl" id="demo" class="aa">
     <div>{{name}}</div>
 </div>
-
-
-
-
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
 <script src="../source/js/jquery.min.js"></script>
-<script src="../../zwt.source.js"></script>
-<script src="../source/js/angular-1.2.15.js"></script>
+<script src="qunit/qunit-1.14.0.js"></script>
+<script type="text/javascript" src="../source/js/lodash.js"></script>
+<script type="text/javascript" src="../../zwt.min.js"></script>
+<!--<script src="../source/js/angular-1.2.15.js"></script>
 <script type="text/javascript">
-    'use script';
-    var app = angular.module('ngApp', []).run(function(){
-
-    });
+    var app = angular.module('ngApp', []).run(function(){ });
     function TestCtrl($scope){
         $scope.name = "a";
     }
-
-
+</script>-->
+<script type="text/javascript">
+    'use script';
     var list = [ { product_id: 'Product_000000000000000000204345',
         name: '彩带',
         category: 'Category_00000000000000000249891',
@@ -1802,10 +1800,19 @@
             price: null,
             mimic_path: 'upload/d/d1/dabao/picture/2013/05/07/4cb3818d-1ab9-411f-9ef1-92184f71fcf0_6.jpg',
             thumbnail_path: 'upload/d/d1/dabao/picture/2013/05/07/4cb3818d-1ab9-411f-9ef1-92184f71fcf0_5.jpg' } ];
-    var result = _.filter(list, function(item){
-        return item.name.indexOf('运动车') > -1;
+QUnit.test('filter', function(assert){
+    var array = [1, 2, 3];
+    var result = Zwt.indexOf(array, 1);
+    var result2 = Zwt.findIndex(list, function(item){
+        return item.name.indexOf('笔记本') > -1;
     });
-    console.log(result);
+    var result3 = Zwt.findIndex(list, function(item){
+        return item.name.indexOf('需') > -1;
+    });
+    assert.equal(result, 0, 'test findIndex passed!');
+    assert.equal(result2, 110, 'test findIndex passed!');
+    assert.equal(result3, 90, 'test findIndex passed!');
+});
 </script>
 </body>
 </html>

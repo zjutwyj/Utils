@@ -47,6 +47,7 @@
     "gulp-minify-html": "~0.1.1",
     "gulp-google-cdn": "~0.3.0",
     "gulp-bower": "0.0.4",
-    "del": "~0.1.1"
+    "del": "~0.1.1",
+    "gulp-yuidoc": "~0.1.2"
   }
 }

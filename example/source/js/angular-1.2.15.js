@@ -1376,7 +1376,6 @@ function bootstrap(element, modules) {
       $provide.value('$rootElement', element);
     }]);
     modules.unshift('ng');
-      debugger
     var injector = createInjector(modules);
     injector.invoke(['$rootScope', '$rootElement', '$compile', '$injector', '$animate',
        function(scope, element, compile, injector, animate) {

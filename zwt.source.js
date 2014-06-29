@@ -10,6 +10,11 @@
     var uid = ['0', '0', '0'];
     var urlParsingNode = document.createElement("a");
     var originUrl = urlResolve(window.location.href, true);
+    // for define
+    var moduleMap = {};
+    var fileMap = {};
+    var noop = function () {};
+
     // 创建Zwt对象
     var Zwt = function(obj) {
         if (obj instanceof Zwt) return obj;
@@ -62,8 +67,10 @@
      * 如果list是个JavaScript对象，callback的参数是 (value, key, list, index, first, last))。返回list以方便链式调用。
      * 如果callback 返回false,则中止遍历
      * @method each
-     * @param {*} obj 遍历对象
-     * @param {}
+     * @param {Array/Object} obj 遍历对象
+     * @param {Function} callback 回调函数
+     * @param {Object} context 上下文
+     * @return {Object}
      * @example
      * Zwt.each([1, 2, 3], alert); => alerts each number in turn...
      * Zwt.each({one: 1, two: 2, three: 3}, alert); => alerts each number value in turn...
@@ -92,7 +99,7 @@
      * 复制是按顺序的, 所以后面的对象属性会把前面的对象属性覆盖掉(如果有重复).
      * @method extend
      * @param {Object} obj destination对象
-     * @returns {Object} 返回 destination 对象
+     * @return {Object} 返回 destination 对象
      * @author wyj on 14/5/22
      * @example
      * Zwt.extend({name: 'moe'}, {age: 50}); => {name: 'moe', age: 50}
@@ -113,7 +120,7 @@
      * @method inherit
      * @param {Object} target 继承对象
      * @param {Object} extra 额外对象
-     * @returns {*}
+     * @return {*}
      * @example
      * var target = {x:'dont change me'};var newObject = Zwt.inherit(target); =>  index.html:140
      * dont change me
@@ -135,7 +142,7 @@
          * @description 如果object是一个参数对象，返回true
          * @method isFunction
          * @param {*} obj 待检测参数
-         * @returns {boolean}
+         * @return {boolean}
          * @author wyj on 14/5/22
          * @example
          * Zwt.isFunction(alert); => true
@@ -147,7 +154,7 @@
     /**
      * @description 返回一个对象里所有的方法名, 而且是已经排序的 — 也就是说, 对象里每个方法(属性值是一个函数)的名称.
      * @method functions
-     * @params {Object} obj 检测对象
+     * @param {Object} obj 检测对象
      * @return {Array} 返回包含方法数组
      * @author wyj on 14/5/22
      * @example
@@ -164,7 +171,7 @@
      * @description 返回一个封装的对象. 在封装的对象上调用方法会返回封装的对象本身, 直道 value 方法调用为止.
      * @method chain
      * @param obj
-     * @returns {*}
+     * @return {*}
      * @author wyj on 14/5/22
      * @example
      * var stooges = [{name: 'curly', age: 25}, {name: 'moe', age: 21}, {name: 'larry', age: 23}];
@@ -182,7 +189,7 @@
      * @description 如果对象 object 中的属性 property 是函数, 则调用它, 否则, 返回它。
      * @method result
      * @param obj
-     * @returns {*}
+     * @return {*}
      * @author wyj on 14/5/22
      * @example
      * var object = {cheese: 'crumpets', stuff: function(){ return 'nonsense'; }};
@@ -197,7 +204,7 @@
      * @description [1]检测数据类型 [undefined][number][string][function][regexp][array][date][error]
      * @method typeOf
      * @param {*} target 检测对象
-     * @returns {*|string}
+     * @return {*|string}
      * @author wyj on 14/5/24
      * @example
      *  Zwt.typeOf(Zwt); => 'object'
@@ -211,10 +218,12 @@
     Zwt.typeOf = typeOf;
     /**
      * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined)
-     * @param value
-     * @returns {boolean}
+     * @method isEmpty
+     * @param {Object} value
+     * @return {boolean}
      * @author wyj on 14/6/26
      * @example
+     * Zwt.isEmpty(value);
      */
     function isEmpty(value) {
         var result = true;
@@ -235,7 +244,7 @@
      * @description 返回值函数
      * @method valueFn
      * @param value
-     * @returns {Function}
+     * @return {Function}
      * @author wyj on 14/6/26
      * @example
      *
@@ -247,10 +256,10 @@
     }
     Zwt.valueFn = valueFn;
     /**
-     * @dexcription 反转key value  用于forEach
+     * @description 反转key value  用于forEach
      * @method reverseParams
      * @param {Function} iteratorFn
-     * @returns {Function}
+     * @return {Function}
      * @author wyj on 14/6/26
      * @example
      */
@@ -263,7 +272,7 @@
      * @method hasKey
      * @param {Object} obj 检测对象
      * @param {Sting} key 检测键
-     * @returns {boolean|*}
+     * @return {boolean|*}
      * @author wyj on 14/5/25
      * @example
      *   var object6 = {name:1,sort:1};
@@ -277,7 +286,7 @@
      * @description 计算hash值
      * @method hashKey
      * @param obj
-     * @returns {string}
+     * @return {string}
      * @author wyj on 14/6/25
      * @example
      * var value = Zwt.hashKey(obj); => 'object:001'
@@ -298,8 +307,9 @@
     Zwt.hashKey = hashKey;
     /**
      * @description 设置hashKey
-     * @param obj
-     * @param h
+     * @method setHashKey
+     * @param {Object} obj
+     * @param {String} h
      */
     function setHashKey(obj, h) {
         if (h) {
@@ -316,7 +326,7 @@
      * @param {Object} obj 过滤对象
      * @param {Function} callback 回调函数
      * @param context
-     * @returns {{}}
+     * @return {{}}
      * @author wyj on 14/5/26
      * @example
      *      var object3 = {name:'a', sort: '1', sId: '000002'};
@@ -341,8 +351,9 @@
     Zwt.pick = pick;
     /**
      * @description 获取对象属性值
-     * @param key
-     * @returns {Function}
+     * @method property
+     * @param {Object} key
+     * @return {Function}
      */
     function property(key) {
         return function(object) {
@@ -356,7 +367,7 @@
      * @param {Function} func 方法
      * @param {Number} ms 缓冲时间
      * @param context
-     * @returns {Function}
+     * @return {Function}
      * @author wyj on 14/5/24
      * @example
      *     Zwt.buffer(function(){}, 5);
@@ -370,12 +381,91 @@
         }, wait);
     }
     Zwt.delay = delay;
+    /**
+     * @description 模块定义
+     * @method define
+     * @param {String} name 模块名称
+     * @param {String} dependencies 模块描述
+     * @param {Function} factory 方法
+     * @return {*}
+     * @author wyj on 14/6/29
+     * @example
+     *
+     */
+    function define(name, dependencies, factory) {
+        if (!moduleMap[name]) {
+            var module = {
+                name: name,
+                dependencies: dependencies,
+                factory: factory
+            };
+            moduleMap[name] = module;
+        }
+        return moduleMap[name];
+    }
+    Zwt.define = define;
+    /**
+     * @description 模块请求
+     * @method require
+     * @param {String} pathArr 文件中第
+     * @param {Function} callback 回调函数
+     * @author wyj on 14/6/29
+     * @example
+     *
+     */
+    function require(pathArr, callback) {
+        for (var i = 0; i < pathArr.length; i++) {
+            var path = pathArr[i];
+            if (!fileMap[path]) {
+                var head = document.getElementsByTagName('head')[0];
+                var node = document.createElement('script');
+                node.type = 'text/javascript';
+                node.async = 'true';
+                node.src = path + '.js';
+                node.onload = function () {
+                    fileMap[path] = true;
+                    head.removeChild(node);
+                    checkAllFiles();
+                };
+                head.appendChild(node);
+            }
+        }
+        function checkAllFiles() {
+            var allLoaded = true;
+            for (var i = 0; i < pathArr.length; i++) {
+                if (!fileMap[pathArr[i]]) {
+                    allLoaded = false;
+                    break;
+                }
+            }
+            if (allLoaded) {
+                callback();
+            }
+        }
+    }
+    Zwt.require = require;
+    function use(name) {
+        var module = moduleMap[name];
+        if (!module.entity) {
+            var args = [];
+            for (var i=0; i<module.dependencies.length; i++) {
+                if (moduleMap[module.dependencies[i]].entity) {
+                    args.push(moduleMap[module.dependencies[i]].entity);
+                }
+                else {
+                    args.push(this.use(module.dependencies[i]));
+                }
+            }
+            module.entity = module.factory.apply(noop, args);
+        }
+        return module.entity;
+    }
 
     // StringUtils =============================================================================================================================================
     /**
      * @description 产生唯一身份标识， 如'012ABC', 若为数字较容易数字溢出
      * @method nextUid
-     * @returns {string}
+     * @return {string}
      * @author wyj on 14/6/23
      * @example
      * var uid = Zwt.nextUid(); => '001'
@@ -404,7 +494,7 @@
      * @description 转换成小写字母
      * @method lowercase
      * @param {String} string 原字符串
-     * @returns {string}
+     * @return {string}
      * @author wyj on 14/6/17
      * @example
      *  Zwt.lowercase("LE"); => le
@@ -417,7 +507,7 @@
      * @description 转换成大写字母
      * @method uppercase
      * @param {String} string 原字符串
-     * @returns {string}
+     * @return {string}
      * @author wyj on 14/6/17
      * @example
      *  Zwt.lowercase("le"); => LE
@@ -432,7 +522,7 @@
      * @method repeat
      * @param {String} target 原字符串
      * @param {Number} n 重复次数
-     * @returns {String} 返回字符串
+     * @return {String} 返回字符串
      * @author wyj on 14-04-23
      * @example
      *      Zwt.repeat('ruby', 2); => rubyruby
@@ -500,7 +590,7 @@
      * @method byteLen
      * @param target 目标字符串
      * @param fix 汉字字节长度，如mysql存储汉字时， 是用3个字节
-     * @returns {Number}
+     * @return {Number}
      * @author wyj on 14-04-23
      * @example
      *      Zwt.byteLen('sfasf我'， 2); => 7
@@ -517,7 +607,7 @@
      * @param target 目标字符串
      * @param length 截取长度
      * @param truncation 结尾符号
-     * @returns {string}
+     * @return {string}
      * @author wyj on 14-04-23
      * @example
      *     Zwt.truncate('aaaaaa', 4, '...'); => 'aaa...'
@@ -534,7 +624,7 @@
      * @param str 目标字符串
      * @param length 截取长度
      * @param truncation 结尾符号
-     * @returns {string}
+     * @return {string}
      * @author wyj on 14-04-25
      * @example
      *     Zwt.cutByte('aaaaaa', 4, '...'); => 'a...'
@@ -569,12 +659,12 @@
     }
     Zwt.cutByte = cutByte;
     /**
-     * @dexcription 替换指定的html标签, 当第3个参数为true时， 删除该标签并删除标签里的内容
+     * @description 替换指定的html标签, 当第3个参数为true时， 删除该标签并删除标签里的内容
      * @method stripTabName
      * @param {String} target 目标字符串
      * @param {String} tagName 标签名称
      * @param {String} deep 是否删除标签内的内容
-     * @returns {string}
+     * @return {string}
      * @method wyj on 14/6/18
      * @example
      * Zwt.stripTagName("<script>a</script>", "script", true)=> ''
@@ -589,7 +679,7 @@
      * @description 移除字符串中所有的script标签。弥补stripTags 方法的缺陷。此方法应在stripTags之前调用
      * @method stripScripts
      * @param {String} target 目标字符串
-     * @returns {string} 返回字符串
+     * @return {string} 返回字符串
      * @author wyj on 14/5/5
      * @example
      *     Zwt.stripScripts("a<script></script>"); => 'a'
@@ -602,7 +692,7 @@
      * @description 移除字符串中的html标签, 若字符串中有script标签，则先调用stripScripts方法
      * @method stripTags
      * @param {String} target 原字符串
-     * @returns {string} 返回新字符串
+     * @return {string} 返回新字符串
      * @author wyj on 14/5/5
      * @example
      *     Zwt.stripTags('aa<div>bb</div>'); => 'aabb'
@@ -615,7 +705,7 @@
      * @description 替换原字符串中的“< > " '”为 “&lt;&gt;&quot;&#39;”
      * @method escapeHTML
      * @param {String} target 原字符串
-     * @returns {String} 返回新字符串
+     * @return {String} 返回新字符串
      * @author wyj on 14/5/5
      * @example
      *     Zwt.escapeHTML('<'); => '&lt;'
@@ -632,7 +722,7 @@
      * @description 替换原字符串中的“&lt;&gt;&quot;&#39;”为 “< > " '”
      * @method unescapeHTML
      * @param {String} target 原字符串
-     * @returns {String} 返回新字符串
+     * @return {String} 返回新字符串
      * @author wyj on 14/5/5
      * @example
      *     Zwt.unescapeHTML('&lt;'); => '<'
@@ -650,8 +740,9 @@
     Zwt.unescapeHTML = unescapeHTML;
     /**
      * @description 将字符串安全格式化为正则表达式的源码
+     * @method escapeRegExp
      * @param {String} target 原字符串
-     * @returns {XML|string|void|*}
+     * @return {*}
      * @author wyj on 14/5/16
      * @example
      *      Zwt.escapeRegExp('aaa/[abc]/') => aaa\/\[abc\]\/;
@@ -693,9 +784,10 @@
     Zwt.pad = pad;
     /**
      * @description 格式化字符串，类似于模板引擎，但轻量级无逻辑
+     * @method format
      * @param {String} str 原字符串
      * @param {Object} object 若占位符为非零整数形式即对象，则键名为点位符
-     * @returns {String} 返回结果字符串
+     * @return {String} 返回结果字符串
      * @author wyj on 14/5/5
      * @example
      *     Zwt.format("Result is #{0}, #{1}", 22, 23); => "Result is 22, 23"
@@ -719,7 +811,7 @@
      * @description 移除字符串左端的空白
      * @method ltrim
      * @param {String} str 原字符串
-     * @returns {String} 返回新字符串
+     * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
      *     Zwt.ltrim('  dd    '); => 'dd    '
@@ -738,7 +830,7 @@
      * @description 移除字符串右端的空白
      * @method rtrim
      * @param {String} str 原字符串
-     * @returns {String} 返回新字符串
+     * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
      *     Zwt.rtrim('  dd    '); => '   dd'
@@ -757,7 +849,7 @@
      * @description 移除字符串两端的空白
      * @method trim
      * @param {String} str 原字符串
-     * @returns {String} 返回新字符串
+     * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
      *     Zwt.trim('  dd    '); => 'dd'
@@ -782,7 +874,7 @@
      * @description 去除字符串中的所有空格
      * @method deepTrim
      * @param {String} str 原字符串
-     * @returns {String} 返回新字符串
+     * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
      *     Zwt.allTrim('a b c'); => 'abc'
@@ -797,7 +889,7 @@
      * @method removeAt
      * @param {Array} list 原数组
      * @param {Nubmer} index 数组索引
-     * @returns {Boolean} 返回是否删除成功
+     * @return {Boolean} 返回是否删除成功
      * @author wyj on 14/5/24
      * @example
      *      Zwt.removeAt(list, dx) => ;
@@ -811,7 +903,7 @@
      * @method arrayRemove
      * @param {Array} array 目标数组
      * @param {*} value 删除元素
-     * @returns {*}
+     * @return {*}
      * @author wyj on 14/6/23
      * @example
      * var list = ['a', 'b', 'b'];
@@ -828,7 +920,7 @@
      * @description 获取对象的所有KEY值
      * @method keys
      * @param {Object} obj 目标对象
-     * @returns {Array}
+     * @return {Array}
      * @author wyj on 14/5/25
      * @example
      *   Zwt.keys({name:1,sort:1}); =>
@@ -845,7 +937,7 @@
      * @description 用来辨别 给定的对象是否匹配指定键/值属性的列表
      * @method matches
      * @param attrs
-     * @returns {Function}
+     * @return {Function}
      * @author wyj on 14/6/26
      * @example
      */
@@ -883,11 +975,12 @@
     Zwt.filter = filter;
 
     /**
-     * description 数组中查找符合条件的索引值
+     * description 数组中查找符合条件的索引值 比较原始值用indexOf
+     * @method findIndex
      * @param array
      * @param {Function} callback 回调函数
      * @param {Object} context 上下文
-     * @returns {number}
+     * @return {number}
      * @author wyj on 14/6/29
      * @example
      * var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
@@ -911,13 +1004,12 @@
 
 
     /**
-     * @description 数组转化为object
+     * @description 数组转化为object 如果对象key值为数字类型， 则按数字从小到大排序
      * @method arrayToObject
      * @param {Array} list 目标数组
      * @param {String} name key
      * @param {String} val value
-     * @returns {Object} object
-     * @warn 如果对象key值为数字类型， 则按数字从小到大排序
+     * @return {Object} object
      * @author wyj on 14/5/24
      * @example
      *      var list4 = [{key:'key1',value:'value1'},{key:'key2',value:'value2'}];
@@ -936,9 +1028,9 @@
     Zwt.arrayToObject = arrayToObject;
     /**
      * @description 对象转化为数组
-     * @mothod arrayFromObject
+     * @method arrayFromObject
      * @param {Object} obj 待转化的对象
-     * @returns {Array} 返回数组
+     * @return {Array} 返回数组
      * @author wyj on 14/5/24
      * @example
      *      var object5 = {key1: 'value1',key2: 'value2'};
@@ -1039,7 +1131,7 @@
      * @param {Array} obj 目标数组
      * @param callback 回调函数
      * @param context 上下文
-     * @returns {Array} 返回数组
+     * @return {Array} 返回数组
      * @author wyj on 14/6/23
      * @example
      * var list = [1, 2, 3];
@@ -1060,7 +1152,7 @@
      * @description 字符串转化成MAP对象，以逗号隔开， 用于FORM表单
      * @method makeMap
      * @param str
-     * @returns {{}}
+     * @return {{}}
      * @author wyj on 14/6/23
      * @example
      * var object = Zwt.makeMap("a, aa, aaa"); => {"a":true, "aa": true, "aaa": true}
@@ -1077,7 +1169,7 @@
      * @method indesOf
      * @param array
      * @param obj
-     * @returns {*}
+     * @return {*}
      * @author wyj on 14/6/23
      * @example
      * var list = ['a', 'b'];
@@ -1101,7 +1193,7 @@
      * @param naturalH 图片高度
      * @param targetW 展示框宽度
      * @param targetH 展示框高度
-     * @returns {{width: *, height: *, marginTop: number, marginLeft: number}}
+     * @return {{width: *, height: *, marginTop: number, marginLeft: number}}
      * @author wyj on 14-04-24
      * @example
      *```$.each($(".imageCrop"), function(){
@@ -1283,7 +1375,7 @@
      * @method getMaxPage
      * @param {number} totalCount 总条数
      * @param {number} pageSize 每页显示的条数
-     * @returns {number} 返回最大页数
+     * @return {number} 返回最大页数
      * @author wyj on 14-04-26
      * @example
      * ````Zwt.getMaxPage(parseInt(50), parseInt(10)); => 5
@@ -1297,7 +1389,7 @@
      * @method getMaxPage_2
      * @param { Number} totalCount otalCount 总条数
      * @param {Number} pageSize pageSize 每页显示的条数
-     * @returns {Number} 返回最大页数
+     * @return {Number} 返回最大页数
      * @author wyj on 14/04/26
      * @example
      *     Zwt.getMaxPage(parseInt(50), parseInt(10)); => 5
@@ -1312,7 +1404,7 @@
      * @param {Array} pageList  全部列表
      * @param page 当前页
      * @param pageSize  每页显示几条
-     * @returns {Array} 返回结果集
+     * @return {Array} 返回结果集
      * @author wyj on 14-04-26
      * @example
      * ````Zwt.getListByPage(pageList, page, pageSize);
@@ -1339,7 +1431,7 @@
      * @param {Number} page 当前页
      * @param {Number} totalPage 总页数
      * @param {Number} length 显示数
-     * @returns {Array} 返回数字集
+     * @return {Array} 返回数字集
      * @example
      *     Zwt.getPaginajtionNumber(parseInt(6), parseInt(50), 9); => 3,4,5,6,7,8,9
      */
@@ -1373,12 +1465,12 @@
     // CacheUtils
     /**
      * @description 数据缓存
-     * @mehtod getCache
+     * @method getCache
      * @param {String} uId 唯一标识符
      * @param {Object} ctx 缓存对象
      * @param {String} options.area 缓存分区
      * @param {Object} options {Function} options.getData 获取待缓存的数据
-     * @returns {*} 返回缓存数据
+     * @return {*} 返回缓存数据
      * @author wyj on 14/5/3
      * @example
      *     Zwt.getCache('uId', session, {
@@ -1411,7 +1503,7 @@
      * @param {Element} target 目标元素
      * @param {String} parentClass 父模块class选择符
      * @param {Object} $  jquery对象 或 其它
-     * @returns {string} 返回当前元素的选择符
+     * @return {string} 返回当前元素的选择符
      * @author wyj on 14/5/5
      * @example
      *     Zwt.getSelector($('#gird-li').get(0), 'moveChild')) => ;
@@ -1436,7 +1528,7 @@
      * @description 获取元素的标签符号 , 大写的转换成小写的
      * @method getTagName
      * @param {Element} target 目标元素
-     * @returns {string} 返回标签符号
+     * @return {string} 返回标签符号
      * @author wyj on 14/5/6
      * @example
      *     Zwt.getTagName(document.getElementById('a')); ==>　'div'
@@ -1451,7 +1543,7 @@
      * @method dateFormat
      * @param {String} date 时间
      * @param {String} fmt 格式化规则 如‘yyyy-MM-dd’
-     * @returns {String} 返回格式化时间
+     * @return {String} 返回格式化时间
      * @author wyj on 14/5/3
      * @example
      *     Zwt.dateFormat(new Date(), 'yyyy-MM-dd'); => '2014-05-03'
@@ -1482,9 +1574,11 @@
     // DomUtils
     /**
      * @description 清空该元素下面的所有子节点【大数据量时】 在数据量小的情况下可以用jQuery的empty()方法
+     * parentNode必须为DOM对象，$('#selector').get(0);
+     * @method clearAllNode
      * @param parentNode
+     * @return {*}
      * @author wyj on 14-04-26
-     * @warning parentNode必须为DOM对象，$('#selector').get(0);
      * @example
      * ````Zwt.clearAllNode(document.getElementById("showResFilesContent"));
      */
@@ -1500,7 +1594,7 @@
     /**
      * @description 判断是否是IE浏览器，并返回版本号
      * @method msie
-     * @returns {mise}
+     * @return {mise}
      * @author wyj on 14/6/17
      * @example
      * Zwt.msie(); => 7
@@ -1521,7 +1615,7 @@
      * @method getUrlParam
      * @param {String} name 参数名称
      * @param {String} url 指定URL
-     * @returns {String} 不存在返回NULL
+     * @return {String} 不存在返回NULL
      * @author wyj on 14-04-26
      * @example
      *      (function($, Zwt){ $.getUrlParam = Zwt.getUrlParam;})(jQuery, Zwt);
@@ -1538,7 +1632,7 @@
      * @description 过滤地址
      * @method urlResolve
      * @param {String} url
-     * @returns  {*}
+     * @return  {*}
      * @author wyj on 14/6/26
      * @example
      *
