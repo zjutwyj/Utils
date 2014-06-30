@@ -388,7 +388,7 @@
     }
     Est.delay = delay;
     /**
-     * @description 模块定义
+     * @description 模块定义 如果项目中存在require.js 则调用require.js
      * @method define
      * @param {String} name 模块名称
      * @param {Array} dependencies 依赖模块
@@ -399,6 +399,7 @@
      *
      */
     Est.define = function(name, dependencies, factory) {
+        if (typeof define === 'function' && define.amd) return define;
         if (!moduleMap[name]) {
             var module = {
                 name: name,
@@ -409,11 +410,8 @@
         }
         return moduleMap[name];
     }
-    Est.define('Est', [], function(){
-        return Est;
-    });
     /**
-     * @description 模块请求
+     * @description 模块请求 如果项目中存在require.js 则调用require.js
      * @method require
      * @param {String} pathArr 文件中第
      * @param {Function} callback 回调函数
@@ -422,6 +420,7 @@
      *
      */
     Est.require = function(pathArr, callback) {
+        if (typeof define === 'function' && define.amd) return require;
         for (var i = 0; i < pathArr.length; i++) {
             var path = pathArr[i];
             if (!fileMap[path]) {
@@ -1714,6 +1713,10 @@
     // request.js
     if (typeof define === 'function' && define.amd) {
         define('Est', [], function() {
+            return Est;
+        });
+    } else{
+        Est.define('Est', [], function(){
             return Est;
         });
     }

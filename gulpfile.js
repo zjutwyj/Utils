@@ -10,7 +10,7 @@ var del = require('del');
 
 var paths = {
     scripts: ['Est.source.js'],
-    images: 'example/source/images/*'
+    images: 'vendor/images/*'
 };
 
 gulp.task('clean', function(cb) {
@@ -31,7 +31,7 @@ gulp.task('yuidoc', ['clean'], function() {
 gulp.task('images', ['clean'], function() {
     return gulp.src(paths.images)
         .pipe(imagemin({optimizationLevel: 5}))
-        .pipe(gulp.dest('build/img'));
+        .pipe(gulp.dest('dist/vendor/images'));
 });
 
 gulp.task('watch', function() {
