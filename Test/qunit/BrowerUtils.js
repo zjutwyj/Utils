@@ -21,8 +21,8 @@ QUnit.test("Est.urlResolve", function(assert){
         "hash": "",
         "host": "localhost:63342",
         "hostname": "localhost",
-        "href": "http://localhost:63342/Utils/example/Test/qunit.html",
-        "pathname": "/Utils/example/Test/qunit.html",
+        "href": "http://localhost:63342/Utils/test/qunit.html",
+        "pathname": "/Utils/test/qunit.html",
         "port": "63342",
         "protocol": "http",
         "search": ""
