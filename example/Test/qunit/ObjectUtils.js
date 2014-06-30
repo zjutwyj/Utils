@@ -56,3 +56,28 @@ QUnit.test("Zwt.isEmpty", function(assert){
     var result5 = Zwt.isEmpty(obj1);
     assert.ok(!result5, "passed!");
 });
+
+QUnit.test("Zwt.define", function(assert){
+    var result = 2;
+    Zwt.define('moduleA', [], function(){
+        return {
+            getData: function(){
+                return 1;
+            }
+        }
+    });
+    Zwt.define('moduleB', ['moduleA'], function(moduleA){
+        result = moduleA.getData();
+        return {
+            getResult : function(){
+                return result;
+            }
+        }
+    });
+    Zwt.define('moduleC', ['moduleB', 'Zwt'], function(mod, utils){
+        var result = utils.pad(mod.getResult(), 5, '0', false);
+        console.log(result);
+    });
+    Zwt.use('moduleC');
+    assert.equal(result, 1, 'passed!');
+});

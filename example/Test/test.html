@@ -1812,6 +1812,10 @@ QUnit.test('filter', function(assert){
     assert.equal(result, 0, 'test findIndex passed!');
     assert.equal(result2, 110, 'test findIndex passed!');
     assert.equal(result3, 90, 'test findIndex passed!');
+
+    var list3 = [ {name: 1, sort: 1}, {name: 2, sort: 2}, {name: 3, sort: 3}, {name: 4, sort: 4} ];
+    Zwt.arrayInsert(list3, 3, 1, {column: 'sort', callback: function (list) { }});
+    [ {name: 1, sort: 1}, {name: 4, sort: 2}, {name: 2, sort: 3}, {name: 3, sort: 4} ]
 });
 </script>
 </body>
