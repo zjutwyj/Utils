@@ -14,7 +14,7 @@
 <script src="../source/js/jquery.min.js"></script>
 <script src="qunit/qunit-1.14.0.js"></script>
 <script type="text/javascript" src="../source/js/lodash.js"></script>
-<script type="text/javascript" src="../../zwt.min.js"></script>
+<script type="text/javascript" src="../../Est.min.js"></script>
 <!--<script src="../source/js/angular-1.2.15.js"></script>
 <script type="text/javascript">
     var app = angular.module('ngApp', []).run(function(){ });
@@ -1802,11 +1802,11 @@
             thumbnail_path: 'upload/d/d1/dabao/picture/2013/05/07/4cb3818d-1ab9-411f-9ef1-92184f71fcf0_5.jpg' } ];
 QUnit.test('filter', function(assert){
     var array = [1, 2, 3];
-    var result = Zwt.indexOf(array, 1);
-    var result2 = Zwt.findIndex(list, function(item){
+    var result = Est.indexOf(array, 1);
+    var result2 = Est.findIndex(list, function(item){
         return item.name.indexOf('笔记本') > -1;
     });
-    var result3 = Zwt.findIndex(list, function(item){
+    var result3 = Est.findIndex(list, function(item){
         return item.name.indexOf('需') > -1;
     });
     assert.equal(result, 0, 'test findIndex passed!');
@@ -1814,7 +1814,7 @@ QUnit.test('filter', function(assert){
     assert.equal(result3, 90, 'test findIndex passed!');
 
     var list3 = [ {name: 1, sort: 1}, {name: 2, sort: 2}, {name: 3, sort: 3}, {name: 4, sort: 4} ];
-    Zwt.arrayInsert(list3, 3, 1, {column: 'sort', callback: function (list) { }});
+    Est.arrayInsert(list3, 3, 1, {column: 'sort', callback: function (list) { }});
     [ {name: 1, sort: 1}, {name: 4, sort: 2}, {name: 2, sort: 3}, {name: 3, sort: 4} ]
 });
 </script>

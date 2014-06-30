@@ -9,7 +9,7 @@ var yuidoc = require("gulp-yuidoc");
 var del = require('del');
 
 var paths = {
-    scripts: ['zwt.source.js'],
+    scripts: ['Est.source.js'],
     images: 'example/source/images/*'
 };
 
@@ -20,7 +20,7 @@ gulp.task('clean', function(cb) {
 gulp.task('scripts', ['clean'], function() {
     return gulp.src(paths.scripts)
         .pipe(uglify())
-        .pipe(concat('zwt.min.js'))
+        .pipe(concat('Est.min.js'))
         .pipe(gulp.dest(''));
 });
 gulp.task('yuidoc', ['clean'], function() {

@@ -6,10 +6,10 @@
 QUnit.module( "【CacheUtils】" );
 
 
-QUnit.test("Zwt.getCache", function(assert){
+QUnit.test("Est.getCache", function(assert){
     var session = {},
         cache_data = {name:1};
-    Zwt.getCache('uId', session, {
+    Est.getCache('uId', session, {
         area : 'dd',
         getData : function(){
             return cache_data;

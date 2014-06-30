@@ -6,7 +6,7 @@
 ;
 (function (window, document, undefined) {
     'use strict';
-    var utils = window.Zwt, // 工具类
+    var utils = window.Est, // 工具类
         jqLite = window.jQuery, // Dom操作类
         angularModule,
         angular = window.angular || (window.angular = {});

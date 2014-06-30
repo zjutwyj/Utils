@@ -5,8 +5,8 @@
  */
 QUnit.module( "【DomUtils】" );
 
-QUnit.test("Zwt.clearAllNode", function(assert){
-    Zwt.clearAllNode(document.getElementById("clearAllNodeDiv"));
+QUnit.test("Est.clearAllNode", function(assert){
+    Est.clearAllNode(document.getElementById("clearAllNodeDiv"));
     var size = $("#clearAllNodeDiv span").size();
     assert.equal(size,  0, 'passed!');
 });

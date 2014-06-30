@@ -5,7 +5,7 @@
  */
 QUnit.module( "【CssUtils】" );
 
-QUnit.test("Zwt.getSelector", function(assert){
-    var selector = Zwt.getSelector($('#qunit').get(0), 'moveChild', $);
+QUnit.test("Est.getSelector", function(assert){
+    var selector = Est.getSelector($('#qunit').get(0), 'moveChild', $);
     assert.equal(selector, '#wide_product #qunit', 'passed!');
 });

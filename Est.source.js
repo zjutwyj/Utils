@@ -1,8 +1,8 @@
 /**
  * 工具类库.
  *
- * @class Zwt
- * @constructor Zwt
+ * @class Est
+ * @constructor Est
  */
 ;(function() {'use strict';
     var root = this;
@@ -21,29 +21,29 @@
     var fileMap = {};
     var noop = function () {};
 
-    // 创建Zwt对象
-    var Zwt = function(obj) {
-        if (obj instanceof Zwt) return obj;
-        if (!(this instanceof Zwt)) return new Zwt(obj);
+    // 创建Est对象
+    var Est = function(obj) {
+        if (obj instanceof Est) return obj;
+        if (!(this instanceof Est)) return new Est(obj);
         this._wrapped = obj;
     };
-    Zwt.version = '1.1.0';
+    Est.version = '1.1.0';
     // 用于node.js 导出
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
-            exports = module.exports = Zwt;
+            exports = module.exports = Est;
         }
-        exports.Zwt = Zwt;
+        exports.Est = Est;
     } else {
-        root.Zwt = Zwt;
+        root.Est = Est;
     }
     function identity(value) {
         return value;
     }
-    Zwt.identity = identity;
+    Est.identity = identity;
     var lookupIterator = function(value, context, argCount) {
-        if (value == null) return Zwt.identity;
-        if (Zwt.isFunction(value)) return createCallback(value, context, argCount);
+        if (value == null) return Est.identity;
+        if (Est.isFunction(value)) return createCallback(value, context, argCount);
         if (typeOf(value) === 'object') return matches(value);
         return property(value);
     };
@@ -78,8 +78,8 @@
      * @param {Object} context 上下文
      * @return {Object}
      * @example
-     *     Zwt.each([1, 2, 3], alert); => alerts each number in turn...
-     *     Zwt.each({one: 1, two: 2, three: 3}, alert); => alerts each number value in turn...
+     *     Est.each([1, 2, 3], alert); => alerts each number in turn...
+     *     Est.each({one: 1, two: 2, three: 3}, alert); => alerts each number value in turn...
      */
     function each(obj, callback, context) {
         var i, length, first = false, last = false;
@@ -99,7 +99,7 @@
         }
         return obj;
     };
-    Zwt.each = Zwt.forEach = each;
+    Est.each = Est.forEach = each;
     /**
      * @description 复制source对象中的所有属性覆盖到destination对象上，并且返回 destination 对象.
      * 复制是按顺序的, 所以后面的对象属性会把前面的对象属性覆盖掉(如果有重复).
@@ -108,9 +108,9 @@
      * @return {Object} 返回 destination 对象
      * @author wyj on 14/5/22
      * @example
-     *      Zwt.extend({name: 'moe'}, {age: 50}); => {name: 'moe', age: 50}
+     *      Est.extend({name: 'moe'}, {age: 50}); => {name: 'moe', age: 50}
      */
-    Zwt.extend = function(obj) {
+    Est.extend = function(obj) {
         var h = obj.$$hashKey;
         if (typeOf(obj) !== 'object') return obj;
         each(slice.call(arguments, 1), function(source) {
@@ -128,7 +128,7 @@
      * @param {Object} extra 额外对象
      * @return {*}
      * @example
-     *      var target = {x:'dont change me'};var newObject = Zwt.inherit(target); =>
+     *      var target = {x:'dont change me'};var newObject = Est.inherit(target); =>
      *      dont change me
      */
     function inherit(target, extra){
@@ -141,7 +141,7 @@
         fn.prototype = target;
         return new fn();
     }
-    Zwt.inherit = inherit;
+    Est.inherit = inherit;
 
     if (typeof /./ !== 'function') {
         /**
@@ -151,9 +151,9 @@
          * @return {boolean}
          * @author wyj on 14/5/22
          * @example
-         *      Zwt.isFunction(alert); => true
+         *      Est.isFunction(alert); => true
          */
-        Zwt.isFunction = function(obj) {
+        Est.isFunction = function(obj) {
             return typeof obj === 'function';
         };
     }
@@ -164,12 +164,12 @@
      * @return {Array} 返回包含方法数组
      * @author wyj on 14/5/22
      * @example
-     *      Zwt.functions(Zwt); => ["all", "any", "bind", "bindAll", "clone", "compact", "compose" ...
+     *      Est.functions(Est); => ["all", "any", "bind", "bindAll", "clone", "compact", "compose" ...
      */
-    Zwt.functions = Zwt.methods = function(obj) {
+    Est.functions = Est.methods = function(obj) {
         var names = [];
         for (var key in obj) {
-            if (Zwt.isFunction(obj[key])) names.push(key);
+            if (Est.isFunction(obj[key])) names.push(key);
         }
         return names.sort();
     };
@@ -181,15 +181,15 @@
      * @author wyj on 14/5/22
      * @example
      *      var stooges = [{name: 'curly', age: 25}, {name: 'moe', age: 21}, {name: 'larry', age: 23}];
-     *      var youngest = Zwt.chain(stooges)
+     *      var youngest = Est.chain(stooges)
      *          .sortBy(function(stooge){ return stooge.age; })
      *          .map(function(stooge){ return stooge.name + ' is ' + stooge.age; })
      *          .first()
      *          .value();
      *      => "moe is 21"
      */
-    Zwt.chain = function(obj) {
-        return Zwt(obj).chain();
+    Est.chain = function(obj) {
+        return Est(obj).chain();
     };
     /**
      * @description 如果对象 object 中的属性 property 是函数, 则调用它, 否则, 返回它。
@@ -199,11 +199,11 @@
      * @author wyj on 14/5/22
      * @example
      *      var object = {cheese: 'crumpets', stuff: function(){ return 'nonsense'; }};
-     *      Zwt.result(object, 'cheese'); => "crumpets"
-     *      Zwt.result(object, 'stuff'); => "nonsense"
+     *      Est.result(object, 'cheese'); => "crumpets"
+     *      Est.result(object, 'stuff'); => "nonsense"
      */
     var result = function(obj) {
-        return this._chain ? Zwt(obj).chain() : obj;
+        return this._chain ? Est(obj).chain() : obj;
     };
     // ObjectUtils
     /**
@@ -213,7 +213,7 @@
      * @return {*|string}
      * @author wyj on 14/5/24
      * @example
-     *      Zwt.typeOf(Zwt); => 'object'
+     *      Est.typeOf(Est); => 'object'
      */
     function typeOf(target){
         var _type = {"undefined" : "undefined", "number": "number", "boolean": "boolean", "string": "string",
@@ -221,7 +221,7 @@
             "[object Date]" : "date", "[object Error]" : "error" ,"[object File]":"file", "[object Blob]":"blob"};
         return _type[typeof target] || _type[toString.call(target)] || (target ? "object" : "null");
     }
-    Zwt.typeOf = typeOf;
+    Est.typeOf = typeOf;
     /**
      * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined)
      * @method isEmpty
@@ -229,7 +229,7 @@
      * @return {boolean}
      * @author wyj on 14/6/26
      * @example
-     *      Zwt.isEmpty(value); => false
+     *      Est.isEmpty(value); => false
      */
     function isEmpty(value) {
         var result = true;
@@ -237,7 +237,7 @@
         var className = toString.call(value),
             length = value.length;
         if ((className == '[object Array]' || className == '[object String]' || className == '[object Arguments]' ) ||
-            (className == '[object Object]' && typeof length == 'number' && Zwt.isFunction(value.splice))) {
+            (className == '[object Object]' && typeof length == 'number' && Est.isFunction(value.splice))) {
             return !length;
         }
         each(value, function() {
@@ -245,7 +245,7 @@
         });
         return result;
     }
-    Zwt.isEmpty = isEmpty;
+    Est.isEmpty = isEmpty;
     /**
      * @description 返回值函数
      * @method valueFn
@@ -260,7 +260,7 @@
             return value;
         };
     }
-    Zwt.valueFn = valueFn;
+    Est.valueFn = valueFn;
     /**
      * @description 反转key value  用于forEach
      * @method reverseParams
@@ -272,7 +272,7 @@
     function reverseParams(iteratorFn) {
         return function(value, key) { iteratorFn(key, value); };
     }
-    Zwt.reverseParams = reverseParams;
+    Est.reverseParams = reverseParams;
     /**
      * @description [2]判断对象是否含有某个键 不是原型对象
      * @method hasKey
@@ -282,12 +282,12 @@
      * @author wyj on 14/5/25
      * @example
      *      var object6 = {name:1,sort:1};
-     *      Zwt.hasKey(object6, 'name') => true
+     *      Est.hasKey(object6, 'name') => true
      */
     function hasKey(obj, key) {
         return obj != null && hasOwnProperty.call(obj, key);
     }
-    Zwt.hasKey = hasKey;
+    Est.hasKey = hasKey;
     /**
      * @description 计算hash值
      * @method hashKey
@@ -295,7 +295,7 @@
      * @return {string}
      * @author wyj on 14/6/25
      * @example
-     *      var value = Zwt.hashKey(obj); => 'object:001'
+     *      var value = Est.hashKey(obj); => 'object:001'
      */
     function hashKey(obj) {
         var objType = typeof obj, key;
@@ -310,7 +310,7 @@
         }
         return objType + ':' + key;
     }
-    Zwt.hashKey = hashKey;
+    Est.hashKey = hashKey;
     /**
      * @description 设置hashKey
      * @method setHashKey
@@ -325,7 +325,7 @@
             delete obj.$$hashKey;
         }
     }
-    Zwt.setHashKey = setHashKey;
+    Est.setHashKey = setHashKey;
     /**
      * @description [3]过滤对象字段
      * @method pick
@@ -336,7 +336,7 @@
      * @author wyj on 14/5/26
      * @example
      *      var object3 = {name:'a', sort: '1', sId: '000002'};
-     *      Zwt.pick(object3, ['name','sort']) =>
+     *      Est.pick(object3, ['name','sort']) =>
      *      {"name":"a","sort":"1"}
      */
     function pick(obj, callback, context) {
@@ -354,7 +354,7 @@
         }
         return result;
     }
-    Zwt.pick = pick;
+    Est.pick = pick;
     /**
      * @description 获取对象属性值
      * @method property
@@ -366,7 +366,7 @@
             return object[key];
         };
     }
-    Zwt.property = property;
+    Est.property = property;
     /**
      * @description 避免在 ms 段时间内，多次执行func。常用 resize、scoll、mousemove等连续性事件中
      * @method delay
@@ -376,7 +376,7 @@
      * @return {Function}
      * @author wyj on 14/5/24
      * @example
-     *     Zwt.buffer(function(){}, 5);
+     *     Est.buffer(function(){}, 5);
      */
     function delay(func, wait){
         if (typeOf(func) !== 'function') {
@@ -386,7 +386,7 @@
             func.apply(undefined, slice.call(arguments));
         }, wait);
     }
-    Zwt.delay = delay;
+    Est.delay = delay;
     /**
      * @description 模块定义
      * @method define
@@ -398,7 +398,7 @@
      * @example
      *
      */
-    Zwt.define = function(name, dependencies, factory) {
+    Est.define = function(name, dependencies, factory) {
         if (!moduleMap[name]) {
             var module = {
                 name: name,
@@ -409,8 +409,8 @@
         }
         return moduleMap[name];
     }
-    Zwt.define('Zwt', [], function(){
-        return Zwt;
+    Est.define('Est', [], function(){
+        return Est;
     });
     /**
      * @description 模块请求
@@ -421,7 +421,7 @@
      * @example
      *
      */
-    Zwt.require = function(pathArr, callback) {
+    Est.require = function(pathArr, callback) {
         for (var i = 0; i < pathArr.length; i++) {
             var path = pathArr[i];
             if (!fileMap[path]) {
@@ -467,7 +467,7 @@
         }
         return module.entity;
     }
-    Zwt.use = use;
+    Est.use = use;
 
     // StringUtils =============================================================================================================================================
     /**
@@ -476,7 +476,7 @@
      * @return {string}
      * @author wyj on 14/6/23
      * @example
-     *      var uid = Zwt.nextUid(); => '001'
+     *      var uid = Est.nextUid(); => '001'
      */
     function nextUid() {
         var index = uid.length, digit;
@@ -497,7 +497,7 @@
         uid.unshift('0');
         return uid.join('');
     }
-    Zwt.nextUid = nextUid;
+    Est.nextUid = nextUid;
     /**
      * @description 转换成小写字母
      * @method lowercase
@@ -505,12 +505,12 @@
      * @return {string}
      * @author wyj on 14/6/17
      * @example
-     *      Zwt.lowercase("LE"); => le
+     *      Est.lowercase("LE"); => le
      */
     function lowercase(string){
         return typeOf(string) === 'string' ? string.toLowerCase() : string;
     }
-    Zwt.lowercase = lowercase;
+    Est.lowercase = lowercase;
     /**
      * @description 转换成大写字母
      * @method uppercase
@@ -518,12 +518,12 @@
      * @return {string}
      * @author wyj on 14/6/17
      * @example
-     *      Zwt.lowercase("le"); => LE
+     *      Est.lowercase("le"); => LE
      */
     function uppercase(string){
         return typeOf(string) === 'string' ? string.toUpperCase() : string;
     }
-    Zwt.uppercase = uppercase;
+    Est.uppercase = uppercase;
 
     /**
      * @description 二分法将一个字符串重复自身N次
@@ -533,7 +533,7 @@
      * @return {String} 返回字符串
      * @author wyj on 14-04-23
      * @example
-     *      Zwt.repeat('ruby', 2); => rubyruby
+     *      Est.repeat('ruby', 2); => rubyruby
      */
      function repeat(target, n){
         var s = target, total = '';
@@ -545,7 +545,7 @@
         }
         return total;
     }
-    Zwt.repeat = repeat;
+    Est.repeat = repeat;
     /**
      * @description 判定一个字符串是否包含另一个字符串
      * @method contains
@@ -555,12 +555,12 @@
      * @return {boolean} 返回true/false
      * @author wyj on 14-04-23
      * @example
-     *      Zwt.contains("aaaaa", "aa"); => true
+     *      Est.contains("aaaaa", "aa"); => true
      */
     function contains(target, str, separator){
         return separator ? (separator + target + separator).indexOf(separator + str + separator) > -1 : target.indexOf(str) > -1;
     }
-    Zwt.contains = contains;
+    Est.contains = contains;
     /**
      * @description 判定目标字符串是否位于原字符串的开始之处
      * @method startsWidth
@@ -570,13 +570,13 @@
      * @return {boolean} true/false
      * @author wyj on 14-04-23
      * @example
-     *      Zwt.startsWidth('aaa', 'aa', true); => true
+     *      Est.startsWidth('aaa', 'aa', true); => true
      */
     function startsWith(target, str, ignorecase){
         var start_str = target.substr(0, str.length);
         return ignorecase ? start_str.toLowerCase() === str.toLowerCase() : start_str === str;
     }
-    Zwt.startsWidth = startsWith;
+    Est.startsWidth = startsWith;
     /**
      * @description 判定目标字符串是否位于原字符串的结束之处
      * @method endsWidth
@@ -586,13 +586,13 @@
      * @return {boolean} true/false
      * @author wyj on 14-04-23
      * @example
-     *      Zwt.endsWidth('aaa', 'aa', true); => true
+     *      Est.endsWidth('aaa', 'aa', true); => true
      */
     function endsWidth(target, str, ignorecase){
         var end_str = target.substring(target.length - str.length);
         return ignorecase ? end_str.toLowerCase() === str.toLowerCase() : end_str === str;
     }
-    Zwt.endsWidth = endsWidth;
+    Est.endsWidth = endsWidth;
     /**
      * @description 取得一个字符串所有字节的长度
      * @method byteLen
@@ -601,14 +601,14 @@
      * @return {Number}
      * @author wyj on 14-04-23
      * @example
-     *      Zwt.byteLen('sfasf我'， 2); => 7
+     *      Est.byteLen('sfasf我'， 2); => 7
      */
     function byteLen(target, fix){
         fix = fix ? fix : 2;
         var str = new Array(fix + 1).join('-');
         return target.replace(/[^\x00-\xff]/g, str).length;
     }
-    Zwt.byteLen = byteLen;
+    Est.byteLen = byteLen;
     /**
      * @description 对字符串进行截取处理，默认添加三个点号【版本一】
      * @method truncate
@@ -618,14 +618,14 @@
      * @return {string}
      * @author wyj on 14-04-23
      * @example
-     *     Zwt.truncate('aaaaaa', 4, '...'); => 'aaa...'
+     *     Est.truncate('aaaaaa', 4, '...'); => 'aaa...'
      */
     function truncate(target, length, truncation){
         length = length || 30
         truncation = truncation === void(0) ? "..." : truncation
         return target.length > length ? target.slice(0, length - truncation.length) + truncation : String(target);
     }
-    Zwt.truncate = truncate;
+    Est.truncate = truncate;
     /**
      * @description 对字符串进行截取处理，默认添加三个点号【版本二】
      * @method cutByte
@@ -635,7 +635,7 @@
      * @return {string}
      * @author wyj on 14-04-25
      * @example
-     *     Zwt.cutByte('aaaaaa', 4, '...'); => 'a...'
+     *     Est.cutByte('aaaaaa', 4, '...'); => 'a...'
      */
     function cutByte(str, length, truncation) {
         //提前判断str和length
@@ -665,7 +665,7 @@
             return str;
         }
     }
-    Zwt.cutByte = cutByte;
+    Est.cutByte = cutByte;
     /**
      * @description 替换指定的html标签, 当第3个参数为true时， 删除该标签并删除标签里的内容
      * @method stripTabName
@@ -675,14 +675,14 @@
      * @return {string}
      * @author wyj on 14/6/18
      * @example
-     *      Zwt.stripTagName("<script>a</script>", "script", true)=> ''
-     *      Zwt.stripTagName("<script>a</script>", "script", false)=> 'a'
+     *      Est.stripTagName("<script>a</script>", "script", true)=> ''
+     *      Est.stripTagName("<script>a</script>", "script", false)=> 'a'
      */
     function stripTagName(target, tagName, deep){
         var pattern = deep ? "<" + tagName + "[^>]*>([\\S\\s]*?)<\\\/" + tagName + ">" : "<\/?" + tagName + "[^>]*>";
         return String(target || '').replace(new RegExp(pattern, 'img'), '');
     }
-    Zwt.stripTagName = stripTagName;
+    Est.stripTagName = stripTagName;
     /**
      * @description 移除字符串中所有的script标签。弥补stripTags 方法的缺陷。此方法应在stripTags之前调用
      * @method stripScripts
@@ -690,12 +690,12 @@
      * @return {string} 返回字符串
      * @author wyj on 14/5/5
      * @example
-     *     Zwt.stripScripts("a<script></script>"); => 'a'
+     *     Est.stripScripts("a<script></script>"); => 'a'
      */
     function stripScripts(target){
         return String(target || '').replace(/<script[^>]*>([\S\s]*?)<\/script>/img, '');
     }
-    Zwt.stripScripts = stripScripts;
+    Est.stripScripts = stripScripts;
     /**
      * @description 移除字符串中的html标签, 若字符串中有script标签，则先调用stripScripts方法
      * @method stripTags
@@ -703,12 +703,12 @@
      * @return {string} 返回新字符串
      * @author wyj on 14/5/5
      * @example
-     *     Zwt.stripTags('aa<div>bb</div>'); => 'aabb'
+     *     Est.stripTags('aa<div>bb</div>'); => 'aabb'
      */
     function stripTags(target){
         return String(target || '').replace(/<[^>]+>/img,'');
     }
-    Zwt.stripTags = stripTags;
+    Est.stripTags = stripTags;
     /**
      * @description 替换原字符串中的“< > " '”为 “&lt;&gt;&quot;&#39;”
      * @method escapeHTML
@@ -716,7 +716,7 @@
      * @return {String} 返回新字符串
      * @author wyj on 14/5/5
      * @example
-     *     Zwt.escapeHTML('<'); => '&lt;'
+     *     Est.escapeHTML('<'); => '&lt;'
      */
     function escapeHTML(target){
         return target.replace(/&/mg, '&amp;')
@@ -725,7 +725,7 @@
             .replace(/"/mg, '&quot;')
             .replace(/'/mg, '&#39;');
     }
-    Zwt.escapeHTML = escapeHTML;
+    Est.escapeHTML = escapeHTML;
     /**
      * @description 替换原字符串中的“&lt;&gt;&quot;&#39;”为 “< > " '”
      * @method unescapeHTML
@@ -733,7 +733,7 @@
      * @return {String} 返回新字符串
      * @author wyj on 14/5/5
      * @example
-     *     Zwt.unescapeHTML('&lt;'); => '<'
+     *     Est.unescapeHTML('&lt;'); => '<'
      */
     function unescapeHTML(target){
         target = target || '';
@@ -745,7 +745,7 @@
                 return String.fromCharCode(parseInt($1, 10));
             });
     }
-    Zwt.unescapeHTML = unescapeHTML;
+    Est.unescapeHTML = unescapeHTML;
     /**
      * @description 将字符串安全格式化为正则表达式的源码
      * @method escapeRegExp
@@ -753,12 +753,12 @@
      * @return {*}
      * @author wyj on 14/5/16
      * @example
-     *      Zwt.escapeRegExp('aaa/[abc]/') => aaa\/\[abc\]\/;
+     *      Est.escapeRegExp('aaa/[abc]/') => aaa\/\[abc\]\/;
      */
     function escapeRegExp(target){
         return target.replace(/([-.*+?^${}()|[\]\/\\])/img, '\\$1');
     }
-    Zwt.escapeRegExp = escapeRegExp;
+    Est.escapeRegExp = escapeRegExp;
     /**
      * @description 为字符串的某一端添加字符串。 如：005
      * @method pad
@@ -770,7 +770,7 @@
      * @param {Object} opts {String} opts.prefix 前缀
      * @author wyj on 14/5/5
      * @example
-     *      Zwt.pad(5, 10, '0', false, 10, {prefix:'prefix'}); => prefix0005
+     *      Est.pad(5, 10, '0', false, 10, {prefix:'prefix'}); => prefix0005
      */
     function pad(target, n, filling, right, radix, opts){
         var str = target.toString(radix || 10), prefix = '', length = n;
@@ -789,7 +789,7 @@
         }
         return prefix + str;
     }
-    Zwt.pad = pad;
+    Est.pad = pad;
     /**
      * @description 格式化字符串，类似于模板引擎，但轻量级无逻辑
      * @method format
@@ -798,8 +798,8 @@
      * @return {String} 返回结果字符串
      * @author wyj on 14/5/5
      * @example
-     *     Zwt.format("Result is #{0}, #{1}", 22, 23); => "Result is 22, 23"
-     *     Zwt.format("#{name} is a #{sex}", {name : 'Jhon',sex : 'man'}); => "Jhon is a man"
+     *     Est.format("Result is #{0}, #{1}", 22, 23); => "Result is 22, 23"
+     *     Est.format("#{name} is a #{sex}", {name : 'Jhon',sex : 'man'}); => "Jhon is a man"
      */
     function format(str, object){
         var array = Array.prototype.slice.call(arguments, 1);
@@ -814,7 +814,7 @@
             return '';
         });
     }
-    Zwt.format = format;
+    Est.format = format;
     /**
      * @description 移除字符串左端的空白
      * @method ltrim
@@ -822,7 +822,7 @@
      * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
-     *     Zwt.ltrim('  dd    '); => 'dd    '
+     *     Est.ltrim('  dd    '); => 'dd    '
      */
     function ltrim(str){
         for(var i = 0; i < str.length; i++){
@@ -833,7 +833,7 @@
         }
         return whitespace.indexOf(str.charAt(0)) === -1 ? (str) : '';
     }
-    Zwt.ltrim = ltrim;
+    Est.ltrim = ltrim;
     /**
      * @description 移除字符串右端的空白
      * @method rtrim
@@ -841,7 +841,7 @@
      * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
-     *     Zwt.rtrim('  dd    '); => '   dd'
+     *     Est.rtrim('  dd    '); => '   dd'
      */
     function rtrim(str){
         for(var i = str.length -1; i >= 0; i--){
@@ -852,7 +852,7 @@
         }
         return whitespace.lastIndexOf(str.charAt(str.length-1)) === -1 ? (str) : '';
     }
-    Zwt.rtrim = rtrim;
+    Est.rtrim = rtrim;
     /**
      * @description 移除字符串两端的空白
      * @method trim
@@ -860,7 +860,7 @@
      * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
-     *     Zwt.trim('  dd    '); => 'dd'
+     *     Est.trim('  dd    '); => 'dd'
      */
     function trim(str){
         for(var i = 0; i < str.length; i++){
@@ -877,7 +877,7 @@
         }
         return whitespace.indexOf(str.charAt(0)) === -1 ? (str) : '';
     }
-    Zwt.trim = trim;
+    Est.trim = trim;
     /**
      * @description 去除字符串中的所有空格
      * @method deepTrim
@@ -885,12 +885,12 @@
      * @return {String} 返回新字符串
      * @author wyj on 14/5/6
      * @example
-     *     Zwt.allTrim('a b c'); => 'abc'
+     *     Est.allTrim('a b c'); => 'abc'
      */
     function deepTrim(str){
         return str.toString().replace(/\s*/gm, '');
     }
-    Zwt.deepTrim = deepTrim;
+    Est.deepTrim = deepTrim;
     // ArrayUtils ===============================================================================================================================================
     /**
      * @description 根据索引值移除数组元素
@@ -900,12 +900,12 @@
      * @return {Boolean} 返回是否删除成功
      * @author wyj on 14/5/24
      * @example
-     *      Zwt.removeAt(list, dx) => ;
+     *      Est.removeAt(list, dx) => ;
      */
     function removeAt(list, index){
         return !!list.splice(index, 1).length;
     }
-    Zwt.removeAt = removeAt;
+    Est.removeAt = removeAt;
     /**
      * @description 删除数组中的元素
      * @method arrayRemove
@@ -915,7 +915,7 @@
      * @author wyj on 14/6/23
      * @example
      *      var list = ['a', 'b', 'b'];
-     *      var result = Zwt.arrayRemove(list, 'a'); => ['a', 'b']
+     *      var result = Est.arrayRemove(list, 'a'); => ['a', 'b']
      */
     function arrayRemove(array, value){
         var index = indexOf(array, value);
@@ -923,7 +923,7 @@
             array.splice(index, 1);
         return value;
     }
-    Zwt.arrayRemove = arrayRemove;
+    Est.arrayRemove = arrayRemove;
     /**
      * @description 获取对象的所有KEY值
      * @method keys
@@ -931,7 +931,7 @@
      * @return {Array}
      * @author wyj on 14/5/25
      * @example
-     *      Zwt.keys({name:1,sort:1}); =>
+     *      Est.keys({name:1,sort:1}); =>
      */
     function keys(obj) {
         if (typeOf(obj) !== 'object') return [];
@@ -940,7 +940,7 @@
         for (var key in obj) if (hasKey(obj, key)) keys.push(key);
         return keys;
     }
-    Zwt.keys = keys;
+    Est.keys = keys;
     /**
      * @description 用来辨别 给定的对象是否匹配指定键/值属性的列表
      * @method matches
@@ -957,7 +957,7 @@
             return true;
         };
     }
-    Zwt.matches = matches;
+    Est.matches = matches;
     /**
      * @description 数组过滤
      * @method filter
@@ -967,7 +967,7 @@
      * @author wyj on 14/6/6
      * @example
      *      var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
-     *      var result = Zwt.filter(list, function(item){
+     *      var result = Est.filter(list, function(item){
      *          return item.name.indexOf('b') > -1;
      *      }); => [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ]
      */
@@ -980,7 +980,7 @@
         });
         return results;
     }
-    Zwt.filter = filter;
+    Est.filter = filter;
 
     /**
      * @description 数组中查找符合条件的索引值 比较原始值用indexOf
@@ -992,8 +992,8 @@
      * @author wyj on 14/6/29
      * @example
      *      var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
-     *      var index = Zwt.findIndex(list, {name: 'aa'}); => 0
-     *      var index2 =  Zwt.findIndex(list, function(item){
+     *      var index = Est.findIndex(list, {name: 'aa'}); => 0
+     *      var index2 =  Est.findIndex(list, function(item){
      *          return item.name === 'aa';
      *      }); => 0
      */
@@ -1008,7 +1008,7 @@
         }
         return -1;
     }
-    Zwt.findIndex = findIndex;
+    Est.findIndex = findIndex;
 
 
     /**
@@ -1021,7 +1021,7 @@
      * @author wyj on 14/5/24
      * @example
      *      var list4 = [{key:'key1',value:'value1'},{key:'key2',value:'value2'}];
-     *      Zwt.arrayToObject(list4, 'key', 'value'); =>
+     *      Est.arrayToObject(list4, 'key', 'value'); =>
      *      {key1: 'value1',key2: 'value2'}
      */
     function arrayToObject(list, key, val){
@@ -1033,7 +1033,7 @@
         });
         return obj;
     }
-    Zwt.arrayToObject = arrayToObject;
+    Est.arrayToObject = arrayToObject;
     /**
      * @description 对象转化为数组
      * @method arrayFromObject
@@ -1042,7 +1042,7 @@
      * @author wyj on 14/5/24
      * @example
      *      var obj = {key1: 'value1', key2: 'value2'};
-     *      var result = Zwt.arrayFromObject(obj, 'key', 'value'); =>
+     *      var result = Est.arrayFromObject(obj, 'key', 'value'); =>
      *      [{key: 'key1', value: 'value1'},
      *      {key: 'key2', value: 'value2'}]
      */
@@ -1058,7 +1058,7 @@
         });
         return list;
     }
-    Zwt.arrayFromObject = arrayFromObject;
+    Est.arrayFromObject = arrayFromObject;
     /**
      * @description 交换元素
      * @method arrayExchange
@@ -1069,7 +1069,7 @@
      * @author wyj on 14/5/13
      * @example
      *      var list2 = [{name:1, sort:1},{name:2, sort:2}];
-     *      Zwt.arrayExchange(list2, 0 , 1, {
+     *      Est.arrayExchange(list2, 0 , 1, {
      *          column:'sort',
      *          callback:function(thisNode, targetNode){
      *          }
@@ -1099,7 +1099,7 @@
         list[thisdx] = nextNode;
         list[targetdx] = temp;
     }
-    Zwt.arrayExchange = arrayExchange;
+    Est.arrayExchange = arrayExchange;
     /**
      * @description 数组插序
      * @method arrayInsert
@@ -1110,7 +1110,7 @@
      * @author wyj on 14/5/15
      * @example
      *          var list3 = [{name:1, sort:1},{name:2, sort:2},{name:3, sort:3},{name:4, sort:4}];
-     *          Zwt.arrayInsert(list3, 3 , 1, {column:'sort',callback:function(list){}}); =>
+     *          Est.arrayInsert(list3, 3 , 1, {column:'sort',callback:function(list){}}); =>
      *          [{name:1,sort:1},{name:4,sort:2},{name:2,sort:3},{name:3,sort:4}]
      */
     function arrayInsert(list, thisdx, targetdx, opts) {
@@ -1134,7 +1134,7 @@
             opts.callback.apply(null, [tempList]);
         }
     }
-    Zwt.arrayInsert = arrayInsert;
+    Est.arrayInsert = arrayInsert;
     /**
      * @description 遍历MAP对象
      * @method map
@@ -1145,7 +1145,7 @@
      * @author wyj on 14/6/23
      * @example
      *      var list = [1, 2, 3];
-     *      var result = Zwt.map(list, function(value, list, index){
+     *      var result = Est.map(list, function(value, list, index){
      *      return list[index] + 1;
      *      }); => [2, 3, 4]
      */
@@ -1157,7 +1157,7 @@
         });
         return results;
     }
-    Zwt.map = map;
+    Est.map = map;
     /**
      * @description 字符串转化成MAP对象，以逗号隔开， 用于FORM表单
      * @method makeMap
@@ -1165,7 +1165,7 @@
      * @return {{}}
      * @author wyj on 14/6/23
      * @example
-     *      var object = Zwt.makeMap("a, aa, aaa"); => {"a":true, "aa": true, "aaa": true}
+     *      var object = Est.makeMap("a, aa, aaa"); => {"a":true, "aa": true, "aaa": true}
      */
     function makeMap(str){
         var obj = {}, items = str.split(","), i;
@@ -1173,7 +1173,7 @@
             obj[ items[i] ] = true;
         return obj;
     }
-    Zwt.makeMap = makeMap;
+    Est.makeMap = makeMap;
     /**
      * @description 判断元素是否存在于数组中
      * @method indexOf
@@ -1183,7 +1183,7 @@
      * @author wyj on 14/6/23
      * @example
      *      var list = ['a', 'b'];
-     *      var has = Zwt.indexOf('b'); => 1
+     *      var has = Est.indexOf('b'); => 1
      */
     function indexOf(array, value) {
         if (array.indexOf) return array.indexOf(value);
@@ -1192,7 +1192,7 @@
         }
         return -1;
     }
-    Zwt.indexOf = indexOf;
+    Est.indexOf = indexOf;
 
 
     // ImageUtils ==============================================================================================================================================
@@ -1210,7 +1210,7 @@
      *          $(this).load(function(response, status, xhr){
      *              var w = $(this).get(0).naturalWidth, h = $(this).get(0).naturalHeight;
      *              var width = $(this).attr("data-width"), height = $(this).attr("data-height");
-     *              $(this).css(Zwt.imageCrop(w, h, width, height), 'fast');
+     *              $(this).css(Est.imageCrop(w, h, width, height), 'fast');
      *              $(this).fadeIn('fast');
      *          });
      *      });
@@ -1240,7 +1240,7 @@
         }
         return res;
     }
-    Zwt.imageCrop = imageCrop;
+    Est.imageCrop = imageCrop;
 
     // GirdUtils
     /**
@@ -1261,10 +1261,10 @@
      *                      justifylist.eq(i).css("margin-right", space);
      *                  }
      *              };
-     *          Zwt.girdJustify(justifyOpts);
+     *          Est.girdJustify(justifyOpts);
      *          $(window).bind("resize", function () {
      *              justifyOpts.containerWidth = justifyCont.width();
-     *              Zwt.girdJustify(justifyOpts);
+     *              Est.girdJustify(justifyOpts);
      *          });
      *      </script>
      */
@@ -1293,7 +1293,7 @@
             }
         }
     }
-    Zwt.girdJustify = girdJustify;
+    Est.girdJustify = girdJustify;
     // TreeUtils
     /**
      * @description 构建树
@@ -1309,7 +1309,7 @@
      *              root.push(list[i]);
      *          }
      *      }
-     *      Zwt.bulidSubNode(root, list);
+     *      Est.bulidSubNode(root, list);
      */
     function bulidSubNode(rootlist, totalList, opts) {
         var options = {
@@ -1319,7 +1319,7 @@
             dxs: []
         }
         if (typeof(opts) != 'undefined') {
-            Zwt.extend(options, opts);
+            Est.extend(options, opts);
         }
         if (typeof(options['dxs']) !== 'undefined') {
             for (var k = 0 , len3 = options['dxs'].length; k < len3; k++) {
@@ -1350,7 +1350,7 @@
         }
         return rootlist;
     }
-    Zwt.bulidSubNode = bulidSubNode;
+    Est.bulidSubNode = bulidSubNode;
     /**
      * @description 获取select表单控件样式的树
      * @method bulidSelectNode
@@ -1359,7 +1359,7 @@
      * @param {Object} obj {String} opts.name 字段名称
      * @author wyj on 14/5/15
      * @example
-     *      Zwt.bulidSelectNode(rootlist, 2, {
+     *      Est.bulidSelectNode(rootlist, 2, {
      *          name : 'name'
      *      });
      */
@@ -1378,7 +1378,7 @@
         }
         return rootlist;
     }
-    Zwt.bulidSelectNode = bulidSelectNode;
+    Est.bulidSelectNode = bulidSelectNode;
     // PaginationUtils
     /**
      * @description 获取最大页数
@@ -1388,12 +1388,12 @@
      * @return {number} 返回最大页数
      * @author wyj on 14-04-26
      * @example
-     *      Zwt.getMaxPage(parseInt(50), parseInt(10)); => 5
+     *      Est.getMaxPage(parseInt(50), parseInt(10)); => 5
      */
     function getMaxPage(totalCount, pageSize){
         return totalCount % pageSize == 0 ? totalCount / pageSize : Math.floor(totalCount/pageSize) + 1;
     }
-    Zwt.getMaxPage = getMaxPage;
+    Est.getMaxPage = getMaxPage;
     /**
      * @description 获取最大页数【版本二】
      * @method getMaxPage_2
@@ -1402,12 +1402,12 @@
      * @return {Number} 返回最大页数
      * @author wyj on 14/04/26
      * @example
-     *     Zwt.getMaxPage(parseInt(50), parseInt(10)); => 5
+     *     Est.getMaxPage(parseInt(50), parseInt(10)); => 5
      */
     function getMaxPage_2(totalCount, pageSize){
         return totalCount > pageSize ? Math.ceil(totalCount / pageSize) : 1;
     }
-    Zwt.getMaxPage_2 = getMaxPage_2;
+    Est.getMaxPage_2 = getMaxPage_2;
     /**
      * @description 根据pageList总列表， page当前页   pageSize显示条数  截取列表
      * @method getListByPage
@@ -1417,7 +1417,7 @@
      * @return {Array} 返回结果集
      * @author wyj on 14-04-26
      * @example
-     *      Zwt.getListByPage(pageList, page, pageSize);
+     *      Est.getListByPage(pageList, page, pageSize);
      */
     function getListByPage(pageList, page, pageSize){
         var pageList = pageList,
@@ -1434,7 +1434,7 @@
         }
         return newList;
     }
-    Zwt.getListByPage = getListByPage;
+    Est.getListByPage = getListByPage;
     /**
      * @description 通过当前页、总页数及显示个数获取分页数字
      * @method getPaginationNumber
@@ -1443,7 +1443,7 @@
      * @param {Number} length 显示数
      * @return {Array} 返回数字集
      * @example
-     *      Zwt.getPaginajtionNumber(parseInt(6), parseInt(50), 9); => 3,4,5,6,7,8,9
+     *      Est.getPaginajtionNumber(parseInt(6), parseInt(50), 9); => 3,4,5,6,7,8,9
      */
     function getPaginationNumber(page, totalPage, length){
         var page = parseInt(page, 10),
@@ -1470,7 +1470,7 @@
         }
         return number_list;
     }
-    Zwt.getPaginationNumber = getPaginationNumber;
+    Est.getPaginationNumber = getPaginationNumber;
 
     // CacheUtils
     /**
@@ -1483,7 +1483,7 @@
      * @return {*} 返回缓存数据
      * @author wyj on 14/5/3
      * @example
-     *     Zwt.getCache('uId', session, {
+     *     Est.getCache('uId', session, {
      *          area : 'dd',
      *          getData : function(data){
      *              return cache_data;
@@ -1495,7 +1495,7 @@
             area : 'templates',
             getData : null
         }
-        Zwt.extend(opts, options);
+        Est.extend(opts, options);
         ctx.cache = ctx.cache || {};
         if ( typeof ctx.cache[opts.area] === 'undefined') { ctx.cache[opts.area] = {}; }
         var data = ctx.cache[opts.area][uId];
@@ -1504,7 +1504,7 @@
         }
         return data;
     }
-    Zwt.getCache = getCache;
+    Est.getCache = getCache;
 
     // CssUtils
     /**
@@ -1516,7 +1516,7 @@
      * @return {string} 返回当前元素的选择符
      * @author wyj on 14/5/5
      * @example
-     *     Zwt.getSelector($('#gird-li').get(0), 'moveChild')) => ;
+     *     Est.getSelector($('#gird-li').get(0), 'moveChild')) => ;
      */
     function getSelector(target, parentClass, $){
         var selector = "";
@@ -1533,7 +1533,7 @@
         }
         return isModule ?  selector : '#' + $(target).parents('.moveChild:first').attr('id') + ' ' + selector;
     }
-    Zwt.getSelector = getSelector;
+    Est.getSelector = getSelector;
     /**
      * @description 获取元素的标签符号 , 大写的转换成小写的
      * @method getTagName
@@ -1541,12 +1541,12 @@
      * @return {string} 返回标签符号
      * @author wyj on 14/5/6
      * @example
-     *     Zwt.getTagName(document.getElementById('a')); ==>　'div'
+     *     Est.getTagName(document.getElementById('a')); ==>　'div'
      */
     function getTagName(target){
         return target.tagName.toLowerCase();
     }
-    Zwt.getTagName = getTagName;
+    Est.getTagName = getTagName;
     // DateUtils
     /**
      * @description 格式化时间
@@ -1556,7 +1556,7 @@
      * @return {String} 返回格式化时间
      * @author wyj on 14/5/3
      * @example
-     *     Zwt.dateFormat(new Date(), 'yyyy-MM-dd'); => '2014-05-03'
+     *     Est.dateFormat(new Date(), 'yyyy-MM-dd'); => '2014-05-03'
      */
     function dateFormat(date, fmt){
         var date = date ? new Date(date) : new Date();
@@ -1580,7 +1580,7 @@
         }
         return fmt;
     }
-    Zwt.dateFormat = dateFormat;
+    Est.dateFormat = dateFormat;
     // DomUtils
     /**
      * @description 清空该元素下面的所有子节点【大数据量时】 在数据量小的情况下可以用jQuery的empty()方法
@@ -1590,7 +1590,7 @@
      * @return {*}
      * @author wyj on 14-04-26
      * @example
-     *      Zwt.clearAllNode(document.getElementById("showResFilesContent"));
+     *      Est.clearAllNode(document.getElementById("showResFilesContent"));
      */
     function clearAllNode(parentNode){
         while (parentNode.firstChild) {
@@ -1598,7 +1598,7 @@
             oldNode = null;
         }
     }
-    Zwt.clearAllNode = clearAllNode;
+    Est.clearAllNode = clearAllNode;
 
     // BrowerUtils
     /**
@@ -1607,7 +1607,7 @@
      * @return {mise}
      * @author wyj on 14/6/17
      * @example
-     * Zwt.msie(); => 7
+     *      Est.msie(); => 7
      */
     function msie(){
         var msie = parseInt((/msie (\d+)/.exec(lowercase(navigator.userAgent)) || [])[1], 10);
@@ -1619,7 +1619,7 @@
         }
         return msie;
     }
-    Zwt.msie = msie;
+    Est.msie = msie;
     /**
      * @description 获取浏览器参数列表
      * @method getUrlParam
@@ -1628,7 +1628,7 @@
      * @return {String} 不存在返回NULL
      * @author wyj on 14-04-26
      * @example
-     *      (function($, Zwt){ $.getUrlParam = Zwt.getUrlParam;})(jQuery, Zwt);
+     *      (function($, Est){ $.getUrlParam = Est.getUrlParam;})(jQuery, Est);
      *      console.log($.getUrlParam('name'));
      */
     function getUrlParam(name, url){
@@ -1637,7 +1637,7 @@
         var r = path.substr(1).match(reg);
         if (r!=null) return unescape(r[2]); return null;
     }
-    Zwt.getUrlParam = getUrlParam;
+    Est.getUrlParam = getUrlParam;
     /**
      * @description 过滤地址
      * @method urlResolve
@@ -1667,7 +1667,7 @@
                 : '/' + urlParsingNode.pathname
         };
     }
-    Zwt.urlResolve = urlResolve;
+    Est.urlResolve = urlResolve;
 
 
 
@@ -1678,31 +1678,31 @@
 
 
     /**
-     * @description 实用程序函数扩展Zwt。
-     * 传递一个 {name: function}定义的哈希添加到Zwt对象，以及面向对象封装。
+     * @description 实用程序函数扩展Est。
+     * 传递一个 {name: function}定义的哈希添加到Est对象，以及面向对象封装。
      * @method mixin
      * @param obj
      * @author wyj on 14/5/22
      * @example
-     *      Zwt.mixin({
+     *      Est.mixin({
      *          capitalize: function(string) {
      *              return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
      *          }
      *      });
-     *      Zwt("fabio").capitalize(); => "Fabio"
+     *      Est("fabio").capitalize(); => "Fabio"
      */
-    Zwt.mixin = function(obj) {
-        Zwt.each(Zwt.functions(obj), function(name) {
-            var func = Zwt[name] = obj[name];
-            Zwt.prototype[name] = function() {
+    Est.mixin = function(obj) {
+        Est.each(Est.functions(obj), function(name) {
+            var func = Est[name] = obj[name];
+            Est.prototype[name] = function() {
                 var args = [this._wrapped];
                 push.apply(args, arguments);
-                return result.call(this, func.apply(Zwt, args));
+                return result.call(this, func.apply(Est, args));
             };
         });
     };
-    Zwt.mixin(Zwt);
-    Zwt.extend(Zwt.prototype, {
+    Est.mixin(Est);
+    Est.extend(Est.prototype, {
         chain: function() {
             this._chain = true;
             return this;
@@ -1713,8 +1713,8 @@
     });
     // request.js
     if (typeof define === 'function' && define.amd) {
-        define('Zwt', [], function() {
-            return Zwt;
+        define('Est', [], function() {
+            return Est;
         });
     }
 }.call(this));

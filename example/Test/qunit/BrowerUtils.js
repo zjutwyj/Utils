@@ -5,18 +5,18 @@
  */
 QUnit.module( "【BrowerUtils】" );
 
-QUnit.test("Zwt.msie", function(assert){
-    var result = Zwt.msie();
+QUnit.test("Est.msie", function(assert){
+    var result = Est.msie();
     assert.equal(result, false, "passed!");
 });
-QUnit.test("Zwt.getUrlParam", function(assert){
+QUnit.test("Est.getUrlParam", function(assert){
     var url = "http://www.zket.net?name=zjut";
-    var name = Zwt.getUrlParam('name', url);
+    var name = Est.getUrlParam('name', url);
     var result = 'zjut';
     assert.equal(name, result, "passed!");
 });
-QUnit.test("Zwt.urlResolve", function(assert){
-    var obj = Zwt.urlResolve(window.location.href);
+QUnit.test("Est.urlResolve", function(assert){
+    var obj = Est.urlResolve(window.location.href);
     assert.deepEqual(obj, {
         "hash": "",
         "host": "localhost:63342",
