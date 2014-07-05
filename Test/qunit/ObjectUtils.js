@@ -81,3 +81,12 @@ QUnit.test("Est.define", function(assert){
     Est.use('moduleC');
     assert.equal(result, 1, 'passed!');
 });
+
+QUnit.test('Est.pluck', function(assert){
+    var characters = [
+        { 'name': 'barney', 'age': 36 },
+        { 'name': 'fred',   'age': 40 }
+    ];
+    var result = Est.pluck(characters, 'name');
+    assert.deepEqual(result, [ "barney", "fred" ], 'passed!');
+});

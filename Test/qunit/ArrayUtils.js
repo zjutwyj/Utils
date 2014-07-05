@@ -111,3 +111,17 @@ QUnit.test("Est.findIndex", function(assert){
     var index3 = Est.findIndex(list, {name:'bb', address:'zjut'});
     assert.equal(index3, 3, 'test multi params of  object : passed!');
 });
+
+QUnit.test('Est.sortBy', function(assert){
+    var result = Est.sortBy([1, 2, 3], function(num) { return Math.sin(num); });
+    assert.deepEqual(result, [3, 1, 2], 'passed!');
+    var characters = [ { 'name': 'barney',  'age': 36 }, { 'name': 'fred',    'age': 40 }, { 'name': 'barney',  'age': 26 }, { 'name': 'fred',    'age': 30 } ];
+    var result2 = Est.sortBy(characters, 'age');
+    assert.deepEqual(result2, [
+        { "age": 26, "name": "barney" }, { "age": 30, "name": "fred" }, { "age": 36, "name": "barney" }, { "age": 40, "name": "fred" }
+    ], 'passed!');
+    var result3 = Est.sortBy(characters, ['name', 'age']);
+    assert.deepEqual(result3, [
+        { "age": 26, "name": "barney" },{ "age": 36, "name": "barney" },  { "age": 30, "name": "fred" }, { "age": 40, "name": "fred" }
+    ], 'passed!');
+});

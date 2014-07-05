@@ -45,6 +45,7 @@
         if (value == null) return Est.identity;;
         if (Est.isFunction(value)) return createCallback(value, context, argCount);
         if (typeOf(value) === 'object') return matches(value);
+        if (typeOf(value) === 'array') return value;
         return property(value);
     };
     var createCallback = function(func, context, argCount) {
@@ -356,7 +357,7 @@
     }
     Est.pick = pick;
     /**
-     * @description 获取对象属性值
+     * @description 返回获取对象属性值的方法
      * @method [对象] - property
      * @param {Object} key
      * @return {Function}
@@ -367,6 +368,22 @@
         };
     }
     Est.property = property;
+    /**
+     * @description 翠取对象中key对应的值
+     * @method [对象] - pluck
+     * @param obj
+     * @param key
+     * @return {*}
+     * @author wyj on 14/7/5
+     * @example
+     *      var characters = [ { 'name': 'barney', 'age': 36 }, { 'name': 'fred',   'age': 40 } ];
+     *      var result = Est.pluck(characters, 'name'); =>
+     *      [ "barney", "fred" ]
+     */
+    function pluck(obj, key) {
+        return map(obj, property(key), null);
+    };
+    Est.pluck = pluck;
     /**
      * @description 避免在 ms 段时间内，多次执行func。常用 resize、scoll、mousemove等连续性事件中
      * @method [对象] - delay
@@ -1153,7 +1170,7 @@
         if (obj === null) return results;
         callback = matchCallback(callback, context);
         each(obj, function(value, index, list) {
-            results.push(callback(context, value, index, list));
+            results.push(callback(value, index, list));
         });
         return results;
     }
@@ -1193,7 +1210,65 @@
         return -1;
     }
     Est.indexOf = indexOf;
-
+    /**
+     * @description 数组排序
+     * @method [数组] - sortBy
+     * @param obj
+     * @param iterator
+     * @param context
+     * @return {*}
+     * @author wyj on 14/7/5
+     * @example
+     *      var result = Est.sortBy([1, 2, 3], function(num) { return Math.sin(num); }); => [3, 1, 2]
+     *
+     *      var characters = [ { 'name': 'barney',  'age': 36 }, { 'name': 'fred',    'age': 40 }, { 'name': 'barney',  'age': 26 }, { 'name': 'fred',    'age': 30 } ];
+     *      var result2 = Est.sortBy(characters, 'age'); =>
+     *      [{ "age": 26, "name": "barney" }, { "age": 30, "name": "fred" }, { "age": 36, "name": "barney" }, { "age": 40, "name": "fred" }]
+     *
+     *      var result3 = Est.sortBy(characters, ['name', 'age']); =>
+     *      [{ "age": 26, "name": "barney" },{ "age": 36, "name": "barney" },  { "age": 30, "name": "fred" }, { "age": 40, "name": "fred" } ]
+     */
+    function sortBy(collection, callback, context) {
+        var index = -1,
+            isArr = typeOf(callback) === 'array',
+            length = collection ? collection.length : 0,
+            result = Array(typeof length == 'number' ? length : 0);
+        if (!isArr) {
+            callback = matchCallback(callback, context);
+        }
+        each(collection, function(value, key, collection) {
+            var object = result[++index] = {};
+            if (isArr) {
+                object.criteria = map(callback, function(key) { return value[key]; });
+            } else {
+                (object.criteria = [])[0] = callback(value, key, collection);
+            }
+            object.index = index;
+            object.value = value;
+        });
+        length = result.length;
+        result.sort(function(left, right){
+            var left_c = left.criteria,
+                right_c = right.criteria,
+                index = -1,
+                length = left_c.length;
+            while (++index < length) {
+                var value = left_c[index],
+                    other = right_c[index];
+                if (value !== other) {
+                    if (value > other || typeof value == 'undefined') {
+                        return 1;
+                    }
+                    if (value < other || typeof other == 'undefined') {
+                        return -1;
+                    }
+                }
+            }
+            return left.index - right.index;
+        });
+        return pluck(result, 'value');
+    }
+    Est.sortBy = sortBy;
 
     // ImageUtils ==============================================================================================================================================
     /**
