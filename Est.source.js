@@ -41,8 +41,8 @@
         return value;
     }
     Est.identity = identity;
-    var lookupIterator = function(value, context, argCount) {
-        if (value == null) return Est.identity;
+    var matchCallback = function(value, context, argCount) {
+        if (value == null) return Est.identity;;
         if (Est.isFunction(value)) return createCallback(value, context, argCount);
         if (typeOf(value) === 'object') return matches(value);
         return property(value);
@@ -973,7 +973,7 @@
     function filter(collection, callback, context){
         var results = [];
         if (!collection) return result;
-        var predicate = lookupIterator(callback, context);
+        var predicate = matchCallback(callback, context);
         each(collection, function(value, index, list) {
             if (predicate(value, index, list)) results.push(value);
         });
@@ -999,7 +999,7 @@
     function findIndex(array, callback, context) {
         var index = -1,
             length = array ? array.length : 0;
-        callback = lookupIterator(callback, context);
+        callback = matchCallback(callback, context);
         while (++index < length) {
             if (callback(array[index], index, array)) {
                 return index;
@@ -1151,8 +1151,9 @@
     function map(obj, callback, context) {
         var results = [];
         if (obj === null) return results;
+        callback = matchCallback(callback, context);
         each(obj, function(value, index, list) {
-            results.push(callback.call(context, value, index, list));
+            results.push(callback(context, value, index, list));
         });
         return results;
     }

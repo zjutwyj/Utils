@@ -79,6 +79,14 @@ QUnit.test("Est.map", function(assert){
         return list[index] + 1;
     });
     assert.deepEqual(result, [2, 3, 4], 'passed!');
+    var result2 = Est.map({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { return num * 3; });
+    assert.deepEqual(result2, [3, 6, 9], 'object passed!');
+    var characters = [
+        { 'name': 'barney', 'age': 36 },
+        { 'name': 'fred',   'age': 40 }
+    ];
+    var result3 = Est.map(characters, 'name');
+    assert.deepEqual(result3, ['barney', 'fred'], 'passed!');
 });
 QUnit.test("Est.filter", function(assert){
     var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
