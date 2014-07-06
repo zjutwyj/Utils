@@ -75,7 +75,7 @@ QUnit.test("Est.arrayRemove", function(assert){
 
 QUnit.test("Est.map", function(assert){
     var list = [1, 2, 3];
-    var result = Est.map(list, function(value, list, index){
+    var result = Est.map(list, function(value, index, list){
         return list[index] + 1;
     });
     assert.deepEqual(result, [2, 3, 4], 'passed!');
@@ -123,5 +123,8 @@ QUnit.test('Est.sortBy', function(assert){
     var result3 = Est.sortBy(characters, ['name', 'age']);
     assert.deepEqual(result3, [
         { "age": 26, "name": "barney" },{ "age": 36, "name": "barney" },  { "age": 30, "name": "fred" }, { "age": 40, "name": "fred" }
+    ], 'passed!');
+    var result4 = Est.sortBy(characters, ['age', 'name']);
+    assert.deepEqual(result4, [ { "age": 26, "name": "barney" }, { "age": 30, "name": "fred" }, { "age": 36, "name": "barney" }, { "age": 40, "name": "fred" }
     ], 'passed!');
 });

@@ -20,6 +20,8 @@
     var moduleMap = {};
     var fileMap = {};
     var noop = function () {};
+    var maxPoolSize = 40;
+    var arrayPool = [], objectPool = [];
 
     // 创建Est对象
     var Est = function(obj) {
@@ -70,7 +72,7 @@
     };
     /**
      * @description 遍历数据或对象。如果传递了context参数，则把callback绑定到context对象上。
-     * 如果list是数组，callback的参数是：(element, list, index, first, last)。
+     * 如果list是数组，callback的参数是：(element, index, list, first, last)。
      * 如果list是个JavaScript对象，callback的参数是 (value, key, list, index, first, last))。返回list以方便链式调用。
      * 如果callback 返回false,则中止遍历
      * @method [数组] - each
@@ -89,7 +91,7 @@
         if (obj.length === +obj.length) {
             for (i = 0, length = obj.length; i < length; i++) {
                 first = i === 0 ? true : false; last = i === length - 1 ? true : false;
-                if (callback(obj[i], obj, i, first, last) === false) break;
+                if (callback(obj[i], i, obj, first, last) === false) break;
             }
         } else {
             var ks = keys(obj);
@@ -484,6 +486,117 @@
         return module.entity;
     }
     Est.use = use;
+
+
+    function getArray() {
+        return arrayPool.pop() || [];
+    }
+    function getObject() {
+        return objectPool.pop() || { 'array': null, 'cache': null, 'criteria': null, 'false': false, 'index': 0, 'null': false, 'number': null, 'object': null, 'push': null, 'string': null, 'true': false, 'undefined': false, 'value': null };
+    }
+    function releaseArray(array) {
+        array.length = 0;
+        if (arrayPool.length < maxPoolSize) {
+            arrayPool.push(array);
+        }
+    }
+    function baseClone(value, isDeep, callback, stackA, stackB){
+        var type = typeOf(value);
+        if (callback) {
+            var result = callback(value);
+            if (typeOf(result) !==  'undefined') {
+                return result;
+            }
+        }
+        if (typeof value === 'object' && type !== 'null'){
+            switch (type){
+                case 'function':
+                    return value;
+                    break;
+                case 'date':
+                    return new Date(+value);
+                    break;
+                case 'string':
+                    return new String(value);
+                    break;
+                case 'regexp':
+                    result = RegExp(value.source, /\w*$/.exec(value));
+                    result.lastIndex = value.lastIndex;
+                    break;
+            }
+        } else{
+            return value;
+        }
+        var isArr = type === 'array';
+        if (isDeep){
+            var initedStack = !stackA;
+            stackA || (stackA = []);
+            stackB || (stackB = []);
+            var length = stackA.length;
+            while (length--) {
+                if (stackA[length] == value) {
+                    return stackB[length];
+                }
+            }
+            result = isArr ? Array(value.length) : {};
+        } else{
+            //result = isArr ? slice(value) : assign({}, value);
+        }
+        if (isArr) {
+            if (hasOwnProperty.call(value, 'index')) {
+                result.index = value.index;
+            }
+            if (hasOwnProperty.call(value, 'input')) {
+                result.input = value.input;
+            }
+        }
+        if (!isDeep) {
+            return result;
+        }
+        stackA.push(value);
+        stackB.push(result);
+        each(value, function(target, key){
+            result[key] = baseClone(target, isDeep, callback, stackA, stackB);
+        });
+        if (initedStack){
+            releaseArray(stackA);
+            releaseArray(stackB);
+        }
+        return result;
+    }
+
+    /**
+     * @description 浅复制
+     * @method clone
+     * @param value
+     * @param callback
+     * @param context
+     * @return {*}
+     * @author wyj on 14/7/6
+     * @example
+     *
+     */
+    function clone(value, callback, context){
+        callback = typeOf(callback) === 'function' && matchCallback(callback, context, 1);
+        return baseClone(value, false, callback);
+    }
+    Est.clone = clone;
+    /**
+     * @description 深复制
+     * @method cloneDeep
+     * @param value
+     * @param callback
+     * @param context
+     * @return {*}
+     * @author wyj on 14/7/6
+     * @example
+     *
+     */
+    function cloneDeep(value, callback, context){
+        callback = typeOf(callback) === 'function' && matchCallback(callback, context, 1);
+        return baseClone(value, true, callback);
+    }
+    Est.cloneDeep = cloneDeep;
 
     // StringUtils =============================================================================================================================================
     /**
