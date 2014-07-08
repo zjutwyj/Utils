@@ -565,7 +565,7 @@
 
     /**
      * @description 浅复制
-     * @method clone
+     * @method [对象] - clone
      * @param value
      * @param callback
      * @param context
@@ -581,7 +581,7 @@
     Est.clone = clone;
     /**
      * @description 深复制
-     * @method cloneDeep
+     * @method [对象] - cloneDeep
      * @param value
      * @param callback
      * @param context
@@ -1382,7 +1382,7 @@
     Est.sortBy = sortBy;
     /**
      * @description 截取数组
-     * @method arraySlice
+     * @method [数组] - arraySlice
      * @param array
      * @param start
      * @param end
@@ -1763,7 +1763,7 @@
     Est.getTagName = getTagName;
     /**
      * @description 加载样式文件
-     * @method loadCss
+     * @method [样式] - loadCss
      * @param url
      * @author wyj on 14/7/7
      * @example

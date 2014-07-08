@@ -1,3 +1,19 @@
+/**
+ * @class angular-ui
+ * @constructor angular-ui
+ */
+
+/**
+ * @description 普通树
+ * @method treeModel
+ * @module angularTreeview
+ * @param {String} data-angular-treeview
+ * @author wyj on 14/7/8
+ * @example
+ *      <div data-angular-treeview="true" data-tree-id="tree01" data-tree-model="roleList1" data-node-id="roleId" data-node-label="roleName" data-node-children="children" > </div>
+ */
+
+
 (function ( angular ) {
 	'use strict';
 	angular.module( 'angularTreeview', [] ).directive( 'treeModel', ['$compile', function( $compile ) {

@@ -17,8 +17,8 @@ var paths = {
             name: 'Est.min.js'
         },
         doc: {
-            scripts: ['Est.source.js'],
-            dist: ['./doc/Est']
+            source: ['Est.source.js'],
+            dist: './doc/Est'
         }
     },
     ng_treeview: {
@@ -27,14 +27,14 @@ var paths = {
             dist: 'angular-ui/ng-treeview/scripts',
             name : 'angular.treeview.min.js'
         },
-        images: {
-            source:'angular-ui/ng-treeview/images/*',
-            dist:'angular-ui/ng-treeview/images'
-        },
         styles: {
-            source: ['angular-ui/ng-treeview/styles/*'],
+            source: ['angular-ui/ng-treeview/styles/angular.treeview.css'],
             dist: 'angular-ui/ng-treeview/styles',
             name: 'angular.treeview.min.css'
+        },
+        doc: {
+            source: ['angular-ui/ng-treeview/scripts/angular.treeview.js'],
+            dist: './doc/angular-ui/ng-treeview'
         }
     }
 };
@@ -44,37 +44,59 @@ gulp.task('begin', function(){
         for (var key in paths[item]){
             switch (key){
                 case 'scripts':
-                    gulp.task(key + 'scripts', ['clean'], function(){
-                        return gulp.src(paths[key].scripts.source)
-                            .pipe(uglify())
-                            .pipe(concat(paths[key].scripts.name))
-                            .pipe(gulp.dest(paths[key].scripts.dist));
-                    });
-                    gulp.start(key + 'scripts');
+                    try {
+                        gulp.task(item + key, function(){
+                            return gulp.src(paths[item].scripts.source)
+                                .pipe(uglify())
+                                .pipe(concat(paths[item].scripts.name))
+                                .pipe(gulp.dest(paths[item].scripts.dist));
+                        });
+                        gulp.start(item + key);
+                    } catch(e){
+                        console.error(item + key + e);
+                    }
+                    break;
 
                 case 'styles':
-                    gulp.task(key + 'styles', ['clean'], function(){
-                        return gulp.src(paths[key].styles.source)
-                            .pipe(minifyCSS({keepBreaks:true}))
-                            .pipe(gulp.dest(paths[key].images.dist));
-                    });
-                    gulp.start(key + 'styles');
+                    try {
+                        gulp.task(item + key, function(){
+                            return gulp.src(paths[item].styles.source)
+                                .pipe(minifyCSS({keepBreaks:true}))
+                                .pipe(concat(paths[item].styles.name))
+                                .pipe(gulp.dest(paths[item].styles.dist));
+                        });
+                        gulp.start(item + key);
+                    } catch(e){
+                        console.error(item + key + e);
+                    }
+                    break;
 
                 case 'doc':
-                    gulp.task(key + 'doc', ['clean'], function(){
-                        return gulp.src(paths[key].doc.source)
-                            .pipe(yuidoc())
-                            .pipe(gulp.dest(paths[key].doc.dist))
-                    });
-                    gulp.start(key + 'doc');
+                    try {
+                        gulp.task(item + key, function(){
+                            return gulp.src(paths[item].doc.source)
+                                .pipe(yuidoc())
+                                .pipe(gulp.dest(paths[item].doc.dist))
+                        });
+                        gulp.start(item + key);
+                    } catch(e){
+                        console.error(item + key + e);
+                    }
+                    break;
 
                 case 'images':
-                    gulp.task(key + 'images', ['clean'], function(){
-                        return gulp.src(paths[key].images.source)
-                            .pipe(imagemin({optimizationLevel: 5}))
-                            .pipe(gulp.dest(paths[key].images.dist));
-                    });
-                    gulp.start(key + 'images');
+                    try {
+                        gulp.task(item + key, function(){
+                            return gulp.src(paths[item].images.source)
+                                .pipe(imagemin({optimizationLevel: 5}))
+                                .pipe(gulp.dest(paths[item].images.dist));
+                        });
+                        gulp.start(item + key);
+                    } catch(e){
+                        console.error(item + key + e);
+                    }
+                    break;
+                default:
             }
         }
     }
@@ -93,7 +115,7 @@ gulp.task('html', function () {
 });
 
 gulp.task('clean', function(cb) {
-    del(['build'], cb);
+    del(['doc'], cb);
 });
 
 // 创建watch任务去检测文件,当文件改动之后，去调用一个Gulp的Task
@@ -104,4 +126,4 @@ gulp.task('watch', function() {
     gulp.watch(['./test/*.html'], ['html']);
 });
 
-gulp.task('default', ['begin']);
+gulp.task('default', ['clean', 'begin']);
