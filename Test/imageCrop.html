@@ -6,37 +6,38 @@
     <style>
         #gird {width: 100%; list-style: none; margin: 0; padding: 0; }
         #gird li { width: 200px; height:180px;overflow:hidden; float: left; margin-right: 10px; margin-bottom:10px; padding: 0; }
-        #gird li img{display:none;}
+        #gird li img{display:block;}
     </style>
     <script src="../vendor/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(".imageCrop").each(function () {
+            $(this).load(function (response, status, xhr) {
+                var w = $(this).get(0).naturalWidth, h = $(this).get(0).naturalHeight;
+                var width = $(this).attr("data-width"), height = $(this).attr("data-height");
+                $(this).css(Est.imageCrop(w, h, width, height));
+                $(this).fadeIn('fast');
+            });
+        });
+    </script>
 </head>
 <body>
 <ul id="gird" class="moveChild">
     <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li id="gird-li"><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
-    <li><img src="images/sample.gif" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
+    <li><img src="images/13.png" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
+    <li><img src="images/11_min.jpg" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
+    <li><img src="images/11_800.jpg" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
+    <li><img src="images/11.jpg" class="imageCrop" data-width="200" data-height="180" alt=""/></li>
 </ul>
-<script src="../Est.min.js"></script>
-<script>
-    $.each($(".imageCrop"), function () {
-        $(this).load(function (response, status, xhr) {
-            var w = $(this).get(0).naturalWidth, h = $(this).get(0).naturalHeight;
-            var width = $(this).attr("data-width"), height = $(this).attr("data-height");
-            $(this).css(Est.imageCrop(w, h, width, height));
-            $(this).fadeIn('fast');
+<script type="text/javascript" src="../Est.source.js"></script>
+<script type="text/javascript">
+        $(".imageCrop").each(function () {
+            $(this).load(function (response, status, xhr) {
+                var w = $(this).get(0).naturalWidth, h = $(this).get(0).naturalHeight;
+                var width = $(this).attr("data-width"), height = $(this).attr("data-height");
+                $(this).css(Est.imageCrop(w, h, width, height));
+                $(this).fadeIn('fast');
+            });
         });
-    });
 </script>
 </body>
 </html>

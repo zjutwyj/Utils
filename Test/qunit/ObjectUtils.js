@@ -120,7 +120,7 @@ QUnit.test('Est.clone', function(assert){
         { 'name': 'fred',   'age': 40 }
     ];
     var clone = Est.clone(characters);
-    assert.deepEqual(clone, [], 'passed!');
+    assert.deepEqual(clone, [ { "age": 36, "name": "barney" }, { "age": 40, "name": "fred" } ], 'passed!');
     //assert.ok(clone[0] === characters[0], 'passed!');
 
     var cloneDeep = Est.cloneDeep(characters);

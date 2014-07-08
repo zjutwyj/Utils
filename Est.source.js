@@ -504,9 +504,7 @@
         var type = typeOf(value);
         if (callback) {
             var result = callback(value);
-            if (typeOf(result) !==  'undefined') {
-                return result;
-            }
+            if (typeOf(result) !==  'undefined') return result;
         }
         if (typeof value === 'object' && type !== 'null'){
             switch (type){
@@ -524,7 +522,7 @@
                     result.lastIndex = value.lastIndex;
                     break;
             }
-        } else{
+        } else {
             return value;
         }
         var isArr = type === 'array';
@@ -540,7 +538,7 @@
             }
             result = isArr ? Array(value.length) : {};
         } else{
-            //result = isArr ? slice(value) : assign({}, value);
+            result = isArr ? arraySlice(value) : extend({}, value);
         }
         if (isArr) {
             if (hasOwnProperty.call(value, 'index')) {
@@ -1382,15 +1380,42 @@
         return pluck(result, 'value');
     }
     Est.sortBy = sortBy;
+    /**
+     * @description 截取数组
+     * @method arraySlice
+     * @param array
+     * @param start
+     * @param end
+     * @return {*}
+     * @author wyj on 14/7/7
+     * @example
+     *
+     */
+    function arraySlice(array, start, end) {
+        start || (start = 0);
+        if (typeof end == 'undefined') {
+            end = array ? array.length : 0;
+        }
+        var index = -1,
+            length = end - start || 0,
+            result = Array(length < 0 ? 0 : length);
+
+        while (++index < length) {
+            result[index] = array[start + index];
+        }
+        return result;
+    }
+    Est.arraySlice = arraySlice;
 
     // ImageUtils ==============================================================================================================================================
     /**
      * @description 获取居中图片的margin值, 若图片宽高比太大，则不剪切
      * @method [图片] - imageCrop
-     * @param naturalW 图片宽度
-     * @param naturalH 图片高度
-     * @param targetW 展示框宽度
-     * @param targetH 展示框高度
+     * @param {Number} naturalW 图片宽度
+     * @param {Number} naturalH 图片高度
+     * @param {Number} targetW 展示框宽度
+     * @param {Number} targetH 展示框高度
+     * @param {Boolean} fill 是否铺满框
      * @return {{width: *, height: *, marginTop: number, marginLeft: number}}
      * @author wyj on 14-04-24
      * @example
@@ -1403,18 +1428,19 @@
      *          });
      *      });
      */
-    function imageCrop(naturalW, naturalH, targetW, targetH) {
+    function imageCrop(naturalW, naturalH, targetW, targetH, fill) {
         var _w = parseInt(naturalW, 10), _h = parseInt(naturalH, 10),
             w = parseInt(targetW, 10), h = parseInt(targetH, 10);
+        var fill = fill || false;
         var res = { width: w, height: h, marginTop: 0, marginLeft: 0 }
         if (_w != 0 && _h != 0) {
             var z_w = w / _w, z_h = h / _h;
-            if (z_w > 1.5) {
+            if (!fill && (z_w / z_h) > 1.5) {
                 //若高度 远远 超出 宽度
-                res = { width: 'auto', height: h, marginTop: 0, marginLeft: (h - _w) / 2 };
-            } else if (z_h > 1.5) {
+                res = { width: 'auto', height: h, marginTop: 0, marginLeft: Math.abs((w - _w * z_h) / 2) };
+            } else if (!fill && (z_h / z_w) > 1.5) {
                 //若宽度 远远 超出 高度
-                res = { width: w, height: 'auto', marginTop: (h - _h) / 2, marginLeft: 0 };
+                res = { width: w, height: 'auto', marginTop: Math.abs((h - _h * z_w) / 2), marginLeft: 0 };
             }
             else {
                 if (z_w < z_h) {
@@ -1735,6 +1761,22 @@
         return target.tagName.toLowerCase();
     }
     Est.getTagName = getTagName;
+    /**
+     * @description 加载样式文件
+     * @method loadCss
+     * @param url
+     * @author wyj on 14/7/7
+     * @example
+     *
+     */
+    function loadCSS(url) {
+        var elem = document.createElement("link");
+        elem.rel = "stylesheet";
+        elem.type = "text/css";
+        elem.href = url;
+        document.body.appendChild(elem);
+   }
+    Est.loadCss = loadCSS;
     // DateUtils
     /**
      * @description 格式化时间
