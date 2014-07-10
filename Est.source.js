@@ -1613,7 +1613,7 @@
     Est.bulidSelectNode = bulidSelectNode;
     /**
      * @description 构建树
-     * @method bulidTreeNode
+     * @method [树] - bulidTreeNode
      * @param {Array} list
      * @param {String} name 父分类的字段名称
      * @param {String} value 值
