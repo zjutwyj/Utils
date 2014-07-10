@@ -28,3 +28,9 @@ QUnit.test("Est.urlResolve", function(assert){
         "search": ""
     }, "passed!");
 });
+
+QUnit.test('Est.copy', function(assert){
+    var text = 'aaa';
+    var result = Est.copyToClipboard(text);
+    assert.equal(result,true, 'passed!');
+});

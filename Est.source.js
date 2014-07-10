@@ -1408,6 +1408,24 @@
     Est.arraySlice = arraySlice;
 
     // ImageUtils ==============================================================================================================================================
+
+    /**
+     * @description  获取图片地址缩放等级
+     * @method [图片] - picUrl
+     * @param src
+     * @param zoom
+     * @return {string}
+     * @author wyj on 14/7/25
+     * @example
+     *      Est.picUrl(src, 5);
+     */
+    function picUrl(src, zoom){
+        var type = src.substring(src.lastIndexOf(".") + 1, src.length);
+        var hasZoom = src.lastIndexOf('_') > 0 ? true : false;
+        return src.substring(0, src.lastIndexOf(hasZoom ? '_' : '.')) + "_" + zoom + "." + type;
+    }
+    Est.picUrl = picUrl;
+
     /**
      * @description 获取居中图片的margin值, 若图片宽高比太大，则不剪切
      * @method [图片] - imageCrop
@@ -1593,6 +1611,66 @@
         return rootlist;
     }
     Est.bulidSelectNode = bulidSelectNode;
+    /**
+     * @description 构建树
+     * @method bulidTreeNode
+     * @param {Array} list
+     * @param {String} name 父分类的字段名称
+     * @param {String} value 值
+     * @param {Object} opts {String} opts.category_id 分类Id {String} opts.belong_id 父类Id
+     * @return {*}
+     * @author wyj on 14/7/9
+     * @example
+     *      Est.bulidTreeNode(list, 'grade', '01', {
+     *          category_id: 'category_id',// 分类ＩＤ
+     *          belong_id: 'belong_id',// 父类ＩＤ
+     *          child_tag: 'cates', // 子分类集的字段名称
+     *      });
+     */
+    function bulidTreeNode(list, name, value, opts){
+        var root = [];
+        each(list, function (item) {
+            if (item[name] === value) root.push(item);
+        });
+        return bulidSubNode(root, list, opts);
+    }
+    Est.bulidTreeNode = bulidTreeNode;
+
+    /**
+     * @description 获取面包屑导航
+     * @method [树] - bulidBreakNav
+     * @param {Array} list 总列表
+     * @param {String} nodeId ID标识符
+     * @param {String} nodeValue id值
+     * @param {String} nodeLabel 名称标识符
+     * @param {String} nodeParentId 父类ID标识符
+     * @return {*}
+     * @author wyj on 14/7/10
+     * @example
+     *
+     *
+     */
+    function bulidBreakNav(list, nodeId, nodeValue, nodeLabel, nodeParentId){
+        var breakNav = [];
+        var result = Est.filter(list, function(item){
+            return item[nodeId] === nodeValue;
+        });
+        if (result.length === 0) return breakNav;
+        breakNav.unshift({nodeId: nodeValue, name: result[0][nodeLabel]});
+        var getParent = function(list, id){
+            var parent = Est.filter(list, function(item){
+                return item[nodeId] === id;
+            });
+            if (parent.length > 0){
+                breakNav.unshift({nodeId: parent[0][nodeId], name: parent[0][nodeLabel]});
+                getParent(list, parent[0][nodeParentId]);
+            }
+        }
+        getParent(list, result[0][nodeParentId]);
+        return breakNav;
+    }
+    Est.bulidBreakNav = bulidBreakNav;
+
     // PaginationUtils
     /**
      * @description 获取最大页数
@@ -1678,6 +1756,8 @@
                 start = page - (offset - 1);
                 end = page + (offset -1);
             }
+        } else{
+            end = totalPage;
         }
         for (var i = start; i <= end; i++) {
             number_list.push(i);
@@ -1898,8 +1978,6 @@
         };
     }
     Est.urlResolve = urlResolve;
-
-
 
 
 

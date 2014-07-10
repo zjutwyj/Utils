@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<style>
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,strong,ins,kbd,q,s,samp,small,strike,sub,sup,tt,var,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th
+	{
+	border: 0 none;
+	margin: 0;
+	outline: 0 none;
+	padding: 0;
+}
+
+html,body,label,table {
+	font-size: 12px;
+}
+
+a:focus {
+	outline: 0 none;
+}
+
+a:active {
+	outline: 0 none;
+}
+
+ol,ul {
+	list-style: none outside none;
+}
+
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+a {
+	color: #666666;
+	cursor: pointer;
+	padding: 0;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #666666;
+}
+
+.clear {
+	clear: both;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.textLeft {
+	text-align: left;
+}
+
+.textCenter {
+	text-align: center;
+}
+
+.textRight {
+	text-align: right;
+}
+
+.disabled {
+	display: none;
+}
+
+.txtInput {
+	border: 1px solid #ABADB3;
+	height: 20px;
+	width: 150px;
+}
+
+.popupTabBody .ui-tabs {
+	border: 0 none;
+	color: #555555;
+	padding: 0;
+	position: relative;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-panel {
+	background: none repeat scroll 0 center rgba(0, 0, 0, 0);
+	border-width: 0;
+	display: block;
+	padding: 1em 1.4em 0;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-hide {
+	display: none !important;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav {
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	background: none repeat scroll 0 0 #E4E5E4;
+	border-color: -moz-use-text-color -moz-use-text-color #BFBFBF;
+	border-image: none;
+	border-style: none none solid;
+	border-width: 0 0 1px;
+	margin-top: -1px;
+	padding: 0 0 0 11px;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li {
+	border-bottom: 0 none !important;
+	float: left;
+	list-style: none outside none;
+	margin: 0 0 0 -1px;
+	padding: 0;
+	position: relative;
+	top: 1px;
+	white-space: nowrap;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li a {
+	float: left;
+	padding: 0.3em 1em;
+	text-decoration: none;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+	margin-bottom: 0;
+	padding-bottom: 1px;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-tabs-selected a,.ui-tabs .ui-tabs-nav li.ui-state-disabled a,.ui-tabs .ui-tabs-nav li.ui-state-processing a
+	{
+	cursor: text;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-state-default {
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	background: none repeat scroll 0 center rgba(0, 0, 0, 0);
+	border-color: -moz-use-text-color #BFBFBF;
+	border-image: none;
+	border-style: none solid;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-width: 0 1px;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-state-active {
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	background:
+		url("/image/comm/fai/ui-bg_faitab_ffffff_1x27.png?v=201310170037")
+		repeat-x scroll 0 0 #FFFFFF;
+	border-color: -moz-use-text-color #BFBFBF;
+	border-image: none;
+	border-style: none solid;
+	border-width: 0 1px;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-state-active a:visited {
+	color: #333333;
+	font-weight: 600;
+}
+
+.popupTabBody .ui-tabs .ui-tabs-nav li a,.ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a
+	{
+	cursor: pointer;
+}
+
+.saveButton {
+	background: none repeat scroll 0 0 #49A3FF;
+	border: 1px solid #0064B5;
+	color: #FFFFFF;
+}
+
+.saveButton:hover {
+	background: none repeat scroll 0 0 #5FBBFF;
+	border: 1px solid #3298FE;
+	color: #FFFFFF;
+}
+
+.saveButton:active {
+	background: none repeat scroll 0 0 #49A3FF;
+	border: 1px solid #0064B5;
+	color: #FFFFFF;
+}
+
+.saveButton:disabled {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #CECECE;
+	color: #D1D1D1;
+}
+
+.cancelButton {
+	background: none repeat scroll 0 0 #F5F5F5;
+	border: 1px solid #8F8F8F;
+	color: #666666;
+}
+
+.cancelButton:hover {
+	background: none repeat scroll 0 0 #E8F3FE;
+	border: 1px solid #3298FE;
+	color: #666666;
+}
+
+.cancelButton:active {
+	background: none repeat scroll 0 0 #D3E9FF;
+	border: 1px solid #3298FE;
+	color: #666666;
+}
+
+.cancelButton:disabled {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 1px solid #CECECE;
+	color: #D1D1D1;
+}
+
+.setLine {
+	padding-top: 20px;
+	height: 24px;
+	line-height: 24px;
+	margin: 2px 0;
+}
+
+.setchLine {
+	padding-top: 15px;
+	height: 55px;
+}
+
+.setTitle {
+	float: left;
+	height: 24px;
+	line-height: 24px;
+	text-align: right;
+	width: 80px;
+}
+
+.setCtrl {
+	float: left;
+	height: 24px;
+	line-height: 24px;
+}
+
+.setRadioCtrl span {
+	cursor: pointer;
+}
+
+.paInput {
+	width: 200px;
+}
+
+.whInput {
+	width: 60px;
+}
+
+.nmInput {
+	width: 140px;
+}
+
+.searchInput {
+	text-align: center;
+	width: 80px;
+}
+</style>
+
+<script type="text/javascript" src="http://www.jihui88.com/js/jquery.js"></script>
+<body class="popupTabBody">
+	<div id="tabs"
+		class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+		<!-- basicSetting -->
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<div id="basicSetting" style="display: inline-block"
+							class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+
+							<div class="setLine">
+								<div class="setTitle">外边距：</div>
+								<div class="setCtrl">
+									<input type="text" onchange="refreshQrcode()" class="whInput"
+										value="20" placeholder="20" id="qrcodeM">
+								</div>
+								<div class="setTitle">外框：</div>
+								<div class="setCtrl">
+									<input type="text" onchange="refreshQrcode()"
+										class="whInput iColorPicker" value="#000000"
+										placeholder="#000000" id="qrcodePt">
+								</div>
+								<div class="setTitle">内点：</div>
+								<div class="setCtrl">
+									<input type="text" onchange="refreshQrcode()"
+										class="whInput iColorPicker" value="#000000"
+										placeholder="#000000" id="qrcodeInpt">
+								</div>
+							</div>
+							<div class="setLine">
+								<div class="setTitle">纠错等级：</div>
+								<div class="setCtrl">
+									<select id="qrcodeVersions" onchange="refreshQrcode()">
+										<option value="L">最低</option>
+										<option value="M">低</option>
+										<option value="Q" selected>中等</option>
+										<option value="H">高</option>
+									</select>
+								</div>
+								<div class="setTitle">前景色</div>
+								<div class="setCtrl">
+									<input type="text" maxlength="4" class="whInput iColorPicker"
+										onchange="refreshQrcode()" value="#ffffff"
+										placeholder="#ffffff" id="qrcodeBg">
+								</div>
+								<div style="float: left">背景色</div>
+								<div class="setCtrl">
+									<input type="text" maxlength="4" class="whInput iColorPicker"
+										onchange="refreshQrcode()" value="#000000"
+										placeholder="#000000" id="qrcodeFg">
+								</div>
+								<div style="float: left">渐变颜色</div>
+								<div class="setCtrl">
+									<input type="text" maxlength="4" class="whInput iColorPicker"
+										onchange="refreshQrcode()" value="#000000"
+										placeholder="#cc0000" id="qrcodeGc">
+								</div>
+							</div>
+							<div class="setLine">
+								<div class="setTitle">尺寸大小：</div>
+								<div class="setCtrl">
+									<input type="text" class="whInput" maxlength="30"
+										onchange="refreshQrcode()" value="300" id="qrcodeSize">
+								</div>
+								<div style="margin-left: 20px;" class="setTitle">LOGO图片：</div>
+								<div class="setCtrl">
+									<input type="text" style="width: 275px;"
+										onchange="refreshQrcode()" class="paInput" maxlength="70"
+										value="http://www.jihui88.com/website/images/logo.gif"
+										placeholder="http://www.jihui88.com/website/images/logo.gif"
+										id="qrcodeLogo">
+								</div>
+							</div>
+							<div class="setLine">
+								<div class="setTitle">网址/文字：</div>
+								<input placeholder="http://www.jihui88.com/"
+									onchange="refreshQrcode()"
+									style="margin: 0px; padding: 0px; width: 450px; vertical-align: top"
+									id="qrcodeInfo" value="http://www.jihui88.com"
+									placeholder="http://www.jihui88.com" />
+							</div>
+						</div>
+					</td>
+					<td>
+						<div
+							style="float: right; width: 180px; height: 180px; display: inline-block; margin-top: 27px;">
+							<img style="width: 180px; height: 180px;" id="qrcodeImg"
+								src="example.png" />
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class="formBtns" style="display: table; margin-left: 20px;">
+			<tbody>
+				<tr>
+					<td align="center" style="padding-top: 15px">
+						<button type="button" onclick="save()"
+							class="abutton faiButton saveButton" value="" id="popup_save">保
+							存</button>
+						<button type="button" onclick="save_without()"
+							class="abutton faiButton cancelButton" value="" id="popup_close">取
+							消</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<script type="text/javascript" charset="UTF-8">
+		var url = 'http://qr.liantu.com/api.php?bg=ffffff&fg=cc0000&text=www.jihui88.com';
+		function refreshQrcode() {
+			url = 'http://qr.liantu.com/api.php';
+			url += '?bg=' + $("#qrcodeBg").val().slice(1);
+			url += '&fg=' + $("#qrcodeFg").val().slice(1);
+			url += '&gc=' + $("#qrcodeGc").val().slice(1);
+			url += '&el=' + $("#qrcodeVersions").val();
+			url += '&w=' + $("#qrcodeSize").val();
+			url += '&m=' + $("#qrcodeM").val();
+			url += '&logo='
+					+ unescape(encodeURIComponent($('#qrcodeLogo').val()));
+			url += '&pt=' + $("#qrcodePt").val().slice(1);
+			url += '&inpt=' + $("#qrcodeInpt").val().slice(1);
+			url += '&logo=' + $("#qrcodeLogo").val();
+			url += '&text='
+					+ unescape(encodeURIComponent($('#qrcodeInfo').val()));
+			$("#qrcodeImg").attr("src", url);
+		}
+		function save() {
+			var html = '<img src="http://qr.liantu.com/api.php';
+			html += '?bg=' + $("#qrcodeBg").val().slice(1);
+			html += '&fg=' + $("#qrcodeFg").val().slice(1);
+			html += '&gc=' + $("#qrcodeGc").val().slice(1);
+			html += '&el=' + $("#qrcodeVersions").val();
+			html += '&w=' + $("#qrcodeSize").val();
+			html += '&m=' + $("#qrcodeM").val();
+			html += '&logo='
+					+ unescape(encodeURIComponent($('#qrcodeLogo').val()));
+			html += '&pt=' + $("#qrcodePt").val().slice(1);
+			html += '&inpt=' + $("#qrcodeInpt").val().slice(1);
+			html += '&logo=' + $("#qrcodeLogo").val();
+			html += '&text='
+					+ unescape(encodeURIComponent($('#qrcodeInfo').val()));
+			html += '"/>';
+			callback(html);
+		}
+		function save_without() {
+			callback();
+		}
+		$("#pickerTable0 td").live("click", function() {
+			refreshQrcode();
+		});
+		$(".iColorPicker").bind("change paste keyup", function() {
+			alert($(this).val());
+		});
+		setTimeout(refreshQrcode, 100);
+	</script>
+<script type="text/javascript" src="iColorPicker.js"></script>
+
+</body>
+</html>

@@ -29,4 +29,6 @@ QUnit.test("Est.getPaginationNumber", function(assert){
     var result2 = [ 41, 42, 43, 44, 45, 46, 47];
     assert.deepEqual(list, result, 'passed!');
     assert.deepEqual(list2, result2, 'passed!');
+    var list3 = Est.getPaginationNumber(1, 1, 9);
+    assert.deepEqual(list3, [1], 'passed!');
 });

@@ -23,9 +23,9 @@ var paths = {
     },
     ng_treeview: {
         scripts:{
-            source: ['angular-ui/ng-treeview/scripts/angular.treeview.js'],
+            source: ['angular-ui/ng-treeview/scripts/ui.bootstrap.treeview.js'],
             dist: 'angular-ui/ng-treeview/scripts',
-            name : 'angular.treeview.min.js'
+            name : 'ui.bootstrap.treeview.min.js'
         },
         styles: {
             source: ['angular-ui/ng-treeview/styles/angular.treeview.css'],
@@ -36,63 +36,92 @@ var paths = {
             source: ['angular-ui/ng-treeview/scripts/angular.treeview.js'],
             dist: './doc/angular-ui/ng-treeview'
         }
+    },
+    ng_directive: {
+        scripts: {
+            source: ['angular-directive/directive.js'],
+            dist: 'angular-directive',
+            name: 'directive.min.js'
+        },
+        doc: {
+            source: ['angular-directive/directive.js'],
+            dist: './doc/angular-directive'
+        }
+    },
+    angular_ui: {
+        scripts: {
+            source: ['angular-ui/ui.js'],
+            dist: 'angular-ui',
+            name: 'ui.min.js'
+        }
     }
 };
 
 gulp.task('begin', function(){
-    for (var item in paths){
-        for (var key in paths[item]){
-            switch (key){
+    doTask(false);
+});
+gulp.task('debug', function(){
+    doTask(true);
+});
+function doTask(debug) {
+    for (var item in paths) {
+        for (var key in paths[item]) {
+            switch (key) {
                 case 'scripts':
                     try {
-                        gulp.task(item + key, function(){
+                        gulp.task(item + key, function () {
+                            if (debug) {
+                                return gulp.src(paths[item].scripts.source)
+                                    .pipe(concat(paths[item].scripts.name))
+                                    .pipe(gulp.dest(paths[item].scripts.dist));
+                            }
                             return gulp.src(paths[item].scripts.source)
                                 .pipe(uglify())
                                 .pipe(concat(paths[item].scripts.name))
                                 .pipe(gulp.dest(paths[item].scripts.dist));
                         });
                         gulp.start(item + key);
-                    } catch(e){
+                    } catch (e) {
                         console.error(item + key + e);
                     }
                     break;
 
                 case 'styles':
                     try {
-                        gulp.task(item + key, function(){
+                        gulp.task(item + key, function () {
                             return gulp.src(paths[item].styles.source)
-                                .pipe(minifyCSS({keepBreaks:true}))
+                                .pipe(minifyCSS({keepBreaks: true}))
                                 .pipe(concat(paths[item].styles.name))
                                 .pipe(gulp.dest(paths[item].styles.dist));
                         });
                         gulp.start(item + key);
-                    } catch(e){
+                    } catch (e) {
                         console.error(item + key + e);
                     }
                     break;
 
                 case 'doc':
                     try {
-                        gulp.task(item + key, function(){
+                        gulp.task(item + key, function () {
                             return gulp.src(paths[item].doc.source)
                                 .pipe(yuidoc())
                                 .pipe(gulp.dest(paths[item].doc.dist))
                         });
                         gulp.start(item + key);
-                    } catch(e){
+                    } catch (e) {
                         console.error(item + key + e);
                     }
                     break;
 
                 case 'images':
                     try {
-                        gulp.task(item + key, function(){
+                        gulp.task(item + key, function () {
                             return gulp.src(paths[item].images.source)
                                 .pipe(imagemin({optimizationLevel: 5}))
                                 .pipe(gulp.dest(paths[item].images.dist));
                         });
                         gulp.start(item + key);
-                    } catch(e){
+                    } catch (e) {
                         console.error(item + key + e);
                     }
                     break;
@@ -100,7 +129,9 @@ gulp.task('begin', function(){
             }
         }
     }
-});
+}
+
+
 
 // 使用connect启动一个Web服务器
 gulp.task('connect', function () {
@@ -120,10 +151,10 @@ gulp.task('clean', function(cb) {
 
 // 创建watch任务去检测文件,当文件改动之后，去调用一个Gulp的Task
 gulp.task('watch', function() {
-    gulp.watch(paths.scripts, ['scripts']);
-    gulp.watch(paths.images, ['images']);
-    gulp.watch(docPaths.scripts, ['yuidoc']);
-    gulp.watch(['./test/*.html'], ['html']);
+    gulp.watch(paths, ['begin']);
+    /*gulp.watch(paths.images, ['images']);
+     gulp.watch(docPaths.scripts, ['yuidoc']);
+     gulp.watch(['./test*//*.html'], ['html']);*/
 });
 
-gulp.task('default', ['clean', 'begin']);
+gulp.task('default', [ 'begin']);

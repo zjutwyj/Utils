@@ -96,6 +96,33 @@ QUnit.test("Est.filter", function(assert){
     assert.deepEqual(result, [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ], 'passed!');
     var result2 = Est.filter(list, {"name": "bb", "address": "zjut"});
     assert.deepEqual(result2, [ { "address": "zjut", "name":  "bb" } ], "passed!");
+
+    var list3 = [
+        { album_id: "Album_00000000000000000000033002", name: "默认相册", add_time: null, update_time: "2014-06-18T02:49:01.762Z", parent_id: null },
+        { album_id: "Album_00000000000000000000054391", name: "企业网站案例", add_time: "2013-08-19T08:35:06.850Z", update_time: "2014-06-18T02:49:01.762Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059126", name: "ssss", add_time: "2014-07-09T07:16:06.408Z", update_time: "2014-07-09T07:16:06.408Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059127", name: "fddgdfg", add_time: "2014-07-09T07:40:18.125Z", update_time: "2014-07-09T07:40:18.125Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059128", name: "sdfsdf", add_time: "2014-07-09T07:55:15.251Z", update_time: "2014-07-09T07:55:15.251Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059129", name: "sdfsdf", add_time: "2014-07-09T07:55:45.829Z", update_time: "2014-07-09T07:55:45.829Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059130", name: "sdfsdf", add_time: "2014-07-09T07:56:02.911Z", update_time: "2014-07-09T07:56:02.911Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059131", name: "sdfsdf", add_time: "2014-07-09T07:56:36.404Z", update_time: "2014-07-09T07:56:36.404Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059132", name: "wwww", add_time: "2014-07-09T07:59:32.410Z", update_time: "2014-07-09T07:59:32.410Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059133", name: "fdgfdg", add_time: "2014-07-09T08:00:34.047Z", update_time: "2014-07-09T08:00:34.047Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059134", name: "vvcb", add_time: "2014-07-09T08:21:59.718Z", update_time: "2014-07-09T08:21:59.718Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059135", name: "sdfsf", add_time: "2014-07-09T08:38:29.574Z", update_time: "2014-07-09T08:38:29.574Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059136", name: "sdfdsf", add_time: "2014-07-09T08:39:53.980Z", update_time: "2014-07-09T08:39:53.980Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059137", name: "dfff", add_time: "2014-07-09T08:39:59.668Z", update_time: "2014-07-09T08:39:59.668Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059138", name: "dddd", add_time: "2014-07-09T08:57:35.417Z", update_time: "2014-07-09T08:57:35.417Z", parent_id: "Album_00000000000000000000059132" },
+        { album_id: "Album_00000000000000000000059139", name: "企业网站案例", add_time: "2014-07-09T09:41:40.112Z", update_time: "2014-07-09T09:41:40.112Z", parent_id: null },
+        { album_id: "Album_00000000000000000000059140", name: "uuu", add_time: "2014-07-09T09:57:57.177Z", update_time: "2014-07-09T09:57:57.177Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059141", name: "eee", add_time: "2014-07-09T10:18:36.331Z", update_time: "2014-07-09T10:18:36.331Z", parent_id: "Album_00000000000000000000059133" },
+        { album_id: "Album_00000000000000000000059142", name: "二级分类", add_time: "2014-07-09T14:41:19.940Z", update_time: "2014-07-09T14:41:19.940Z", parent_id: "Album_00000000000000000000033002" },
+        { album_id: "Album_00000000000000000000059143", name: "三级分类", add_time: "2014-07-09T14:41:29.434Z", update_time: "2014-07-09T14:41:29.434Z", parent_id: "Album_00000000000000000000059142" },
+        { album_id: "Album_00000000000000000000059144", name: "四级分类", add_time: "2014-07-09T14:41:37.539Z", update_time: "2014-07-09T14:41:37.539Z", parent_id: "Album_00000000000000000000059143" }
+    ];
+    var result3 = Est.filter(list3, {"album_id": 'Album_00000000000000000000059144'});
+    assert.deepEqual(result3, [ { "add_time": "2014-07-09T14:41:37.539Z", "album_id": "Album_00000000000000000000059144", "name": "四级分类", "parent_id": "Album_00000000000000000000059143", "update_time": "2014-07-09T14:41:37.539Z" } ], 'passed!');
+
 });
 
 QUnit.test("Est.findIndex", function(assert){
