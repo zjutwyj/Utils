@@ -23,35 +23,35 @@ var paths = {
     },
     ng_treeview: {
         scripts:{
-            source: ['angular-ui/ng-treeview/scripts/ui.bootstrap.treeview.js'],
-            dist: 'angular-ui/ng-treeview/scripts',
+            source: ['ui/ng-treeview/scripts/ui.bootstrap.treeview.js'],
+            dist: 'ui/ng-treeview/scripts',
             name : 'ui.bootstrap.treeview.min.js'
         },
         styles: {
-            source: ['angular-ui/ng-treeview/styles/angular.treeview.css'],
-            dist: 'angular-ui/ng-treeview/styles',
+            source: ['ui/ng-treeview/styles/angular.treeview.css'],
+            dist: 'ui/ng-treeview/styles',
             name: 'angular.treeview.min.css'
         },
         doc: {
-            source: ['angular-ui/ng-treeview/scripts/angular.treeview.js'],
-            dist: './doc/angular-ui/ng-treeview'
+            source: ['ui/ng-treeview/scripts/angular.treeview.js'],
+            dist: './doc/ui/ng-treeview'
         }
     },
     ng_directive: {
         scripts: {
-            source: ['angular-directive/directive.js'],
-            dist: 'angular-directive',
+            source: ['directive/directive.js'],
+            dist: 'directive',
             name: 'directive.min.js'
         },
         doc: {
-            source: ['angular-directive/directive.js'],
-            dist: './doc/angular-directive'
+            source: ['directive/directive.js'],
+            dist: './doc/directive'
         }
     },
     angular_ui: {
         scripts: {
-            source: ['angular-ui/ui.js'],
-            dist: 'angular-ui',
+            source: ['ui/ui.js'],
+            dist: 'ui',
             name: 'ui.min.js'
         }
     }
