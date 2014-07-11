@@ -137,6 +137,10 @@ QUnit.test("Est.findIndex", function(assert){
 
     var index3 = Est.findIndex(list, {name:'bb', address:'zjut'});
     assert.equal(index3, 3, 'test multi params of  object : passed!');
+
+    /*var list4 = ["Attach_0000000000000000000667698"];
+    var index4 = Est.findIndex(list4, 'Attach_0000000000000000000667698');
+    assert.equal(index4, 0, 'passed');*/
 });
 
 QUnit.test('Est.sortBy', function(assert){

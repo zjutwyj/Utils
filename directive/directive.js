@@ -152,7 +152,7 @@ app.directive('ngEnter', function() {
  */
 app.directive('ngFocus', function(){
     return {
-        link:function(sceop, elements, attrs, controller){
+        link:function(scope, elements, attrs, controller){
             elements[0].focus();
         }
     }
@@ -206,17 +206,21 @@ app.directive('format', ['$filter', function ($filter) {
  * @example
  *      <button id="copy-button" data-clipboard-text="Copy Me!" title="Click to copy me.">Copy to Clipboard</button>
  */
-app.directive('clipboard', function(){
+app.directive('clipboard', ['$rootScope',function($rootScope){
     return function(scope, element, attrs){
         var client = new ZeroClipboard( element, {
             moviePath: "vendor/zeroclipboard/ZeroClipboard.swf"
         } );
         client.on( "mousedown", function(client) {
             client.on( "complete", function(client, args) {
-                alert('已复制到剪切板');
+                if (scope.ok){
+                    scope.ok();
+                } else{
+                    $rootScope.showMsg('复制成功');
+                }
             } );
         } );
     }
-});
+}]);
 
 
