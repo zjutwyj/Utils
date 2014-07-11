@@ -143,6 +143,20 @@ app.directive('ngEnter', function() {
         });
     };
 });
+/**
+ * @description 获取焦点
+ * @method ngFoces
+ * @author wyj on 14/7/10
+ * @example
+ *      <input type="button" ng-focus >
+ */
+app.directive('ngFocus', function(){
+    return {
+        link:function(sceop, elements, attrs, controller){
+            elements[0].focus();
+        }
+    }
+});
 
 /**
  * @description 格式化输入的内容
@@ -204,3 +218,5 @@ app.directive('clipboard', function(){
         } );
     }
 });
+
+
