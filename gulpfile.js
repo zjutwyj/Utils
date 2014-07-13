@@ -10,16 +10,13 @@ var minifyCSS = require('gulp-minify-css');
 var del = require('del');
 
 var paths = {
-    app: {
+    vendor: {
       scripts: {
           source: ['app/vendor/jquery/jquery.min.js',
               'app/vendor/angular-custom/angular.js',
               'app/vendor/bootstrap/bootstrap.js',
               'app/scripts/utils/Est.min.js',
               'app/vendor/zeroclipboard/ZeroClipboard.min.js',
-              'app/vendor/ace/ace-elements.min.js',
-              'app/vendor/ace/ace.min.js',
-              'app/vendor/ace-extra.min.js',
               'app/vendor/angular-resource.min.js',
               'app/vendor/angular-cookies/angular-cookies.min.js',
               'app/vendor/angular-route/angular-route.min.js',
@@ -31,6 +28,30 @@ var paths = {
           dist: 'app/scripts/vendor',
           name: 'vendor.min.js'
       }
+    },
+    app:{
+      scripts: {
+        source: ['app/scripts/app.js',
+            'app/scripts/directives/directive.js',
+            'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
+            'app/scripts/directives/ui.js',
+            'app/scripts/filters/filter.js',
+            'app/scripts/factorys/factory.js'],
+          dist: 'app/scripts',
+          name: 'app.min.js'
+      }
+    },
+    patch: {
+        scripts: {
+            source: ['app/vendor/es5-shim/es5-shim.js',
+                'app/vendor/json3/json3.js',
+                'app/vendor/respond/respond.src.js',
+                'app/vendor/html5shiv/html5shiv.js',
+                'app/vendor/html5shiv/html5shiv-printshiv.js',
+                'app/vendor/css3-mediaqueries/css3-mediaqueries.js'],
+            dist: 'app/scripts/patch',
+            name: 'patch.min.js'
+        }
     },
     Est : {
         scripts: {
@@ -144,11 +165,28 @@ gulp.task('Est', function(){
     doTask('Est', false);
 });
 
+gulp.task('vendor', function(){
+    doTask('vendor', true);
+});
+
+gulp.task('vendor.min', function(){
+    doTask('vendor', false);
+});
+
 gulp.task('app', function(){
     doTask('app', true);
 });
+
 gulp.task('app.min', function(){
     doTask('app', false);
+});
+
+gulp.task('patch', function(){
+    doTask('patch', true);
+});
+
+gulp.task('patch.min', function(){
+    doTask('patch', false);
 });
 
 gulp.task('normal', function(){
