@@ -117,14 +117,14 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
                 if (typeof (action) === 'function') action(msg);
             });
         };
-        $rootScope.modalInit = ['$scope', '$modalInstance', 'item',function($scope, $modalInstance, item){
+        $rootScope.modalInit = function($scope, $modalInstance, item){
             $scope.ok = function(){
                 $modalInstance.close(item);
             }
             $scope.cancel = function(){
                 $modalInstance.dismiss('cancel');
             }
-        }];
+        }
         $rootScope.search = function(search_key, url){
             var url = url || '/product_list';
             $rootScope.search_key = search_key;

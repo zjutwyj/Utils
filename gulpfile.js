@@ -33,6 +33,7 @@ var paths = {
       scripts: {
         source: ['app/scripts/app.js',
             'app/scripts/directives/directive.js',
+            'app/scripts/directives/angular-ueditor/ng-ueditor.src.js',
             'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
             'app/scripts/directives/ui-bootstrap/ui.bootstrap.transition.js',
             'app/scripts/directives/ui-bootstrap/ui.bootstrap.position.js',
