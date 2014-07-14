@@ -71,24 +71,38 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
             $rootScope.current_page = page;
             $location.path(url);
         }
-        /** $rootScope.open("是否删除该图片？",function(){
-     * $http({
-     *      method : 'DELETE',
-     *      url:API_END_POINT + 'album/' +$scope.albumId+'/att/' + pic.att_id)
-     * }).success(function () {
-     * $scope.pic_list.splice(index, 1);
-     * })
-     * .error(function (data) {
-     * });
-     * },{
-     * ok:"确定",
-     * cancel : "取消"
-     * });
-         */
         $rootScope.open = function (msg, action, opts) {
             var modalInstance = $modal.open({
                 templateUrl: 'templates/msg/msg.html',
-                controller: MsgModelInit,
+                controller: ['$scope', '$modalInstance', 'item',function($scope, $modalInstance, item){
+                    $scope.ok_text = "确定";
+                    $scope.cancel_text = "关闭";
+                    $scope.msg = item.msg;
+                    if (item.opts) {
+                        if (item.opts.ok) {
+                            $scope.show_ok = true;
+                            $scope.ok_text = item.opts.ok;
+                        }
+                        if (item.opts.cancel) {
+                            $scope.show_cancel = true;
+                            $scope.cancel_text = item.opts.cancel;
+                        }
+                    } else {
+                        $scope.show_ok = true;
+                        $scope.show_cancel = true;
+                    }
+                    $scope.ok = function () {
+                        $modalInstance.close($scope.msg);
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                    if (typeof (item.action) !== 'undefined' && typeof (item.action) !== 'function') {
+                        $timeout(function () {
+                            $scope.cancel();
+                        }, item.action);
+                    }
+                }],
                 resolve: {
                     item: function () {
                         return {
@@ -100,49 +114,17 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
                 }
             });
             modalInstance.result.then(function (msg) {
-                if (typeof (action) === 'function') {
-                    action(msg);
-                }
-            }, function () {
+                if (typeof (action) === 'function') action(msg);
             });
         };
-        $rootScope.modalInit = function($scope, $modalInstance, item){
+        $rootScope.modalInit = ['$scope', '$modalInstance', 'item',function($scope, $modalInstance, item){
             $scope.ok = function(){
                 $modalInstance.close(item);
             }
             $scope.cancel = function(){
                 $modalInstance.dismiss('cancel');
             }
-        }
-        var MsgModelInit = function ($scope, $modalInstance, item) {
-            $scope.ok_text = "确定";
-            $scope.cancel_text = "关闭";
-            $scope.msg = item.msg;
-            if (item.opts) {
-                if (item.opts.ok) {
-                    $scope.show_ok = true;
-                    $scope.ok_text = item.opts.ok;
-                }
-                if (item.opts.cancel) {
-                    $scope.show_cancel = true;
-                    $scope.cancel_text = item.opts.cancel;
-                }
-            } else {
-                $scope.show_ok = true;
-                $scope.show_cancel = true;
-            }
-            $scope.ok = function () {
-                $modalInstance.close($scope.msg);
-            };
-            $scope.cancel = function () {
-                $modalInstance.dismiss('cancel');
-            };
-            if (typeof (item.action) !== 'undefined' && typeof (item.action) !== 'function') {
-                $timeout(function () {
-                    $scope.cancel();
-                }, item.action);
-            }
-        };
+        }];
         $rootScope.search = function(search_key, url){
             var url = url || '/product_list';
             $rootScope.search_key = search_key;
@@ -177,15 +159,14 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
                 type : 'post',
                 async : true,
                 data : JSON.stringify({"page" : page, "item_id": item_id}),
-                success : function (result){}
+                success : function (){}
             });
         }
         $rootScope.static_part = function(){
             $.ajax({
                 url: '/views/static/part',
                 type: 'post',
-                success: function(data){
-                }
+                success: function(){ }
             });
             $rootScope.edited = false;
             $rootScope.editNum = 0;

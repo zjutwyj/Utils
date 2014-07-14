@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h5 class="green"><i class="icon-info-sign green"></i>提示信息</h5>
+    <i class="icon-remove upload-close" ng-click="cancel()">&nbsp;</i>
+</div>
+<div class="modal-body row blue" style="font-size:14px;font-weignt:bold;text-align:center;padding:10px;">
+    <span>{{msg}}</span>
+</div>
+<div class="modal-footer">
+    <button ng-show="show_ok" class="btn btn-primary"  ng-click="ok()">{{ok_text}}</button>
+    <button ng-show="show_cancel" class="btn btn-warning" ng-click="cancel()">{{cancel_text}}</button>
+</div>
