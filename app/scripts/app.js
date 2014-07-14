@@ -41,6 +41,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         $rootScope.editNum = 0;
         $rootScope.alerts = [];
         $rootScope.search_key = '';
+        $rootScope.ueContainer = {};
         $rootScope.closeAlert = function (index) {
             $rootScope.alerts.splice(index, 1);
         };

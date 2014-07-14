@@ -398,7 +398,7 @@ app.factory('PictureFactory', ['BaseFactory', function(BaseFactory){
     return {
         query: function(id, params){
             var params = Est.typeOf(params) === 'undefined' ? '' : params;
-            return BaseFactory.query('album/' + id + '/att' + params);
+            return BaseFactory.query('album/' + id + '/att', params);
         },
         detail: function(id){
             return BaseFactory.detail('album/att', id);

@@ -45,12 +45,13 @@
                     element.attr('contenteditable', true);
                 }
                 var onLoad = function () {
-                    var instance =UE.getEditor(attrs['id']);
+                    var id = attrs['id'];
+                    $rootScope.ueContainer[id] =UE.getEditor(id);
                     element.bind('$destroy', function () {
-                        UE.getEditor(attrs['id']).destroy();//移除编辑器
+                        $rootScope.ueContainer[id].destroy();//移除编辑器
                     });
                     var setModelData = function(setPristine) {
-                        var data = instance.getContent();
+                        var data = $rootScope.ueContainer[id].getContent();
                         if (data == EMPTY_HTML) {
                             data = null;
                         }
@@ -62,42 +63,24 @@
                         if (!data.length) { return; }
                         var item = data.pop() || EMPTY_HTML;
                         isReady = false;
-                        instance.setContent(item);
+                        $rootScope.ueContainer[id].setContent(item);
                     }
-                    instance.addListener('contentChange',setModelData);
-                    instance.addListener('instanceReady',function(){
+                    $rootScope.ueContainer[id].addListener('contentChange',setModelData);
+                    $rootScope.ueContainer[id].addListener('instanceReady',function(){
                         scope.$apply(function(){
                             onUpdateModelData(true);
                         });
                     });
-                    instance.addListener('customConfigLoaded', function() {
+                    $rootScope.ueContainer[id].addListener('customConfigLoaded', function() {
                         configLoaderDef.resolve();
                     });
-                    var QQModelInit = function ($scope, $modalInstance, obj) {
-                        $rootScope.qqstr = "";
-                        $scope.ok = function () {
-                            $modalInstance.close($rootScope.qqstr);
-                        };
-                        $scope.cancel = function () {
-                            $modalInstance.dismiss('cancel');
-                        };
-                    }
-                    var codeInit = function($scope,$modalInstance,obj){
-                        $scope.codestr = "";
-                        $scope.ok = function(str){
-                            $modalInstance.close(str);
-                        }
-                        $scope.cancel = function(){
-                            $modalInstance.dismiss('cancel');
-                        }
-                    }
-                    instance.addListener("openDialog", function(){
+                    $rootScope.ueContainer[id].addListener("openDialog", function(){
                         $rootScope.openFileDialog(function(select_list){
-                            instance.execCommand('insertHtml', "<img src='"+$rootScope.API_END_POINT+select_list[0].server_path+"'/>");
+                            $rootScope.ueContainer[id].execCommand('insertHtml', "<img src='"+$rootScope.API_END_POINT+select_list[0].server_path+"'/>");
                         });
                         return false;
                     });
-                    instance.addListener("openFlashDialog", function(){
+                    $rootScope.ueContainer[id].addListener("openFlashDialog", function(){
                         $rootScope.openFlashDialog(function(select_list){
                             var str = '',
                                 src = $rootScope.API_END_POINT + select_list[0].server_path;
@@ -113,30 +96,34 @@
                             else{
                                 str = "<embed width=\"78\" height=\"80\" allowscriptaccess=\"always\" wmode=\"transparent\" src=\""+src+"\">";
                             }
-                            instance.execCommand('insertHtml', str);
+                            $rootScope.ueContainer[id].execCommand('insertHtml', str);
                         })
                         return false;
                     });
-                    instance.addListener("openQQDialog", function(){
+                    $rootScope.ueContainer[id].addListener("openQQDialog", function(){
                         var qqModelInstance = $modal.open({
-                            templateUrl : 'modules/Tool/views/qq.html',
-                            controller: QQModelInit,
+                            templateUrl : 'vendor/ueditor1_4_3/third-party/qq/index.html',
+                            controller: ['$scope', '$modalInstance', 'obj', function ($scope, $modalInstance, obj) {
+                                $rootScope.qqstr = "";
+                                $rootScope.modalInit($scope, $modalInstance, $scope.qqstr);
+                            }],
                             resolve : {
-                               obj : function(){
-                                   return "";
-                               }
+                               obj : function(){ return ""; }
                             }
                         });
                         qqModelInstance.result.then(function(str){
-                            instance.execCommand('insertHtml', str);
+                            $rootScope.ueContainer[id].execCommand('insertHtml', str);
                         },function(){
                             //alert('openQQDialog');
                         });
                     });
-                    instance.addListener('openCodeDialog', function(){
+                    $rootScope.ueContainer[id].addListener('openCodeDialog', function(){
                         var codeInstance = $modal.open({
-                            templateUrl : 'modules/Tool/views/qrcode.html',
-                            controller : codeInit,
+                            templateUrl : 'vendor/ueditor1_4_3/third-party/qrcode/index.html',
+                            controller : ['$scope', '$modalInstance', 'obj', function($scope, $modalInstance, obj){
+                                $scope.codestr = "";
+                                $rootScope.modalInit($scope, $modalInstance, $scope.codestr);
+                            }],
                             resolve : {
                                 obj : function(){
                                     return "";
@@ -144,11 +131,11 @@
                             }
                         });
                         codeInstance.result.then(function(str){
-                            instance.execCommand('insertHtml',str);
+                            $rootScope.ueContainer[id].execCommand('insertHtml',str);
                         });
                     });
                     $timeout(function(){
-                        instance.setContent(element.val());
+                        $rootScope.ueContainer[id].setContent(element.val());
                     },1000);
                     /*var safeApply = function(scope, fn) {
                         (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);

@@ -240,3 +240,48 @@ app.directive('loading', ['$rootScope', function($rootScope){
     }
 }]);
 
+/**
+ * @description 百度编辑器 上传word文件
+ * @method ueditorword
+ * @author wyj on 14/7/10
+ * @examples
+ *      <button id="copy-button"  ueditorword>上传word文件</button>
+ */
+app.directive('ueditorword', ['$rootScope',function($rootScope){
+    return function(scope, element, attrs){
+        var uploader = WebUploader.create({
+            pick: {
+                id: "#" + id,
+                multiple: false
+            },
+            accept: {
+                title: "word文档",
+                extensions: "doc,docx",
+                mimeTypes: "application/msword"
+            },
+            fileSingleSizeLimit: 5120000,
+            swf: 'docparser/webuploader/Uploader.swf',
+            server: 'http://convert.wenku.baidu.com/rtcs/convert?pn=1&rn=-1',
+            fileVal: 'file',
+            duplicate: true
+        });
+
+        uploader.on('filesQueued', function(files){
+            uploader.upload();
+            uploader.disable();
+        });
+
+        uploader.on('uploadFinished', function(files){
+            setTimeout(function () {
+                uploader.enable();
+            },2000);
+        });
+
+        uploader.on('all', function(){
+            var args = UE.utils.clone([], arguments);
+            args[0] = 'uploader_' + args[0];
+            console.log(args[0]);
+            return ue.fireEvent.apply(ue, args);
+        });
+    }
+}]);
