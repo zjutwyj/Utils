@@ -102,7 +102,7 @@
                     });
                     $rootScope.ueContainer[id].addListener("openQQDialog", function(){
                         var qqModelInstance = $modal.open({
-                            templateUrl : 'vendor/ueditor1_4_3/third-party/qq/index.html',
+                            templateUrl : 'modules/Tool/views/qq.html',
                             controller: ['$scope', '$modalInstance', 'obj', function ($scope, $modalInstance, obj) {
                                 $rootScope.qqstr = "";
                                 $rootScope.modalInit($scope, $modalInstance, $scope.qqstr);
@@ -112,26 +112,22 @@
                             }
                         });
                         qqModelInstance.result.then(function(str){
-                            $rootScope.ueContainer[id].execCommand('insertHtml', str);
-                        },function(){
-                            //alert('openQQDialog');
+                            $rootScope.ueContainer[id].execCommand('insertHtml', $rootScope.qqstr);
                         });
                     });
                     $rootScope.ueContainer[id].addListener('openCodeDialog', function(){
                         var codeInstance = $modal.open({
-                            templateUrl : 'vendor/ueditor1_4_3/third-party/qrcode/index.html',
+                            templateUrl : 'modules/Tool/views/qrcode.html',
                             controller : ['$scope', '$modalInstance', 'obj', function($scope, $modalInstance, obj){
                                 $scope.codestr = "";
                                 $rootScope.modalInit($scope, $modalInstance, $scope.codestr);
                             }],
                             resolve : {
-                                obj : function(){
-                                    return "";
-                                }
+                                obj : function(){ return ""; }
                             }
                         });
                         codeInstance.result.then(function(str){
-                            $rootScope.ueContainer[id].execCommand('insertHtml',str);
+                            $rootScope.ueContainer[id].execCommand('insertHtml',$rootScope.codestr);
                         });
                     });
                     $timeout(function(){

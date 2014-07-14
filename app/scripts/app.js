@@ -12,7 +12,7 @@ var app = angular.module('angularOneApp', [
     'ui.bootstrap.modal',
     'ui.bootstrap.tooltip'
 ])
-.constant('HOST', 'example.com')
+.constant('HOST', 'http://example.com:9004')
 .constant('API_END_POINT', 'http://example.com:9004/api/')
 .constant('SOURCE_URL', 'http://agent.example.com/')
 .constant('MOBILE_DESIGN_URL', 'http://mviews.example.com:4002')
