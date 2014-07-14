@@ -1,7 +1,7 @@
 /**
  * 工具类库.
  *
- * @class Est
+ * @class Est - 工具类库
  * @constructor Est
  */
 ;(function() {'use strict';

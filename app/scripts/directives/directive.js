@@ -1,7 +1,6 @@
 /**
  * @description directive
- * @namespace directive
- * @class directive
+ * @class directive - 指令集
  * @author yongjin on 2014/7/3
  */
 /**
@@ -33,11 +32,12 @@ app.directive('datetimepicker', function() {
 });
 
 /**
- * @description 图片等比例居中显示
+ * @description 图片等比例居中显示, data-width data-height 显示的长与宽，
+ * data-fill 为false时， 图片居中显示
  * @method imgcrop
  * @author wyj on 14/3/11
  * @example
- *      <img imgcrop data-width='80' data-height="80"   ng-src="">
+ *      <img imgcrop data-width='80' data-height="80"  data-fill="true" ng-src="">
  **/
 app.directive('imgcrop', function () {
     return {
@@ -102,7 +102,6 @@ app.directive("clickToEdit", function() {
 /**
  * @description flash
  * @method embedSrc
- * @param {String} embedSrc 地址
  * @author wyj on 14;5/21
  * @example
  *      <embed width="105" height="105" allowscriptaccess="always" wmode="transparent" embed-src="{{API_END_POINT}}{{pic.server_path}}" />
@@ -126,7 +125,6 @@ app.directive('embedSrc', function () {
 /**
  * @description 回车事件
  * @method ngEnter
- * @param {Function} ngEnter 回调函数
  * @author wyj on 14;5/21
  * @example
  *      <input  class="ui-pg-input" type="text" size="2" maxlength="7" ng-init="gotopage=1" tooltip="按回车跳转"  ng-model="gotopage" ng-enter="params.page(gotopage)" role="textbox">
@@ -159,11 +157,9 @@ app.directive('ngFocus', function(){
 });
 
 /**
- * @description 格式化输入的内容
+ * @description 格式化输入的内容 number 格式化数字 1200 => 1,200，
+ * price 格式化价格 1200 => 1,200， phone 格式化固定电话 057512345678 => 0575-12345678
  * @method format
- * @param {String} number 格式化数字 1200 => 1,200
- * @param {String} price 格式化价格 1200 => 1,200
- * @param {String} phone 格式化固定电话 057512345678 => 0575-12345678
  * @author wyj on 14;5/21
  * @example
  *      <input ng-model="user.phone"  name="phone" format="phone" ng-required="requireTel"
@@ -227,7 +223,7 @@ app.directive('clipboard', ['$rootScope',function($rootScope){
  * @description 显示加载中...
  * @method loading
  * @author wyj on 14/7/12
- * @exmaple
+ * @example
  *      <div loading>loading...</div>
  */
 app.directive('loading', ['$rootScope', function($rootScope){

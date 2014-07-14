@@ -1,14 +1,23 @@
 /**
- * @description factory
- * @namespace factory
+ * @description 工厂类， 提供数组接口
+ * @class factory - 工厂类
  * @author yongjin on 2014/7/3
  */
 
 /**
- * @description 基础工厂类
- * @factory BaseFactory
+ * @description 基础工厂类， 提供四个方法 ，分别为query[查询], detail[详细], save[保存或添加], del[删除]
+ * @method BaseFactory
  * @author wyj on 14/7/3
- * @modified wyj on 14/7/3 [bulid]
+ * @example
+ *      query : BaseFactory.query('product', params);
+ *
+ *      detail : BaseFactory.detail('product', id);
+ *
+ *      save : BaseFactory.save({product_id:'Product_000000001', name: 'aaa'}, 'product', {
+ *              id: 'product_id'
+ *          }, params);
+ *
+ *      del : BaseFactory.del('product', id);
  */
 app.factory('BaseFactory', ['$http', '$q', 'API_END_POINT',
     function ($http, $q, API_END_POINT) {
@@ -65,9 +74,27 @@ app.factory('BaseFactory', ['$http', '$q', 'API_END_POINT',
 
 /**
  * @description 产品工厂类
- * @factory ProductFactory
+ * @method ProductFactory
  * @author wyj on 14/7/2
- * @modified wyj on 14/7/2 [添加注释]
+ * @example
+ *      query : ProductFactory.query(); // 全查
+ *              ProductFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : ProductFactory.save(product).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : ProductFactory.detail(product.product_id).then(function(data){
+ *                  $scope.product = data;
+ *              });
+ *
+ *      del : ProductFactory.del(product).then(function(data){ // 参数可以是ID 或 product对象 或ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
  */
 app.factory('ProductFactory', ['BaseFactory', function (BaseFactory) {
     return {
@@ -84,6 +111,9 @@ app.factory('ProductFactory', ['BaseFactory', function (BaseFactory) {
             return BaseFactory.detail('product', id);
         },
         del: function (id) {
+            if (Est.typeOf(id) === 'array'){
+                return BaseFactory.del('product', undefined, id);
+            }
             var id = Est.typeOf(id) === 'object' ? id.product_id : id;
             return BaseFactory.del('product', id);
         }
@@ -92,9 +122,27 @@ app.factory('ProductFactory', ['BaseFactory', function (BaseFactory) {
 
 /**
  * @description 新闻工厂类
- * @factory NewsFactory
+ * @method NewsFactory
  * @author wyj on 14/7/2
- * @modified wyj on 14/7/2 [添加注释]
+ * @example
+ *      query : NewsFactory.query(); // 全查
+ *              NewsFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : NewsFactory.save(news).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : NewsFactory.detail(news.news_id).then(function(data){
+ *                  $scope.news = data;
+ *              });
+ *
+ *      del : NewsFactory.del(news).then(function(data){ // 参数可以是ID 或 news对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
  */
 app.factory('NewsFactory', ['BaseFactory', function (BaseFactory) {
     return {
@@ -111,6 +159,9 @@ app.factory('NewsFactory', ['BaseFactory', function (BaseFactory) {
             return BaseFactory.detail('news', id);
         },
         del: function (id) {
+            if (Est.typeOf(id) === 'array'){
+                return BaseFactory.del('news', undefined, id);
+            }
             var id = Est.typeOf(id) === 'object' ? id.news_id : id;
             return BaseFactory.del('news', id);
         }
@@ -119,14 +170,33 @@ app.factory('NewsFactory', ['BaseFactory', function (BaseFactory) {
 
 /**
  * @description 产品分类工厂类
- * @factory ProductCategoryFactory
+ * @method ProductCategoryFactory
  * @author wyj on 14/7/3
- * @modified wyj on 14/7/3 [bulid]
+ * @example
+ *      query : ProductCategoryFactory.query(); // 全查
+ *              ProductCategoryFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : ProductCategoryFactory.save(category).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : ProductCategoryFactory.detail(category.category_id).then(function(data){
+ *                  $scope.category = data;
+ *              });
+ *
+ *      del : ProductCategoryFactory.del(category).then(function(data){ // 参数可以是ID 或 category对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
  */
 app.factory('ProductCategoryFactory', ['BaseFactory', function (BaseFactory) {
     return {
-        query: function () {
-            return BaseFactory.query('product/category');
+        query: function (params) {
+            var url = params ? 'product/category' : 'product/category';
+            return BaseFactory.query(url, params);
         },
         save: function (target, params) {
             return BaseFactory.save(target, 'product/category', {
@@ -137,6 +207,9 @@ app.factory('ProductCategoryFactory', ['BaseFactory', function (BaseFactory) {
             return BaseFactory.detail('product/category', id);
         },
         del: function (id) {
+            if (Est.typeOf(id) === 'array'){
+                return BaseFactory.del('product/category', undefined, id);
+            }
             var id = Est.typeOf(id) === 'object' ? id.category_id : id;
             return BaseFactory.del('product/category', id);
         }
@@ -144,14 +217,33 @@ app.factory('ProductCategoryFactory', ['BaseFactory', function (BaseFactory) {
 }]);
 /**
  * @description 新闻分类工厂类
- * @factory NewsCategoryFactory
+ * @method NewsCategoryFactory
  * @author wyj on 14/7/3
- * @modified wyj on 14/7/3 [bulid]
+ * @example
+ *      query : NewsCategoryFactory.query(); // 全查
+ *              NewsCategoryFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : NewsCategoryFactory.save(category).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : NewsCategoryFactory.detail(category.category_id).then(function(data){
+ *                  $scope.category = data;
+ *              });
+ *
+ *      del : NewsCategoryFactory.del(category).then(function(data){ // 参数可以是ID 或 category对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
  */
 app.factory('NewsCategoryFactory', ['BaseFactory', function (BaseFactory) {
     return {
-        query: function () {
-            return BaseFactory.query('news/category');
+        query: function (params) {
+            var url = params ? 'news/category' : 'news/category';
+            return BaseFactory.query(url, params);
         },
         save: function (target, params) {
             return BaseFactory.save(target, 'news/category', {
@@ -162,6 +254,9 @@ app.factory('NewsCategoryFactory', ['BaseFactory', function (BaseFactory) {
             return BaseFactory.detail('news/category', id);
         },
         del: function (id) {
+            if (Est.typeOf(id) === 'array'){
+                return BaseFactory.del('news/category', undefined, id);
+            }
             var id = Est.typeOf(id) === 'object' ? id.category_id : id;
             return BaseFactory.del('news/category', id);
         }
@@ -169,22 +264,52 @@ app.factory('NewsCategoryFactory', ['BaseFactory', function (BaseFactory) {
 }]);
 /**
  * @description 产品标签
- * @factory ProductTagFactory
+ * @method ProductTagFactory
  * @author wyj on 14/7/2
- * @modified wyj on 14/7/2 [创建]
+ * @example
+ *      query : ProductTagFactory.query(); // 全查
+ *              ProductTagFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : ProductTagFactory.save(item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : ProductTagFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : ProductTagFactory.del(item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
+ *
+ *      saveProTag : ProductTagFactory.saveProTag($scope.product.product_id, item.tag_id); // 保存产品标签
+ *
+ *      delProTag : ProductTagFactory.delProTag($scope.product.product_id, item.tag_id); // 删除产品标签
  */
 app.factory('ProductTagFactory', ['BaseFactory', function (BaseFactory) {
     return {
-        query: function () {
-            return BaseFactory.query('product/tag');
+        query: function (params) {
+            var url = params ? 'product/tag' : 'product/tag';
+            return BaseFactory.query(url, params);
         },
-        queryById: function (id) {
+        detail: function (id) {
             return BaseFactory.query('product/' + id + '/tag');
         },
         save: function (target, params) {
             return BaseFactory.save(target, 'product/tag', {
                 id: 'tag_id'
             }, params);
+        },
+        del: function (id) {
+            if (Est.typeOf(id) === 'array'){
+                return BaseFactory.del('product/tag', undefined, id);
+            }
+            var id = Est.typeOf(id) === 'object' ? id.category_id : id;
+            return BaseFactory.del('product/tag', id);
         },
         saveProTag: function (product_id, tag_id, params) {
             return BaseFactory.save({
@@ -200,14 +325,33 @@ app.factory('ProductTagFactory', ['BaseFactory', function (BaseFactory) {
 }]);
 /**
  * @description 相册
- * @factory AlbumFactory
+ * @method AlbumFactory
  * @author wyj on 14/7/8
- * @modified wyj on 14/7/8 [创建]
+ * @example
+ *      query : AlbumFactory.query(); // 全查
+ *              AlbumFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : AlbumFactory.save(item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : AlbumFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : AlbumFactory.del(item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
  */
 app.factory('AlbumFactory', ['BaseFactory', function(BaseFactory){
     return {
-        query: function(){
-            return BaseFactory.query('album');
+        query: function(params){
+            var url = params ? 'album' : 'album';
+            return BaseFactory.query(url, params);
         },
         detail: function(id){
             return BaseFactory.detail('album', id);
@@ -218,6 +362,9 @@ app.factory('AlbumFactory', ['BaseFactory', function(BaseFactory){
             }, params);
         },
         del: function (id) {
+            if (Est.typeOf(id) === 'array'){
+                return BaseFactory.del('album', undefined, id);
+            }
             var id = Est.typeOf(id) === 'object' ? id.album_id : id;
             return BaseFactory.del('album', id);
         }
@@ -225,15 +372,36 @@ app.factory('AlbumFactory', ['BaseFactory', function(BaseFactory){
 }]);
 /**
  * @description 图片
- * @factory PictureFactory
+ * @method PictureFactory
  * @author wyj on 14/7/9
- * @modified wyj on 14/7/9 [创建]
+ * @example
+ *      query : PictureFactory.query(); // 全查
+ *              ProductTagFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : PictureFactory.save(albumId, item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : PictureFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : PictureFactory.del(albumId, item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
  */
 app.factory('PictureFactory', ['BaseFactory', function(BaseFactory){
     return {
         query: function(id, params){
             var params = Est.typeOf(params) === 'undefined' ? '' : params;
             return BaseFactory.query('album/' + id + '/att' + params);
+        },
+        detail: function(id){
+            return BaseFactory.detail('album/att', id);
         },
         del: function(albumId, id){
             if (Est.typeOf(albumId) === 'array'){

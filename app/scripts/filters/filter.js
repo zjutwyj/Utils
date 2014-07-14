@@ -1,6 +1,6 @@
 /**
- * @description filters
- * @namespace filters
+ * @description 过滤器
+ * @class filters - 过滤器
  * @author yongjin on 2014/7/3
  */
 /**
@@ -52,7 +52,8 @@ app.filter('characters', function () {
     };
 });
 /**
- * @description 获取尺寸为4的图片
+ * @description 获取尺寸为4的图片， pic5 获取尺寸为5的图片， 以此类推
+ * pic3 : 800*800; pic4 : 300*300; pic5 : 160*160; pic6 : 40*40; pic7 : 500*500; pic8 : 80*80
  * @method pic4
  * @author wyj on 14/7/9
  * @example

@@ -10,7 +10,7 @@ var minifyCSS = require('gulp-minify-css');
 var del = require('del');
 
 var paths = {
-    vendor: {
+    vendor : {
       scripts: {
           source: ['app/vendor/jquery/jquery.min.js',
               'app/vendor/angular-custom/angular.js',
@@ -29,19 +29,24 @@ var paths = {
           name: 'vendor.min.js'
       }
     },
-    app:{
+    app :{
       scripts: {
         source: ['app/scripts/app.js',
             'app/scripts/directives/directive.js',
             'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
-            'app/scripts/directives/ui.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.transition.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.position.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.bindHtml.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
             'app/scripts/filters/filter.js',
             'app/scripts/factorys/factory.js'],
           dist: 'app/scripts',
           name: 'app.min.js'
       }
     },
-    patch: {
+    patch : {
         scripts: {
             source: ['app/vendor/es5-shim/es5-shim.js',
                 'app/vendor/json3/json3.js',
@@ -51,6 +56,16 @@ var paths = {
                 'app/vendor/css3-mediaqueries/css3-mediaqueries.js'],
             dist: 'app/scripts/patch',
             name: 'patch.min.js'
+        }
+    },
+    doc : {
+        doc : {
+            source: ['app/scripts/utils/Est.source.js',
+                'app/scripts/directives/directive.js',
+                'app/scripts/filters/filter.js',
+                'app/scripts/factorys/factory.js',
+                'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js'],
+            dist: './app/doc'
         }
     },
     Est : {
@@ -160,8 +175,10 @@ gulp.task('watch', function() {
     gulp.watch(paths, ['begin']);
 });
 
-
 gulp.task('Est', function(){
+    doTask('Est', true);
+});
+gulp.task('Est.min', function(){
     doTask('Est', false);
 });
 
@@ -176,7 +193,9 @@ gulp.task('vendor.min', function(){
 gulp.task('app', function(){
     doTask('app', true);
 });
-
+gulp.task('doc', function(){
+    doTask('doc', false);
+});
 gulp.task('app.min', function(){
     doTask('app', false);
 });
