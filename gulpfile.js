@@ -5,6 +5,8 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var imagemin = require('gulp-imagemin');
 var connect = require('gulp-connect');
+var jshint = require('gulp-jshint');
+var stylish = require('jshint-stylish');
 var yuidoc = require("gulp-yuidoc");
 var minifyCSS = require('gulp-minify-css');
 var del = require('del');
@@ -93,6 +95,8 @@ function doTask(item, debug){
                     gulp.task(item + key, function () {
                         if (debug) {
                             return gulp.src(paths[item].scripts.source)
+                                .pipe(jshint())
+                                .pipe(jshint.reporter(stylish))
                                 .pipe(concat(paths[item].scripts.name))
                                 .pipe(gulp.dest(paths[item].scripts.dist));
                         }

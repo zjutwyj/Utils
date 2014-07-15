@@ -108,13 +108,19 @@ app.factory('ProductFactory', ['BaseFactory', function (BaseFactory) {
             }, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.product_id;
+            }
             return BaseFactory.detail('product', id);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('product', undefined, id);
+            var type = Est.typeOf(id);
+            switch (type){
+                case 'array':
+                    return BaseFactory.del('product', undefined, id);
+                case 'object':
+                    id = id.product_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.product_id : id;
             return BaseFactory.del('product', id);
         }
     }
@@ -156,13 +162,19 @@ app.factory('NewsFactory', ['BaseFactory', function (BaseFactory) {
             }, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.news_id;
+            }
             return BaseFactory.detail('news', id);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('news', undefined, id);
+            var type = Est.typeOf(id);
+            switch (type){
+                case 'array':
+                    return BaseFactory.del('news', undefined, id);
+                case 'object':
+                    id = id.news_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.news_id : id;
             return BaseFactory.del('news', id);
         }
     }
@@ -204,13 +216,18 @@ app.factory('ProductCategoryFactory', ['BaseFactory', function (BaseFactory) {
             }, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.category_id;
+            }
             return BaseFactory.detail('product/category', id);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('product/category', undefined, id);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('product/category', undefined, id);
+                case 'object':
+                    id = id.category_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.category_id : id;
             return BaseFactory.del('product/category', id);
         }
     }
@@ -251,13 +268,18 @@ app.factory('NewsCategoryFactory', ['BaseFactory', function (BaseFactory) {
             }, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.category_id;
+            }
             return BaseFactory.detail('news/category', id);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('news/category', undefined, id);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('news/category', undefined, id);
+                case 'object':
+                    id = id.category_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.category_id : id;
             return BaseFactory.del('news/category', id);
         }
     }
@@ -297,6 +319,9 @@ app.factory('ProductTagFactory', ['BaseFactory', function (BaseFactory) {
             return BaseFactory.query(url, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.tag_id;
+            }
             return BaseFactory.query('product/' + id + '/tag');
         },
         save: function (target, params) {
@@ -305,10 +330,12 @@ app.factory('ProductTagFactory', ['BaseFactory', function (BaseFactory) {
             }, params);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('product/tag', undefined, id);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('product/tag', undefined, id);
+                case 'object':
+                    id = id.category_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.category_id : id;
             return BaseFactory.del('product/tag', id);
         },
         saveProTag: function (product_id, tag_id, params) {
@@ -354,6 +381,9 @@ app.factory('AlbumFactory', ['BaseFactory', function(BaseFactory){
             return BaseFactory.query(url, params);
         },
         detail: function(id){
+            if (Est.typeOf(id) === 'object'){
+                id = id.album_id;
+            }
             return BaseFactory.detail('album', id);
         },
         save: function (target, params) {
@@ -362,10 +392,12 @@ app.factory('AlbumFactory', ['BaseFactory', function(BaseFactory){
             }, params);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('album', undefined, id);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('album', undefined, id);
+                case 'object':
+                    id = id.album_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.album_id : id;
             return BaseFactory.del('album', id);
         }
     }
@@ -401,11 +433,17 @@ app.factory('PictureFactory', ['BaseFactory', function(BaseFactory){
             return BaseFactory.query('album/' + id + '/att', params);
         },
         detail: function(id){
+            if (Est.typeOf(id) === 'object'){
+                id = id.att_id;
+            }
             return BaseFactory.detail('album/att', id);
         },
         del: function(albumId, id){
-            if (Est.typeOf(albumId) === 'array'){
-                return BaseFactory.del('album/att', undefined, albumId);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('album/att', undefined, albumId);
+                case 'object':
+                    id = id.att_id;
             }
             return BaseFactory.del('album/' + albumId + '/att/' + id);
         },
@@ -453,13 +491,18 @@ app.factory('CertificateFactory', ['BaseFactory', function(BaseFactory){
             }, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.certificate_id;
+            }
             return BaseFactory.detail('certificate', id);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('certificate', undefined, id);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('certificate', undefined, id);
+                case 'object':
+                    id = id.certificate_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.certificate_id : id;
             return BaseFactory.del('certificate', id);
         }
     }
@@ -501,16 +544,232 @@ app.factory('RecruitFactory', ['BaseFactory', function(BaseFactory){
             }, params);
         },
         detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.job_id;
+            }
             return BaseFactory.detail('job', id);
         },
         del: function (id) {
-            if (Est.typeOf(id) === 'array'){
-                return BaseFactory.del('job', undefined, id);
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('job', undefined, id);
+                case 'object':
+                    id = id.job_id;
             }
-            var id = Est.typeOf(id) === 'object' ? id.job_id : id;
             return BaseFactory.del('job', id);
         }
     }
 }]);
 
+/**
+ * @description 二级会员
+ * @method SubmemberFactory
+ * @author wyj on 14/7/4
+ * @example
+ *      query : SubmemberFactory.query(); // 全查
+ *              SubmemberFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : SubmemberFactory.save(albumId, item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : SubmemberFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : SubmemberFactory.del(albumId, item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
+ */
+app.factory('SubmemberFactory', ['BaseFactory', function(BaseFactory){
+    return {
+        query: function (params) {
+            var url = params ? 'submember' : 'submember';
+            return BaseFactory.query(url, params);
+        },
+        save: function (target, params) {
+            return BaseFactory.save(target, 'submember', {
+                id: 'member_id'
+            }, params);
+        },
+        detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.member_id;
+            }
+            return BaseFactory.detail('submember', id);
+        },
+        del: function (id) {
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('submember', undefined, id);
+                case 'object':
+                    id = id.member_id;
+            }
+            return BaseFactory.del('submember', id);
+        }
+    }
+}]);
 
+
+/**
+ * @description 询盘
+ * @method InquiryFactory
+ * @author wyj on 14/7/4
+ * @example
+ *      query : InquiryFactory.query(); // 全查
+ *              InquiryFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : InquiryFactory.save(albumId, item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : InquiryFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : InquiryFactory.del(albumId, item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
+ */
+app.factory('InquiryFactory', ['BaseFactory', function(BaseFactory){
+    return {
+        query: function (params) {
+            var url = params ? 'inquiry' : 'inquiry';
+            return BaseFactory.query(url, params);
+        },
+        save: function (target, params) {
+            return BaseFactory.save(target, 'inquiry', {
+                id: 'inquiry_id'
+            }, params);
+        },
+        detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.inquiry_id;
+            }
+            return BaseFactory.detail('inquiry', id);
+        },
+        del: function (id) {
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('inquiry', undefined, id);
+                case 'object':
+                    id = id.inquiry_id;
+            }
+            return BaseFactory.del('inquiry', id);
+        }
+    }
+}]);
+
+/**
+ * @description 消息
+ * @method MessageFactory
+ * @author wyj on 14/7/4
+ * @example
+ *      query : MessageFactory.query(); // 全查
+ *              MessageFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : MessageFactory.save(albumId, item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : MessageFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : MessageFactory.del(albumId, item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
+ */
+app.factory('MessageFactory', ['BaseFactory', function(BaseFactory){
+    return {
+        query: function (params) {
+            var url = params ? 'message' : 'message';
+            return BaseFactory.query(url, params);
+        },
+        save: function (target, params) {
+            return BaseFactory.save(target, 'message', {
+                id: 'message_id'
+            }, params);
+        },
+        detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.message_id;
+            }
+            return BaseFactory.detail('message', id);
+        },
+        del: function (id) {
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('message', undefined, id);
+                case 'object':
+                    id = id.message_id;
+            }
+            return BaseFactory.del('message', id);
+        }
+    }
+}]);
+
+/**
+ * @description 供求
+ * @method SupplyFactory
+ * @author wyj on 14/7/4
+ * @example
+ *      query : SupplyFactory.query(); // 全查
+ *              SupplyFactory.query({page: 1, pageSize: 5}); // 分页查询
+ *
+ *      save : SupplyFactory.save(albumId, item).then(function(data){
+ *                  $rootScope.showMsg("修改成功!",{ time: 500 });
+ *              }, function(){
+ *                  $rootScope.showMsg("修改失败!");
+ *              });
+ *
+ *      detail : SupplyFactory.detail(id).then(function(data){
+ *                  $scope.item = data;
+ *              });
+ *
+ *      del : SupplyFactory.del(albumId, item).then(function(data){ // 参数可以是ID 或 item对象 或 ID数组
+ *                  $rootScope.showMsg("删除成功！",1000);
+ *              }, function(){
+ *                  $rootScope.showMsg("删除失败！");
+ *              });
+ */
+app.factory('SupplyFactory', ['BaseFactory', function(BaseFactory){
+    return {
+        query: function (params) {
+            var url = params ? 'supply' : 'supply';
+            return BaseFactory.query(url, params);
+        },
+        save: function (target, params) {
+            return BaseFactory.save(target, 'supply', {
+                id: 'supply_id'
+            }, params);
+        },
+        detail: function (id) {
+            if (Est.typeOf(id) === 'object'){
+                id = id.supply_id;
+            }
+            return BaseFactory.detail('supply', id);
+        },
+        del: function (id) {
+            switch (Est.typeOf(id)){
+                case 'array':
+                    return BaseFactory.del('supply', undefined, id);
+                case 'object':
+                    id = id.supply_id;
+            }
+            return BaseFactory.del('supply', id);
+        }
+    }
+}]);

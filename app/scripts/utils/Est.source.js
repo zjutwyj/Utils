@@ -20,6 +20,7 @@
     var moduleMap = {};
     var fileMap = {};
     var noop = function () {};
+    // pool
     var maxPoolSize = 40;
     var arrayPool = [], objectPool = [];
 
