@@ -244,7 +244,7 @@ app.directive('loading', ['$rootScope', function($rootScope){
  * @description 百度编辑器 上传word文件
  * @method ueditorword
  * @author wyj on 14/7/10
- * @examples
+ * @example
  *      <button id="copy-button"  ueditorword>上传word文件</button>
  */
 app.directive('ueditorword', ['$rootScope',function($rootScope){

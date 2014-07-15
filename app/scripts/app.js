@@ -1,3 +1,9 @@
+/**
+ * @description 存在于$rootScope中的通用方法
+ * @class $rootScope - ng 通用方法集
+ * @author wyj on 14/7/15
+ */
+
 'use strict';
 var app = angular.module('angularOneApp', [
     'ngCookies',
@@ -42,10 +48,19 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         $rootScope.alerts = [];
         $rootScope.search_key = '';
         $rootScope.ueContainer = {};
+        $rootScope.staticContainer = { product: [], news: [] };
         $rootScope.closeAlert = function (index) {
             $rootScope.alerts.splice(index, 1);
         };
-        // 提示信息
+        /**
+         * @description 提示消息
+         * @method showMsg
+         * @param {String} msg 提示内容
+         * @param {Object} opts 配置信息
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.showMsg("修改成功!", { time: 500 }); // 0.5秒后关闭 默认2秒后关闭
+         */
         $rootScope.showMsg = function (msg, opts) {
             var opts = opts || {};
             var time = opts.time || 2000;
@@ -59,6 +74,15 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
             }, time);
         };
         // js跳转url
+        /**
+         * @description js跳转url
+         * @method jumpUrl
+         * @param {String} url 跳转网址
+         * @param {Boolean} target 是否打开新窗口
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.jumpUrl('http://www.jihui88.com', true);
+         */
         $rootScope.jumpUrl = function (url, target){
             if (typeof target !== 'undefined' && target){
                 open(url);
@@ -66,12 +90,33 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
                 location.href = url;
             }
         }
-        // ng跳转url
+        /**
+         * @description augular url跳转
+         * @method locationUrl
+         * @param {Stirng} url 待跳转URL
+         * @param {String} page 说明
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.locationUrl('/product_list', '产品');
+         */
         $rootScope.locationUrl = function(url,page){
             $rootScope.search_key = '';
             $rootScope.current_page = page;
             $location.path(url);
         }
+        /**
+         * @description 消息提示框  比如删除前提示  产品添加成功后提示
+         * @method open
+         * @param {String} msg 提示内容
+         * @param {Function} action 提示成功后操作
+         * @param {Object} opts 配置信息
+         * @author wyj on 14/7/15
+         * @example
+         *      普通: $rootScope.open('修改失败,原密码错误!');
+         *      复杂：$rootScope.open("是否删除?" ,function(){
+         *          。。。
+         *      }， {ok: '确定', cancel: '取消'});
+         */
         $rootScope.open = function (msg, action, opts) {
             var modalInstance = $modal.open({
                 templateUrl: 'templates/msg/msg.html',
@@ -118,6 +163,27 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
                 if (typeof (action) === 'function') action(msg);
             });
         };
+        /**
+         * @description 通用弹出对话框 初始化
+         * @method modalInit
+         * @param {Object} $scope 作用域
+         * @param {Object} $modalInstance 对话框实例对象
+         * @param {Object} item 传递的数据  可以是object, 或数值
+         * @author wyj on 14/7/15
+         * @example
+         *      var modalInstance = $modal.open({
+         *          templateUrl: 'modules/Upload/views/copy_src.html',
+         *          controller: ['$scope', '$modalInstance', function($scope, $modalInstance){
+         *              $scope.pic = pic;
+         *              $rootScope.modalInit($scope, $modalInstance, $scope.pic);
+         *          }],
+         *          windowClass : 'pic-upload-dialog',
+         *          resolve: { pic: function () { return pic; } }
+         *      });
+         *  modalInstance.result.then(function () {
+         *          $rootScope.showMsg('复制成功');
+         *      });
+         */
         $rootScope.modalInit = function($scope, $modalInstance, item){
             $scope.ok = function(){
                 $modalInstance.close(item);
@@ -126,12 +192,31 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
                 $modalInstance.dismiss('cancel');
             }
         }
+        /**
+         * @description 通用搜索方法 默认跳转到产品列表页面
+         * @method search
+         * @param {String} search_key 搜索关键词
+         * @param {String} url 跳转地址
+         * @author wyj on 14/7/15
+         * @example
+         *      <input type="text" ng-model="search_key" tooltip="按回车查询" ng-enter="search(search_key, '/product_list')" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+         */
         $rootScope.search = function(search_key, url){
             var url = url || '/product_list';
             $rootScope.search_key = search_key;
             $location.path(url);
             $route.reload();
         }
+        /**
+         * @description 任务指示跳转
+         * @method editTask
+         * @param {String} url 跳转URL
+         * @param {String} title 标题
+         * @param task 任务
+         * @author wyj on 14/7/15
+         * @example
+         *      <span ng-hide="enterprise.logo" ng-click="editTask('/entinfo', '公司资料', 'logo')">设置</span>
+         */
         $rootScope.editTask = function(url, title, task){
             $rootScope.task = task;
             $rootScope.locationUrl(url, title);
@@ -148,22 +233,76 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
             $rootScope.staticPage();
         }
 
-        $rootScope.staticPage = function(){
+        // 静态化相关
+        /**
+         * @description 添加到静态化列表
+         * @method addToStatic
+         * @param {String} 静态化页面， 目录支持product, news
+         * @param {String} 静态化产品或新闻ID值
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.addToStatic('product', 'Product_00000000000000000321');
+         *      $rootScope.doStatic(); // 执行静态化
+         */
+        $rootScope.addToStatic = function(page, item_id){
+            if (Est.typeOf(page) !== 'undefined'){
+                $rootScope.staticContainer[page].push(item_id);
+            }
             if ($rootScope.sessionuser.grade === '02'){
                 $rootScope.edited = true;
                 $rootScope.editNum += 1;
             }
         }
-        $rootScope.static_page = function(page, item_id){
+        /**
+         * @description 执行静态化程序
+         * @method doStatic
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.doStatic();
+         */
+        $rootScope.doStatic = function(){
+            Est.each($rootScope.staticContainer, function(value, key){
+                var name = key;
+                Est.each(value, function(item_id){
+                    $rootScope.staticPage(name, item_id);
+                });
+            });
+            $rootScope.showMsg('静态化完毕');
+        }
+
+        /**
+         * @description 静态化详细页面
+         * @method staticPage
+         * @param {String} page news 或 product
+         * @param {String} item_id id值
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.staticPage('product', 'Product_00000000000000021');
+         */
+        $rootScope.staticPage = function(page, item_id){
+            var deferred = $q.defer();
             $.ajax({
                 url : '/views/static/page',
                 type : 'post',
                 async : true,
                 data : JSON.stringify({"page" : page, "item_id": item_id}),
-                success : function (){}
+                success : function (data){
+                    deferred.resolve(data);
+                },
+                error: function(data){
+                    deferred.reject(data);
+                }
             });
+            return deferred.promise;
         }
-        $rootScope.static_part = function(){
+        /**
+         * @description 部分静态化  比如导航页面， 分类页面
+         * @method staticPart
+         * @author wyj on 14/7/15
+         * @example
+         *      $rootScope.staticPart();
+         */
+        $rootScope.staticPart = function(){
             $.ajax({
                 url: '/views/static/part',
                 type: 'post',
@@ -173,6 +312,19 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
             $rootScope.editNum = 0;
             $rootScope.showMsg('正在静态化...', {time: 3000});
         }
+
+        /**
+         * @description nestedSortable option配置
+         * @method NestedSortableOption
+         * @param $scope
+         * @param category_id 分类ID
+         * @param belong_id 父类ID
+         * @param grade 父元素值  比如00
+         * @param bulidCate 树构建器
+         * @author wyj on 14/7/15
+         * @example
+         *       $scope.options = $rootScope.NestedSortableOption($scope, 'category_id', 'belong_id', 'grade', bulidCate);
+         */
         $rootScope.NestedSortableOption = function($scope, category_id, belong_id, grade, bulidCate){
             return {
                 accept: function (data, sourceItemScope, targetScope) {

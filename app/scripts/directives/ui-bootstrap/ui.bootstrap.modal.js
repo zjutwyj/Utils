@@ -10,18 +10,19 @@
  * @method modal
  * @author wyj on 14/7/13
  * @example
- * var modalInstance = $modal.open({
-                templateUrl: 'modules/Product/views/product_cate.html',
-                controller: CateModelInit,
-                resolve: { cates: function () {
-                    return [];
-                } }
-            });
- modalInstance.result.then(function (cates) {
-                $scope.cates = cates;
-            }, function () {
-                initProCate();
-            });
+ *      var modalInstance = $modal.open({
+            templateUrl: 'modules/Upload/views/file_upload.html',
+            controller: ['$scope', '$modalInstance', 'album_id',function ($scope, $modalInstance, album_id) {
+                $scope.select_list = [];
+                $scope.albumId = album_id || null;
+                $rootScope.modalInit($scope, $modalInstance, $scope.select_list);
+            }],
+            windowClass : 'pic-upload-dialog',
+            resolve: { album_id: function () { return null; } }
+        });
+        modalInstance.result.then(function (select_list) {
+            if (typeof callback !== 'undefined') callback.call(null, select_list);
+        });
  */
 angular.module('ui.bootstrap.modal', ['ui.bootstrap.transition'])
     .factory('$$stackedMap', function () {
@@ -73,9 +74,6 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.transition'])
         };
     })
 
-/**
- * A helper directive for the $modal service. It creates a backdrop element.
- */
     .directive('modalBackdrop', ['$timeout', function ($timeout) {
         return {
             restrict: 'EA',

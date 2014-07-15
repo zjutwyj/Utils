@@ -62,10 +62,13 @@ var paths = {
     doc : {
         doc : {
             source: ['app/scripts/utils/Est.source.js',
+                'app/scripts/app.js',
                 'app/scripts/directives/directive.js',
                 'app/scripts/filters/filter.js',
                 'app/scripts/factorys/factory.js',
-                'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js'],
+                'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js',
+                'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
+            'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js'],
             dist: './app/doc'
         }
     },
