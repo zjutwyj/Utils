@@ -1,0 +1,175 @@
+<div ng-repeat="alert in alerts" class="msgtip" close="closeAlert($index)" ng-show="$last"><p
+        class="inner {{alert.type}}">{{alert.msg}}</p></div>
+<div ng-controller="FileUploadCtrl">
+    <div class="col-lg-2 visible-lg hidden-md hidden-sm hidden-xs" style="padding-left: 0;">
+        <div class="widget-box" style="border-bottom:none;margin-top: -8px;">
+            <div class="widget-body" style="border:none; border-right: 1px solid #eee; min-height:1500px;">
+                <div class="tree tree-unselectable" style="padding-top:5px;"
+                     angular-treeview="true"
+                     tree-id="tree02"
+                     tree-model="cate_list"
+                     node-id="album_id"
+                     node-label="name"
+                     node-children="children">
+                </div>
+                <div class="widget-main padding-8"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-10">
+            <h4 style="padding-left:5px;margin-top: 4px; margin-bottom:4px;"><span ng-click="folderInto(null)">图片目录</span>
+                <small ng-repeat="nav in breakNav track by $index" ng-click="folderInto(nav.nodeId)" class="pointer">
+                    <i class="icon-double-angle-right"></i>
+                    {{nav.name}}
+                </small></h4>
+        <form id="fileupload" name="fileupload" method="POST" enctype="multipart/form-data"
+              data-ng-controller="FileUploadController" data-file-upload="upload_opts" data-sequential-uploads="true"
+              data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+            <div class="page-header" style="margin-bottom:4px;padding-bottom:10px;">
+                <h1>
+                    <button class="btn btn-info btn-sm" ng-click="folderBack()" tooltip="返回">
+                        <i class="icon-reply icon-only"></i>
+                    </button>
+                    <button class="btn btn-info btn-sm" ng-click="folderReFresh()" tooltip="刷新">
+                        <i class="icon-undo icon-only"></i>
+                    </button>
+               <span class="btn btn-sm btn-success fileinput-button" ng-class="{disabled: disabled}"
+                     ng-click="preUpload()">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>上传图片到此目录</span>
+                    <input type="file" name="files[]" multiple ng-disabled="disabled">
+                    </span>
+                    <span class="fileupload-process"></span>
+                <span class="btn btn-sm btn-light fileinput-button">
+                    <i class="icon-folder-close-alt"></i>
+                    <span ng-click="addAlbumDialog()">新建文件夹</span>
+                </span>
+                     <span class="btn btn-sm btn-light fileinput-button">
+                    <i class="icon-leaf"></i>
+                    <span >水印设置</span>
+                </span>
+                <span class="btn btn-sm btn-light fileinput-button">
+                    <i class="icon-trash"></i>
+                    <span ng-click="pic_delete_all()">批量删除</span>
+                </span>
+                <span class="input-icon input-icon-right" style="vertical-align: middle;">
+					<input type="text" ng-model="searchText" ng-enter="search()" id="form-field-icon-2"
+                           placeholder="按图片名称搜索">
+                    <i class="icon-search green" ng-click="search()"></i>
+                </span>
+                </h1>
+            </div>
+            <div class="hide fade" data-ng-class="{in: active(),show : active()}">
+                <div class="progress progress-striped active" data-file-upload-progress="progress()">
+                    <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+                </div>
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <div class="row-fluid">
+                    <ul class="ace-thumbnails">
+                        <li ng-repeat="album in cur_cate_list track by $index" ng-dblclick="folderInto(album.album_id)"
+                            tooltip="双击进入文件夹">
+                            <a href="javascript:;" title="{{album.name}}" data-rel="colorbox" class="folder">
+                                <i class="icon-folder-open bigger-700"></i>
+                            </a>
+                            <div class="name" ng-click="" ng-mouseenter="cate_hover(album)"
+                                 ng-mouseleave="cate_hover(album)">
+                                <a href="javascript:;" ng-show="!album.edit_show" ng-click="cate_edit(album)">{{album.name | characters:10}}</a>
+                                <input type="text" ng-show="album.edit_show" ng-model="album.name"
+                                        ng-blur="cate_edit_save(album)" class="cate_edit">
+                                <span class="pic_cate_tool" ng-show="album.show_tool">
+                                <a class="blue ng-scope" href="javascript:;" tooltip="修改分类"
+                                                                                           ng-click="cate_edit(album)">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                                <a class="red ng-scope" href="javascript:;" tooltip="删除分类"
+                                   ng-click="cate_delete(album,$index)">
+                                    <i class="icon-trash bigger-130"></i>
+                                </a></span></div>
+                        </li>
+                        <li ng-repeat="pic in pageList track by $index" ng-class="{hover: pic.show_tool}" ng-mouseenter="pic_hover(pic)"
+                            ng-mouseleave="pic_hover(pic)">
+                            <a href="{{API_END_POINT}}{{pic.server_path}}" title="" data-rel="colorbox" class="cboxElement" data-gallery>
+                                <img imgcrop data-width='150' data-height="150" data-fill="true"
+                                     ng-src="{{API_END_POINT}}{{pic.thumbnail_path | pic4}}"
+                                     alt="{{pic.filename}}">
+                            </a>
+                            <div class="name">
+                                <a href="javascript:;" ng-click="pic_edit(pic)" ng-show="!pic.edit_show">{{pic.filename | characters:10}} </a>
+                                <input type="text" ng-show="pic.edit_show" ng-model="pic.filename" ng-blur="pic_edit_save(pic)" class="cate_edit">
+                            </div>
+                            <div class="tools tools-top">
+                                <a href="javascript:;" tooltip="重命名" title="重命名" ng-click="pic_edit(pic)"> <i class="icon-edit"></i> </a>
+                                <a href="javascript:;" tooltip="修改图片" title="修改图片" ng-click="pictureReplace(pic)"> <i class="icon-pencil"></i> </a>
+                                <a href="javascript:;" ng-click="pic_delete(pic,$index,$event)" tooltip="删除" title="删除"> <i class="icon-remove red"></i> </a>
+                                <a href="javascript:;"  ng-click="copyImgSrc(pic)" tooltip="复制图片链接" title="复制图片链接"> <i class="icon-link"></i> </a>
+                            </div>
+                            <label ng-show="pic.show_tool || pic.checked" class="checkbox-select"
+                                   ng-click="checkbox_checked(pic,$event)">
+                                <input type="checkbox" class="ace">
+                                <span class="lbl"></span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-xs-12">
+                <ul class="pagination">
+                    <li ng-class="{disabled:page == 1}">
+                        <a href="javascript:;" ng-click="pageTo(1)">
+                            <i class="icon-double-angle-left"></i>
+                        </a>
+                    </li>
+                    <li ng-class="{active: num == page}" ng-repeat="num in pageNum">
+                        <a href="javascript:;" ng-click="pageTo(num)">{{num}}</a>
+                    </li>
+                    <li ng-class="{disabled:page == pageNum[pageNum.length-1]}">
+                        <a href="javascript:;" ng-click="pageTo(pageNum[pageNum.length-1])">
+                            <i class="icon-double-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="blueimp-gallery" class="blueimp-gallery">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body next"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left prev">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button type="button" class="btn btn-primary next">
+                        Next
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

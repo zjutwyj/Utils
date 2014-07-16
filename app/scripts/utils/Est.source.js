@@ -1542,13 +1542,18 @@
      *              root.push(list[i]);
      *          }
      *      }
-     *      Est.bulidSubNode(root, list);
+     *      Est.bulidSubNode(root, list, {
+     *          categoryId: 'category_id', // 分类ＩＤ
+     *          belongId: 'belong_id', // 父类ＩＤ
+     *          childTag: 'cates', // 存放子类字段名称
+     *          dxs: []
+     *      });
      */
     function bulidSubNode(rootlist, totalList, opts) {
         var options = {
-            category_id: 'category_id',//分类ＩＤ
-            belong_id: 'belong_id',//父类ＩＤ
-            child_tag: 'cates',
+            categoryId: 'category_id',//分类ＩＤ
+            belongId: 'belong_id',//父类ＩＤ
+            childTag: 'cates',
             dxs: []
         }
         if (typeof(opts) != 'undefined') {
@@ -1565,13 +1570,13 @@
             // 设置子元素
             for (var j = 0, len1 = totalList.length; j < len1; j++) {
                 var newResItem = totalList[j];
-                if (item[options.category_id] == newResItem[options.belong_id]) {
+                if (item[options.categoryId] == newResItem[options.belongId]) {
                     navlist.push(newResItem);
                     //options['dxs'].push(j);
                 }
             }
             // 设置子元素
-            item[options.child_tag] = navlist.slice(0);
+            item[options.childTag] = navlist.slice(0);
             // 判断是否有下级元素
             if (navlist.length > 0) {
                 item.hasChild = true;
@@ -1618,21 +1623,34 @@
      * @param {Array} list
      * @param {String} name 父分类的字段名称
      * @param {String} value 值
-     * @param {Object} opts {String} opts.category_id 分类Id {String} opts.belong_id 父类Id
+     * @param {Object} opts 配置信息
      * @return {*}
      * @author wyj on 14/7/9
      * @example
      *      Est.bulidTreeNode(list, 'grade', '01', {
-     *          category_id: 'category_id',// 分类ＩＤ
-     *          belong_id: 'belong_id',// 父类ＩＤ
-     *          child_tag: 'cates', // 子分类集的字段名称
+     *          categoryId: 'category_id',// 分类ＩＤ
+     *          belongId: 'belong_id',// 父类ＩＤ
+     *          childTag: 'cates', // 子分类集的字段名称
+     *          sortBy: 'sort', // 按某个字段排序
+     *          callback: function(item){}  // 回调函数
      *      });
      */
     function bulidTreeNode(list, name, value, opts){
         var root = [];
         each(list, function (item) {
             if (item[name] === value) root.push(item);
+            if (opts && Est.typeOf(opts.callback) === 'function'){
+                opts.callback.call(this, item);
+            }
         });
+        if (opts && Est.typeOf(opts.sortBy) !== 'undefined'){
+            root = Est.sortBy(root, function (item) {
+                return item[opts.sortBy];
+            });
+            list = Est.sortBy(list, function (item) {
+                return item[opts.sortBy];
+            });
+        }
         return bulidSubNode(root, list, opts);
     }
     Est.bulidTreeNode = bulidTreeNode;

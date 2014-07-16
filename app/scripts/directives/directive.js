@@ -240,48 +240,51 @@ app.directive('loading', ['$rootScope', function($rootScope){
     }
 }]);
 
-/**
- * @description 百度编辑器 上传word文件
- * @method ueditorword
- * @author wyj on 14/7/10
- * @example
- *      <button id="copy-button"  ueditorword>上传word文件</button>
- */
-app.directive('ueditorword', ['$rootScope',function($rootScope){
-    return function(scope, element, attrs){
-        var uploader = WebUploader.create({
-            pick: {
-                id: "#" + id,
-                multiple: false
-            },
-            accept: {
-                title: "word文档",
-                extensions: "doc,docx",
-                mimeTypes: "application/msword"
-            },
-            fileSingleSizeLimit: 5120000,
-            swf: 'docparser/webuploader/Uploader.swf',
-            server: 'http://convert.wenku.baidu.com/rtcs/convert?pn=1&rn=-1',
-            fileVal: 'file',
-            duplicate: true
-        });
+app.directive('code', function(){
+         var func = function($scope, $element, $attrs){
+               var html = $element.text();
+               var lines = html.split('\n');
+              //处理首尾空白
+              if(lines[0] == ''){lines = lines.slice(1, lines.length - 1)}
+               if(lines[lines.length-1] == ''){lines = lines.slice(0, lines.length - 1)}
+              $element.empty();
+               //处理外框
+               (function(){
+                     $element.css('clear', 'both');
+                    $element.css('display', 'block');
+                    $element.css('line-height', '20px');
+                   $element.css('height', '200px');
+                   })();
+              //是否显示行号的选项
+              if('lines' in $attrs){
+                     //处理行号
+                    (function(){
+                          var div = $('<div style="width: %spx; background-color: gray; float: left; text-align: right; padding-right: 5px; margin-right: 10px;"></div>'
+                                       .replace('%s', String(lines.length).length * 10));
+                           var s = '';
+                          angular.forEach(lines, function(_, i){
+                                s += '<pre style="margin: 0;">%s</pre>\n'.replace('%s', i + 1);
+                              });
+                          div.html(s);
+                          $element.append(div);
+                        })();
+                  }
+             //处理内容
+              (function(){
+                   var div = $('<div style="float: left;"></div>');
+                  var s = '';
+                    angular.forEach(lines, function(l){
+                          s += '<span style="margin: 0;">%s</span><br />\n'.replace('%s', l.replace(/\s/g, '<span>&nbsp;</span>'));
+                        });
+                    div.html(s);
+                    $element.append(div);
+                })();
+            }
+         return {link: func,
+                     restrict: 'AE'}; //以元素或属性的形式使用命令
+   });
 
-        uploader.on('filesQueued', function(files){
-            uploader.upload();
-            uploader.disable();
-        });
 
-        uploader.on('uploadFinished', function(files){
-            setTimeout(function () {
-                uploader.enable();
-            },2000);
-        });
 
-        uploader.on('all', function(){
-            var args = UE.utils.clone([], arguments);
-            args[0] = 'uploader_' + args[0];
-            console.log(args[0]);
-            return ue.fireEvent.apply(ue, args);
-        });
-    }
-}]);
+
+

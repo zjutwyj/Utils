@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="zh-CN" />
+<meta content="IE=edge" http-equiv="X-UA-Compatible">
+<title></title>
+<style>
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, strong, ins, kbd, q, s, samp, small, strike, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th {
+    border: 0 none;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+}
+html, body, label, table {
+    font-size: 12px;
+}
+a:focus {
+    outline: 0 none;
+}
+a:active {
+    outline: 0 none;
+}
+ol, ul {
+    list-style: none outside none;
+}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+a {
+    color: #666666;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+a:hover {
+    color: #666666;
+}
+.clear {
+    clear: both;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+.pointer {
+    cursor: pointer;
+}
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.textLeft {
+    text-align: left;
+}
+.textCenter {
+    text-align: center;
+}
+.textRight {
+    text-align: right;
+}
+.disabled {
+    display: none;
+}
+
+.txtInput {
+    border: 1px solid #ABADB3;
+    height: 20px;
+    width: 150px;
+}
+
+.popupTabBody .ui-tabs {
+    border: 0 none;
+    color: #555555;
+    padding: 0;
+    position: relative;
+}
+.popupTabBody .ui-tabs .ui-tabs-panel {
+    background: none repeat scroll 0 center rgba(0, 0, 0, 0);
+    border-width: 0;
+    display: block;
+    padding: 1em 1.4em 0;
+}
+.popupTabBody .ui-tabs .ui-tabs-hide {
+    display: none !important;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #E4E5E4;
+    border-color: -moz-use-text-color -moz-use-text-color #BFBFBF;
+    border-image: none;
+    border-style: none none solid;
+    border-width: 0 0 1px;
+    margin-top: -1px;
+    padding: 0 0 0 11px;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li {
+    border-bottom: 0 none !important;
+    float: left;
+    list-style: none outside none;
+    margin: 0 0 0 -1px;
+    padding: 0;
+    position: relative;
+    top: 1px;
+    white-space: nowrap;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li a {
+    float: left;
+    padding: 0.3em 1em;
+    text-decoration: none;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+    margin-bottom: 0;
+    padding-bottom: 1px;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a {
+    cursor: text;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-state-default {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 center rgba(0, 0, 0, 0);
+    border-color: -moz-use-text-color #BFBFBF;
+    border-image: none;
+    border-style: none solid;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-width: 0 1px;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-state-active {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: url("/image/comm/fai/ui-bg_faitab_ffffff_1x27.png?v=201310170037") repeat-x scroll 0 0 #FFFFFF;
+    border-color: -moz-use-text-color #BFBFBF;
+    border-image: none;
+    border-style: none solid;
+    border-width: 0 1px;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li.ui-state-active a:visited {
+    color: #333333;
+    font-weight: 600;
+}
+.popupTabBody .ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a {
+    cursor: pointer;
+}
+
+.saveButton {
+    background: none repeat scroll 0 0 #49A3FF;
+    border: 1px solid #0064B5;
+    color: #FFFFFF;
+}
+.saveButton:hover {
+    background: none repeat scroll 0 0 #5FBBFF;
+    border: 1px solid #3298FE;
+    color: #FFFFFF;
+}
+.saveButton:active {
+    background: none repeat scroll 0 0 #49A3FF;
+    border: 1px solid #0064B5;
+    color: #FFFFFF;
+}
+.saveButton:disabled {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CECECE;
+    color: #D1D1D1;
+}
+.cancelButton {
+    background: none repeat scroll 0 0 #F5F5F5;
+    border: 1px solid #8F8F8F;
+    color: #666666;
+}
+.cancelButton:hover {
+    background: none repeat scroll 0 0 #E8F3FE;
+    border: 1px solid #3298FE;
+    color: #666666;
+}
+.cancelButton:active {
+    background: none repeat scroll 0 0 #D3E9FF;
+    border: 1px solid #3298FE;
+    color: #666666;
+}
+.cancelButton:disabled {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CECECE;
+    color: #D1D1D1;
+}
+
+.setLine {
+    height: 24px;
+    line-height: 24px;
+    margin: 2px 0;
+}
+.setchLine {
+    height: 55px;
+}
+.setTitle {
+    float: left;
+    height: 24px;
+    line-height: 24px;
+    text-align: right;
+    width: 80px;
+}
+.setCtrl {
+    float: left;
+    height: 24px;
+    line-height: 24px;
+}
+.setRadioCtrl span {
+    cursor: pointer;
+}
+.paInput {
+    width: 200px;
+}
+.whInput {
+    width: 60px;
+}
+.nmInput {
+    width: 140px;
+}
+.searchInput {
+    text-align: center;
+    width: 80px;
+}
+.mapContainer {
+	margin-left:20px;
+	margin-right:20px;
+    height: 420px;
+    overflow: auto;
+    width: 600px;
+}
+
+
+</style>
+
+<script type="text/javascript" src="http://www.jihui88.com/js/jquery/jquery-1.4.4.min.js"> </script>
+
+
+
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.1&services=true"></script>
+<link href="http://api.map.baidu.com/res/11/bmap.css" type="text/css" rel="stylesheet">
+
+
+<body class="popupTabBody">
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <!-- basicSetting -->
+    <div id="basicSetting" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+        <div class="setLine" style="display:none">
+            <div class="setTitle">模块标题：</div>
+            <div class="setCtrl"><input type="text" class="noneInput nmInput" value="" id="name"></div>
+        </div>
+        <div class="setLine">
+        	<div class="setTitle">地图版本：</div>
+             <div class="setCtrl"><select id="mapVersions"><option value="1">百度地图</option><option value="2">谷歌地图</option></select></div>
+            <div class="setTitle">地图宽高：</div>
+            <div class="setCtrl"><input type="text" maxlength="4" class="noneInput whInput"  onchange="refreshMapWH()" value="600" id="width"></div>
+            <div style="float:left">×</div>
+            <div class="setCtrl"><input type="text" maxlength="4" class="noneInput whInput"  onchange="refreshMapWH()" value="320" id="height"></div>
+        </div>
+        <div class="setLine">
+            <div class="setTitle">所在城市：</div>
+            <div class="setCtrl"><input type="text" class="noneInput whInput" maxlength="30" value="永康市" id="province"></div>
+            <div style="margin-left: 20px;" class="setTitle">详细地址：</div>
+            <div class="setCtrl"><input type="text" style="width: 175px;" class="noneInput paInput" maxlength="70" value="东方五金电子商务有限公司" id="address"></div>
+            <div class="setCtrl">
+                <input type="button" value="搜索位置" class="noneInput searchInput faiButton" style="margin-left: 20px;" id="searchMap">
+            </div>
+        </div>
+        <div class="setchLine" >
+            <div class="setTitle">标记信息：</div>
+            <textarea style="margin:0px; padding:0px; height:50px; width:462px; vertical-align:top" id="mapInfo"></textarea>
+        </div>
+        <div style="border: 1px solid #DFE5EB;" id="baiduMapContainer" class="baiduMapContainer">
+            <div class="mapContainer" style="height: 320px; width: 600px; overflow: hidden; position: relative; z-index: 0; background-image: url(&quot;http://api.map.baidu.com/images/bg.png&quot;); color: rgb(0, 0, 0); text-align: left;" id="mapContainer"></div>
+            <div class="mapContainer" style="height: 320px; width: 600px; display: none;" id="googleMapContainerDiv"></div>
+        </div>
+
+    </div>
+</div>
+
+
+<table  class="formBtns" style="display: table;margin:10px;10px;10px;10px">
+	<tbody>
+	<tr>
+	<td align="center" >
+	<button type="button" onclick="save()"  class="abutton faiButton saveButton" value="" id="popup_save">保 存</button>
+	<button type="button" onclick="save_without()" class="abutton faiButton cancelButton" value="" id="popup_close">取 消</button>
+	</td>
+	</tr>
+	</tbody>
+</table>
+	
+	
+<script type="text/javascript" charset="UTF-8">
+
+var map;
+var marker;
+var googleMap;
+
+function getProvinceAddr(){
+	var provinceAddr = {};
+	provinceAddr['p'] = $.trim( $('#province').val() );
+	provinceAddr['a'] = $.trim( $('#address').val() );
+	return provinceAddr;
+}
+var _mapPos={};
+function getMapPos(){
+	if( $('#mapVersions').val() == 2 ){
+		return;
+	}
+	var mapPos = {};
+	var overlays;
+	if( map ){
+		overlays = map.getOverlays();
+	}
+	if(overlays && overlays.length > 0){
+		var finalPoint = overlays[0].getPoint();
+		var centerPoint = map.getCenter();
+		mapPos['ox'] = finalPoint.lng;
+		mapPos['oy'] = finalPoint.lat;
+		mapPos['x'] = centerPoint.lng;
+		mapPos['y'] = centerPoint.lat;
+		mapPos['z'] = map.getZoom();
+	}else{
+		mapPos['ox'] = 120.04739399999994;
+		mapPos['oy'] = 28.888782;
+		mapPos['x'] = 120.12235729999998;
+		mapPos['y'] = 28.930311614094542;
+		mapPos['z'] = 10;
+	}
+	_mapPos = mapPos;
+	return mapPos;
+}
+
+function getGoogleMapPos(){
+	var googleMapPos = {};
+	var position = marker.getPosition();
+	var latLng = googleMap.getCenter();
+	if(position){
+		googleMapPos['oy'] = latLng.lng();
+		googleMapPos['ox'] = latLng.lat();
+		googleMapPos['z'] = googleMap.getZoom()
+		googleMapPos['x'] = position.lat();
+		googleMapPos['y'] = position.lng();//标记经度
+	}else{
+		googleMapPos['ox'] = 120.04739399999994;
+		googleMapPos['oy'] = 28.888782;
+		googleMapPos['z'] = 10;
+		googleMapPos['x'] = 120.12235729999998;
+		googleMapPos['y'] = 28.930311614094542;
+	}
+	return googleMapPos;
+}
+
+function refreshMapWH(){
+	var height = $('#height').val();
+	var width = $('#width').val();
+	if(!/^[0-9]*$/g.test(width)){
+		$('#width').val(600);
+		return;
+	}
+	if(!/^[0-9]*$/g.test(height)){
+		$('#height').val(320);
+		return;
+	}
+}
+
+function save() {
+	var html_result;
+	var mapType = $('#mapVersions').val();
+	var width = $('#width').val();
+	var height = $('#height').val();
+	var random = Math.random(); 
+	if(mapType==1){
+		getMapPos();
+		var mapPos = _mapPos;
+		html_result ='<iframe frameborder="0" style="width: '+width+'px; height:'+height+'px;" src="http://www.jihui88.com/common/xheditor-tools/abbcc-map/embedded.jsp';
+		html_result +='?width='+width+'&height='+height;
+		html_result +='&info='+encodeURIComponent(encodeURIComponent($('#mapInfo').val().split("\n").join("<br />")));
+		html_result +='&mapType='+mapType+"&x="+mapPos.x+"&y="+mapPos.y+"&ox="+mapPos.ox+"&oy="+mapPos.oy+"&z="+mapPos.z;
+		html_result +='"></iframe>';
+	}else{
+		var googleMapPos = getGoogleMapPos();
+		html_result ='<iframe frameborder="0" style="width: '+width+'px; height:'+height+'px;" src="http://www.jihui88.com/common/xheditor-tools/abbcc-map/embedded.jsp';
+		html_result +='?width='+width+'&height='+height;
+		html_result +='&info='+encodeURIComponent(encodeURIComponent($('#mapInfo').val().split("\n").join("<br />")));
+		html_result +='&mapType='+mapType+"&x="+googleMapPos.x+"&y="+googleMapPos.y+"&ox="+googleMapPos.ox+"&oy="+googleMapPos.oy+"&z="+googleMapPos.z;
+		html_result +='"></iframe>';
+	}
+	callback(html_result);
+}
+function save_without(){
+	callback();
+}
+
+
+function baiduMapInitial(){
+	map = new BMap.Map("mapContainer"); // map实例
+	var point = new BMap.Point(120.04739399999994, 28.888782); // 坐标点»
+	var oPoint = new BMap.Point(120.12235729999998, 28.930311614094542);
+	var marker = new BMap.Marker(oPoint); // 覆盖物对象
+	map.centerAndZoom( point, 10 );
+	map.enableScrollWheelZoom(); // 启用滚轮放大缩小
+	map.disableDoubleClickZoom(); // 禁止双击放大
+	map.addOverlay(marker); // 添加一个小圆点
+	marker.enableDragging(true); // 设置标注可拖拽
+	var initMapInfo = '网络公司';
+	if( initMapInfo ) {
+		var infoWindow = new BMap.InfoWindow(initMapInfo, { width:'auto', height:'auto', title:'', enableAutoPan: false }); // 创建信息窗口对象
+		marker.openInfoWindow(infoWindow);
+	}
+	var bMapNavigation = new BMap.NavigationControl();
+	map.addControl( bMapNavigation ); // 添加一条鱼骨
+	map.addEventListener('click',function(e){
+			//this.clearOverlays();
+			var newPoint = new BMap.Point(e.point.lng, e.point.lat);
+			refreshMarker( newPoint );
+			});
+}
+
+function refreshMarker(point){
+	map.clearOverlays();
+	var marker = new BMap.Marker( point, {enableDragging: true} );
+	map.addOverlay( marker );
+	map.panTo( point );
+	var mapInfo = $('#mapInfo').val().split("\n").join("<br />");
+	if( mapInfo ){
+		var infoWindow = new BMap.InfoWindow( mapInfo, { width:'auto', height:'auto', title:'', enableAutoPan:false } );
+		marker.openInfoWindow( infoWindow );
+	}
+}
+function searchMap(){
+	var myGeo = new BMap.Geocoder();
+	// 将地址解析结果显示在地图上，并调整地图视野
+	var province = $.trim( $('#province').val() );
+	var address = $.trim( $('#address').val() );
+	if(province == ''){
+		return;
+	}
+	if(address == ''){
+		return;
+	}
+	myGeo.getPoint( address, function(point){
+			if(point){
+			map.centerAndZoom(point, 17);
+			refreshMarker( point );
+			}else{
+			var ls;
+			var lsOptions = {
+				onSearchComplete : function(results) {
+			if (ls.getStatus() == BMAP_STATUS_SUCCESS){
+				if( results.getCurrentNumPois() <= 0 ){
+				}else{
+				var poi = results.getPoi(0);
+				map.centerAndZoom( poi.point, 17 );
+				refreshMarker( poi.point );
+				}
+			    }else{
+				}
+			}
+			}
+			ls = new BMap.LocalSearch(province, lsOptions);
+			ls.search(address);
+			}
+	}, province );
+	getMapPos();
+}
+
+var g_infoWin;
+function googleMapInitial(){
+	//获取承载谷歌地图的容器
+	var container = document.getElementById('googleMapContainerDiv');
+	var myLatLng = new google.maps.LatLng( 120.04739399999994,28.888782);
+	var myOverLatLng = new google.maps.LatLng( 120.12235729999998,28.930311614094542);
+	//创建谷歌地图
+	googleMap = new google.maps.Map(container,
+		{draggable : true,
+		zoom : 10,
+		streetViewControl: false,
+		center:myOverLatLng,
+		scaleControl: true,
+		mapTypeId : google.maps.MapTypeId.ROADMAP}
+	);
+	//创建标记
+	marker = new google.maps.Marker({map : googleMap,position:myLatLng,animation: google.maps.Animation.DROP,
+			draggable : true});
+	marker.setMap(googleMap);
+	var markerContainter = [];
+	markerContainter.push(marker);
+	g_infoWin = new google.maps.InfoWindow({content:$('#mapInfo').val().split("\n").join("<br />"),width:"auto",height:"auto"});
+	g_infoWin.close(googleMap,marker);
+	g_infoWin = new google.maps.InfoWindow({content:$('#mapInfo').val().split("\n").join("<br />").split("\n").join("<br />"),width:"auto",height:"auto"});
+	g_infoWin.open(googleMap,marker);
+	google.maps.event.addListener(marker, 'drag', function(){
+			//google.maps.event.addListener( marker, 'drag', function(){} );
+			});
+}
+function updateContent(){
+	if($('#mapVersions').val() == 1){
+		var newPoint = new BMap.Point( map.getCenter().lng, map.getCenter().lat);
+		refreshMarker( newPoint );
+	}else if($('#mapVersions').val() == 2){
+		g_infoWin.close(googleMap,marker);
+		g_infoWin = new google.maps.InfoWindow({content:$('#mapInfo').val().split("\n").join("<br />"),width:"auto",height:"auto"});
+		g_infoWin.open(googleMap,marker);
+	}
+
+}
+//谷歌搜索
+function doGoogleSearch(){
+	//提示框
+	var address = document.getElementById('address').value;
+	var province = document.getElementById('province').value;
+	var geocoder = new google.maps.Geocoder();
+	if($.trim(address) == ''){
+		return;
+	}
+	if($.trim(province) == ''){
+		return;
+	}
+	var searchAddress=province+address;
+	geocoder.geocode({'address':searchAddress}, function(result,status){
+			if(status == google.maps.GeocoderStatus.OK){
+			var bounds = result[0].geometry.viewport;
+			googleMap.fitBounds(bounds);
+			marker.setPosition(result[0].geometry.location);
+			marker.setTitle(address);
+			}else{
+			}
+			});
+	getMapPos();
+}
+
+
+$('#mapVersions').live('change',function(){
+	if(this.value == 2){
+		$("#googleMapContainerDiv").show();
+		$("#mapContainer").hide();
+		if(googleMap == null || googleMap == 'undefined'){
+			googleMapInitial();
+		}
+		doGoogleSearch();
+	}
+	if(this.value == 1){
+		$("#googleMapContainerDiv").hide();
+		$("#mapContainer").show();
+		if(map == null || map == 'undefined'){
+			baiduMapInitial();
+		}
+		searchMap();
+	}
+});
+//查询
+$('#searchMap').live('click',function(){
+		if($('#mapVersions').val() == 2){
+		doGoogleSearch();
+		}
+		if($('#mapVersions').val() == 1){
+		searchMap();
+		}
+});
+function initWhChange(){
+	$('#height').change(function(){
+			var height = $(this).val();
+			if( height < 300 ){
+			}else{
+			$('#mapContainer').height( height );
+			$('#googleMapContainerDiv').height( height );
+			}
+			});
+	$('#width').change(function(){
+			var width = $(this).val();
+			if( width < 300 ){
+			}else{
+			$('#mapContainer').width( width );
+			$('#googleMapContainerDiv').width( width );
+			}
+			});
+}
+function initBoost(){
+	if( typeof BMap == 'undefined' )
+		return setTimeout(initBoost, 500);
+	$('#mapInfo').val("网络公司");
+	$('#mapVersions').val(1);
+	$("#googleMapContainerDiv").hide();
+	$("#mapContainer").show();
+	baiduMapInitial();
+	initWhChange();
+	$("#mapInfo").bind("keyup cut paste", function(){
+			setTimeout(function(){
+				updateContent();
+				}, 10);
+			});
+
+	$('#name').focus();
+	getMapPos();
+}
+setTimeout(initBoost, 500);
+
+
+
+</script>
+
+
+</body>
+</html>

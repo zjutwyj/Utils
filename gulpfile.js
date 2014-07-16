@@ -17,7 +17,7 @@ var paths = {
           source: ['app/vendor/jquery/jquery.min.js',
               'app/vendor/angular-custom/angular.js',
               'app/vendor/bootstrap/bootstrap.js',
-              'app/scripts/utils/Est.min.js',
+              'app/scripts/utils/Est.source.js',
               'app/vendor/zeroclipboard/ZeroClipboard.min.js',
               'app/vendor/angular-resource.min.js',
               'app/vendor/angular-cookies/angular-cookies.min.js',
@@ -101,8 +101,8 @@ function doTask(item, debug){
                                 .pipe(gulp.dest(paths[item].scripts.dist));
                         }
                         return gulp.src(paths[item].scripts.source)
-                            .pipe(uglify())
                             .pipe(concat(paths[item].scripts.name))
+                            .pipe(uglify())
                             .pipe(gulp.dest(paths[item].scripts.dist));
                     });
                     gulp.start(item + key);

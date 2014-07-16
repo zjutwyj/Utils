@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h5>产品分类添加</h5>
+</div>
+<div class="modal-body row">
+
+    <div class="form-group clearfix">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 分类名称 </label>
+
+        <div class="col-sm-9">
+            <input type="text" name="cate_name" autofocus ng-model="category.name" id="form-field-1" placeholder="分类名称" required
+                   class="col-xs-10 col-sm-5"/>
+            <p class=" error" ng-show="cate_add_form.category.name.$dirty && form.category.name.$invalid">
+                靖输入分类名称</p>
+        </div>
+
+    </div>
+    <div class="space-4"></div>
+    <div class="form-group clearfix">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 分类描述 </label>
+
+        <div class="col-sm-9">
+            <textarea name="cdesc" ng-model="category.cdesc" class="col-xs-10 col-sm-5"/>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="cate_add_form.$invalid" ng-click="ok()">添加</button>
+    <button class="btn btn-warning" ng-click="cancel()">关闭</button>
+</div>

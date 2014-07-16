@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h5>产品分类添加</h5>
+</div>
+<form name="form"  class="form-horizontal" role="form" novalidate>
+<div class="modal-body">
+    <input type="hidden" ng-model="category.category_id" name="category_id">
+    <div class="form-group clearfix" ng-class="{'has-success': form.cate_name.$valid, 'has-error': form.cate_name.$dirty && form.cate_name.$invalid}">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 分类名称 </label>
+
+        <div class="col-sm-9">
+            <span class="required">*</span>
+            <input type="text" name="cate_name" ng-model="category.name" autofocus id="form-field-1" placeholder="分类名称" required
+                   class="col-xs-10 col-sm-5"/>
+            <p class="help-block error" ng-show="form.cate_name.$dirty && form.cate_name.$invalid">
+                靖输入分类名称</p>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="ok()">提交</button>
+    <button class="btn btn-warning" ng-click="cancel()">关闭</button>
+</div>
+    </form>

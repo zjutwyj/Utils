@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h5>产品分类广告</h5>
+</div>
+<form name="form" class="form-horizontal" role="form" novalidate>
+    <div class="modal-body">
+        <input type="hidden" ng-model="category.category_id" name="category_id">
+        <textarea name="adcontent" id="adcontent" ueditor  ng-model="category.adcontent"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary"  ng-click="ok()">提交</button>
+        <button class="btn btn-warning" ng-click="cancel()">关闭</button>
+    </div>
+</form>

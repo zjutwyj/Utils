@@ -1,0 +1,211 @@
+<div class="upload-header breadcrumbs">
+    <h5>图片选取
+    </h5>
+    <i class="icon-remove upload-close" ng-click="cancel()">&nbsp;</i>
+</div>
+
+<div class="picupload-body modal-body" ng-controller="FileUploadCtrl">
+
+    <form id="fileupload" name="fileupload"  method="POST" enctype="multipart/form-data"
+          data-ng-controller="FileUploadController" data-file-upload="upload_opts" data-sequential-uploads="true"
+          data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+        <!--图片添加栏-->
+        <div class=" fileupload-buttonbar form-group">
+            <div class="col-lg-12 col-md-12 col-sm-12" style="text-align: left">
+
+                <span class="btn btn-success fileinput-button" ng-class="{disabled: disabled}" ng-click="preUpload()">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>上传图片至此目录</span>
+                    <input type="file" name="files[]" multiple ng-disabled="disabled">
+                </span>
+                <button class="btn btn-info btn-sm" ng-click="folderBack()" tooltip="返回">
+                    <i class="icon-reply icon-only"></i>
+                </button>
+                <button class="btn btn-info btn-sm" ng-click="folderReFresh()" tooltip="刷新">
+                    <i class="icon-undo icon-only"></i>
+                </button>
+                <span class="btn btn-sm btn-light fileinput-button">
+                    <i class="icon-folder-close-alt"></i>
+                    <span ng-click="addAlbumDialog()">新建文件夹</span>
+                </span>
+                <ul class="pager" style="display:inline-block;vertical-align: middle;margin:0;">
+                    <li class="previous btn-sm">
+                        <a href="javascript:;" ng-click="pagePre()">← 上一页</a>
+                    </li>
+                    <li class="next btn-sm">
+                        <a href="javascript:;" ng-click="pageNext()">下一页 →</a>
+                    </li>
+                </ul>
+                <span class="fileupload-process"></span>
+            </div>
+        </div>
+        <div class="hide fade" data-ng-class="{in: active(),show : active()}">
+            <div class="progress progress-striped active" data-file-upload-progress="progress()">
+                <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+            </div>
+            <!-- The extended global progress state -->
+            <div class="progress-extended">&nbsp;</div>
+        </div>
+        <table class="table table-striped files ng-cloak" style="display:none;">
+            <tr ng-repeat="file in queue" ng-class="{'processing': file.$processing()}">
+                <td ng-switch data-on="!!file.thumbnailUrl">
+                    <div class="preview" data-ng-switch-when="true">
+                        <a data-ng-href="{{file.url}}" title="{{file.name}}" download="{{file.name}}" data-gallery><img
+                                data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+                    </div>
+                    <div class="preview" data-ng-switch-default data-file-upload-preview="file"></div>
+                </td>
+                <td>
+                    <p class="name" data-ng-switch data-on="!!file.url">
+                        <span data-ng-switch-when="true" data-ng-switch data-on="!!file.thumbnailUrl">
+                            <a data-ng-switch-when="true" data-ng-href="{{file.url}}" title="{{file.name}}"
+                               download="{{file.name}}" data-gallery>{{file.name}}</a>
+                            <a data-ng-switch-default data-ng-href="{{file.url}}" title="{{file.name}}"
+                               download="{{file.name}}">{{file.name}}</a>
+                        </span>
+                        <span data-ng-switch-default>{{file.name}}</span>
+                    </p>
+                    <strong data-ng-show="file.error" class="error text-danger">{{file.error}}</strong>
+                </td>
+                <td>
+                    <p class="size">{{file.size | formatFileSize}}</p>
+
+                    <div class="progress progress-striped active fade" data-ng-class="{pending: 'in'}[file.$state()]"
+                         data-file-upload-progress="file.$progress()">
+                        <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"></div>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div class="col-xs-12">
+        <!-- PAGE CONTENT BEGINS -->
+        <div class="row-fluid">
+            <ul class="ace-thumbnails">
+                <li ng-repeat="album in cur_cate_list track by $index" ng-dblclick="folderInto(album.album_id)" tooltip="双击进入文件夹">
+                    <a href="javascript:;" title="{{album.name}}" data-rel="colorbox" class="folder">
+                        <i class="icon-folder-open bigger-700"></i>
+                    </a>
+                    <div class="name">{{album.name | characters:10}}</div>
+                </li>
+                <li ng-repeat="pic in pageList track by $index | filter:{filename:searchText}" ng-click="select_pic(pic)" ng-mouseenter="pic_hover(pic)"
+                    ng-mouseleave="pic_hover(pic)">
+                    <a href="" title="" data-rel="colorbox" class="cboxElement">
+                        <img imgcrop data-width='150' data-height="150" data-fill="true" ng-src="{{API_END_POINT}}{{pic.thumbnail_path | pic4}}"
+                             alt="{{pic.filename}}">
+                    </a>
+                    <div class="name">{{pic.filename | characters:10}}</div>
+                    <div class="tools tools-top">
+                        <a href="javascript:;" tooltip="重命名" title="重命名" ng-click="pic_edit(pic)"> <i class="icon-edit"></i> </a>
+                        <a href="javascript:;" tooltip="修改图片" title="修改图片" ng-click="pictureReplace(pic)"> <i class="icon-pencil"></i> </a>
+                        <a href="javascript:;" ng-click="pic_delete(pic,$index,$event)" tooltip="删除" title="删除"> <i class="icon-remove red"></i> </a>
+                        <a href="javascript:;"  ng-click="copyImgSrc(pic.server_path)" tooltip="复制图片链接" title="复制图片链接"> <i class="icon-link"></i> </a>
+                    </div>
+                    <label ng-show="pic.show_tool || pic.checked" class="checkbox-select"
+                           ng-click="checkbox_checked(pic,$event)">
+                        <input type="checkbox" class="ace">
+                        <span class="lbl"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-xs-12">
+                <ul class="pagination">
+                    <li ng-class="{disabled:page == 1}">
+                        <a href="javascript:;" ng-click="pageTo(1)">
+                            <i class="icon-double-angle-left"></i>
+                        </a>
+                    </li>
+                    <li ng-class="{active: num == page}" ng-repeat="num in pageNum">
+                        <a href="javascript:;" ng-click="pageTo(num)">{{num}}</a>
+                    </li>
+                    <li ng-class="{disabled:page == pageNum[pageNum.length-1]}">
+                        <a href="javascript:;" ng-click="pageTo(pageNum[pageNum.length-1])">
+                            <i class="icon-double-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="row">
+        &lt;!&ndash;图片分类　min&ndash;&gt;
+        <div class="pic-nav-sm visible-xs visible-sm hidden-md hidden-lg">
+            <ul class="pic-nav-sm-ul">
+                <li class="ui-droppable local" ng-repeat="nav1 in cate_list">
+                    <div tag="" class="category-li "><a ng-click="get_pic(nav1.album_id)">{{nav1.name}}</a></div>
+                </li>
+            </ul>
+            <div class="pic-cate-add" style="float:left;">
+                <input type="text" name="cate_name" ng-model="cateName"  placeholder="相册分类"
+                       style="width:50px;height:20px;"> <a ng-click="add_cate()">添加</a>
+                <span class="input-icon input-icon-right">
+                    <input type="text" ng-model="searchText"
+                           style="width:50px;height:20px;margin-bottom:5px;"/>
+                    <i class="icon-search gray" style="font-size: 12px;top: 0;height: 20px;line-height: 20px;"></i>
+               </span>
+            </div>
+        </div>
+        &lt;!&ndash;图片展示区&ndash;&gt;
+        <div>
+            <div class="col-lg-9 col-md-8 col-sm-12" style="padding:5px 0 0 24px;height:450px;overflow:auto;">
+                <div class="wp-manage-panel-picture" ng-repeat="pic in pic_list | filter:{filename:searchText}">
+                    <div class="img ui-draggable"  ng-click="select_pic(pic)" ng-mouseenter="pic_hover(pic)"
+                         ng-mouseleave="pic_hover(pic)">
+                        <div class="transparent-block" ng-show="pic.show_tool" ><i class="icon-trash" ng-click="pic_delete(pic,$index,$event)" tooltip="删除"></i></div>
+                        <img imgcrop="thumb_size" data-width = '105' data-height="105" src="{{API_END_POINT}}{{pic.thumbnail_path}}">
+                        <label ng-show="pic.show_tool || pic.checked" class="checkbox-select" ng-click="checkbox_checked(pic,$event)">
+                            <input type="checkbox" class="ace" >
+                            <span class="lbl"></span>
+                        </label>
+                    </div>
+                    <p class="link">{{pic.filename}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 visible-md visible-lg hidden-sm hidden-xs pic-cate ie7_ie8_hidden">
+                <div class="wp-chooser-category-div"
+                     style="max-height: 416px; overflow: hidden; position: relative; padding: 0px;">
+                    <div class="jscroll-c"
+                         style="top: 0px; z-index: 99; zoom: 1; position: relative;">
+                        <div style="height:0px;overflow:hidden;"></div>
+                        <ul id="wp-chooser-category-ul" class="pic-nav-ul">
+                            <li>
+                                <span class="input-icon input-icon-right">
+                                 <input type="text" ng-model="searchText"
+                                        style="width:100%;margin-bottom:5px;"/>
+                                 <i class="icon-search gray"></i>
+                                </span>
+                            </li>
+                            <li class="local" ng-repeat="nav2 in cate_list" ng-mouseenter="cate_hover(nav2, $index)"
+                                ng-mouseleave="cate_hover(nav2, $index)">
+                                <div tag="" class="category-li">
+                                    <a ng-click="get_pic(nav2.album_id)" ng-show="!nav2.edit_show">{{nav2.name}}</a>
+                                    <input type="text" ng-show="nav2.edit_show" ng-model="nav2.name"
+                                           ng-focus="nav2.edit_show" ng-blur="cate_edit_save(nav2)" class="cate_edit">
+                                </div>
+                                <div class="pic_cate_tool" ng-show="nav2.show_tool">
+                                    <a class="blue ng-scope" href="javascript:;" tooltip="修改分类"
+                                       ng-click="cate_edit(nav2)">
+                                        <i class="icon-pencil bigger-130"></i>
+                                    </a>
+                                    <a class="red ng-scope" href="javascript:;" tooltip="删除分类"
+                                       ng-click="cate_delete(nav2,$index)">
+                                        <i class="icon-trash bigger-130"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pic-cate-add">
+                    <input ng-model="cateName" type="text" name="cate_ame"  placeholder="相册分类"
+                           style="width:70%;height:20px;margin-top:3px;"> <a ng-click="add_cate()">添加</a>
+                </div>
+            </div>
+        </div>
+    </div>-->
+</div>

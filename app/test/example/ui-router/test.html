@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../../styles/theme/ace-source/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="vendor/patch/patch.min.js"></script>
+    <![endif]-->
+    <script src="../../../vendor/jquery/jquery.min.js"></script>
+    <script src="../../../scripts/utils/Est.min.js"></script>
+    <script src="../../../vendor/angular/angular.js"></script>
+    <script src="../../../vendor/angular-resource/angular-resource.min.js"></script>
+    <script src="../../../vendor/angular-route/angular-route.min.js"></script>
+    <script src="../../../vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="../../../vendor/angular-animate/angular-animate.min.js"></script>
+
+    <script src="app.js"></script>
+
+</head>
+<body  class="ng-app:formApp" id="ng-app" ng-app="formApp">
+
+<script>
+    function Ctrl($scope) {
+        $scope.user = {name: 'guest', last: 'visitor'};
+    }
+</script>
+<div ng-controller="Ctrl">
+    <form name="myForm">
+        User name: <input type="text" name="userName" ng-model="user.name" required>
+     <span class="error" ng-show="myForm.userName.$error.required">
+       Required!</span><br>
+        Last name: <input type="text" name="lastName" ng-model="user.last"
+                          ng-minlength="3" ng-maxlength="10">
+     <span class="error" ng-show="myForm.lastName.$error.minlength">
+       Too short!</span>
+     <span class="error" ng-show="myForm.lastName.$error.maxlength">
+       Too long!</span><br>
+    </form>
+    <hr>
+    <tt>user = {{user}}</tt><br/>
+    <tt>myForm.userName.$valid = {{myForm.userName.$valid}}</tt><br>
+    <tt>myForm.userName.$error = {{myForm.userName.$error}}</tt><br>
+    <tt>myForm.lastName.$valid = {{myForm.lastName.$valid}}</tt><br>
+    <tt>myForm.lastName.$error = {{myForm.lastName.$error}}</tt><br>
+    <tt>myForm.$valid = {{myForm.$valid}}</tt><br>
+    <tt>myForm.$error.required = {{!!myForm.$error.required}}</tt><br>
+    <tt>myForm.$error.minlength = {{!!myForm.$error.minlength}}</tt><br>
+    <tt>myForm.$error.maxlength = {{!!myForm.$error.maxlength}}</tt><br>
+</div>
+
+
+
+</body>
+</html>

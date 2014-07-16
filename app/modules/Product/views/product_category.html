@@ -1,0 +1,21 @@
+
+<div class="modal-header">
+    <h5>请选择分类</h5>
+</div>
+<form name="form"  class="form-horizontal" role="form" novalidate>
+    <div class="modal-body">
+        <div class="form-group clearfix" ng-class="{'has-success': form.cate_name.$valid, 'has-error': form.cate_name.$dirty && form.cate_name.$invalid}">
+            <select class="category_select1" ng-model="category">
+                <option value="" default>请选择分类</option>
+                <option value="{{cate.category_id}}"   ng-repeat="cate in cates">
+                    {{cate.name}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="ok(category)">提交</button>
+        <button class="btn btn-warning" ng-click="cancel()">关闭</button>
+    </div>
+</form>

@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h5>图片替换</h5>
+    <i class="icon-remove upload-close" ng-click="cancel()">&nbsp;</i>
+</div>
+    <div class="modal-body">
+        <input type="hidden" ng-model="pic.att_id" name="att_id">
+        <div class="form-group" style="padding-top:10px;">
+            <form id="fileupload" name="fileupload" method="POST" enctype="multipart/form-data"
+                  data-ng-controller="FileUploadController" data-file-upload="upload_opts" data-sequential-uploads="true"
+                  data-ng-class="{'fileupload-processing': processing() || loadingFiles}">
+               <span class="btn btn-sm btn-success fileinput-button">
+                    <span>选择文件</span>
+                    <input type="file" name="files[]" multiple>
+                    </span>
+                    <span class="fileupload-process"></span>
+            </form>
+        </div>
+        <!--<div class="form-group">
+            <img ng-src="{{API_END_POINT + pic.thumbnail_path}}" height="100">
+        </div>-->
+    </div>
+   <!-- <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="ok()">提交</button>
+        <button class="btn btn-warning" ng-click="cancel()">关闭</button>
+    </div>-->

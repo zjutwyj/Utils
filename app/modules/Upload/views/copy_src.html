@@ -1,0 +1,85 @@
+<div class="modal-header">
+    <h5>选择图片尺寸</h5>
+    <i class="icon-remove upload-close" ng-click="cancel()">&nbsp;</i>
+</div>
+<form name="form" class="form-horizontal" role="form" novalidate>
+    <div class="modal-body">
+        <div class="form-group" style="padding-top:10px;">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right"> 原图尺寸 </label>
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right"> 800*800 </label>
+
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path | pic3}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path | pic3}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right"> 500*500 </label>
+
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path | pic7}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path | pic7}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right"> 300*300 </label>
+
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path | pic4}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path | pic4}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right"> 160*160 </label>
+
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path | pic5}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path | pic5}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right">80*80</label>
+
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path | pic8}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path | pic8}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <label class="col-sm-3 control-label no-padding-right">40*40</label>
+
+                <div class="col-sm-9">
+                    <input type="button" clipboard data-clipboard-text="{{API_END_POINT}}{{pic.server_path | pic6}}"
+                           class="btn btn-blue btn-sm" value="复制链接">
+                    <input type="button" clipboard data-clipboard-text="<img src='{{API_END_POINT}}{{pic.server_path | pic6}}' alt='{{pic.filename}}'>"
+                           class="btn btn-blue btn-sm" value="复制代码">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

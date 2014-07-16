@@ -1,0 +1,147 @@
+<div ng-repeat="alert in alerts" class="msgtip"   close="closeAlert($index)" ng-show="$last"><p class="inner {{alert.type}}">{{alert.msg}}</p></div>
+<div ng-controller="ProductCtrl">
+    <div class="page-header list-header-tool">
+        <a class="btn btn-primary" ng-click="locationUrl('/product_add', '添加产品')" >添加产品</a>
+        <a class="btn btn-primary hidden-sm hidden-xs" ng-click="locationUrl('/product_upload_excel','批量添加产品')">批量添加产品</a>
+        <a class="btn btn-primary" ng-click="products_del()">批量删除产品</a>
+        <a class="btn btn-primary" ng-click="updateAllCategory()">批量转移分类</a>
+        <!--<a class="btn btn-primary" ng-mousedown="csv.generate()" ng-href="{{ csv.link() }}" download="products.csv">导出到CSV</a>-->
+    </div>
+            <div class="div-filter-area">
+                <select class="category_select" ng-controller="ProductCategoryCtrl" ng-model="tableParams.filter().category">
+                    <option value="" default>请选择分类</option>
+                    <option value="{{cate.category_id}}"   ng-repeat="cate in cates">
+                        {{cate.name}}
+                    </option>
+                </select>
+                <select class="type_select hidden-xs"  title="产品类型" class="left text" id="type" name="type" ng-model="tableParams.filter().type">
+                    <option value="">所有类型</option>
+                    <option value="NM">普通</option>
+                    <option value="NW">新品</option>
+                    <option value="CP">精品</option>
+                </select>
+                <select class="ads_select hidden-sm hidden-xs"  title="广告产品" class="left text" id="published_ads" name="ads" ng-model="tableParams.filter().ads">
+                    <option value="">广告产品</option>
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                </select>
+                <input type="text"  placeholder="产品名称" tooltip="按回车查询， 清空输入框返回总列表"  ng-model="tableParams.filter().name">&nbsp;
+                <input type="text" class="hidden-sm hidden-xs"    ng-model="tableParams.filter().prodtype" placeholder="产品型号">
+            </div>
+    <table ng-table="tableParams" show-filter="true" template-pagination="custom/pager"  export-csv="csv" id="sample-table-2" class="table table-striped table-bordered table-hover dataTable">
+        <tbody>
+        <tr ng-repeat="product in productlist"  ng-class="{'active': product.$selected}" >
+            <!--选择框-->
+            <td width="30" class="center  sorting_1" header="'ng-table/headers/checkbox.html'">
+                <label>
+                    <input type="checkbox" name="ch" class="ace checkProducts" indexValue="{{$index}}" fieldValue="{{product.product_id}}"  ng-checked="checkAll" ng-click="product.$selected = !product.$selected; changeSelection(product.product_id,product.$selected)"/>
+                    <span class="lbl"></span>
+                </label>
+            </td>
+            <!--操作-->
+            <td >
+                <div class="div-op-l mr5">
+                    <a data-nodrag class="blue" href="javascript:;" tooltip="修改产品" ng-click="product_view(product)">
+                        <i class="icon-pencil bigger-130"></i>
+                    </a>
+                    <a data-nodrag class="pink hidden-sm hidden-xs" tooltip="SEO修改" href="javascript:;" ng-click="seo_edit(product)">
+                        <i class="icon-search bigger-130"></i>
+                    </a>
+                    <a class="red" href="javascript:;">
+                        <i class="icon-trash bigger-130" ng-click="product_del(product,$index)"></i>
+                    </a>
+                </div>
+                <div class="div-op-l visible-xs visible-sm hidden-md hidden-lg">
+                    <div class="inline position-relative">
+                        <button class="btn btn-minier btn-info dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-caret-down icon-only bigger-120"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                            <li>
+                                <a data-nodrag class="pink" tooltip="SEO修改" href="javascript:;" ng-click="seo(product)">
+                                    <i class="icon-search bigger-130"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <!--产品图片-->
+            <td>
+                <a class="pro_list_img_a"><img imgcrop data-width = '40' data-height="40" src="{{API_END_POINT}}{{product.thumbnail_path}}" alt=""/></a>
+            </td>
+            <!--产品名称-->
+            <td  sortable="'name'" filter="{ 'name': 'text' }" >
+                <span class="label label-sm " ng-class="{'label-warning': product.state==00, 'label-success': product.state==01,'label-inverse':product.state==02}">
+                    {{product.state | state}}
+                </span>
+                <a href="javascript:;" ng-click="product_view(product)" style="color:#333;" tooltip="{{product.name}}">{{product.name | characters:25}}</a>
+            </td>
+            <!--型号-->
+            <td class="visible-md visible-lg hidden-sm hidden-xs"  sortable="'prodtype'" filter="{ 'prodtype': 'text' }" ng-click="product_view(product)">
+                <span ng-if="!product.$edit">{{product.prodtype | characters:10}}</span>
+                <div ng-if="product.$edit"><input class="" type="text"  ng-model="product.prodtype" /></div>
+            </td>
+            <!--发布时间-->
+            <td class="visible-md visible-lg hidden-sm hidden-xs"  sortable = "update_time" filter = "{'update_time' : 'text'}">
+                {{product.update_time | date:'yyyy-MM-dd' }}
+            </td>
+            <!--是否推荐-->
+            <td class="visible-md visible-lg hidden-sm hidden-xs" sortable="'broadcast'" filter="{ 'broadcast': 'text' }">
+                <label tooltip="是否推荐" data-nodrag>
+                    <input name="switch-field-1" ng-model="product.broadcast" ng-click="set_broadcast(product)" ng-checked = "{{product.broadcast}}"
+                           class="ace ace-switch ace-switch-4" type="checkbox">
+                    <span class="lbl"></span>
+
+                </label>
+            </td>
+            <!--排序-->
+            <td class="hidden-xs" sortable="'sort'" filter="{ 'sort': 'text' }">
+                <!--<input class="hidden-sm hidden-xs" type="text"  ng-blur="setSort(product)" ng-model="product.sort" style="width:50px;"/>-->
+                <a data-nodrag  ng-class="{grey: $first, green: !$first }" class="green" href="javascript:;" tooltip="上移" ng-click="moveUp($index, $first)" >
+                    <i class="icon-arrow-up bigger-130"></i>
+                </a>
+                <a data-nodrag ng-class="{grey: $last, blue: !$last }" href="javascript:;" tooltip="下移" ng-click="moveDown($index, $last)" >
+                    <i class="icon-arrow-down bigger-130"></i>
+                </a>
+            </td>
+            <!--插序-->
+            <td class="visible-md visible-lg hidden-sm hidden-xs">
+                <select name="insertSort" ng-model="product.product_id" ng-init="oldValue = ''" ng-focus="setTempValue(product.product_id)"  ng-change="insertSort(product)" ng-options="item.product_id as item.sort for item in product_result_data">
+                </select>
+            </td>
+            <!--标签-->
+            <td class="visible-md visible-lg hidden-sm hidden-xs tags" class="hidden-480"  sortable = 'state'>
+                <span class="tag"  ng-repeat="item in product.tags" ng-model="item.tag_id">
+                    {{item.title}}
+                    <button type="button" class="close" ng-click="delTag(product.product_id, item.tag_id, product.tags)">×</button>
+                </span>
+            </td>
+            <!--发布-->
+            <td>
+                <input type="button" class="btn btn-info btn-xs"  ng-click="publish(product)" value="发布">
+            </td>
+        </tr>
+        </tbody>
+        <!--移到底部 解决ng-table分页问题-->
+        <thead>
+        <tr>
+            <th><label><input type="checkbox" class="ace" ng-checked="checkAll" ng-click="checkAllFn()"/><span class="lbl"></span> </label></th>
+            <th class="th-operate-min" style="width:80px;">操作</th>
+            <th style="width:58px;">图片</th>
+            <th class="sorting" ng-click="sortByColum('name')">名称</th>
+            <th class="sorting visible-md visible-lg hidden-sm hidden-xs" ng-click="sortByColum('prodtype')">型号</th>
+            <th class="sorting visible-md visible-lg hidden-sm hidden-xs th-time-min" ng-click="sortByColum('update_time')" style="width:145px;">
+                <i class="icon-time bigger-110 hidden-480"></i>
+                最后修改时间
+            </th>
+            <th class="sorting visible-md visible-lg hidden-sm hidden-xs" ng-click="sortByColum('broadcast')">推荐</th>
+            <th class="hidden-xs th-sort-min" ng-click="sortByColum('sort')">排序</th>
+            <th class="visible-md visible-lg hidden-sm hidden-xs">插序</th>
+            <th class="visible-md visible-lg hidden-sm hidden-xs">标签</th>
+            <th class="">发布</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
