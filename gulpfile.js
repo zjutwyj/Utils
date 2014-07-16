@@ -84,6 +84,92 @@ var paths = {
             source: ['app/scripts/utils/Est.source.js'],
             dist: './app/doc/Est'
         }
+    },
+    controllers: {
+        scripts: {
+            source: ['app/scripts/controllers/header.js',
+                'app/modules/MainPage/controllers/main.js',
+                'app/scripts/controllers/message.js',
+                'app/modules/Account/account.js',
+                'app/modules/Account/controllers/login.js',
+                'app/modules/Account/controllers/register.js',
+                'app/modules/Account/controllers/info.js',
+                'app/modules/News/controllers/news.js',
+                'app/modules/Product/controllers/product.js',
+                'app/modules/Product/controllers/ProductCtrl.js',
+                'app/modules/Product/controllers/ProductAddCtrl.js',
+                'app/modules/Product/controllers/ProductCateCtrl.js',
+                'app/modules/Product/controllers/ProductTagCtrl.js',
+                'app/modules/Supply/controllers/supply.js',
+                'app/modules/Wwy/controllers/wwy.js',
+                'app/modules/Bind/controllers/bind.js',
+                'app/modules/Certificate/controllers/certificate.js',
+                'app/modules/Recruit/controllers/recruit.js',
+                'app/modules/Customer/controllers/customer.js' ,
+                'app/modules/Tool/controllers/tools.js' ,
+                'app/modules/Upload/scripts/upload.js' ,
+                'app/modules/Upload/scripts/gallery.js' ,
+                'app/scripts/api/api.js'],
+            dist: 'app/scripts/controllers',
+            name: 'controllers.min.js'
+        }
+    },
+    fileupload: {
+        scripts: {
+            source: ['app/modules/Upload/vendor/jq-upload/jquery.ui.widget.js',
+                'app/modules/Upload/vendor/jq-upload/load-image.min.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.xdr-transport.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.iframe-transport.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload-process.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload-image.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload-audio.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload-video.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload-validate.js',
+                'app/modules/Upload/vendor/jq-upload/jquery.fileupload-angular.js'
+            ],
+            dist: 'app/modules/Upload/vendor/jq-upload',
+            name: 'jquery-upload.min.js'
+        }
+    },
+    acejs: {
+        scripts: {
+            source: ['app/styles/theme/ace/scripts/ace-elements.min.js',
+                'app/styles/theme/ace/scripts/ace.min.js',
+                'app/styles/theme/ace/scripts/ace-extra.min.js'],
+            dist: 'app/styles/theme/ace/scripts',
+            name: 'ace.merge.min.js'
+        }
+    },
+    acecss: {
+        styles: {
+            source: ['app/styles/theme/ace/jhw.min.css',
+                'app/styles/theme/ace/jhw-rtl.css',
+                'app/styles/theme/ace/jhw-skins.css',
+                'app/styles/theme/ace/blueimp-gallery.min.css',
+                'app/styles/theme/ace/bootstrap-image-gallery.min.css',
+                'app/styles/theme/ace/ng-table.css'
+            ],
+            dist: 'app/styles/theme/ace',
+            name: 'jhw.merge.min.css'
+        }
+    },
+    ueditor: {
+        scripts:{
+            source: ['app/vendor/ueditor1_4_3/ueditor.config.js',
+                'app/vendor/ueditor1_4_3/ueditor.all.min.js',
+                'app/vendor/ueditor1_4_3/lang/zh-cn/zh-cn.js'],
+            dist: 'app/vendor/ueditor1_4_3',
+            name: 'ueditor.merge.min.js'
+        }
+    },
+    gallery: {
+        scripts: {
+            source: ['app/modules/Upload/vendor/image-gallery/jquery.blueimp-gallery.min.js',
+                'app/modules/Upload/vendor/image-gallery/bootstrap-image-gallery.js'],
+            dist: 'app/modules/Upload/vendor/image-gallery',
+            name: 'gallery.min.js'
+        }
     }
 };
 
@@ -223,6 +309,63 @@ gulp.task('normal', function(){
 gulp.task('debug', function(){
     startTask(true);
 });
+gulp.task('controllers', function(){
+    doTask('controllers', true);
+});
+gulp.task('controllers.min', function(){
+    doTask('controllers', false);
+});
+gulp.task('fileupload', function(){
+    doTask('fileupload', true);
+});
+gulp.task('fileupload.min', function(){
+    doTask('fileupload', false);
+});
+gulp.task('acejs', function(){
+    doTask('acejs', true);
+});
+gulp.task('acejs.min', function(){
+    doTask('acejs', false);
+});
+gulp.task('ueditor', function(){
+    doTask('ueditor', true);
+});
+gulp.task('ueditor.min', function(){
+    doTask('ueditor', false);
+});
+gulp.task('gallery', function(){
+    doTask('gallery', true);
+});
+gulp.task('gallery.min', function(){
+    doTask('gallery', false);
+});
 
-
+gulp.task('acecss', function(){
+    doTask('acecss', true);
+});
+gulp.task('acecss.min', function(){
+    doTask('acecss', false);
+});
 gulp.task('default', [ 'normal']);
+gulp.task('watch.min', function(){
+    gulp.watch(paths.controllers.scripts.source, ['controllers.min']);
+    gulp.watch(paths.fileupload.scripts.source, ['fileupload.min']);
+    gulp.watch(paths.acejs.scripts.source, ['acejs.min']);
+    gulp.watch(paths.ueditor.scripts.source, ['ueditor.min']);
+    gulp.watch(paths.gallery.scripts.source, ['gallery.min']);
+    gulp.watch(paths.acecss.styles.source, ['acecss.min']);
+});
+gulp.task('watch', function(){
+    gulp.watch(paths.controllers.scripts.source, ['controllers']);
+    gulp.watch(paths.fileupload.scripts.source, ['fileupload']);
+    gulp.watch(paths.acejs.scripts.source, ['acejs']);
+    gulp.watch(paths.ueditor.scripts.source, ['ueditor']);
+    gulp.watch(paths.gallery.scripts.source, ['gallery']);
+    gulp.watch(paths.acecss.styles.source, ['acecss']);
+});
+gulp.task('js.min', ['controllers.min', 'fileupload.min', 'acejs.min', 'ueditor.min', 'gallery.min']);
+gulp.task('css.min', ['acecss.min']);
+gulp.task('js', ['controllers', 'fileupload', 'acejs', 'ueditor', 'gallery']);
+gulp.task('css', ['acecss']);
+gulp.task('all', ['watch', 'js', 'css']);
+gulp.task('all.min', ['watch.min', 'js.min', 'css.min']);
