@@ -240,51 +240,138 @@ app.directive('loading', ['$rootScope', function($rootScope){
     }
 }]);
 
-app.directive('code', function(){
-         var func = function($scope, $element, $attrs){
-               var html = $element.text();
-               var lines = html.split('\n');
-              //处理首尾空白
-              if(lines[0] == ''){lines = lines.slice(1, lines.length - 1)}
-               if(lines[lines.length-1] == ''){lines = lines.slice(0, lines.length - 1)}
-              $element.empty();
-               //处理外框
-               (function(){
-                     $element.css('clear', 'both');
-                    $element.css('display', 'block');
-                    $element.css('line-height', '20px');
-                   $element.css('height', '200px');
-                   })();
-              //是否显示行号的选项
-              if('lines' in $attrs){
-                     //处理行号
-                    (function(){
-                          var div = $('<div style="width: %spx; background-color: gray; float: left; text-align: right; padding-right: 5px; margin-right: 10px;"></div>'
-                                       .replace('%s', String(lines.length).length * 10));
-                           var s = '';
-                          angular.forEach(lines, function(_, i){
-                                s += '<pre style="margin: 0;">%s</pre>\n'.replace('%s', i + 1);
-                              });
-                          div.html(s);
-                          $element.append(div);
-                        })();
-                  }
-             //处理内容
-              (function(){
-                   var div = $('<div style="float: left;"></div>');
-                  var s = '';
-                    angular.forEach(lines, function(l){
-                          s += '<span style="margin: 0;">%s</span><br />\n'.replace('%s', l.replace(/\s/g, '<span>&nbsp;</span>'));
-                        });
-                    div.html(s);
-                    $element.append(div);
-                })();
+
+app.directive('treeInclude', ['$window', function(){
+    return {
+        restrict: "AE",
+        templateUrl: "cates_renderer_v2.html"
+    }
+}]);
+
+
+/*
+
+app.controller('ngTreeCtrl', ['$scope',function($scope){
+    $scope.sortableElement = null;
+    $scope.sortableModelValue = null;
+    $scope.callbacks = null;
+    $scope.items = [];
+    $scope.initSortable = function(element) {
+        $scope.sortableElement = element;
+    };
+    $scope.insertSortableItem = function(index, itemModelData) {
+        $scope.sortableModelValue.splice(index, 0, itemModelData);
+        $scope.$apply();
+    };
+    $scope.initSubItemElement = function(subElement) {
+        subElement.parentScope = $scope;
+    };
+    $scope.parentItemScope = function() {
+        return $scope.sortableElement.parentItemScope;
+    };
+    $scope.level = function() {
+        var parentItem = $scope.parentItemScope();
+        if (parentItem) {
+            return parentItem.level() + 1;
+        }
+        return 1;
+    };
+}]);
+app.controller('ngTreeItemCtrl', ['$scope', '$attrs', function($scope, $attrs){
+    $scope.sortableItemElement = null;
+    $scope.subSortableElement = null;
+
+    $scope.initItem = function(element) {
+        $scope.sortableItemElement = element;
+        $scope.initSubItemElement(element);
+        $scope.items.splice($scope.$index, 0, $scope);
+        element.attr('sortable-elment-type', 'item');
+    };
+    var subLevel = 0;
+    var countSubLevel = function(scope) {
+        var count = 0;
+        for (var i = 0; i < scope.items.length; i++) {
+            var itemSub = scope.items[i].subScope();
+            if (itemSub) {
+                count = 1;
+                countSubLevel(itemSub);
             }
-         return {link: func,
-                     restrict: 'AE'}; //以元素或属性的形式使用命令
-   });
+        }
+        subLevel += count;
+    };
+    $scope.setSubSortableElement = function(subElement){
+        $scope.subSortableElement = subElement;
+        if (subElement) {
+            subElement.parentItemScope = $scope;
+        }
+    };
 
+    $scope.parentScope = function() {
+        return $scope.sortableItemElement.parentScope;
+    };
 
+    $scope.subScope = function() {
+        if (!$scope.subSortableElement) {
+            return null;
+        }
+        var subScope = $scope.subSortableElement.scope();
+        if (subScope && !subScope.sortableModelValue) {
+            // has no children data
+            subScope = null;
+        }
+        return subScope;
+    };
 
+}]);
+app.directive('ngTree', [, function(){
+    return {
+        require: ['ngModel', '?^ngTreeItem'],
+        restrict: 'A',
+        scope: true,
+        controller: 'ngTreeCtrl',
+        link: function(scope, element, attrs, controllersArr){
+            var ngModel = controllersArr[0];
+            var itemCtrl = controllersArr[1];
+            scope.initSortable(element);
+            if (itemCtrl) { // if it has a parent, link it with parent
+                scope.setSubSortableElement(element);
+            }
+            if (ngModel) {
+                ngModel.$render = function() {
+                    scope.sortableModelValue = ngModel.$modelValue;
+                };
+            }
+            scope.$watch(attrs.ngTree, function(newVal, oldVal){
+                angular.forEach(newVal, function(value, key){
+                    if (callbacks[key]) {
+                        if (typeof value === "function") {
+                            callbacks[key] = value;
+                        }
+                    }
+                });
+                scope.callbacks = callbacks;
+            }, true);
+            element.on('$destroy', function() {
+                if (itemCtrl) { // if it was removed, unlink to parent
+                    scope.setSubSortableElement(null);
+                    element.parentItemScope = null;
+                }
+            });
+        }
+    }
+}]);
+
+app.directive('ngTreeItem', ['$window', function(){
+    return {
+        require: '^ngTree',
+        restrict: 'A',
+        controller: 'ngTreeItemCtrl',
+        link: function(scope, element, attrs){
+            scope.initItem(element);
+        }
+    }
+}]);
+
+*/
 
 

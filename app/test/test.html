@@ -6,9 +6,6 @@
     <link rel="stylesheet" href="qunit/qunit-1.14.0.css">
 </head>
 <body  id="ng-app" class="ng-app:ngApp" ng-app="ngApp" >
-<div ng-controller="TestCtrl" id="demo" class="aa">
-    <div>{{name}}</div>
-</div>
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
 <script src="../vendor/jquery.min.js"></script>
@@ -16,11 +13,100 @@
 <script type="text/javascript" src="../vendor/lodash.js"></script>
 <script type="text/javascript" src="../scripts/utils/Est.min.js"></script>
 <script src="../vendor/angular-1.2.15.js"></script>
+
+<div ng-controller="TestCtrl" id="demo" class="aa">
+    <!--<div id="a">A {{ text }}</div>
+    <div id="b">B </div>-->
+
+    <div show-length>{{ text }}</div>
+    <button ng-click="text='xx'">改变</button>
+</div>
+
 <script type="text/javascript">
     var app = angular.module('ngApp', []).run(function(){ });
-    function TestCtrl($scope){
-        $scope.name = "b";
+    function TestCtrl($scope, $compile, $element){
+        /*var s = '<more>123</more>';
+        var link = $compile(s, function(a, b){return a + b});
+        var node = link($scope);
+        $element.append(node);*/
     }
+    app.directive('showLength', function($rootScope, $document){
+        var func = function(element, attrs, link){
+            return function(scope, ielement, iattrs, controller){
+                var node = link(scope);
+                ielement.append(node);
+                var lnode = $('<span></span>');
+                ielement.prepend(lnode);
+
+                scope.$watch(function(scope){
+                    lnode.text(node.text().length);
+                });
+            };
+        }
+
+        return {compile: func,
+            transclude: true, // element是节点没,其它值是节点的内容没
+            restrict: 'A'};
+    });
+    app.directive('more', function(){
+        var func = function(element, attrs, callback){
+            var sum = callback(1, 2);
+            console.log(sum);
+            console.log(element);
+        }
+        return {compile: func,
+            restrict: 'E'};
+    });
+    app.directive('code', function(){
+             var func = function($scope, $element, $attrs){
+                  var html = $element.text();
+                   var lines = html.split('\n');
+
+                  //处理首尾空白
+                  if(lines[0] == ''){lines = lines.slice(1, lines.length - 1)}
+                   if(lines[lines.length-1] == ''){lines = lines.slice(0, lines.length - 1)}
+
+                   $element.empty();
+
+                   //处理外框
+                  (function(){
+                         $element.css('clear', 'both');
+                        $element.css('display', 'block');
+                         $element.css('line-height', '20px');
+                         $element.css('height', '200px');
+                       })();
+
+                   //是否显示行号的选项
+                   if('lines' in $attrs){
+                         //处理行号
+                         (function(){
+                               var div = $('<div style="width: %spx; background-color: gray; float: left; text-align: right; padding-right: 5px; margin-right: 10px;"></div>'
+                                           .replace('%s', String(lines.length).length * 10));
+                               var s = '';
+                               angular.forEach(lines, function(_, i){
+                                     s += '<pre style="margin: 0;">%s</pre>\n'.replace('%s', i + 1);
+                                   });
+                               div.html(s);
+                               $element.append(div);
+                          })();
+                    }
+
+                  //处理内容
+                  (function(){
+                         var div = $('<div style="float: left;"></div>');
+                         var s = '';
+                        angular.forEach(lines, function(l){
+                               s += '<span style="margin: 0;">%s</span><br />\n'.replace('%s', l.replace(/\s/g, '<span>&nbsp;</span>'));
+                           });
+                      div.html(s);
+                        $element.append(div);
+                      })();
+                }
+
+             return {link: func,
+                        restrict: 'AE'}; //以元素或属性的形式使用命令
+       });
+
 </script>
 <script type="text/javascript">
     'use script';
@@ -7783,7 +7869,5 @@ QUnit.test('cloneDeep', function(assert){
 
 <input type="button" value="访问函数内部变量" onclick="getResult()">
 <input type="button" value="加1" onclick="addNum()">
-
-<script type="text/javascript" src="array.js"></script>
 </body>
 </html>

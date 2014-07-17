@@ -269,8 +269,7 @@
 
   angular.module('ui.nestedSortable')
 
-    .directive('uiNestedSortable', [ 'nestedSortableConfig', '$window',
-      function(nestedSortableConfig) {
+    .directive('uiNestedSortable', [ 'nestedSortableConfig', '$window', function(nestedSortableConfig) {
         return {
           require: ['ngModel', '?^uiNestedSortableItem'],
           restrict: 'A',

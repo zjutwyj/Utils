@@ -1421,9 +1421,11 @@
      *      Est.picUrl(src, 5);
      */
     function picUrl(src, zoom){
-        var type = src.substring(src.lastIndexOf(".") + 1, src.length);
-        var hasZoom = src.lastIndexOf('_') > 0 ? true : false;
-        return src.substring(0, src.lastIndexOf(hasZoom ? '_' : '.')) + "_" + zoom + "." + type;
+        if (!Est.isEmpty(src)){
+            var type = src.substring(src.lastIndexOf(".") + 1, src.length);
+            var hasZoom = src.lastIndexOf('_') > 0 ? true : false;
+            return src.substring(0, src.lastIndexOf(hasZoom ? '_' : '.')) + "_" + zoom + "." + type;
+        }
     }
     Est.picUrl = picUrl;
 
