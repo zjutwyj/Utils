@@ -143,12 +143,12 @@ app.directive('ngEnter', function() {
 });
 /**
  * @description 获取焦点
- * @method ngFoces
+ * @method foces
  * @author wyj on 14/7/10
  * @example
- *      <input type="button" ng-focus >
+ *      <input type="button" focus >
  */
-app.directive('ngFocus', function(){
+app.directive('focus', function(){
     return {
         link:function(scope, elements, attrs, controller){
             elements[0].focus();

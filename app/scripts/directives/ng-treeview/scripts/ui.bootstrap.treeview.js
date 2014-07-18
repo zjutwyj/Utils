@@ -10,27 +10,25 @@
  * @param {String} data-angular-treeview
  * @author wyj on 14/7/8
  * @example
- *      <div data-angular-treeview="true" data-tree-id="tree01" data-tree-model="roleList1" data-node-id="roleId" data-node-label="roleName" data-node-children="children" > </div>
+ *      <div angular-treeview="true"
+ *      tree-id="tree01"
+ *      tree-model="roleList1"
+ *      node-id="roleId"
+ *      node-label="roleName"
+ *      node-children="children" > </div>
  */
-
-
 (function (angular) {
     'use strict';
     angular.module('ui.bootstrap.treeview', []).directive('treeModel', ['$compile', function ($compile) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
-                //tree id
                 var treeId = attrs.treeId;
-                //tree model
-                var treeModel = attrs.treeModel;
-                //node id
-                var nodeId = attrs.nodeId || 'id';
-                //node label
-                var nodeLabel = attrs.nodeLabel || 'label';
-                //children
-                var nodeChildren = attrs.nodeChildren || 'children';
-                //tree template
+                var treeModel = attrs.treeModel; // 数据源
+                var nodeId = attrs.nodeId || 'id'; // ID字段
+                var nodeLabel = attrs.nodeLabel || 'label';// 名称字段
+                var nodeChildren = attrs.nodeChildren || 'children'; // 子列表
+                // 模板
                 var template =
                         '<div class="tree-folder" ng-repeat="node in ' + treeModel + '">' +
                             '<div class="tree-folder-header">' +
@@ -42,33 +40,27 @@
                             '<div class="tree-folder-content" ng-hide="node.collapsed" tree-id="' + treeId + '" tree-model="node.' + nodeChildren + '" node-id=' + nodeId + ' node-label=' + nodeLabel + ' node-children=' + nodeChildren + '>' +
                             '</div>' +
                         '</div>';
-
-
-                //check tree id, tree model
                 if (treeId && treeModel) {
-                    //root node
-                    if (attrs.angularTreeview) {
-                        //create tree object if not exists
+                    if (attrs.angularTreeview) { // 若为根节点
                         scope[treeId] = scope[treeId] || {};
-                        //if node head clicks,
+                        // 点击根节点
                         scope[treeId].selectNodeHead = scope[treeId].selectNodeHead || function (selectedNode) {
-                            //Collapse or Expand
                             selectedNode.collapsed = !selectedNode.collapsed;
                         };
-                        //if node label clicks,
+                        // 点击名称
                         scope[treeId].selectNodeLabel = scope[treeId].selectNodeLabel || function (selectedNode) {
-                            //remove highlight from previous node
+                            // 移除高亮
                             if (scope[treeId].currentNode && scope[treeId].currentNode.selected) {
                                 scope[treeId].currentNode.selected = undefined;
                             }
-                            //set highlight to selected node
+                            // 设置当前元素高亮
                             selectedNode.selected = 'selected';
-                            //set currentNode
+                            // 设置当前元素
                             scope[treeId].currentNode = selectedNode;
                             scope.folderInto(selectedNode[nodeId]);
                         };
                     }
-                    //Rendering template.
+                    // 渲染模板.
                     element.html('').append($compile(template)(scope));
                 }
             }

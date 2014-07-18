@@ -12,28 +12,28 @@ var minifyCSS = require('gulp-minify-css');
 var del = require('del');
 
 var paths = {
-    vendor : {
-      scripts: {
-          source: ['app/vendor/jquery/jquery.min.js',
-              'app/vendor/angular-custom/angular.js',
-              'app/vendor/bootstrap/bootstrap.js',
-              'app/scripts/utils/Est.source.js',
-              'app/vendor/zeroclipboard/ZeroClipboard.min.js',
-              'app/vendor/angular-resource.min.js',
-              'app/vendor/angular-cookies/angular-cookies.min.js',
-              'app/vendor/angular-route/angular-route.min.js',
-              'app/vendor/ng-table/ng-table.min.js',
-              'app/vendor/angular-nestedsortable/angular-nested-sortable.min.js',
-              'app/vendor/typeahead/typeahead.bundle.min.js',
-              'app/vendor/datetime/bootstrap-datepicker.min.js',
-              'app/vendor/datetime/bootstrap-datepicker.zh-CN.js'],
-          dist: 'app/scripts/vendor',
-          name: 'vendor.min.js'
-      }
-    },
     app :{
       scripts: {
-        source: ['app/scripts/app.js',
+        source: [
+            'app/vendor/jquery/jquery.min.js',
+            'app/vendor/angular-custom/angular.js',
+            'app/vendor/bootstrap/bootstrap.js',
+            'app/scripts/utils/Est.source.js',
+            'app/vendor/zeroclipboard/ZeroClipboard.min.js',
+            'app/vendor/angular-resource.min.js',
+            'app/vendor/angular-cookies/angular-cookies.min.js',
+            'app/vendor/angular-route/angular-route.min.js',
+            'app/vendor/ng-table/ng-table.min.js',
+            'app/vendor/angular-nestedsortable/angular-nested-sortable.min.js',
+            'app/vendor/typeahead/typeahead.bundle.min.js',
+            'app/vendor/datetime/bootstrap-datepicker.min.js',
+            'app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+            'app/styles/theme/ace/scripts/ace-element.min.js',
+            'app/styles/theme/ace/scripts/ace.min.js',
+            'app/styles/theme/ace/scripts/ace-extra.min.js',
+            'app/vendor/jq-upload/jquery-upload.min.js',
+            'app/vendor/image-gallery/gallery.min.js',
+            'app/scripts/app.js',
             'app/scripts/directives/directive.js',
             'app/scripts/directives/angular-ueditor/ng-ueditor.src.js',
             'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
@@ -85,35 +85,6 @@ var paths = {
             dist: './app/doc/Est'
         }
     },
-    controllers: {
-        scripts: {
-            source: ['app/scripts/controllers/header.js',
-                'app/modules/MainPage/controllers/main.js',
-                'app/scripts/controllers/message.js',
-                'app/modules/Account/account.js',
-                'app/modules/Account/controllers/login.js',
-                'app/modules/Account/controllers/register.js',
-                'app/modules/Account/controllers/info.js',
-                'app/modules/News/controllers/news.js',
-                'app/modules/Product/controllers/product.js',
-                'app/modules/Product/controllers/ProductCtrl.js',
-                'app/modules/Product/controllers/ProductAddCtrl.js',
-                'app/modules/Product/controllers/ProductCateCtrl.js',
-                'app/modules/Product/controllers/ProductTagCtrl.js',
-                'app/modules/Supply/controllers/supply.js',
-                'app/modules/Wwy/controllers/wwy.js',
-                'app/modules/Bind/controllers/bind.js',
-                'app/modules/Certificate/controllers/certificate.js',
-                'app/modules/Recruit/controllers/recruit.js',
-                'app/modules/Customer/controllers/customer.js' ,
-                'app/modules/Tool/controllers/tools.js' ,
-                'app/modules/Upload/scripts/upload.js' ,
-                'app/modules/Upload/scripts/gallery.js' ,
-                'app/scripts/api/api.js'],
-            dist: 'app/scripts/controllers',
-            name: 'controllers.min.js'
-        }
-    },
     fileupload: {
         scripts: {
             source: ['app/modules/Upload/vendor/jq-upload/jquery.ui.widget.js',
@@ -130,15 +101,6 @@ var paths = {
             ],
             dist: 'app/modules/Upload/vendor/jq-upload',
             name: 'jquery-upload.min.js'
-        }
-    },
-    acejs: {
-        scripts: {
-            source: ['app/styles/theme/ace/scripts/ace-elements.min.js',
-                'app/styles/theme/ace/scripts/ace.min.js',
-                'app/styles/theme/ace/scripts/ace-extra.min.js'],
-            dist: 'app/styles/theme/ace/scripts',
-            name: 'ace.merge.min.js'
         }
     },
     acecss: {
@@ -165,10 +127,25 @@ var paths = {
     },
     gallery: {
         scripts: {
-            source: ['app/modules/Upload/vendor/image-gallery/jquery.blueimp-gallery.min.js',
-                'app/modules/Upload/vendor/image-gallery/bootstrap-image-gallery.js'],
-            dist: 'app/modules/Upload/vendor/image-gallery',
+            source: ['app/vendor/image-gallery/jquery.blueimp-gallery.min.js',
+                'app/vendor/image-gallery/bootstrap-image-gallery.js'],
+            dist: 'app/vendor/image-gallery',
             name: 'gallery.min.js'
+        }
+    },
+    Account: {
+        scripts:{
+            source: ['app/vendor/jquery/jquery.min.js',
+                'app/scripts/utils/Est.min.js',
+                'app/vendor/angular-custom/angular.js',
+                'app/vendor/bootstrap/bootstrap.min.js',
+                'app/vendor/angular-resource/angular-resource.min.js',
+                'app/vendor/angular-route/angular-route.min.js',
+                'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
+                'app/vendor/angular-animate/angular-animate.min.js',
+                'app/modules/Account/app.js'],
+            dist: 'app/modules/Account',
+            name: 'app.min.js'
         }
     }
 };
@@ -181,8 +158,8 @@ function doTask(item, debug){
                     gulp.task(item + key, function () {
                         if (debug) {
                             return gulp.src(paths[item].scripts.source)
-                                .pipe(jshint())
-                                .pipe(jshint.reporter(stylish))
+                              /*  .pipe(jshint())
+                                .pipe(jshint.reporter(stylish))*/
                                 .pipe(concat(paths[item].scripts.name))
                                 .pipe(gulp.dest(paths[item].scripts.dist));
                         }
@@ -276,56 +253,33 @@ gulp.task('Est.min', function(){
     doTask('Est', false);
 });
 
-gulp.task('vendor', function(){
-    doTask('vendor', true);
-});
-
-gulp.task('vendor.min', function(){
-    doTask('vendor', false);
-});
 
 gulp.task('app', function(){
     doTask('app', true);
 });
-gulp.task('doc', function(){
-    doTask('doc', false);
-});
 gulp.task('app.min', function(){
     doTask('app', false);
 });
-
+gulp.task('doc', function(){
+    doTask('doc', false);
+});
 gulp.task('patch', function(){
     doTask('patch', true);
 });
-
 gulp.task('patch.min', function(){
     doTask('patch', false);
 });
-
 gulp.task('normal', function(){
     startTask(false);
 });
-
 gulp.task('debug', function(){
     startTask(true);
-});
-gulp.task('controllers', function(){
-    doTask('controllers', true);
-});
-gulp.task('controllers.min', function(){
-    doTask('controllers', false);
 });
 gulp.task('fileupload', function(){
     doTask('fileupload', true);
 });
 gulp.task('fileupload.min', function(){
     doTask('fileupload', false);
-});
-gulp.task('acejs', function(){
-    doTask('acejs', true);
-});
-gulp.task('acejs.min', function(){
-    doTask('acejs', false);
 });
 gulp.task('ueditor', function(){
     doTask('ueditor', true);
@@ -346,9 +300,18 @@ gulp.task('acecss', function(){
 gulp.task('acecss.min', function(){
     doTask('acecss', false);
 });
+
+
+// 登录注册
+gulp.task('Account', function(){
+    doTask('Account', true);
+});
+gulp.task('Account.min', function(){
+    doTask('Account', false);
+});
+
 gulp.task('default', [ 'normal']);
 gulp.task('watch.min', function(){
-    gulp.watch(paths.controllers.scripts.source, ['controllers.min']);
     gulp.watch(paths.fileupload.scripts.source, ['fileupload.min']);
     gulp.watch(paths.acejs.scripts.source, ['acejs.min']);
     gulp.watch(paths.ueditor.scripts.source, ['ueditor.min']);
@@ -356,16 +319,18 @@ gulp.task('watch.min', function(){
     gulp.watch(paths.acecss.styles.source, ['acecss.min']);
 });
 gulp.task('watch', function(){
-    gulp.watch(paths.controllers.scripts.source, ['controllers']);
     gulp.watch(paths.fileupload.scripts.source, ['fileupload']);
     gulp.watch(paths.acejs.scripts.source, ['acejs']);
     gulp.watch(paths.ueditor.scripts.source, ['ueditor']);
     gulp.watch(paths.gallery.scripts.source, ['gallery']);
     gulp.watch(paths.acecss.styles.source, ['acecss']);
 });
-gulp.task('js.min', ['controllers.min', 'fileupload.min', 'acejs.min', 'ueditor.min', 'gallery.min']);
-gulp.task('css.min', ['acecss.min']);
-gulp.task('js', ['controllers', 'fileupload', 'acejs', 'ueditor', 'gallery']);
+
 gulp.task('css', ['acecss']);
+gulp.task('css.min', ['acecss.min']);
+
+gulp.task('js', ['fileupload', 'ueditor', 'gallery']);
+gulp.task('js.min', ['fileupload.min', 'ueditor.min', 'gallery.min']);
+
 gulp.task('all', ['watch', 'js', 'css']);
 gulp.task('all.min', ['watch.min', 'js.min', 'css.min']);

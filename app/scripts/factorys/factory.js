@@ -19,8 +19,8 @@
  *
  *      del : BaseFactory.del('product', id);
  */
-app.factory('BaseFactory', ['$http', '$q', 'API_END_POINT',
-    function ($http, $q, API_END_POINT) {
+app.factory('BaseFactory', ['$rootScope', '$http', '$q', 'API_END_POINT',
+    function ($rootScope, $http, $q, API_END_POINT) {
         return {
             query: function (url, params) {
                 var deferred = $q.defer();
@@ -49,9 +49,11 @@ app.factory('BaseFactory', ['$http', '$q', 'API_END_POINT',
                 var sId = bIsEdit ? '/' + oTarget[opts.id] : '';
                 $http({ method: sMethod, url: API_END_POINT + url + sId, data: oTarget, params: params}).
                     success(function (data, status, headers, config) {
+                        $rootScope.showMsg('保存成功');
                         deferred.resolve(data);
                     }).
                     error(function (data, status, headers, config) {
+                        $rootScope.showMsg('保存失败， 请重试');
                         deferred.reject(data);
                     });
                 return deferred.promise;
@@ -61,9 +63,11 @@ app.factory('BaseFactory', ['$http', '$q', 'API_END_POINT',
                 var id = Est.typeOf(id) === 'undefined' ? '' : '/' + id;
                 $http({ method: 'DELETE', url: API_END_POINT + url + id, data: data}).
                     success(function (data, status, headers, config) {
+                        $rootScope.showMsg('删除成功');
                         deferred.resolve(data);
                     }).
                     error(function (data, status, headers, config) {
+                        $rootScope.showMsg('删除失败， 请重试');
                         deferred.reject(data);
                     });
                 ;
