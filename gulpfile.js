@@ -44,6 +44,8 @@ var paths = {
             'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js',
             'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
             'app/scripts/filters/filter.js',
+            'app/scripts/factorys/BaseFactory.js',
+            'app/scripts/factorys/AccountFactory.js',
             'app/scripts/factorys/factory.js'],
           dist: 'app/scripts',
           name: 'app.min.js'
@@ -67,10 +69,14 @@ var paths = {
                 'app/scripts/app.js',
                 'app/scripts/directives/directive.js',
                 'app/scripts/filters/filter.js',
+                'app/scripts/factorys/BaseFactory.js',
+                'app/scripts/factorys/AccountFactory.js',
                 'app/scripts/factorys/factory.js',
                 'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js',
                 'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js'],
+                'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js',
+                'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
+                'app/scripts/directives/angular-ueditor/ng-ueditor.src.js'],
             dist: './app/doc'
         }
     },
@@ -143,9 +149,15 @@ var paths = {
                 'app/vendor/angular-route/angular-route.min.js',
                 'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
                 'app/vendor/angular-animate/angular-animate.min.js',
-                'app/modules/Account/app.js'],
+                'app/modules/Account/app.js',
+                'app/scripts/factorys/BaseFactory.js',
+                'app/scripts/factorys/AccountFactory.js'],
             dist: 'app/modules/Account',
             name: 'app.min.js'
+        },
+        doc: {
+            source: ['app/scripts/utils/Est.source.js','app/scripts/factorys/AccountFactory.js', 'app/modules/Account/app.js'],
+            dist: 'app/modules/Account/doc'
         }
     }
 };

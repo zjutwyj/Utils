@@ -5,80 +5,8 @@
  */
 
 /**
- * @description 基础工厂类， 提供四个方法 ，分别为query[查询], detail[详细], save[保存或添加], del[删除]
- * @method BaseFactory
- * @author wyj on 14/7/3
- * @example
- *      query : BaseFactory.query('product', params);
- *
- *      detail : BaseFactory.detail('product', id);
- *
- *      save : BaseFactory.save({product_id:'Product_000000001', name: 'aaa'}, 'product', {
- *              id: 'product_id'
- *          }, params);
- *
- *      del : BaseFactory.del('product', id);
- */
-app.factory('BaseFactory', ['$rootScope', '$http', '$q', 'API_END_POINT',
-    function ($rootScope, $http, $q, API_END_POINT) {
-        return {
-            query: function (url, params) {
-                var deferred = $q.defer();
-                $http({ method: 'GET', url: API_END_POINT + url, params: params }).
-                    success(function (data, status, headers, config) { deferred.resolve(data); }).
-                    error(function (data, status, headers, config) {
-                        deferred.reject(data);
-                    });
-                return deferred.promise;
-            },
-            detail: function (url, id) {
-                var deferred = $q.defer();
-                $http.get(API_END_POINT + url + '/' + id).
-                    success(function (data, status, headers, config) {
-                        deferred.resolve(data);
-                    }).
-                    error(function (data, status, headers, config) {
-                        deferred.reject(data);
-                    });
-                return deferred.promise;
-            },
-            save: function (oTarget, url, opts, params) {
-                var deferred = $q.defer();
-                var bIsEdit = opts ? opts.id ? oTarget[opts.id] ? true : false : false : false;
-                var sMethod = bIsEdit ? 'PUT' : 'POST';
-                var sId = bIsEdit ? '/' + oTarget[opts.id] : '';
-                $http({ method: sMethod, url: API_END_POINT + url + sId, data: oTarget, params: params}).
-                    success(function (data, status, headers, config) {
-                        $rootScope.showMsg('保存成功');
-                        deferred.resolve(data);
-                    }).
-                    error(function (data, status, headers, config) {
-                        $rootScope.showMsg('保存失败， 请重试');
-                        deferred.reject(data);
-                    });
-                return deferred.promise;
-            },
-            del: function (url, id, data) {
-                var deferred = $q.defer();
-                var id = Est.typeOf(id) === 'undefined' ? '' : '/' + id;
-                $http({ method: 'DELETE', url: API_END_POINT + url + id, data: data}).
-                    success(function (data, status, headers, config) {
-                        $rootScope.showMsg('删除成功');
-                        deferred.resolve(data);
-                    }).
-                    error(function (data, status, headers, config) {
-                        $rootScope.showMsg('删除失败， 请重试');
-                        deferred.reject(data);
-                    });
-                ;
-                return deferred.promise;
-            }
-        };
-    }]);
-
-/**
  * @description 产品工厂类
- * @method ProductFactory
+ * @method [产品] - ProductFactory
  * @author wyj on 14/7/2
  * @example
  *      query : ProductFactory.query(); // 全查
@@ -132,7 +60,7 @@ app.factory('ProductFactory', ['BaseFactory', function (BaseFactory) {
 
 /**
  * @description 新闻工厂类
- * @method NewsFactory
+ * @method [新闻] - NewsFactory
  * @author wyj on 14/7/2
  * @example
  *      query : NewsFactory.query(); // 全查
@@ -186,7 +114,7 @@ app.factory('NewsFactory', ['BaseFactory', function (BaseFactory) {
 
 /**
  * @description 产品分类工厂类
- * @method ProductCategoryFactory
+ * @method [分类] - ProductCategoryFactory
  * @author wyj on 14/7/3
  * @example
  *      query : ProductCategoryFactory.query(); // 全查
@@ -238,7 +166,7 @@ app.factory('ProductCategoryFactory', ['BaseFactory', function (BaseFactory) {
 }]);
 /**
  * @description 新闻分类工厂类
- * @method NewsCategoryFactory
+ * @method [分类] - NewsCategoryFactory
  * @author wyj on 14/7/3
  * @example
  *      query : NewsCategoryFactory.query(); // 全查
@@ -290,7 +218,7 @@ app.factory('NewsCategoryFactory', ['BaseFactory', function (BaseFactory) {
 }]);
 /**
  * @description 产品标签
- * @method ProductTagFactory
+ * @method [标签] - ProductTagFactory
  * @author wyj on 14/7/2
  * @example
  *      query : ProductTagFactory.query(); // 全查
@@ -356,7 +284,7 @@ app.factory('ProductTagFactory', ['BaseFactory', function (BaseFactory) {
 }]);
 /**
  * @description 相册
- * @method AlbumFactory
+ * @method [相册] - AlbumFactory
  * @author wyj on 14/7/8
  * @example
  *      query : AlbumFactory.query(); // 全查
@@ -408,7 +336,7 @@ app.factory('AlbumFactory', ['BaseFactory', function(BaseFactory){
 }]);
 /**
  * @description 图片
- * @method PictureFactory
+ * @method [图片] - PictureFactory
  * @author wyj on 14/7/9
  * @example
  *      query : PictureFactory.query(); // 全查
@@ -461,7 +389,7 @@ app.factory('PictureFactory', ['BaseFactory', function(BaseFactory){
 
 /**
  * @description 证书
- * @method CertificateFactory
+ * @method [证书] - CertificateFactory
  * @author wyj on 14/7/4
  * @example
  *      query : CertificateFactory.query(); // 全查
@@ -514,7 +442,7 @@ app.factory('CertificateFactory', ['BaseFactory', function(BaseFactory){
 
 /**
  * @description 招聘
- * @method RecruitFactory
+ * @method [招聘] - RecruitFactory
  * @author wyj on 14/7/4
  * @example
  *      query : RecruitFactory.query(); // 全查
@@ -567,7 +495,7 @@ app.factory('RecruitFactory', ['BaseFactory', function(BaseFactory){
 
 /**
  * @description 二级会员
- * @method SubmemberFactory
+ * @method [会员] - SubmemberFactory
  * @author wyj on 14/7/4
  * @example
  *      query : SubmemberFactory.query(); // 全查
@@ -621,7 +549,7 @@ app.factory('SubmemberFactory', ['BaseFactory', function(BaseFactory){
 
 /**
  * @description 询盘
- * @method InquiryFactory
+ * @method [询盘] - InquiryFactory
  * @author wyj on 14/7/4
  * @example
  *      query : InquiryFactory.query(); // 全查
@@ -674,7 +602,7 @@ app.factory('InquiryFactory', ['BaseFactory', function(BaseFactory){
 
 /**
  * @description 消息
- * @method MessageFactory
+ * @method [消息] - MessageFactory
  * @author wyj on 14/7/4
  * @example
  *      query : MessageFactory.query(); // 全查
@@ -727,7 +655,7 @@ app.factory('MessageFactory', ['BaseFactory', function(BaseFactory){
 
 /**
  * @description 供求
- * @method SupplyFactory
+ * @method [供求] - SupplyFactory
  * @author wyj on 14/7/4
  * @example
  *      query : SupplyFactory.query(); // 全查

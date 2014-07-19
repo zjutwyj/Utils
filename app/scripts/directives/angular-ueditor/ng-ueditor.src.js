@@ -1,3 +1,7 @@
+/**
+ * @description angular-ui
+ * @class directive - 指令集
+ */
 (function(angular, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['angular', 'ueditor'], function(angular) {
@@ -28,6 +32,13 @@
         $timeout(checkLoaded, 100);
     }])
 
+    /**
+     * @description 百度编辑器
+     * @method [编辑器] - ueditor
+     * @author wyj on 14/7/18
+     * @example
+     *      <textarea name="proddesc" id="productContent" ueditor  ng-model="product.proddesc"></textarea>
+     */
     app.directive('ueditor', ['$timeout', '$q','$modal','$rootScope', function ($timeout, $q, $modal, $rootScope) {
         'use strict';
         return {

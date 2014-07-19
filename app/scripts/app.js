@@ -54,7 +54,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         };
         /**
          * @description 提示消息
-         * @method showMsg
+         * @method [提示] - showMsg
          * @param {String} msg 提示内容
          * @param {Object} opts 配置信息
          * @author wyj on 14/7/15
@@ -76,7 +76,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         // js跳转url
         /**
          * @description js跳转url
-         * @method jumpUrl
+         * @method [跳转] - jumpUrl
          * @param {String} url 跳转网址
          * @param {Boolean} target 是否打开新窗口
          * @author wyj on 14/7/15
@@ -92,7 +92,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         }
         /**
          * @description augular url跳转
-         * @method locationUrl
+         * @method [跳转] - locationUrl
          * @param {Stirng} url 待跳转URL
          * @param {String} page 说明
          * @author wyj on 14/7/15
@@ -106,7 +106,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         }
         /**
          * @description 消息提示框  比如删除前提示  产品添加成功后提示
-         * @method open
+         * @method [提示框] - open
          * @param {String} msg 提示内容
          * @param {Function} action 提示成功后操作
          * @param {Object} opts 配置信息
@@ -165,7 +165,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         };
         /**
          * @description 通用弹出对话框 初始化
-         * @method modalInit
+         * @method [初始化] - modalInit
          * @param {Object} $scope 作用域
          * @param {Object} $modalInstance 对话框实例对象
          * @param {Object} item 传递的数据  可以是object, 或数值
@@ -194,7 +194,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         }
         /**
          * @description 通用搜索方法 默认跳转到产品列表页面
-         * @method search
+         * @method [搜索] - search
          * @param {String} search_key 搜索关键词
          * @param {String} url 跳转地址
          * @author wyj on 14/7/15
@@ -209,7 +209,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         }
         /**
          * @description 任务指示跳转
-         * @method editTask
+         * @method [任务] - editTask
          * @param {String} url 跳转URL
          * @param {String} title 标题
          * @param task 任务
@@ -236,7 +236,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         // 静态化相关
         /**
          * @description 添加到静态化列表
-         * @method addToStatic
+         * @method [静态化] - addToStatic
          * @param {String} 静态化页面， 目录支持product, news
          * @param {String} 静态化产品或新闻ID值
          * @author wyj on 14/7/15
@@ -255,7 +255,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         }
         /**
          * @description 执行静态化程序
-         * @method doStatic
+         * @method [静态化] - doStatic
          * @author wyj on 14/7/15
          * @example
          *      $rootScope.doStatic();
@@ -272,7 +272,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
 
         /**
          * @description 静态化详细页面
-         * @method staticPage
+         * @method [静态化] - staticPage
          * @param {String} page news 或 product
          * @param {String} item_id id值
          * @author wyj on 14/7/15
@@ -297,7 +297,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
         }
         /**
          * @description 部分静态化  比如导航页面， 分类页面
-         * @method staticPart
+         * @method [静态化] - staticPart
          * @author wyj on 14/7/15
          * @example
          *      $rootScope.staticPart();
@@ -312,10 +312,28 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
             $rootScope.editNum = 0;
             $rootScope.showMsg('正在静态化...', {time: 3000});
         }
-
+        /**
+         * @description 跳转到邮箱页面
+         * @method [邮箱] - toMail
+         * @param val
+         * @author wyj on 14/7/19
+         * @example
+         *      $rootScope.toMail('zjut_wyj@163.com');
+         */
+        $rootScope.toMail = function(val){
+            var houzhui = val.split('@')[1]; //后缀名
+            if (houzhui.indexOf("gmail") != -1) { //谷歌
+                window.open("http://mail.google.com");
+            }
+            else if (houzhui.indexOf("hotmail") != -1 || houzhui.indexOf("msn") != -1) {//微软
+                window.open("http://mail.live.com");
+            } else {
+                window.open("http://mail." +houzhui);
+            }
+        }
         /**
          * @description nestedSortable option配置
-         * @method NestedSortableOption
+         * @method [配置] - NestedSortableOption
          * @param $scope
          * @param category_id 分类ID
          * @param belong_id 父类ID

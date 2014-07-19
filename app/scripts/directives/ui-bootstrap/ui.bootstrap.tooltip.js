@@ -285,7 +285,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
     })
 /**
  * @description 提示信息
- * @method tooltip
+ * @method [提示] - tooltip
  * @author wyj on 14/7/13
  * @example
  *      <div tooltip="提示信息">提示信息</div>

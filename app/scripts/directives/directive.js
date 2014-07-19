@@ -5,7 +5,7 @@
  */
 /**
  * @description 时间选择器
- * @method datetimepicker
+ * @method [时间] - datetimepicker
  * @author wyj on 14/3/11
  * @example
  *      <input datetimepicker="" class="form-control" ng-model="enterprise.reg_time" type="text">
@@ -34,7 +34,7 @@ app.directive('datetimepicker', function() {
 /**
  * @description 图片等比例居中显示, data-width data-height 显示的长与宽，
  * data-fill 为false时， 图片居中显示
- * @method imgcrop
+ * @method [图片] - imgcrop
  * @author wyj on 14/3/11
  * @example
  *      <img imgcrop data-width='80' data-height="80"  data-fill="true" ng-src="">
@@ -55,7 +55,7 @@ app.directive('imgcrop', function () {
 
 /**
  * @description 点击编辑
- * @method clickToEdit
+ * @method [编辑] - clickToEdit
  * @author wyj <zjut_wyj@163.com>
  * @example
  *      <div click-to-edit="location.state"></div>
@@ -101,7 +101,7 @@ app.directive("clickToEdit", function() {
 });
 /**
  * @description flash
- * @method embedSrc
+ * @method [Flash] - embedSrc
  * @author wyj on 14;5/21
  * @example
  *      <embed width="105" height="105" allowscriptaccess="always" wmode="transparent" embed-src="{{API_END_POINT}}{{pic.server_path}}" />
@@ -124,7 +124,7 @@ app.directive('embedSrc', function () {
 
 /**
  * @description 回车事件
- * @method ngEnter
+ * @method [事件] - ngEnter
  * @author wyj on 14;5/21
  * @example
  *      <input  class="ui-pg-input" type="text" size="2" maxlength="7" ng-init="gotopage=1" tooltip="按回车跳转"  ng-model="gotopage" ng-enter="params.page(gotopage)" role="textbox">
@@ -143,7 +143,7 @@ app.directive('ngEnter', function() {
 });
 /**
  * @description 获取焦点
- * @method foces
+ * @method [事件] - focus
  * @author wyj on 14/7/10
  * @example
  *      <input type="button" focus >
@@ -159,7 +159,7 @@ app.directive('focus', function(){
 /**
  * @description 格式化输入的内容 number 格式化数字 1200 => 1,200，
  * price 格式化价格 1200 => 1,200， phone 格式化固定电话 057512345678 => 0575-12345678
- * @method format
+ * @method [格式化] - format
  * @author wyj on 14;5/21
  * @example
  *      <input ng-model="user.phone"  name="phone" format="phone" ng-required="requireTel"
@@ -197,7 +197,7 @@ app.directive('format', ['$filter', function ($filter) {
 }]);
 /**
  * @description 复制到剪切板
- * @method clipboard
+ * @method [剪切] - clipboard
  * @author wyj on 14/7/10
  * @example
  *      <button id="copy-button" data-clipboard-text="Copy Me!" title="Click to copy me.">Copy to Clipboard</button>
@@ -221,7 +221,7 @@ app.directive('clipboard', ['$rootScope',function($rootScope){
 
 /**
  * @description 显示加载中...
- * @method loading
+ * @method [加载] - loading
  * @author wyj on 14/7/12
  * @example
  *      <div loading>loading...</div>
@@ -241,12 +241,12 @@ app.directive('loading', ['$rootScope', function($rootScope){
 }]);
 
 
-app.directive('treeInclude', ['$window', function(){
+/*app.directive('treeInclude', ['$window', function(){
     return {
         restrict: "AE",
         templateUrl: "cates_renderer_v2.html"
     }
-}]);
+}]);*/
 
 
 /*

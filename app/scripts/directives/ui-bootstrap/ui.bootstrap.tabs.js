@@ -7,7 +7,7 @@
 
 /**
  * @description 选项卡切换
- * @method tabs
+ * @method [选项] - tabs
  * @author wyj on 14/7/13
  * @example
  *      <ul tabset>

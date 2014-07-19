@@ -1,5 +1,5 @@
 /**
- * @class angular-ui
+ * @description angular-ui
  * @constructor angular-ui
  */
 

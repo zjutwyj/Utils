@@ -7,7 +7,7 @@
 
 /**
  * @description 弹出对话框
- * @method modal
+ * @method [弹出框] - modal
  * @author wyj on 14/7/13
  * @example
  *      var modalInstance = $modal.open({

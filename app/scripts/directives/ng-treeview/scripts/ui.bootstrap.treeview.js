@@ -1,21 +1,19 @@
 /**
- * @class angular-ui
- * @constructor angular-ui
+ * @description angular-ui
+ * @class directive - 指令集
  */
 
 /**
  * @description 普通树
- * @method treeModel
- * @module angularTreeview
- * @param {String} data-angular-treeview
+ * @method [树] - treeModel
  * @author wyj on 14/7/8
  * @example
  *      <div angular-treeview="true"
- *      tree-id="tree01"
- *      tree-model="roleList1"
- *      node-id="roleId"
- *      node-label="roleName"
- *      node-children="children" > </div>
+ *      tree-id="tree01" // 树ID
+ *      tree-model="roleList1" // 数据源
+ *      node-id="roleId" // 字段ID
+ *      node-label="roleName" // 字段名称
+ *      node-children="children" > </div>  // 子分类
  */
 (function (angular) {
     'use strict';
