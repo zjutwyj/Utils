@@ -17,31 +17,13 @@ var app = angular.module('angularOneApp', [
     'ui.bootstrap.tabs',
     'ui.bootstrap.modal',
     'ui.bootstrap.tooltip'
-])
-.constant('HOST', 'http://example.com:9004')
-.constant('API_END_POINT', 'http://example.com:9004/api/')
-.constant('SOURCE_URL', 'http://agent.example.com/')
-.constant('MOBILE_DESIGN_URL', 'http://mviews.example.com:4002')
-.constant('WEB_DESIGN_URL', 'http://views.example.com:4000')
-.constant('WEBSITE_URL', 'http://example.com:9006/')
-.config(['$sceProvider', '$sceDelegateProvider', '$httpProvider', 'SOURCE_URL', 'API_END_POINT',
-        function ($sceProvider,$sceDelegateProvider,$httpProvider,SOURCE_URL, API_END_POINT) {
-        $sceProvider.enabled(false);
-        $sceDelegateProvider.resourceUrlWhitelist(['self',API_END_POINT + '**',SOURCE_URL + '**']);
-        $sceDelegateProvider.resourceUrlBlacklist([]);
-        $httpProvider.defaults.withCredentials = true;
-    }]);
+]);
 angular.module('ie7support', []).config(['$sceProvider', function($sceProvider) {
     // Completely disable SCE to support IE7.
 }]);
-app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POINT','WEB_DESIGN_URL', 'WEBSITE_URL','MOBILE_DESIGN_URL', '$q', '$modal',
-    function($route, $rootScope, $http, $timeout, $location, API_END_POINT,WEB_DESIGN_URL, WEBSITE_URL,MOBILE_DESIGN_URL, $q, $modal){
-        $rootScope.API_END_POINT = API_END_POINT;
-        $rootScope.MOBILE_DESIGN_URL = MOBILE_DESIGN_URL;
+app.run(['$route', '$rootScope', '$http', '$timeout', '$location', '$q', '$modal',
+    function($route, $rootScope, $http, $timeout, $location, $q, $modal){
         $rootScope.WEB_DESIGN = false; // 是否是设计模式
-        $rootScope.WEB_DESIGN_URL = WEB_DESIGN_URL;
-        $rootScope.WEBSITE_URL = WEBSITE_URL;
-
         $rootScope.preLoaded = true;
         $rootScope.edited = false;
         $rootScope.editNum = 0;
@@ -222,16 +204,6 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', 'API_END_POIN
             $rootScope.locationUrl(url, title);
         }
 
-        $rootScope.ajax = function(opts){
-            var successFn = opts.success || function(){};
-            var errorFn = opts.error || function(){};
-            $http({
-                method: opts.method || 'POST',
-                data: opts.data || {},
-                url: API_END_POINT + opts.url
-            }).success(successFn).error(errorFn);
-            $rootScope.staticPage();
-        }
 
         // 静态化相关
         /**
