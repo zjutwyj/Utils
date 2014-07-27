@@ -94,6 +94,17 @@ app.factory('AccountFactory', ['BaseFactory', function(BaseFactory){
         logout: function(){
             return BaseFactory.save({}, 'logout');
         },
+        isLogin: function(){
+            var deferred = $q.defer();
+            BaseFactory.app().then(function(data){
+                if (!data || !data.isLogin) {
+                    deferred.reject(false);
+                } else {
+                    deferred.resolve(true);
+                }
+            });
+            return deferred.promise;
+        },
         getUser: function(){
             return BaseFactory.query('profile');
         },

@@ -19,6 +19,21 @@ QUnit.test("Est.inherit", function(assert){
     assert.equal(newObject.x, target.x , "newObject inherit from target!");
 });
 
+QUnit.test('Est.q', function(assert){
+    var str = '';
+    var result = function(){
+        var deferred = Est.q.defer();
+        setTimeout(function(){
+            deferred.resolve('ok');
+        }, 2000);
+        return deferred.promise;
+    }
+    result().then(function(data){
+        str = data;
+    });
+    assert.equal(str, 'ok', 'passed!');
+});
+
 QUnit.test("Est.typeOf", function(assert){
     var obj = {};
     var type = Est.typeOf(obj);

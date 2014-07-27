@@ -209,6 +209,67 @@
     var result = function(obj) {
         return this._chain ? Est(obj).chain() : obj;
     };
+    /*function q(nextTick){
+        var defer = function(){
+            var pending = [], value, deferred;
+            deferred = {
+                resolve: function(val){
+                    if (pending){
+                        var callbacks = pending;
+                        pending = undefined;
+                        value = ref(val);
+                        if (callbacks.length) {
+                            nextTick(function() {
+                                var callback;
+                                for (var i = 0, ii = callbacks.length; i < ii; i++) {
+                                    callback = callbacks[i];
+                                    value.then(callback[0], callback[1]);
+                                }
+                            });
+                        }
+                    }
+                },
+                promise: {
+                    then: function(callback, errback){
+                        var result = defer();
+                        var wrappedCallback = function(value){
+                            result.resolve((Est.isFunction(callback) ? callback : function(value){
+                                return value;
+                            })(value));
+                        };
+                        var wrappedErrback = function(reason){
+                            result.resolve((Est.isFunction(errback) ? errback : function(value){
+                                return value;
+                            })(reason));
+                        }
+                        if (pending){
+                            pending.push([wrappedCallback, wrappedErrback]);
+                        } else{
+                            value.then(wrappedCallback, wrappedErrback);
+                        }
+                        return result.promise;
+                    }
+                }
+            }
+            return deferred;
+        };
+        var ref = function(value){
+            if (value && Est.isFunction(value.then)) return value;
+            return {
+                then: function(callback) {
+                    var result = defer();
+                    nextTick(function() {
+                        result.resolve(callback(value));
+                    });
+                    return result.promise;
+                }
+            };
+        }
+        return {
+            defer: defer
+        }
+    }
+    Est.q = q();*/
     // ObjectUtils
     /**
      * @description [1]检测数据类型 [undefined][number][string][function][regexp][array][date][error]

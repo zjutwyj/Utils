@@ -68,6 +68,17 @@ app.factory('BaseFactory', ['$rootScope', '$http', '$q', 'API_END_POINT',
                     });
                 ;
                 return deferred.promise;
+            },
+            app: function(){
+                var deferred = $q.defer();
+                $http.get(API_END_POINT).success(function (data) {
+                    deferred.resolve(data);
+                }).error(function (data) {
+                    deferred.reject(data);
+                    deferred.resolve('network is not fine');
+                    $rootScope.isLogin = false;
+                    $location.path('/login');
+                });
             }
         };
 }]);

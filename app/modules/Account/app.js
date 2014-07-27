@@ -11,20 +11,7 @@ var modules = [ 'ui.router', 'ngRoute', 'ngAnimate'];
 if (msie === 7 || msie === 6){
     modules = ['ui.router', 'ngRoute'];
 }
-var app = angular.module('AccountApp', modules)
-    .constant('HOST', 'http://example.com:9007')
-    .constant('API_END_POINT', 'http://example.com:9007/api/')
-    .constant('SOURCE_URL', 'http://agent.example.com/')
-    .constant('MOBILE_DESIGN_URL', 'http://mviews.example.com:4002')
-    .constant('WEB_DESIGN_URL', 'http://views.example.com:4000')
-    .constant('WEBSITE_URL', 'http://example.com:9006/')
-    .config(['$sceProvider', '$sceDelegateProvider', '$httpProvider', 'SOURCE_URL', 'API_END_POINT',
-        function ($sceProvider,$sceDelegateProvider,$httpProvider,SOURCE_URL, API_END_POINT) {
-            $sceProvider.enabled(false);
-            $sceDelegateProvider.resourceUrlWhitelist(['self',API_END_POINT + '**',SOURCE_URL + '**']);
-            $sceDelegateProvider.resourceUrlBlacklist([]);
-            $httpProvider.defaults.withCredentials = true;
-        }]);
+var app = angular.module('AccountApp', modules);
 angular.module('ie7support', []).config(['$sceProvider', function($sceProvider) {
     // Completely disable SCE to support IE7.
 }]);

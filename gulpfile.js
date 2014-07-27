@@ -37,32 +37,9 @@ var paths = {
             'app/scripts/directives/directive.js',
             'app/scripts/directives/angular-ueditor/ng-ueditor.src.js',
             'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.transition.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.position.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.bindHtml.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js',
-            'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
+            'app/scripts/directives/ui-bootstrap/*.js',
             'app/scripts/filters/filter.js',
-            'app/scripts/factorys/BaseFactory.js',
-            'app/scripts/factorys/AccountFactory.js',
-            'app/scripts/factorys/NavigatorFactory.js',
-            'app/scripts/factorys/ProductFactory.js',
-            'app/scripts/factorys/AnalysisFactory.js',
-            'app/scripts/factorys/NewsFactory.js',
-            'app/scripts/factorys/ProductCategoryFactory.js',
-            'app/scripts/factorys/NewsCategoryFactory.js',
-            'app/scripts/factorys/ProductTagFactory.js',
-            'app/scripts/factorys/AlbumFactory.js',
-            'app/scripts/factorys/PictureFactory.js',
-            'app/scripts/factorys/CertificateFactory.js',
-            'app/scripts/factorys/RecruitFactory.js',
-            'app/scripts/factorys/SubmemberFactory.js',
-            'app/scripts/factorys/InquiryFactory.js',
-            'app/scripts/factorys/MessageFactory.js',
-            'app/scripts/factorys/SupplyFactory.js',
-            'app/scripts/factorys/SeoTemplateFactory.js',
-            'app/scripts/factorys/UserDefinedFactory.js'
+            'app/scripts/factorys/*.js',
         ],
           dist: 'app/scripts',
           name: 'app.min.js'
@@ -86,25 +63,7 @@ var paths = {
                 'app/scripts/app.js',
                 'app/scripts/directives/directive.js',
                 'app/scripts/filters/filter.js',
-                'app/scripts/factorys/BaseFactory.js',
-                'app/scripts/factorys/AccountFactory.js',
-                'app/scripts/factorys/NavigatorFactory.js',
-                'app/scripts/factorys/ProductFactory.js',
-                'app/scripts/factorys/AnalysisFactory.js',
-                'app/scripts/factorys/NewsFactory.js',
-                'app/scripts/factorys/ProductCategoryFactory.js',
-                'app/scripts/factorys/NewsCategoryFactory.js',
-                'app/scripts/factorys/ProductTagFactory.js',
-                'app/scripts/factorys/AlbumFactory.js',
-                'app/scripts/factorys/PictureFactory.js',
-                'app/scripts/factorys/CertificateFactory.js',
-                'app/scripts/factorys/RecruitFactory.js',
-                'app/scripts/factorys/SubmemberFactory.js',
-                'app/scripts/factorys/InquiryFactory.js',
-                'app/scripts/factorys/MessageFactory.js',
-                'app/scripts/factorys/SupplyFactory.js',
-                'app/scripts/factorys/SeoTemplateFactory.js',
-                'app/scripts/factorys/UserDefinedFactory.js',
+                'app/scripts/factorys/*.js',
                 'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js',
                 'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
                 'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js',
@@ -290,14 +249,20 @@ gulp.task('clean', function(cb) {
 gulp.task('watch', function() {
     gulp.watch(paths, ['begin']);
 });
-
-gulp.task('Est', function(){
+gulp.task('EstTask', function(){
     doTask('Est', true);
 });
-gulp.task('Est.min', function(){
+gulp.task('Est.minTask', function(){
     doTask('Est', false);
 });
-
+gulp.task('Est', ['watch.Est', 'EstTask']);
+gulp.task('Est.min',['watch.Est.min','Est.minTask']);
+gulp.task('watch.Est', function(){
+    gulp.watch(paths.Est.scripts.source, ['Est'])
+});
+gulp.task('watch.Est.min', function(){
+    gulp.watch(paths.Est.scripts.source, ['Est.min']);
+});
 
 gulp.task('app', function(){
     doTask('app', true);
@@ -358,14 +323,12 @@ gulp.task('Account.min', function(){
 gulp.task('default', [ 'normal']);
 gulp.task('watch.min', function(){
     gulp.watch(paths.fileupload.scripts.source, ['fileupload.min']);
-    gulp.watch(paths.acejs.scripts.source, ['acejs.min']);
     gulp.watch(paths.ueditor.scripts.source, ['ueditor.min']);
     gulp.watch(paths.gallery.scripts.source, ['gallery.min']);
     gulp.watch(paths.acecss.styles.source, ['acecss.min']);
 });
 gulp.task('watch', function(){
     gulp.watch(paths.fileupload.scripts.source, ['fileupload']);
-    gulp.watch(paths.acejs.scripts.source, ['acejs']);
     gulp.watch(paths.ueditor.scripts.source, ['ueditor']);
     gulp.watch(paths.gallery.scripts.source, ['gallery']);
     gulp.watch(paths.acecss.styles.source, ['acecss']);
