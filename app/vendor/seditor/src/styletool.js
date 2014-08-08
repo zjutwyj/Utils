@@ -1046,7 +1046,7 @@ var styletool = {
      */
     setSiteCss : function(handle,name,css){
         $(handle).css(name,css);
-        if(typeof(top.WebUtils.dashedFrame) === 'function'){
+        if(top.WebUtils && typeof(top.WebUtils.dashedFrame) === 'function'){
             top.WebUtils.dashedFrame(handle);
         }
     },
