@@ -151,6 +151,19 @@ var paths = {
             source: ['app/scripts/utils/Est.source.js','app/scripts/factorys/AccountFactory.js', 'app/modules/Account/app.js'],
             dist: 'app/modules/Account/doc'
         }
+    },
+    seditor: {
+        scripts:{
+            source: ['app/vendor/seditor/src/styleutil.js', 'app/vendor/seditor/src/styletool.js'],
+            dist: 'app/vendor/seditor/src',
+            name: 'seditor.min.js'
+        },
+        styles: {
+            source: ['app/vendor/seditor/themes/default/styletool.css'
+            ],
+            dist: 'app/vendor/seditor/themes/default',
+            name: 'styletool.min.css'
+        }
     }
 };
 
@@ -310,7 +323,12 @@ gulp.task('acecss', function(){
 gulp.task('acecss.min', function(){
     doTask('acecss', false);
 });
-
+gulp.task('seditor', function(){
+    doTask('seditor', true);
+});
+gulp.task('seditor.min', function(){
+    doTask('seditor', false);
+});
 
 // 登录注册
 gulp.task('Account', function(){
