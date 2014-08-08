@@ -1,37 +1,55 @@
 /**
  * 工具类库.
  *
+ * @description 修改urlParsingNode变量 on 14/7/29
  * @class Est - 工具类库
  * @constructor Est
  */
 ;(function() {'use strict';
     var root = this;
-    // 系统原型方法
+    /**
+     * @description 系统原型方法
+     * @method [变量] - slice push toString hasOwnProperty concat
+     */
     var slice = Array.prototype.slice, push = Array.prototype.push, toString = Object.prototype.toString,
         hasOwnProperty   = Object.prototype.hasOwnProperty, concat = Array.prototype.concat;
-    // ECMAScript 5
+    /**
+     * @description ECMAScript 5 原先方法
+     * @method [变量] - nativeIsArray nativeKeys nativeBind
+     */
     var nativeIsArray = Array.isArray, nativeKeys = Object.keys, nativeBind = Object.prototype.bind;
     var whitespace = ' \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\n\
         \u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000';
     var uid = ['0', '0', '0'];
-    var urlParsingNode = document.createElement("a");
-    var originUrl = urlResolve(window.location.href, true);
-    // for define
+    var urlParsingNode = null;
+    /**
+     * @description define
+     * @method [变量] - moduleMap
+     */
     var moduleMap = {};
     var fileMap = {};
     var noop = function () {};
-    // pool
+    /**
+     * @description  定义数组和对象的缓存池
+     * @method [变量] - maxPoolSize arrayPool objectPool
+     */
     var maxPoolSize = 40;
     var arrayPool = [], objectPool = [];
 
-    // 创建Est对象
+    /**
+     * @description 创建Est对象
+     * @method [对象] - Est
+     */
     var Est = function(obj) {
         if (obj instanceof Est) return obj;
         if (!(this instanceof Est)) return new Est(obj);
         this._wrapped = obj;
     };
     Est.version = '1.1.0';
-    // 用于node.js 导出
+    /**
+     * @description 用于node.js 导出
+     * @method [模块] - exports
+     */
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
             exports = module.exports = Est;
@@ -280,13 +298,59 @@
      * @example
      *      Est.typeOf(Est); => 'object'
      */
+    var _type = {"undefined" : "undefined", "number": "number", "boolean": "boolean", "string": "string",
+        "[object Function]" : "function", "[object RegExp]" : "regexp", "[object Array]" : "array",
+        "[object Date]" : "date", "[object Error]" : "error" ,"[object File]":"file", "[object Blob]":"blob"};
     function typeOf(target){
-        var _type = {"undefined" : "undefined", "number": "number", "boolean": "boolean", "string": "string",
-            "[object Function]" : "function", "[object RegExp]" : "regexp", "[object Array]" : "array",
-            "[object Date]" : "date", "[object Error]" : "error" ,"[object File]":"file", "[object Blob]":"blob"};
         return _type[typeof target] || _type[toString.call(target)] || (target ? "object" : "null");
     }
     Est.typeOf = typeOf;
+    /**
+   	 * @description 检测数据类型2 此版本 new Number(4) new String("abc") new Boolean(true) new ReferenceError()
+     * 分别生成 Number String Boolean ReferenceError
+   	 * @method [对象] - getType
+   	 * @param {object} value
+   	 * @return {String}
+   	 * @author wyj on 14/8/5
+   	 * @example
+   	 * 		var results = [];
+     var fn = Est.getType;
+     results.push(fn({a: 4})); // "Object"
+     results.push(fn([1, 2, 3])); // "Array"
+     (function() { results.push(fn(arguments));}()); // "Object"
+     results.push(fn(new ReferenceError())); // "ReferenceError"
+     results.push(fn(new Date())); // "Date"
+     results.push(fn(/a-z/)); // "RegExp"
+     results.push(fn(Math)); // "Object"
+     results.push(fn(JSON)); // "Object"
+     results.push(fn(new Number(4))); // "Number"
+     results.push(fn(new String("abc"))); // "String"
+     results.push(fn(new Boolean(true))); // "Boolean"
+     results.push(fn(null)); // "Null"
+     => [ "Object", "Array", "Object", "ReferenceError", "Date", "RegExp", "Object", "Object", "Number", "String", "Boolean", "null" ]
+   	 */
+    function getType(value){
+    	if (value === null) return "null";
+    	var t = typeof value;
+    	switch(t){
+    		case "function":
+    		case "object":
+    			if (value.constructor){
+    				if (value.constructor.name){
+    					return value.constructor.name;
+    				} else{
+                        // /^function\s+([$_a-zA-Z][_$a-zA-Z0-9]*)\s*\(/
+                        // /^\s*function[ \n\r\t]+\w/;
+    					var match = value.constructor.toString().match(/^function (.+)\(.*$/);
+    					if (match) return match[1];
+    				}
+    			}
+    			return toString.call(value).match(/^\[object (.+)\]$/)[1];
+    		default:
+    			return t;
+    	}
+    }
+    Est.getType = getType;
     /**
      * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined)
      * @method [对象] - isEmpty
@@ -548,25 +612,65 @@
         return module.entity;
     }
     Est.use = use;
-
-
-    function getArray() {
-        return arrayPool.pop() || [];
-    }
-    function getObject() {
-        return objectPool.pop() || { 'array': null, 'cache': null, 'criteria': null, 'false': false, 'index': 0, 'null': false, 'number': null, 'object': null, 'push': null, 'string': null, 'true': false, 'undefined': false, 'value': null };
-    }
+    /**
+     * @description 释放数组， 若数组池个数少于最大值， 则压入数组池以备用
+     * @method [数组] - releaseArray
+     * @author wyj on 14/7/1
+     * @example
+     *      Est.releaseArray(array);
+     */
     function releaseArray(array) {
         array.length = 0;
         if (arrayPool.length < maxPoolSize) {
             arrayPool.push(array);
         }
     }
+    Est.releaseArray = releaseArray;
+    /**
+     * @description 释放对象， 若对象池个数少于最大值， 则压入对象池以备用
+     * @method [对象] - releaseObject
+     * @author wyj on 14/7/1
+     * @example
+     *      Est.releaseObject(object);
+     */
+    function releaseObject(object){
+        object.array = object.cache = object.criteria = object.object = object.number = object.string = object.value = null;
+        if (objectPool.length < maxPoolSize) {
+            objectPool.push(object);
+        }
+    }
+    Est.releaseObject = releaseObject;
+    /**
+     * @description 获取数组池
+     * @method [数组] - getArray
+     * @return {Array}
+     * @author wyj on 14/7/1
+     * @example
+     *      var array = Est.getArray();
+     */
+    function getArray() {
+        return arrayPool.pop() || [];
+    }
+    Est.getArray = getArray;
+    /**
+     * @description 获取对象池
+     * @method [对象] - getObject
+     * @return {Object}
+     * @author wyj on 14/7/1
+     * @example
+     *      var object = Est.getObject();
+     */
+    function getObject() {
+        return objectPool.pop() || { 'array': null, 'cache': null, 'criteria': null, 'false': false, 'index': 0, 'null': false, 'number': null, 'object': null, 'push': null, 'string': null, 'true': false, 'undefined': false, 'value': null };
+    }
+    Est.getObject = getObject;
+
     function baseClone(value, isDeep, callback, stackA, stackB){
+        //var type = getType(value);
         var type = typeOf(value);
         if (callback) {
             var result = callback(value);
-            if (typeOf(result) !==  'undefined') return result;
+            if (typeof result !==  'undefined') return result;
         }
         if (typeof value === 'object' && type !== 'null'){
             switch (type){
@@ -590,11 +694,11 @@
         var isArr = type === 'array';
         if (isDeep){
             var initedStack = !stackA;
-            stackA || (stackA = []);
-            stackB || (stackB = []);
+            stackA || (stackA = getArray());
+            stackB || (stackB = getArray());
             var length = stackA.length;
             while (length--) {
-                if (stackA[length] == value) {
+                if (stackA[length] === value) {
                     return stackB[length];
                 }
             }
@@ -1377,7 +1481,7 @@
      */
     function indexOf(array, value) {
         if (array.indexOf) return array.indexOf(value);
-        for (var i = 0; i < array.length; i++) {
+        for (var i = 0, len = array.length; i < len; i++) {
             if (value === array[i]) return i;
         }
         return -1;
@@ -1405,7 +1509,7 @@
         var index = -1,
             isArr = typeOf(callback) === 'array',
             length = collection ? collection.length : 0,
-            result = Array(typeof length == 'number' ? length : 0);
+            result = Array(typeof length === 'number' ? length : 0);
         if (!isArr) {
             callback = matchCallback(callback, context);
         }
@@ -2041,6 +2145,7 @@
      */
     function urlResolve(url) {
         var href = url;
+        urlParsingNode = document && document.createElement("a");
         if (msie()) {
             urlParsingNode.setAttribute("href", href);
             href = urlParsingNode.href;
@@ -2060,11 +2165,32 @@
         };
     }
     Est.urlResolve = urlResolve;
-
-
-
-
-
+   	/**
+     * @description 路由控制
+     * @method [浏览器] - route
+     * @param {Object} handle 待控制对象
+     * @param {String} pathname 路由名称
+     * @param {Object} response 参数
+     * @author wyj on 14/8/1
+     * @example
+     *		var handle = {
+     * 			route1: function(reponse){
+	
+     			},
+     			route2: function(){
+	
+     			}
+     		}
+     * 		Est.route(handle, 'route1', {});
+   	 */
+    function route(handle, pathname, response){
+        if (Est.typeOf(handle[pathname]) === 'function'){
+            return handle[pathname](response);
+        } else{
+            console.log("No request handler found for " + pathname);
+        }
+    }
+    Est.route = route;
 
 
     /**
@@ -2101,7 +2227,10 @@
             return this._wrapped;
         }
     });
-    // request.js
+    /**
+     * @description For request.js
+     * @method [定义] - define
+     */
     if (typeof define === 'function' && define.amd) {
         define('Est', [], function() {
             return Est;

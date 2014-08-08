@@ -28,3 +28,16 @@ QUnit.test("Est.urlResolve", function(assert){
         "search": ""
     }, "passed!");
 });
+
+QUnit.test('Est.route', function(assert){
+    var piece = {
+        "route1": function(data){
+            return "route1" + data;
+        },
+        "route2": function(data){
+            return "route2" + data;
+        }
+    }
+    var result = Est.route(piece, "route2", "route");
+    assert.equal(result, 'route2route', 'passed');
+});

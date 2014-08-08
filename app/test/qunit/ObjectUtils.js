@@ -35,9 +35,44 @@ QUnit.test('Est.q', function(assert){
 });
 
 QUnit.test("Est.typeOf", function(assert){
-    var obj = {};
-    var type = Est.typeOf(obj);
-    assert.equal(type, 'object', 'passed!');
+    var results = [];
+    var fn = Est.typeOf;
+    results.push(fn({a: 4})); // "Object"
+    results.push(fn([1, 2, 3])); // "Array"
+    (function() { results.push(fn(arguments));}()); // "Object"
+    results.push(fn(new ReferenceError())); // "ReferenceError"
+    results.push(fn(new Date())); // "Date"
+    results.push(fn(/a-z/)); // "RegExp"
+    results.push(fn(Math)); // "Object"
+    results.push(fn(JSON)); // "Object"
+    results.push(fn(new Number(4))); // "Number"
+    results.push(fn(new String("abc"))); // "String"
+    results.push(fn(new Boolean(true))); // "Boolean"
+    results.push(fn(null)); // "Null"
+    results.push(fn(function(){})); // "Function"
+
+    assert.deepEqual(results, [ "object", "array", "object", "error", "date", "regexp", "object", "object", "object", "object", "object", 'null', 'function' ], 'passed!');
+});
+
+QUnit.test("Est.getType", function(assert){
+    var results = [];
+    var fn = Est.getType;
+
+    results.push(fn({a: 4})); // "Object"
+    results.push(fn([1, 2, 3])); // "Array"
+    (function() { results.push(fn(arguments));}()); // "Object"
+    results.push(fn(new ReferenceError())); // "ReferenceError"
+    results.push(fn(new Date())); // "Date"
+    results.push(fn(/a-z/)); // "RegExp"
+    results.push(fn(Math)); // "Object"
+    results.push(fn(JSON)); // "Object"
+    results.push(fn(new Number(4))); // "Number"
+    results.push(fn(new String("abc"))); // "String"
+    results.push(fn(new Boolean(true))); // "Boolean"
+    results.push(fn(null)); // "Null"
+    results.push(fn(function(){})); // "Function"
+
+    assert.deepEqual(results, [ "Object", "Array", "Object", "ReferenceError", "Date", "RegExp", "Object", "Object", "Number", "String", "Boolean", "null" , "Function"], "passed");
 });
 
 QUnit.test("Est.hasKey", function(assert){
@@ -107,25 +142,7 @@ QUnit.test('Est.pluck', function(assert){
 });
 
 QUnit.test('Est.clone', function(assert){
-/*    var b = true; // boolean
-    var br = Est.cloneDeep(b);
-    var f = function(){} // function
-    var fr = Est.cloneDeep(f);
-    var s = '';  // string
-    var sr = Est.cloneDeep(s);
-    var n = 1; // number
-    var nr = Est.cloneDeep(n);
-    var u; // undefined
-    var ur = Est.cloneDeep(u);
-    var nu = null; // object
-    var nur = Est.cloneDeep(nu);*/
-    var object = {
-        'name' : 'barney',
-        'age' : 36,
-        'info' : {
-            'array' : ['1', '2']
-        }
-    };
+    var object = { 'name': 'barney', 'age': 36, 'info': { 'array': ['1', '2'] } };
     var object_r = Est.cloneDeep(object);
     assert.deepEqual(object_r, { "age": 36, "info": { "array": [ "1", "2" ] }, "name": "barney" }, 'passed!');
     assert.ok(object_r.info.array !== object.info.array, 'passed!');

@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>webdesign</title>
+    <!--plugin style-->
+    <link href="vendor/artDialog/skins/default.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="vendor/jpicker/css/jPicker.css" />
+    <link rel="stylesheet" type="text/css" href="vendor/autoComplete/jquery.autocomplete.css" />
+    <!--webdesign style-->
+    <link rel="stylesheet" type="text/css" href="themes/default/styletool.css" />
+    <!--plugin javascript-->
+    <script type="text/javascript" src="vendor/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="vendor/drag/jquery.event.drag-2.2.js"></script>
+    <script type="text/javascript" src="vendor/artDialog/artDialog.js"></script>
+    <script type="text/javascript" src="vendor/artDialog/plugins/iframeTools.js"></script>
+    <script type="text/javascript" src="vendor/range/js/rating.min.js"></script>
+    <script type="text/javascript" src="vendor/jpicker/jpicker.js"></script>
+    <script type="text/javascript" src="vendor/tab/Tab.js"></script>
+    <script type="text/javascript" src="vendor/autoComplete/jquery.autocomplete.js"></script>
+    <!--webdesign javascript-->
+    <script type="text/javascript" src="src/styleutil.js"></script>
+    <script type="text/javascript" src="src/styletool.js"></script>
+</head>
+<body>
+<div>
+    <div id="styletool-canvas"  style="width:750px;height:333px;">
+        <div id="styletool-container" class="tab-div-cont">
+            <div class="group-btn-css">
+                <input type="button" class="style-btn-normal" onclick="styletool.changePanel('normal')" value="常用">
+                <input type="button" class="style-btn-size" onclick="styletool.changePanel('size')" value="尺寸、位置">
+                <input type="button" class="style-btn-background" onclick="styletool.changePanel('background')"
+                       value="背景、透明度、圆角">
+                <input type="button" class="style-btn-text" onclick="styletool.changePanel('text')" value="字体、文本">
+                <input type="button" class="style-btn-box" onclick="styletool.changePanel('box')" value="边框、填充、边距">
+            </div>
+            <div id="styletool"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -255,8 +255,8 @@ gulp.task('EstTask', function(){
 gulp.task('Est.minTask', function(){
     doTask('Est', false);
 });
-gulp.task('Est', ['watch.Est', 'EstTask']);
-gulp.task('Est.min',['watch.Est.min','Est.minTask']);
+gulp.task('Est', ['EstTask']);
+gulp.task('Est.min',['Est.minTask']);
 gulp.task('watch.Est', function(){
     gulp.watch(paths.Est.scripts.source, ['Est'])
 });
@@ -340,5 +340,5 @@ gulp.task('css.min', ['acecss.min']);
 gulp.task('js', ['fileupload', 'ueditor', 'gallery']);
 gulp.task('js.min', ['fileupload.min', 'ueditor.min', 'gallery.min']);
 
-gulp.task('all', ['watch', 'js', 'css']);
-gulp.task('all.min', ['watch.min', 'js.min', 'css.min']);
+gulp.task('all', ['js', 'css']);
+gulp.task('all.min', ['js.min', 'css.min']);

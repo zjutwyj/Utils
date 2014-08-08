@@ -24,7 +24,6 @@ angular.module('ie7support', []).config(['$sceProvider', function($sceProvider) 
 app.run(['$route', '$rootScope', '$http', '$timeout', '$location', '$q', '$modal',
     function($route, $rootScope, $http, $timeout, $location, $q, $modal){
         $rootScope.WEB_DESIGN = false; // 是否是设计模式
-        $rootScope.preLoaded = true;
         $rootScope.edited = false;
         $rootScope.editNum = 0;
         $rootScope.alerts = [];

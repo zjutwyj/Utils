@@ -1,0 +1,39 @@
+#jqContextMenu{
+
+}
+#jqContextMenu ul {
+    width: 110px;
+    padding: 0 0 3px 0;
+    background: #4f97df;
+    border: 1px solid #3178c0;
+}
+#jqContextMenu ul li {
+    height: 23px;
+    line-height: 25px;
+    clear: both;
+    padding: 0 7px;
+    text-decoration: none;
+    color:#fff;
+    padding-left:24px;
+}
+#jqContextMenu ul li.itemHoverStyle{
+    background-color: #388add;
+}
+#sEdit{
+    background : url(menu-icon.png) no-repeat scroll 5px -320px transparent;
+}
+#aEdit{
+    background : url(menu-icon.png) no-repeat scroll 7px -39px transparent
+}
+#iEdit{
+    background : url(menu-icon.png) no-repeat scroll 7px -605px transparent
+}
+#tEdit{
+    background : url(menu-icon.png) no-repeat scroll 7px -390px transparent
+}
+#pEdit{
+    background: url(menu-icon.png) no-repeat scroll 5px -392px transparent
+}
+#nEdit{
+    background: url(menu-icon.png) no-repeat scroll 5px -392px transparent
+}
