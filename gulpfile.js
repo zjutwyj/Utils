@@ -154,15 +154,15 @@ var paths = {
     },
     seditor: {
         scripts:{
-            source: ['app/vendor/seditor/src/styleutil.js', 'app/vendor/seditor/src/styletool.js'],
+            source: ['app/vendor/seditor/src/seditorutil.js', 'app/vendor/seditor/src/seditor.js'],
             dist: 'app/vendor/seditor/src',
             name: 'seditor.min.js'
         },
         styles: {
-            source: ['app/vendor/seditor/themes/default/styletool.css'
+            source: ['app/vendor/seditor/themes/default/seditor.css'
             ],
             dist: 'app/vendor/seditor/themes/default',
-            name: 'styletool.min.css'
+            name: 'seditor.min.css'
         }
     }
 };

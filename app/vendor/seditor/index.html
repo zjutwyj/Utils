@@ -7,8 +7,8 @@
     <link href="vendor/artDialog_v6/css/ui-dialog.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="vendor/jpicker/css/jPicker.css" />
     <link rel="stylesheet" type="text/css" href="vendor/autoComplete/jquery.autocomplete.css" />
-    <!--webdesign style-->
-    <link rel="stylesheet" type="text/css" href="themes/default/styletool.min.css" />
+    <!--seditor style-->
+    <link rel="stylesheet" type="text/css" href="themes/default/seditor.min.css" />
     <!--plugin javascript-->
     <script type="text/javascript" src="vendor/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="vendor/drag/jquery.event.drag-2.2.js"></script>
@@ -18,29 +18,29 @@
     <script type="text/javascript" src="vendor/jpicker/jpicker.js"></script>
     <script type="text/javascript" src="vendor/tab/Tab.js"></script>
     <script type="text/javascript" src="vendor/autoComplete/jquery.autocomplete.js"></script>
-    <!--webdesign javascript-->
+    <!--seditor javascript-->
     <script type="text/javascript" src="src/seditor.min.js"></script>
 </head>
 <body>
 <!--<div id="sampleId">aa</div>-->
 <div>
-    <div id="styletool-canvas"  style="width:750px;height:333px;">
-        <div id="styletool-container" class="tab-div-cont">
+    <div id="seditor-canvas"  style="width:750px;height:333px;">
+        <div id="seditor-container" class="tab-div-cont">
             <div class="group-btn-css">
-                <input type="button" class="style-btn-normal" onclick="styletool.changePanel('normal')" value="常用">
-                <input type="button" class="style-btn-size" onclick="styletool.changePanel('size')" value="尺寸、位置">
-                <input type="button" class="style-btn-background" onclick="styletool.changePanel('background')"
+                <input type="button" class="style-btn-normal" onclick="seditor.changePanel('normal')" value="常用">
+                <input type="button" class="style-btn-size" onclick="seditor.changePanel('size')" value="尺寸、位置">
+                <input type="button" class="style-btn-background" onclick="seditor.changePanel('background')"
                        value="背景、透明度、圆角">
-                <input type="button" class="style-btn-text" onclick="styletool.changePanel('text')" value="字体、文本">
-                <input type="button" class="style-btn-box" onclick="styletool.changePanel('box')" value="边框、填充、边距">
+                <input type="button" class="style-btn-text" onclick="seditor.changePanel('text')" value="字体、文本">
+                <input type="button" class="style-btn-box" onclick="seditor.changePanel('box')" value="边框、填充、边距">
             </div>
-            <div id="styletool"></div>
+            <div id="seditor"></div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     //var result =  '[{"append" : "","css" : "","enterpriseId" : "","javascript" : "","moduleId" : "","pictures" : "","styleId" : "","type" : "02"} ]';
-    //styletool.start("sampleId", "#sampleId", result);
+    //seditor.start("sampleId", "#sampleId", result);
 </script>
 </body>
 </html>

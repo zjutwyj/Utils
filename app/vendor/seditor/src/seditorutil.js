@@ -1,4 +1,4 @@
-var styleutil = {
+var seditorutil = {
     isIE : function(){
         var msie6=false;var msie7=false;var msie8 = false;
         if($.browser.msie){
@@ -40,8 +40,8 @@ var styleutil = {
         return event;
     },
     keyEvent : function(obj, type, fn){
-        styleutil.addEvent(obj,type,function(event){
-            fn.call(null,styleutil.getEvent(event).keyCode);
+        seditorutil.addEvent(obj,type,function(event){
+            fn.call(null,seditorutil.getEvent(event).keyCode);
         });
     },
     request : function(paras) {
@@ -69,14 +69,14 @@ var styleutil = {
     },
     cssRuleList : function(text,startreg,endreg){
         var fragments = [];
-        return styleutil.splitCss(text, "{", "}");
+        return seditorutil.splitCss(text, "{", "}");
     },
     splitCss : function(text, startsep, endsep){
         var pos = 0, poss = 0, fragments = [], selector;
         while(pos < text.length){
             if (text.charAt(pos) == startsep) {
                 selector = text.slice(poss,pos);
-                var end = styleutil.findClosing(text, endsep, pos + 1);
+                var end = seditorutil.findClosing(text, endsep, pos + 1);
                 fragments.push(selector.replace(/^[\n\s]*/g,'') + text.slice(pos, end+1));
                 pos = poss = end + 1;
             } else {
@@ -89,7 +89,7 @@ var styleutil = {
         var pos = 0, fragments = [], len = text.length;
         while (pos < len) {
             if (text.charAt(pos) == startsep) {
-                var end = styleutil.findClosing(text, endsep, pos + 1);
+                var end = seditorutil.findClosing(text, endsep, pos + 1);
                 fragments.push(text.slice(pos + 1, end));
                 pos = end + 1;
             } else {
@@ -111,7 +111,7 @@ var styleutil = {
     },
     getCssJSON : function(cssObjectList){
         var array = [];
-        styleutil.forEach(cssObjectList, function(element){
+        seditorutil.forEach(cssObjectList, function(element){
             var arr = [];
             for(var key in element.style){
                 arr.push(key + ":" + element['style'][key]);
@@ -123,7 +123,7 @@ var styleutil = {
     jsonToCSS : function(str){
         var item = {},itemlist = [];
         itemlist = str.split(";");
-        styleutil.forEach(itemlist, function(element){
+        seditorutil.forEach(itemlist, function(element){
             if($.trim(element) != ''){
                 var s = element.split(":"),
                     val = s[1];
@@ -137,12 +137,12 @@ var styleutil = {
     },
     cssToObject : function(list){
         var arr = [];
-        styleutil.forEach(list, function(element){
+        seditorutil.forEach(list, function(element){
             var item = {};
-            var style = styleutil.split(element, "{", "}")[0];
+            var style = seditorutil.split(element, "{", "}")[0];
             var selector = element.substring(0,element.indexOf("{"));
             item['selector'] = $.trim(selector);
-            item['style'] = styleutil.jsonToCSS(style.replace(/{(.*)}/g,'$1'));
+            item['style'] = seditorutil.jsonToCSS(style.replace(/{(.*)}/g,'$1'));
             arr.push(item);
         });
         return arr;
@@ -152,14 +152,14 @@ var styleutil = {
             action(array[i]);
     },
     reduce : function(list, fn){
-        styleutil.forEach(list,function(element){
+        seditorutil.forEach(list,function(element){
             fn.apply(null, arguments);
         });
     },
 
     getRuleValue : function(list,name,selector){
         var val = "";
-        styleutil.forEach(list, function(element){
+        seditorutil.forEach(list, function(element){
             if(element['selector'] == selector){
                 val = element['style'][name];
             }
@@ -168,14 +168,14 @@ var styleutil = {
     },
     setRuleValue : function(list, selector, name, val){
         var has = false;
-        styleutil.reduce(list, function(element){
+        seditorutil.reduce(list, function(element){
             if(element['selector'] == selector){
                 element['style'][name] = val;
                 has = true;
             }
         });
         if(!has){
-            styleutil.appendRule(list, selector, name, val);
+            seditorutil.appendRule(list, selector, name, val);
         }
     },
     appendRule : function(list, selector, name, value) {
@@ -188,7 +188,7 @@ var styleutil = {
     hasSelect : function(list, selector) {
         // 判断是否存在选择符，若存在则返回该对象
         var obj;
-        styleutil.forEach(list, function(element) {
+        seditorutil.forEach(list, function(element) {
             if (element['selector'] == selector) {
                 obj = element;
             }
@@ -289,7 +289,7 @@ var styleutil = {
     };
 },
     scaleable : function(obj, callback, opts){
-        styleutil.scale(obj, $(obj).width(), $(obj).height(), callback);
+        seditorutil.scale(obj, $(obj).width(), $(obj).height(), callback);
     },
     getTagName : function(obj){
         return obj.tagName.toLowerCase();

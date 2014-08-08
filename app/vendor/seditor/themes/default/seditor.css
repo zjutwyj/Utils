@@ -11,7 +11,7 @@ ol,ul {
 }
 
 /* ================================ 模块样式 ========================================== */
-#styletool-canvas {
+#seditor-canvas {
     display: none;
     width: 797px;
     height:auto;
@@ -20,7 +20,7 @@ ol,ul {
     border-radius:5px;
     padding:5px;
 }
-#styletool-canvas .wp-title_black {
+#seditor-canvas .wp-title_black {
     background: url("img/wp-page_title_bg.gif") repeat-x scroll 0 0 #232323;
     border-radius: 10px 10px 0 0;
     color: #FFFFFF;
@@ -28,14 +28,14 @@ ol,ul {
     margin-bottom: 0px;
 }
 
-#styletool-canvas  .wp-title {
+#seditor-canvas  .wp-title {
     padding: 7px 12px 9px;
 }
 
-#styletool-canvas .wp-title_black h2 {
+#seditor-canvas .wp-title_black h2 {
     color: #FFFFFF;
 }
-#styletool-canvas .wp-title h2 {
+#seditor-canvas .wp-title h2 {
     color: #fff;
     float: left;
     font-family: 'Microsoft yahei';
@@ -44,20 +44,20 @@ ol,ul {
     text-indent: 5px;
 }
 
-#styletool-canvas .wp-title .wp-icon {
+#seditor-canvas .wp-title .wp-icon {
     float: right;
     width: 43px;
 }
 
-#styletool-canvas .wp-title .wp-icon a.close {
+#seditor-canvas .wp-title .wp-icon a.close {
     background: url("img/wp-tools_icon.png") no-repeat scroll 0 -34px transparent;
 }
-#styletool-canvas .wp-title .wp-icon a {
+#seditor-canvas .wp-title .wp-icon a {
     display: inline-block;
     height: 19px;
     width: 19px;
 }
-.styletoolslide{
+.seditorslide{
     width:100%;
     height:5px;
     cursor: s-resize;
@@ -251,12 +251,12 @@ ol,ul {
     background:url(img/style-side-icon-open.jpg) no-repeat center bottom transparent;
 }
 /* 样式展示 */
-#styletool{
+#seditor{
     font-size:12px;
     color:#000;
     padding-top:10px;
 }
-#styletool a,#styletool a:link,#styletool a:visited{
+#seditor a,#seditor a:link,#seditor a:visited{
     color:#333;
     text-decoration: none;
 }
@@ -275,57 +275,57 @@ ol,ul {
 .clearfix {
     zoom: 1; /* for IE6 IE7 */
 }
-#styletool .hide {
+#seditor .hide {
     display: none;
 }
-#styletool .show {
+#seditor .show {
     display: block;
 }
-#styletool .block {
+#seditor .block {
     display: block;
 }
-#styletool .inline {
+#seditor .inline {
     display: inline;
 }
-#styletool .left,#styletool .right {
+#seditor .left,#seditor .right {
     display: inline;
 }
-#styletool .left {
+#seditor .left {
     float: left !important;
 }
-#styletool .right {
+#seditor .right {
     float: right !important;
 }
-#styletool .relative{
+#seditor .relative{
     position:relative;
 }
-#styletool .input,.txt ,#styletool .select{
+#seditor .input,.txt ,#seditor .select{
     background: #FFF;
     border: 1px solid #ccc;
     margin: 0 2px;
     padding: 3px 2px;
 }
-#styletool select.select{
+#seditor select.select{
     padding: 2px 2px 1px;
 }
-#styletool textarea.input {
+#seditor textarea.input {
     height: auto;
 }
-#styletool .checkbox{
+#seditor .checkbox{
     vertical-align:middle;
     margin-right:2px;
 }
-#styletool .pointer {
+#seditor .pointer {
     cursor: pointer;
 }
-#styletool .pointer:hover {
+#seditor .pointer:hover {
     color: #FF7B01;
     text-decoration: underline;
 }
-#styletool .space{
+#seditor .space{
     margin-right:5px;
 }
-#styletool .space-m{
+#seditor .space-m{
     margin-right:10px;
 }
 

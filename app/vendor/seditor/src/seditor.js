@@ -3,7 +3,7 @@
  * @author wyj on 2013/11/25
  */
 
-var styletool = {
+var seditor = {
     styleContainer : {
         modify : false,
         curModuleId : "",
@@ -37,7 +37,7 @@ var styletool = {
      * @param {JSON} result样式
      * @author wyj on 14/4/28
      * @example
-     * ````styletool.start("hunk_navigator2", "#hunk_navigator2", result);
+     * ````seditor.start("hunk_navigator2", "#hunk_navigator2", result);
      */
     start : function( moduleId, curSelector, cssStr){
         this.styleContainer['cssStr'] = cssStr;
@@ -47,11 +47,11 @@ var styletool = {
     updatePanel : function(moduleId, curSelector){
         this.removePanel();
         this.createPanel();
-        styletool.styleContainer['curModuleId'] = moduleId;
-        styletool.styleContainer['curControl'] = top.$(curSelector);
-        styletool.styleContainer['curSelector'] = curSelector;
+        seditor.styleContainer['curModuleId'] = moduleId;
+        seditor.styleContainer['curControl'] = top.$(curSelector);
+        seditor.styleContainer['curSelector'] = curSelector;
         //读取缓存数据
-        if( !(moduleId in styletool.styleContainer['moduleContainer']) ){
+        if( !(moduleId in seditor.styleContainer['moduleContainer']) ){
             this.initModuleStyle();
         }
         this.doModuleStyle();
@@ -63,24 +63,24 @@ var styletool = {
      * @param {String} moduleId 模块ID
      */
     initModuleStyle : function() {
-        styletool.styleContainer['result'] = this.getResultByModuleId(styletool.styleContainer['curModuleId']);
+        seditor.styleContainer['result'] = this.getResultByModuleId(seditor.styleContainer['curModuleId']);
         // 1.过滤模块类型
-        styletool.filterResult(styletool.styleContainer['result']);
-        if (!styletool.styleContainer['moduleStyle'].hasOwnProperty("styleId")) {
-            styletool.setDefaultStyle();
+        seditor.filterResult(seditor.styleContainer['result']);
+        if (!seditor.styleContainer['moduleStyle'].hasOwnProperty("styleId")) {
+            seditor.setDefaultStyle();
         } else {
-            styletool.setModuleStyle();
+            seditor.setModuleStyle();
         }
         // 2.保存模型
-        styletool.appendToModuleContainer();
+        seditor.appendToModuleContainer();
     },
     getResultByModuleId : function(moduleId){
         var result;
-        if (styletool.styleContainer[moduleId]){
-            result = styletool.styleContainer[moduleId];
+        if (seditor.styleContainer[moduleId]){
+            result = seditor.styleContainer[moduleId];
         } else{
-            result = jQuery.parseJSON(styletool.styleContainer['cssStr']);
-            styletool.styleContainer[moduleId] = result;
+            result = jQuery.parseJSON(seditor.styleContainer['cssStr']);
+            seditor.styleContainer[moduleId] = result;
         }
         return result;
     },
@@ -89,88 +89,88 @@ var styletool = {
      */
     appendToModuleContainer : function(){
         var moduleObject = {
-            styleId : styletool.styleContainer['styleId'],
-            pictures : styletool.styleContainer['pictures'],
-            append : styletool.styleContainer['append'],
-            javascript : styletool.styleContainer['javascript'],
-            css : styletool.styleContainer['css'],
+            styleId : seditor.styleContainer['styleId'],
+            pictures : seditor.styleContainer['pictures'],
+            append : seditor.styleContainer['append'],
+            javascript : seditor.styleContainer['javascript'],
+            css : seditor.styleContainer['css'],
             modify : false,
-            cssRuleList : styletool.styleContainer['cssRuleList'],
-            cssObjectList : styletool.styleContainer['cssObjectList']
+            cssRuleList : seditor.styleContainer['cssRuleList'],
+            cssObjectList : seditor.styleContainer['cssObjectList']
         };
-        styletool.styleContainer['moduleContainer'][styletool.styleContainer['curModuleId']] = moduleObject;
-        styletool.styleContainer['result'] = '';
+        seditor.styleContainer['moduleContainer'][seditor.styleContainer['curModuleId']] = moduleObject;
+        seditor.styleContainer['result'] = '';
     },
     changePanel : function(type){
         if(typeof type != 'undefined'){
-            styletool.styleContainer['curPanel'] = type;
+            seditor.styleContainer['curPanel'] = type;
         }
-        styletool.removePanel();
+        seditor.removePanel();
         //创建面板
-        styletool.createPanel();
-        styletool.doModuleStyle();
-        styletool.init();
+        seditor.createPanel();
+        seditor.doModuleStyle();
+        seditor.init();
         //显示
-        styletool.showPanel();
+        seditor.showPanel();
     },
     showPanel : function(){
-        $("#styletool").show();
-        $("#styletool-canvas").show();
+        $("#seditor").show();
+        $("#seditor-canvas").show();
     },
     removePanel : function(){
-        $("#styletool").empty();
+        $("#seditor").empty();
         $(".jPicker").remove();
     },
     createPanel : function(){
-        switch (styletool.styleContainer['curPanel']){
+        switch (seditor.styleContainer['curPanel']){
             case 'normal':
-                styletool.createNormalPanel();
+                seditor.createNormalPanel();
                 break;
             case 'size' :
-                styletool.createSizePanel();
+                seditor.createSizePanel();
                 break;
             case 'background' :
-                styletool.createBackgroundPanel();
+                seditor.createBackgroundPanel();
                 break;
             case 'text' :
-                styletool.createTextPanel();
+                seditor.createTextPanel();
                 break;
             case 'box' :
-                styletool.createBoxPanel();
+                seditor.createBoxPanel();
                 break;
             case "hand" :
-                styletool.createHandPanel();
+                seditor.createHandPanel();
                 break;
             default :
-                styletool.createSizePanel();
+                seditor.createSizePanel();
                 break;
         }
     },
     doModuleStyle : function(){
-        var $handleList = $("#styletool .global-area  .handlestyle");
-        styletool.initModuleCss($handleList);
+        var $handleList = $("#seditor .global-area  .handlestyle");
+        seditor.initModuleCss($handleList);
     },
     init : function(){
         var ctx = this;
         //绑定全局设置拖动控件
-        $.each($('#styletool .style-rating-size'), function() {
-            styletool.setSizeHandle($(this));
+        $.each($('#seditor .style-rating-size'), function() {
+            seditor.setSizeHandle($(this));
         });
-        $.each($('#styletool .style-rating-opacity'), function() {
-            styletool.setOpacityHandle($(this));
+        $.each($('#seditor .style-rating-opacity'), function() {
+            seditor.setOpacityHandle($(this));
         });
 
-        $.each($("#styletool .style-range-add"),function(){
+        $.each($("#seditor .style-range-add"),function(){
             $(this).click(function(){
-                var $handlestyle = styletool.getHandleStyle($(this));
+                var $handlestyle = seditor.getHandleStyle($(this));
                 var num = parseInt($handlestyle.val(),10);
                 $handlestyle.val(++num);
                 $handlestyle.change();
             });
         });
-        $.each($("#styletool .style-range-dec"),function(){
+        $.each($("#seditor .style-range-dec"),function(){
             $(this).click(function(){
-                var $handlestyle = styletool.getHandleStyle($(this));
+                var $handlestyle = seditor.getHandleStyle($(this));
                 var num = parseInt($handlestyle.val());
                 $handlestyle.val(num == 0 ? num : --num);
                 $handlestyle.change();
@@ -180,18 +180,18 @@ var styletool = {
         $.each($(".sample-input"),function(){
             $(this).change(function(){
                 if($(this).attr("name") =='z-index'){
-                    styletool.setIndexHandle($(this));
+                    seditor.setIndexHandle($(this));
                 }
                 else{
-                    styletool.setInputHandle($(this));
+                    seditor.setInputHandle($(this));
                 }
             });
         });
         //绑定颜色控件
-        $.each($("#styletool .style-bg-color-span,#styletool .style-border-color,#styletool .color"),function(){
+        $.each($("#seditor .style-bg-color-span,#seditor .style-border-color,#seditor .color"),function(){
             var defaultcolor = "transparent";
-            var $handlestyle = styletool.getHandleStyle($(this));
-            var initColor = styleutil.getRuleValue(styletool.styleContainer['cssObjectList'],$(this).attr("name"),styletool.styleContainer['curSelector'])||'transparent';
+            var $handlestyle = seditor.getHandleStyle($(this));
+            var initColor = seditorutil.getRuleValue(seditor.styleContainer['cssObjectList'],$(this).attr("name"),seditor.styleContainer['curSelector'])||'transparent';
             var colorOpt ={alphaSupport : true};
             if(initColor == 'transparent'){
                 var colorOpt ={alphaSupport : true,active:new $.jPicker.Color({hex:null, a:0})};
@@ -206,8 +206,8 @@ var styletool = {
                 else{
                     defaultcolor ="#" + color.val('all').hex;
                 }
-                styletool.updateCssObjectList(styletool.styleContainer['curSelector'], $handlestyle.attr("name"), defaultcolor);
-                styletool.setSiteCss(styletool.styleContainer['curControl'], $handlestyle.attr("name"), defaultcolor);
+                seditor.updateCssObjectList(seditor.styleContainer['curSelector'], $handlestyle.attr("name"), defaultcolor);
+                seditor.setSiteCss(seditor.styleContainer['curControl'], $handlestyle.attr("name"), defaultcolor);
             },function(color, context){
                 defaultvalue = "transparent";
                 if(color.val('all') == null){
@@ -216,30 +216,30 @@ var styletool = {
                 else{
                     defaultcolor ="#" + color.val('all').hex;
                 }
-                styletool.setSiteCss(styletool.styleContainer['curControl'], $handlestyle.attr("name"), defaultcolor);
+                seditor.setSiteCss(seditor.styleContainer['curControl'], $handlestyle.attr("name"), defaultcolor);
             });
         });
-        $.each($("#styletool .select"),function(){
+        $.each($("#seditor .select"),function(){
             var _this = $(this);
             _this.change(function(){
-                styletool.setSelectHandle(_this);
+                seditor.setSelectHandle(_this);
             });
         });
-        $.each($("#styletool .checkbox"),function(){
+        $.each($("#seditor .checkbox"),function(){
             var _this = $(this);
             _this.click(function(){
-                styletool.setCheckboxHandle(_this);
+                seditor.setCheckboxHandle(_this);
             });
         });
-        $.each($("#styletool .bg-img-btn"),function(){
+        $.each($("#seditor .bg-img-btn"),function(){
             var _this = $(this);
             _this.click(function(){
                 var $target = $(this);
                 var updateStyleCss = function(url){
-                    styletool.setBackgroundHandle($target,'url('+url+')');
+                    seditor.setBackgroundHandle($target,'url('+url+')');
                     $target.parents(".handleitem:first").find(".background-image-sample").css('background-image',"url("+url+")");
                 }
-                art.dialog.open('/common/upload/fiy_upload.html?pageType=styletool&pic_num=1',{
+                art.dialog.open('/common/upload/fiy_upload.html?pageType=seditor&pic_num=1',{
                     id: 'updateStyleCss',
                     title : '选择图片',
                     init : function () {
@@ -251,16 +251,16 @@ var styletool = {
             });
         });
 
-        $.each($("#styletool .bg-image-remove-btn"),function(){
+        $.each($("#seditor .bg-image-remove-btn"),function(){
             var _this = $(this);
             _this.click(function(){
-                styletool.setBackgroundHandle($(this),'none');
+                seditor.setBackgroundHandle($(this),'none');
                 $(this).parents(".handleitem:first").find(".background-image-sample").css('background-image',"url(themes/default/img/style-bg-image.gif)");
             });
         });
 
         /*背景位置*/
-        $.each($("#styletool .style-bg-pos"),function(){
+        $.each($("#seditor .style-bg-pos"),function(){
             $("span",$(this)).bind("click",function(){
 
                 var pre = $(this).attr("class");
@@ -271,8 +271,8 @@ var styletool = {
                 $(this).addClass(pre + "-selected");
 
                 //设置CSS
-                styletool.updateCssObjectList(styletool.styleContainer['curSelector'], "background-position", $(this).attr("value"));
-                styletool.setSiteCss(styletool.styleContainer['curControl'], "background-position",  $(this).attr("value"));
+                seditor.updateCssObjectList(seditor.styleContainer['curSelector'], "background-position", $(this).attr("value"));
+                seditor.setSiteCss(seditor.styleContainer['curControl'], "background-position",  $(this).attr("value"));
             });
         });
     },
@@ -283,12 +283,12 @@ var styletool = {
      */
     changeModule : function(obj){
         var moduleId = $(obj).parents(".moveChild:first").attr("data-piece");
-        var selector = styletool.getHandleSelector(moduleId, $(obj));
+        var selector = seditor.getHandleSelector(moduleId, $(obj));
         if(typeof moduleId == 'undefined'){
             moduleId = $(obj).attr("data-piece");
         }
-        styletool.styleContainer['curModuleId'] = moduleId;
-        styletool.styleContainer['curSelector'] = selector;
+        seditor.styleContainer['curModuleId'] = moduleId;
+        seditor.styleContainer['curSelector'] = selector;
         return {
             moduleId : moduleId,
             selector : selector
@@ -301,12 +301,12 @@ var styletool = {
             selector = "#" + moduleId;
         }
         else{
-            selector = "#" + moduleId + " " + styletool.getSelector($(obj));
+            selector = "#" + moduleId + " " + seditor.getSelector($(obj));
         }
         return selector;
     },
     closeCanvas : function(){
-        $("#styletool-canvas").hide();
+        $("#seditor-canvas").hide();
     },
     /**
      * 过滤封装数据
@@ -315,12 +315,12 @@ var styletool = {
      */
     filterResult : function(result){
         var ctx = this;
-        styletool.styleContainer.StyleResFileList = result;
-        styleutil.forEach(styletool.styleContainer.StyleResFileList, function(item){
+        seditor.styleContainer.StyleResFileList = result;
+        seditorutil.forEach(seditor.styleContainer.StyleResFileList, function(item){
             if (item['type'] == '02'){
-                styletool.styleContainer['defaultStyle'] = item;
+                seditor.styleContainer['defaultStyle'] = item;
             } else{
-                styletool.styleContainer['moduleStyle'] = item;
+                seditor.styleContainer['moduleStyle'] = item;
             }
         });
     },
@@ -330,8 +330,8 @@ var styletool = {
      * @param {String} json 模块内容
      */
     setDefaultStyle : function(){
-        styletool.filterCss(styletool.styleContainer['defaultStyle']);
-        styletool.styleContainer['styleId'] = "";
+        seditor.filterCss(seditor.styleContainer['defaultStyle']);
+        seditor.styleContainer['styleId'] = "";
     },
     /**
      * 分离样式,并存入默认容器中
@@ -339,19 +339,19 @@ var styletool = {
      * @param {Object} style模块样式
      */
     splitStyle : function(style){
-        styletool.styleContainer['pictures'] = $.parseJSON(style['pictures']) || [];
-        styletool.styleContainer['css'] = style['css'];
-        styletool.styleContainer['js'] = style['js'];
-        styletool.styleContainer['append'] = style['append'];
-        styletool.styleContainer['styleId'] = style['styleId'];
+        seditor.styleContainer['pictures'] = $.parseJSON(style['pictures']) || [];
+        seditor.styleContainer['css'] = style['css'];
+        seditor.styleContainer['js'] = style['js'];
+        seditor.styleContainer['append'] = style['append'];
+        seditor.styleContainer['styleId'] = style['styleId'];
     },
     filterCss : function(list){
-        styletool.splitStyle(list);
-        styletool.styleContainer['cssRuleList'] = styleutil.cssRuleList(styletool.styleContainer['css']);
-        styletool.styleContainer['cssObjectList'] = styleutil.cssToObject(styletool.styleContainer['cssRuleList']);
+        seditor.splitStyle(list);
+        seditor.styleContainer['cssRuleList'] = seditorutil.cssRuleList(seditor.styleContainer['css']);
+        seditor.styleContainer['cssObjectList'] = seditorutil.cssToObject(seditor.styleContainer['cssRuleList']);
     },
     setModuleStyle : function(){
-        styletool.filterCss(styletool.styleContainer['moduleStyle']);
+        seditor.filterCss(seditor.styleContainer['moduleStyle']);
     },
     /**
      * 初始化面板CSS
@@ -363,7 +363,7 @@ var styletool = {
         var types = ["text","textarea","select","checkbox","background-image","background-repeat","background-color","background-position","border-top","border-left","border-right","border-bottom"];
         $.each(handleList,function(){
             var check = "text",name = $(this).attr("name");
-            var value = styleutil.getRuleValue(styletool.styleContainer['cssObjectList'],name,styletool.styleContainer['curSelector']);
+            var value = seditorutil.getRuleValue(seditor.styleContainer['cssObjectList'],name,seditor.styleContainer['curSelector']);
             for(var i=0,len=types.length;i < len; i++){
                 if($(this).attr("class").indexOf(types[i]) != -1){
                     check = types[i];
@@ -373,20 +373,20 @@ var styletool = {
             switch (check) {
                 case "text":
                     if(name =='opacity'){
-                        $(this).val(value||parseFloat(top.$(styletool.styleContainer['curSelector']).css(name))*100);
+                        $(this).val(value||parseFloat(top.$(seditor.styleContainer['curSelector']).css(name))*100);
                     }
                     else if(name == 'border-radius'){
-                        $(this).val(value||parseInt(top.$(styletool.styleContainer['curSelector']).css(name))||0);
+                        $(this).val(value||parseInt(top.$(seditor.styleContainer['curSelector']).css(name))||0);
                     }
                     else{
-                        $(this).val( parseInt(value,10)|| styleutil.getElementSize(styletool.styleContainer['curControl'],name));
+                        $(this).val( parseInt(value,10)|| seditorutil.getElementSize(seditor.styleContainer['curControl'],name));
                     }
                     break;
                 case "textarea":
                     break;
                 case "select":
                     if(typeof value == 'undefined' || value == ''){
-                        value = top.$(styletool.styleContainer['curSelector']).css(name);
+                        value = top.$(seditor.styleContainer['curSelector']).css(name);
                     }
                     if(typeof value != 'undefined'){
                         $("[value="+value+"]",$(this)).attr("selected","selected");
@@ -401,7 +401,7 @@ var styletool = {
 
                     break;
                 case "background-image":
-                    var img = styleutil.getRuleValue(styletool.styleContainer['cssObjectList'],$(this).attr("name"),styletool.styleContainer['curSelector'])||'url(themes/default/img/style-bg-image.gif)';
+                    var img = seditorutil.getRuleValue(seditor.styleContainer['cssObjectList'],$(this).attr("name"),seditor.styleContainer['curSelector'])||'url(themes/default/img/style-bg-image.gif)';
                     $(this).parents(".global-bg-upload:first").find(".background-image-sample").css('background-image',img);
                     break;
                 case "background-repeat":
@@ -414,7 +414,7 @@ var styletool = {
                     }
                     break;
                 default:
-                    $(this).val(parseInt(styleutil.getRuleValue(styletool.styleContainer['cssObjectList'],$(this).attr("name"),styletool.styleContainer['curSelector']),10));
+                    $(this).val(parseInt(seditorutil.getRuleValue(seditor.styleContainer['cssObjectList'],$(this).attr("name"),seditor.styleContainer['curSelector']),10));
                     break;
             }
 
@@ -469,7 +469,7 @@ var styletool = {
             "</div>"+
 
             +"</div>";
-        $("#styletool").append($(str));
+        $("#seditor").append($(str));
         var sizeStr = "<div id=\"global-size-conf\" class=\"global-area clearfix\">"
             +"<div class=\"handleitem\">"
             +"<div class=\"style-label left\">宽度</div>"
@@ -506,7 +506,7 @@ var styletool = {
             +"</div>"
             +"</div>"
             +"</div>";
-        $("#styletool").append($(sizeStr));
+        $("#seditor").append($(sizeStr));
         var str = "<div id=\"global-text-conf\" class=\"global-area clearfix\">"
                 +"<div class=\"handleitem left\">"
                 +"<div class=\"style-label left\">文字</div>"
@@ -574,7 +574,7 @@ var styletool = {
 
 
             ;
-        $("#styletool").append($(str));
+        $("#seditor").append($(str));
 
     },
     /**
@@ -617,7 +617,7 @@ var styletool = {
             +"</div>"
             +"</div>"
             +"</div>";
-        $("#styletool").append($(sizeStr));
+        $("#seditor").append($(sizeStr));
         var posStr = "<div id=\"global-pos-conf\" class=\"global-area clearfix\">"
             +"<div class=\"handleitem\">"
             +"<div class=\"style-label left\">定位模式</div>"
@@ -701,7 +701,7 @@ var styletool = {
             + "</div>"
             +"</div>";
 
-        $("#styletool").append($(posStr));
+        $("#seditor").append($(posStr));
     },
     /**
      * 创建背景、透明、圆角面板
@@ -743,7 +743,7 @@ var styletool = {
             +  "</div>"
             + "</div>"
             +   "</div>";
-        $("#styletool").append($(opacity));
+        $("#seditor").append($(opacity));
         var str = "<div id=\"global-bg-conf\" class=\"global-area clearfix\">"
             +"<div class=\"global-bg-upload relative clearfix\">"
             +"<div class=\"handleitem clearfix left\">"
@@ -792,7 +792,7 @@ var styletool = {
             "</div>"+
 
             +"</div>";
-        $("#styletool").append($(str));
+        $("#seditor").append($(str));
     },
     /**
      * 文本、文字面板
@@ -903,7 +903,7 @@ var styletool = {
                 +"</div>"
 
             ;
-        $("#styletool").append($(str));
+        $("#seditor").append($(str));
     },
     /**
      * 框模型面板
@@ -912,26 +912,26 @@ var styletool = {
         //border
         var str = "<div id=\"global-border-conf\" class=\"global-area clearfix\">"
             +"<div class=\"style-border clearfix\">"
-            +styletool.createBorderHtml("border-top")
-            +styletool.createBorderHtml("border-right")
-            +styletool.createBorderHtml("border-bottom")
-            +styletool.createBorderHtml("border-left")
+            +seditor.createBorderHtml("border-top")
+            +seditor.createBorderHtml("border-right")
+            +seditor.createBorderHtml("border-bottom")
+            +seditor.createBorderHtml("border-left")
             +"</div></div>";
         //padding
         str += "<div id=\"global-padding-conf\" class=\"global-area clearfix\"><div class=\"style-padding clearfix\">"
-            +styletool.createPaddingHtml("padding-top","上")
-            +styletool.createPaddingHtml("padding-right","右")
-            +styletool.createPaddingHtml("padding-bottom","下")
-            +styletool.createPaddingHtml("padding-left","左")
+            +seditor.createPaddingHtml("padding-top","上")
+            +seditor.createPaddingHtml("padding-right","右")
+            +seditor.createPaddingHtml("padding-bottom","下")
+            +seditor.createPaddingHtml("padding-left","左")
             +"</div></div>";
         //margin
         str += "<div id=\"global-margin-conf\" class=\"global-area clearfix\"><div class=\"style-padding clearfix\">"
-            +styletool.createMarginHtml("margin-top","上")
-            +styletool.createMarginHtml("margin-right","右")
-            +styletool.createMarginHtml("margin-bottom","下")
-            +styletool.createMarginHtml("margin-left","左")
+            +seditor.createMarginHtml("margin-top","上")
+            +seditor.createMarginHtml("margin-right","右")
+            +seditor.createMarginHtml("margin-bottom","下")
+            +seditor.createMarginHtml("margin-left","左")
             +"</div></div>";
-        $("#styletool").append($(str));
+        $("#seditor").append($(str));
     },
     createMarginHtml : function(type,txt){
         return "<div class=\"style-margin-item left\">"
@@ -1026,15 +1026,15 @@ var styletool = {
             +"</div>";
     },
     getRule : function(){
-        var str = "", i = 0,len=styletool.styleContainer['cssRuleList'].length;
+        var str = "", i = 0,len=seditor.styleContainer['cssRuleList'].length;
         for(i;i < len ; i++){
-            //str = styleutil.split(cssRuleList[i], moduleId, )
+            //str = seditorutil.split(cssRuleList[i], moduleId, )
         }
     },
     updateCss : function(handle,opts){
         $(handle).css(opts);
         for(var key in opts){
-            styletool.updateCssObjectList(styletool.getHandleSelector(styletool.styleContainer['curModuleId'],handle),key,opts[key]);
+            seditor.updateCssObjectList(seditor.getHandleSelector(seditor.styleContainer['curModuleId'],handle),key,opts[key]);
         }
     },
     /**
@@ -1057,11 +1057,11 @@ var styletool = {
      * @param {String} CSS值
      */
     updateCssObjectList : function(selector, name, val){
-        if(typeof styletool.styleContainer['moduleContainer'][styletool.styleContainer['curModuleId']] == 'undefined'){
+        if(typeof seditor.styleContainer['moduleContainer'][seditor.styleContainer['curModuleId']] == 'undefined'){
             //如果容器中没有相关数据则请求服务器加载数据
-            styletool.initModuleStyle(styletool.styleContainer['curModuleId']);
+            seditor.initModuleStyle(seditor.styleContainer['curModuleId']);
         }
-        styleutil.setRuleValue(styletool.styleContainer['moduleContainer'][styletool.styleContainer['curModuleId']]['cssObjectList'], selector, name, val);
+        seditorutil.setRuleValue(seditor.styleContainer['moduleContainer'][seditor.styleContainer['curModuleId']]['cssObjectList'], selector, name, val);
     },
     /**
      * 获取控件
@@ -1077,8 +1077,8 @@ var styletool = {
      * @param {Elemnet} $obj 元素
      */
     initHandlestyle : function($obj, moveFn, finishFn){
-        var $handlestyle = styletool.getHandleStyle($obj);
-        styleutil.range($obj, $handlestyle.val(),  $handlestyle.attr("maxval"), moveFn, finishFn);
+        var $handlestyle = seditor.getHandleStyle($obj);
+        seditorutil.range($obj, $handlestyle.val(),  $handlestyle.attr("maxval"), moveFn, finishFn);
     },
     /**
      * 为文本框绑定range控件
@@ -1090,12 +1090,12 @@ var styletool = {
         $.each(textList,function(){
             var _this = $(this);
             _this.change(function(){
-                styletool.initHandlestyle(rangeObj, moveFn, finishFn);
+                seditor.initHandlestyle(rangeObj, moveFn, finishFn);
                 if(typeof action == 'function'){
                     action();
                 }
             });
-            styleutil.keyEvent(_this.get(0),'onkeydown',function(keycode){
+            seditorutil.keyEvent(_this.get(0),'onkeydown',function(keycode){
                 if(keycode == 38 ){
                     _this.val(parseInt(_this.val())+1);
                     _this.change();
@@ -1113,34 +1113,34 @@ var styletool = {
      * @param {Element} 设置元素
      */
     setSizeHandle : function($obj){
-        var handleStyle = styletool.getHandleStyle($obj);
+        var handleStyle = seditor.getHandleStyle($obj);
 
-        styletool.initHandlestyle($obj, function(value) {
+        seditor.initHandlestyle($obj, function(value) {
             handleStyle.val(value);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
         }, function(value) {
-            styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), value + "px");
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
+            seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), value + "px");
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
         });
 
-        styletool.bindTextEvent(handleStyle, $obj, function(value) {
+        seditor.bindTextEvent(handleStyle, $obj, function(value) {
             handleStyle.val(value);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
         }, function(value) {
-            styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), value + "px");
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
+            seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), value + "px");
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value + "px");
         },function(){
-            styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), handleStyle.val() + "px");
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), handleStyle.val() + "px");
+            seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), handleStyle.val() + "px");
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), handleStyle.val() + "px");
         });
     },
     setInputHandle : function($obj){
-        styletool.updateCssObjectList(styletool.styleContainer['curSelector'], $obj.attr("name"), parseInt($obj.val(),10) + "px");
-        styletool.setSiteCss(styletool.styleContainer['curControl'], $obj.attr("name"), parseInt($obj.val(),10) + "px");
+        seditor.updateCssObjectList(seditor.styleContainer['curSelector'], $obj.attr("name"), parseInt($obj.val(),10) + "px");
+        seditor.setSiteCss(seditor.styleContainer['curControl'], $obj.attr("name"), parseInt($obj.val(),10) + "px");
     },
     setIndexHandle : function($obj){
-        styletool.updateCssObjectList(styletool.styleContainer['curSelector'], $obj.attr("name"), parseInt($obj.val(),10));
-        styletool.setSiteCss(styletool.styleContainer['curControl'], $obj.attr("name"), parseInt($obj.val(),10));
+        seditor.updateCssObjectList(seditor.styleContainer['curSelector'], $obj.attr("name"), parseInt($obj.val(),10));
+        seditor.setSiteCss(seditor.styleContainer['curControl'], $obj.attr("name"), parseInt($obj.val(),10));
     },
     /**
      * 设置透明度
@@ -1148,25 +1148,25 @@ var styletool = {
      * @param {Elemnet} 设置元素
      */
     setOpacityHandle : function($obj){
-        var handleStyle = styletool.getHandleStyle($obj);
+        var handleStyle = seditor.getHandleStyle($obj);
 
-        styletool.initHandlestyle($obj, function(value) {
+        seditor.initHandlestyle($obj, function(value) {
             handleStyle.val(value);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value/100);
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value/100);
         }, function(value) {
-            styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), value/100);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value/100);
+            seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), value/100);
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value/100);
         });
 
-        styletool.bindTextEvent(handleStyle, $obj, function(value) {
+        seditor.bindTextEvent(handleStyle, $obj, function(value) {
             handleStyle.val(value);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value/100);
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value/100);
         }, function(value) {
-            styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), value/100);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), value/100);
+            seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), value/100);
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), value/100);
         },function(){
-            styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), parseInt(handleStyle.val(),10)/100);
-            styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"), parseInt(handleStyle.val(),10)/100);
+            seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), parseInt(handleStyle.val(),10)/100);
+            seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"), parseInt(handleStyle.val(),10)/100);
         });
     },
     /**
@@ -1175,9 +1175,9 @@ var styletool = {
      * @param {Elemnet} $obj
      */
     setSelectHandle : function($obj){
-        var handleStyle = styletool.getHandleStyle($obj);
-        styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), $("option:selected",handleStyle).val());
-        styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"),  $("option:selected",handleStyle).val());
+        var handleStyle = seditor.getHandleStyle($obj);
+        seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), $("option:selected",handleStyle).val());
+        seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"),  $("option:selected",handleStyle).val());
     },
     /**
      * 设置勾选框
@@ -1185,10 +1185,10 @@ var styletool = {
      * @param {Element} $obj
      */
     setCheckboxHandle : function($obj){
-        var handleStyle = styletool.getHandleStyle($obj);
+        var handleStyle = seditor.getHandleStyle($obj);
         var isCheck = $(handleStyle).attr("checked");
-        styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"),isCheck? handleStyle.val() : handleStyle.attr("default"));
-        styletool.setSiteCss(styletool.styleContainer['curControl'],handleStyle.attr("name"),isCheck? handleStyle.val() : handleStyle.attr("default"));
+        seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"),isCheck? handleStyle.val() : handleStyle.attr("default"));
+        seditor.setSiteCss(seditor.styleContainer['curControl'],handleStyle.attr("name"),isCheck? handleStyle.val() : handleStyle.attr("default"));
     },
     /**
      * 设置背景
@@ -1196,13 +1196,13 @@ var styletool = {
      * @param {Elemnet} 设置元素
      */
     setBackgroundHandle : function($obj, val){
-        var handleStyle = styletool.getHandleStyle($obj);
-        styletool.updateCssObjectList(styletool.styleContainer['curSelector'], handleStyle.attr("name"), val);
-        styletool.setSiteCss(styletool.styleContainer['curControl'], handleStyle.attr("name"),  val);
+        var handleStyle = seditor.getHandleStyle($obj);
+        seditor.updateCssObjectList(seditor.styleContainer['curSelector'], handleStyle.attr("name"), val);
+        seditor.setSiteCss(seditor.styleContainer['curControl'], handleStyle.attr("name"),  val);
     },
     getStyle : function(){
-        var curModule = styletool.styleContainer['moduleContainer'][styletool.styleContainer['curModuleId']];
-        curModule['css'] = styleutil.getCssJSON(curModule['cssObjectList']);
+        var curModule = seditor.styleContainer['moduleContainer'][seditor.styleContainer['curModuleId']];
+        curModule['css'] = seditorutil.getCssJSON(curModule['cssObjectList']);
         return {
             id:curModule['styleId'],
             moduleId : curModule['curModuleId'],
@@ -1216,8 +1216,8 @@ var styletool = {
      * 保存模块样式
      */
     saveStyle : function(){
-        var curModule = styletool.styleContainer['moduleContainer'][styletool.styleContainer['curModuleId']];
-        curModule['css'] = styleutil.getCssJSON(curModule['cssObjectList']);
+        var curModule = seditor.styleContainer['moduleContainer'][seditor.styleContainer['curModuleId']];
+        curModule['css'] = seditorutil.getCssJSON(curModule['cssObjectList']);
         alert(curModule['css']);
         $.ajax({
             type:"post",
@@ -1238,10 +1238,10 @@ var styletool = {
     highlight : function(selector, type){
         var display = "block";
         if(typeof type !='undefined' && type == 'show'){
-            styletool.styleContainer['treeHover'] = true;
+            seditor.styleContainer['treeHover'] = true;
             display = "block";
         }
-        else if(styletool.styleContainer['treeHover']){
+        else if(seditor.styleContainer['treeHover']){
             dislay = "block";
         }
         else{
@@ -1252,28 +1252,28 @@ var styletool = {
             height = _selector.height(),
             left = parseInt(_selector.offset().left,10),
             toppos = parseInt(_selector.offset().top,10);
-        var marginleft =styleutil.getElementSize( _selector,"margin-left"),
-            margintop = styleutil.getElementSize( _selector,"margin-top"),
-            marginright = styleutil.getElementSize( _selector,"margin-right"),
-            marginbottom =styleutil.getElementSize( _selector,"margin-bottom"),
-            paddingtop = styleutil.getElementSize( _selector,"padding-top"),
-            paddingright = styleutil.getElementSize( _selector,"padding-right"),
-            paddingbottom =styleutil.getElementSize( _selector,"padding-bottom"),
-            paddingleft= styleutil.getElementSize( _selector,"padding-left"),
-            bordertopwidth = styleutil.getElementSize( _selector,"border-top-width"),
-            borderrightwidth = styleutil.getElementSize( _selector,"border-right-width"),
-            borderbottomwidth = styleutil.getElementSize( _selector,"border-bottom-width"),
-            borderleftwidth = styleutil.getElementSize( _selector,"border-left-width");
+        var marginleft =seditorutil.getElementSize( _selector,"margin-left"),
+            margintop = seditorutil.getElementSize( _selector,"margin-top"),
+            marginright = seditorutil.getElementSize( _selector,"margin-right"),
+            marginbottom =seditorutil.getElementSize( _selector,"margin-bottom"),
+            paddingtop = seditorutil.getElementSize( _selector,"padding-top"),
+            paddingright = seditorutil.getElementSize( _selector,"padding-right"),
+            paddingbottom =seditorutil.getElementSize( _selector,"padding-bottom"),
+            paddingleft= seditorutil.getElementSize( _selector,"padding-left"),
+            bordertopwidth = seditorutil.getElementSize( _selector,"border-top-width"),
+            borderrightwidth = seditorutil.getElementSize( _selector,"border-right-width"),
+            borderbottomwidth = seditorutil.getElementSize( _selector,"border-bottom-width"),
+            borderleftwidth = seditorutil.getElementSize( _selector,"border-left-width");
         var  left = left-  borderleftwidth - marginleft,
             toppos = toppos- bordertopwidth -margintop;
 
-        var zIndex =styleutil.getElementSize(_selector,"z-index");
-        styletool.styleContainer['highlight'] = $("#style-outer");
-        if(!(styletool.styleContainer['highlight'].size() > 0)){
-            styletool.styleContainer['highlight'] = $("<div id='style-outer'><div id='style-highlight' style='z-index:9001;border-style:solid;background:#214FA3;position:absolute;'><div class='style-inner' style='background:#2288cc;width:100%;height:100%;font-size:10px;'>z-index: "+zIndex+"&nbsp;</div></div></div>");
-            $("body").append(styletool.styleContainer['highlight']);
+        var zIndex =seditorutil.getElementSize(_selector,"z-index");
+        seditor.styleContainer['highlight'] = $("#style-outer");
+        if(!(seditor.styleContainer['highlight'].size() > 0)){
+            seditor.styleContainer['highlight'] = $("<div id='style-outer'><div id='style-highlight' style='z-index:9001;border-style:solid;background:#214FA3;position:absolute;'><div class='style-inner' style='background:#2288cc;width:100%;height:100%;font-size:10px;'>z-index: "+zIndex+"&nbsp;</div></div></div>");
+            $("body").append(seditor.styleContainer['highlight']);
         }
-        styletool.styleContainer['highlight'].find("#style-highlight").css({
+        seditor.styleContainer['highlight'].find("#style-highlight").css({
             width : width+ "px",
             height : height  + "px",
             'margin-top' :margintop+ "px",
@@ -1290,7 +1290,7 @@ var styletool = {
             'border-left-width' : borderleftwidth+ "px"
         });
 
-        $(styletool.styleContainer['highlight']).css({
+        $(seditor.styleContainer['highlight']).css({
             opacity : 0.4,
             position:'absolute',
             'z-index' : 9000,
@@ -1304,26 +1304,26 @@ var styletool = {
     },
     hidelight : function(type){
         if(typeof type != 'undefined' && type == 'tree'){
-            styletool.styleContainer['treeHover'] = false;
+            seditor.styleContainer['treeHover'] = false;
         }
-        $(styletool.styleContainer['highlight']).hide();
+        $(seditor.styleContainer['highlight']).hide();
     },
     /**
      * 显示模块DOM目录
      *
      */
     drowDomTree : function(){
-        var module = $("#" + styletool.styleContainer['curModuleId']);
-        $("#dom-tree").empty().append(styletool.createDomTree(module));
+        var module = $("#" + seditor.styleContainer['curModuleId']);
+        $("#dom-tree").empty().append(seditor.createDomTree(module));
     },
     createDomTree : function(parent){
         var root = $("<ul class=\"ul-navList\"></ul>"), grade = 1;
-        var module = styletool.createElement(styletool.bulidItem(parent,styleutil.getTagName(parent[0]),grade))
+        var module = seditor.createElement(seditor.bulidItem(parent,seditorutil.getTagName(parent[0]),grade))
         var sub = $("<ul class=\"grade"+(++grade)+"-ul\" style=\"\"></ul>");
         var children = parent.children();
         for(var i = 0,len = children.size();i < len ;i++){
             var curNode = children.get(i);
-            $(sub).append(styletool.bulidSub(curNode,styletool.createElement(styletool.bulidItem(curNode,styleutil.getTagName(parent[0]),grade)),grade));
+            $(sub).append(seditor.bulidSub(curNode,seditor.createElement(seditor.bulidItem(curNode,seditorutil.getTagName(parent[0]),grade)),grade));
         }
         $(module).append(sub);
         $(root).append(module);
@@ -1337,12 +1337,12 @@ var styletool = {
             var sub = $("<ul class=\"grade"+grade+"-ul\" style=\"\"></ul>");
             for(var i = 0,len = $(parent).children().size();i < len;i++){
                 var obj = $(parent).children().get(i);
-                var item = styletool.bulidItem(obj, styleutil.getTagName(obj), grade);
+                var item = seditor.bulidItem(obj, seditorutil.getTagName(obj), grade);
                 if($(obj).children().size() > 0){
-                    $(sub).append(styletool.bulidSub(obj,styletool.createElement(item),(grade+1)));
+                    $(sub).append(seditor.bulidSub(obj,seditor.createElement(item),(grade+1)));
                 }
                 else{
-                    $(sub).append(styletool.createElement(item));
+                    $(sub).append(seditor.createElement(item));
                 }
             }
             $(frameset).append(sub);
@@ -1357,20 +1357,20 @@ var styletool = {
         var _extend = "";
 
         if (item.hasChild) {
-            _extend = "<span class=\"open\" onclick=\"styletool.extendTree(this)\">&nbsp;</span>";
+            _extend = "<span class=\"open\" onclick=\"seditor.extendTree(this)\">&nbsp;</span>";
         } else {
-            _extend = "<span class=\"open\" onclick=\"styletool.extendTree(this)\">&nbsp;</span>";
+            _extend = "<span class=\"open\" onclick=\"seditor.extendTree(this)\">&nbsp;</span>";
         }
 
         var str = "<li class=\"grade"+item.grade+"\"><div class=\"item-li\">" + _extend
-            + "<a onmouseover=\"styletool.highlight('"+item.selector+"','show')\" onmouseout=\"styletool.hidelight('tree')\" onclick=\"styletool.treeClick(this,'"+item.curModuleId+"','"+item.selector+"')\" href=\"javascript:;\" class=\"a-btn-static " + _cls
+            + "<a onmouseover=\"seditor.highlight('"+item.selector+"','show')\" onmouseout=\"seditor.hidelight('tree')\" onclick=\"seditor.treeClick(this,'"+item.curModuleId+"','"+item.selector+"')\" href=\"javascript:;\" class=\"a-btn-static " + _cls
             + "\">&lt;" + item.name +" id=\""+item['id']+"\"  class=\""+item['className']+"\"&gt;" +item['title'].substring(0,10)+ "</a></div></li>";
         return $(str);
     },
     treeClick : function(obj,moduleId,selector){
         $("#dom-tree").find(".select").removeClass("select");
         $(obj).addClass("select");
-        styletool.start(moduleId,selector);
+        seditor.start(moduleId,selector);
     },
     extendTree : function(obj) {
         var _cls = $(obj).hasClass("open");
@@ -1389,13 +1389,13 @@ var styletool = {
         var item = {};
         var $node =$(node);
         var title = $node.attr("title");
-        item['hasChild'] = styletool.hasChildNode(node);
-        item['curModuleId'] = styletool.styleContainer['curModuleId'];
-        if("#" + styletool.styleContainer['curModuleId'] == styletool.getSelector(node)){
-            item['selector'] = "#" + styletool.styleContainer['curModuleId']
+        item['hasChild'] = seditor.hasChildNode(node);
+        item['curModuleId'] = seditor.styleContainer['curModuleId'];
+        if("#" + seditor.styleContainer['curModuleId'] == seditor.getSelector(node)){
+            item['selector'] = "#" + seditor.styleContainer['curModuleId']
         }
         else{
-            item['selector'] = "#" + styletool.styleContainer['curModuleId'] + " " +styletool.getSelector(node);
+            item['selector'] = "#" + seditor.styleContainer['curModuleId'] + " " +seditor.getSelector(node);
         }
         item['name'] = name;
         item['grade'] = grade;
@@ -1418,13 +1418,13 @@ var styletool = {
             selector = "."+className.split(" ")[0];
         }
         else{
-            selector = styleutil.getTagName(obj);
+            selector = seditorutil.getTagName(obj);
             selector = arguments.callee(obj.parentNode) + " " + selector;
         }
         return selector;
     },
     appendResizableHandle : function(obj){
-        $(styletool.styleContainer['resizeHandle']).remove();
+        $(seditor.styleContainer['resizeHandle']).remove();
         var str = "<div class=\"style-resizable-handle style-resizable-n\"><p class=\"handle N\"></p>"
             + "</div>"
             + "<div class=\"style-resizable-handle style-resizable-s\"><p class=\"handle S\" ></p>"
@@ -1441,9 +1441,9 @@ var styletool = {
             +"</div>"
             + "<div class=\"style-resizable-handle style-resizable-ne\"><p class=\"handle NE\" ></p>"
             + "</div>";
-        styletool.styleContainer['resizeHandle'] = $(str);
-        styleutil.resizeable(styletool.styleContainer['resizeHandle']);
-        $(obj).append(styletool.styleContainer['resizeHandle']);
+        seditor.styleContainer['resizeHandle'] = $(str);
+        seditorutil.resizeable(seditor.styleContainer['resizeHandle']);
+        $(obj).append(seditor.styleContainer['resizeHandle']);
     },
     /**
      * 为元素绑定可编辑
@@ -1451,33 +1451,33 @@ var styletool = {
      */
     bindEditable : function(obj){
         $(obj).bind("click",function(){
-            styletool.editable($(this));
+            seditor.editable($(this));
             return false;
         });
         $(obj).bind("dblclick",function(){
-            var result = styletool.changeModule($(this));
-            styletool.start(result['moduleId'], result['selector']);
+            var result = seditor.changeModule($(this));
+            seditor.start(result['moduleId'], result['selector']);
             return false;
         });
     },
     editable : function(obj){
         var _this = $(obj);
-        styletool.styleContainer['curDrag'] = null;
-        styletool.styleContainer['curIndex'] = styleutil.getElementSize(_this,"z-index");
-        var selector = styletool.changeModule(_this).selector;
-        styletool.updatePanel(styletool.styleContainer['curModuleId'],styletool.styleContainer['curSelector']);
-        styletool.appendResizableHandle(_this);
+        seditor.styleContainer['curDrag'] = null;
+        seditor.styleContainer['curIndex'] = seditorutil.getElementSize(_this,"z-index");
+        var selector = seditor.changeModule(_this).selector;
+        seditor.updatePanel(seditor.styleContainer['curModuleId'],seditor.styleContainer['curSelector']);
+        seditor.appendResizableHandle(_this);
         var position = _this.css("position");
         if(position == 'relative'){
-            styletool.styleContainer['curDrag'] = _this.drag("start", function(ev,dd){
+            seditor.styleContainer['curDrag'] = _this.drag("start", function(ev,dd){
                 dd.attr =$( ev.target ).prop("className");
                 dd.width = _this.width();
                 dd.height = _this.height();
                 dd.left = _this.offset().left;
                 dd.top = _this.offset().top;
             }).drag('end',function(ev,dd){
-                styletool.updateCssObjectList(selector, "width", (dd.width + dd.deltaX) +"px");
-                styletool.updateCssObjectList(selector, "height", (dd.height + dd.deltaY) +"px");
+                seditor.updateCssObjectList(selector, "width", (dd.width + dd.deltaX) +"px");
+                seditor.updateCssObjectList(selector, "height", (dd.height + dd.deltaY) +"px");
                 return false;
             }).drag(function(ev,dd){
                 var props = {};
@@ -1504,7 +1504,7 @@ var styletool = {
             },{handle: '.handle'});
         }
         else{
-            styletool.styleContainer['curDrag'] = _this.drag("start",function( ev, dd ){
+            seditor.styleContainer['curDrag'] = _this.drag("start",function( ev, dd ){
                 dd.attr =$( ev.target ).prop("className");
                 dd.className = "editable";
                 dd.width = _this.width();
@@ -1512,10 +1512,10 @@ var styletool = {
                 dd.left = _this.offset().left;
                 dd.top = _this.offset().top;
             }).drag("end",function( ev, dd ){
-                styletool.updateCssObjectList(selector, "width", (dd.width + dd.deltaX) +"px");
-                styletool.updateCssObjectList(selector, "height", (dd.height + dd.deltaY) +"px");
-                styletool.updateCssObjectList(selector, "left", _this.offset().left +"px");
-                styletool.updateCssObjectList(selector, "top", _this.offset().top +"px");
+                seditor.updateCssObjectList(selector, "width", (dd.width + dd.deltaX) +"px");
+                seditor.updateCssObjectList(selector, "height", (dd.height + dd.deltaY) +"px");
+                seditor.updateCssObjectList(selector, "left", _this.offset().left +"px");
+                seditor.updateCssObjectList(selector, "top", _this.offset().top +"px");
                 return false;
             }).drag(function( ev, dd ){
                 var props = {};

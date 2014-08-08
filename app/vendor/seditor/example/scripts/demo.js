@@ -82,14 +82,14 @@ var sEditFn = function(target){
         oniframeload: function(){
             var iframe = this.iframeNode.contentWindow;
             var result =  '[{"append" : "","css" : "'+laytheme.style['groupStyle']+'","enterpriseId" : "","javascript" : "","moduleId" : "","pictures" : "","styleId" : "","type" : "02"} ]';
-            iframe.styletool.start(moduleId, selector, result);
+            iframe.seditor.start(moduleId, selector, result);
         },
         onshow: function(){
 
         },
         onclose: function(){
             var iframe_page = this.iframeNode.contentWindow;
-            var data = iframe_page.styletool.getStyle();
+            var data = iframe_page.seditor.getStyle();
             laytheme.style['groupStyle'] = data.css;
             $("#result-div").html(data.css);
         }
