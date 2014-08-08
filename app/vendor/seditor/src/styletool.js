@@ -240,6 +240,7 @@ var styletool = {
                     $target.parents(".handleitem:first").find(".background-image-sample").css('background-image',"url("+url+")");
                 }
                 art.dialog.open('/common/upload/fiy_upload.html?pageType=styletool&pic_num=1',{
+                    id: 'updateStyleCss',
                     title : '选择图片',
                     init : function () {
                         var iframe = this.iframe.contentWindow;
