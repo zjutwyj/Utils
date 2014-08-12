@@ -32,7 +32,7 @@ SEditor是由机汇网web前端研发部开发所见即所得元素样式编辑�
     <!--artDialog javascript-->
     <script type="text/javascript" src="../vendor/artDialog_v6/dialog.js"></script>
     <script type="text/javascript" src="../vendor/artDialog_v6/dialog-plus.js"></script>
-    <script type="text/javascript" src="vendor/contextmenu/jquery.contextmenu.r2.js"></script>
+    <script type="text/javascript" src="vendor/contextmenu/contextmenu.js"></script>
 </head>
 <body>
     <div class="sEdit">点击我右键</div>

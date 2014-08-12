@@ -73,12 +73,11 @@ var sEditFn = function(target){
     var selector = CssUtils.getSelector(target, 'moveChild');
     var moduleId = isModule ? $(target).attr('id') : $(target).parents('.moveChild:first').attr('id');
     dialog({
-        id: 'editModuleCss',
         title: '设置样式',
         url: '../index.html',
         width:750,
         height:333,
-        fixed: true,
+        padding:0,
         oniframeload: function(){
             var iframe = this.iframeNode.contentWindow;
             var result =  '[{"append" : "","css" : "'+laytheme.style['groupStyle']+'","enterpriseId" : "","javascript" : "","moduleId" : "","pictures" : "","styleId" : "","type" : "02"} ]';
