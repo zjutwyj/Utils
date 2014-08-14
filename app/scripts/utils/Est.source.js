@@ -227,67 +227,87 @@
     var result = function(obj) {
         return this._chain ? Est(obj).chain() : obj;
     };
-    /*function q(nextTick){
-        var defer = function(){
-            var pending = [], value, deferred;
-            deferred = {
-                resolve: function(val){
-                    if (pending){
-                        var callbacks = pending;
-                        pending = undefined;
-                        value = ref(val);
-                        if (callbacks.length) {
-                            nextTick(function() {
-                                var callback;
-                                for (var i = 0, ii = callbacks.length; i < ii; i++) {
-                                    callback = callbacks[i];
-                                    value.then(callback[0], callback[1]);
-                                }
-                            });
-                        }
-                    }
-                },
-                promise: {
-                    then: function(callback, errback){
-                        var result = defer();
-                        var wrappedCallback = function(value){
-                            result.resolve((Est.isFunction(callback) ? callback : function(value){
-                                return value;
-                            })(value));
-                        };
-                        var wrappedErrback = function(reason){
-                            result.resolve((Est.isFunction(errback) ? errback : function(value){
-                                return value;
-                            })(reason));
-                        }
-                        if (pending){
-                            pending.push([wrappedCallback, wrappedErrback]);
-                        } else{
-                            value.then(wrappedCallback, wrappedErrback);
-                        }
-                        return result.promise;
-                    }
+
+    /**
+     * @description 异步操作执行成功、失败时执行的方法
+     * @method [对象] - promise
+     * @param {Function} fn
+     * @author wyj on 14/8/14
+     * @example
+     *      var str = '';
+            var doFn = function(){
+                return new Est.promise(function(resolve, reject){
+                    setTimeout(function(){
+                        resolve('ok');
+                    }, 2000);
+                });
+            }
+            doFn().then(function(data){
+                str = data;
+                assert.equal(str, 'ok', 'passed!');
+                QUnit.start();
+            });
+     */
+    function promise(fn) {
+        var state = 'pending',
+            value = null,
+            deferreds = [];
+        this.then = function (onFulfilled, onRejected) {
+            return new promise(function (resolve, reject) {
+                handle({
+                    onFulfilled: onFulfilled || null,
+                    onRejected: onRejected || null,
+                    resolve: resolve,
+                    reject: reject
+                });
+            });
+        };
+        function handle(deferred) {
+            if (state === 'pending') {
+                deferreds.push(deferred);
+                return;
+            }
+            var cb = state === 'fulfilled' ? deferred.onFulfilled : deferred.onRejected,
+                ret;
+            if (cb === null) {
+                cb = state === 'fulfilled' ? deferred.resolve : deferred.reject;
+                cb(value);
+                return;
+            }
+            try {
+                ret = cb(value);
+                deferred.resolve(ret);
+            } catch (e) {
+                deferred.reject(e);
+            }
+        }
+        function resolve(newValue) {
+            if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+                var then = newValue.then;
+                if (typeof then === 'function') {
+                    then.call(newValue, resolve, reject);
+                    return;
                 }
             }
-            return deferred;
-        };
-        var ref = function(value){
-            if (value && Est.isFunction(value.then)) return value;
-            return {
-                then: function(callback) {
-                    var result = defer();
-                    nextTick(function() {
-                        result.resolve(callback(value));
-                    });
-                    return result.promise;
-                }
-            };
+            state = 'fulfilled';
+            value = newValue;
+            finale();
         }
-        return {
-            defer: defer
+        function reject(reason) {
+            state = 'rejected';
+            value = reason;
+            finale();
         }
+        function finale() {
+            setTimeout(function () {
+                deferreds.forEach(function (deferred) {
+                    handle(deferred);
+                });
+            }, 0);
+        }
+        fn(resolve, reject);
     }
-    Est.q = q();*/
+    Est.promise = promise;
     // ObjectUtils
     /**
      * @description [1]检测数据类型 [undefined][number][string][function][regexp][array][date][error]

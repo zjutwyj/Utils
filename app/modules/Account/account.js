@@ -56,7 +56,7 @@ app.run(['$rootScope', '$location', '$q', '$http', 'API_END_POINT',
     }
 
     // 监听路由改变时是否登录状态
-    $rootScope.$on('$routeChangeStart', function loginCheck() {
+   /* $rootScope.$on('$routeChangeStart', function loginCheck() {
         var deferred = $q.defer();
 
         $http.get(API_END_POINT).success(function (data) {
@@ -83,7 +83,7 @@ app.run(['$rootScope', '$location', '$q', '$http', 'API_END_POINT',
         return deferred.promise;
     });
     $location.path($location.path());
-
+*/
     // 退出登录
     $rootScope.logout = function () {
         if ($rootScope.isLogin) {

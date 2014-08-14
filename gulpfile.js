@@ -39,7 +39,7 @@ var paths = {
             'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
             'app/scripts/directives/ui-bootstrap/*.js',
             'app/scripts/filters/filter.js',
-            'app/scripts/factorys/*.js',
+            'app/scripts/factorys/*.js'
         ],
           dist: 'app/scripts',
           name: 'app.min.js'
@@ -77,10 +77,6 @@ var paths = {
             source: ['app/scripts/utils/Est.source.js'],
             dist: 'app/scripts/utils',
             name: 'Est.min.js'
-        },
-        doc: {
-            source: ['app/scripts/utils/Est.source.js'],
-            dist: './app/doc/Est'
         }
     },
     fileupload: {
@@ -141,6 +137,7 @@ var paths = {
                 'app/vendor/angular-route/angular-route.min.js',
                 'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
                 'app/vendor/angular-animate/angular-animate.min.js',
+                'app/vendor/angular-cookies/angular-cookies.min.js',
                 'app/modules/Account/app.js',
                 'app/scripts/factorys/BaseFactory.js',
                 'app/scripts/factorys/AccountFactory.js'],

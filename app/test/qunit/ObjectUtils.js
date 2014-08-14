@@ -19,19 +19,20 @@ QUnit.test("Est.inherit", function(assert){
     assert.equal(newObject.x, target.x , "newObject inherit from target!");
 });
 
-QUnit.test('Est.q', function(assert){
+QUnit.asyncTest('Est.promise', function(assert){
     var str = '';
     var result = function(){
-        var deferred = Est.q.defer();
-        setTimeout(function(){
-            deferred.resolve('ok');
-        }, 2000);
-        return deferred.promise;
+        return new Est.promise(function(resolve, reject){
+            setTimeout(function(){
+                resolve('ok');
+            }, 2000);
+        });
     }
     result().then(function(data){
         str = data;
+        assert.equal(str, 'ok', 'passed!');
+        QUnit.start();
     });
-    assert.equal(str, 'ok', 'passed!');
 });
 
 QUnit.test("Est.typeOf", function(assert){

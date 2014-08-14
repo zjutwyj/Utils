@@ -7,7 +7,7 @@
 // create our angular app and inject ngAnimate and ui-router
 // =============================================================================
 var msie = Est.msie();
-var modules = [ 'ui.router', 'ngRoute', 'ngAnimate'];
+var modules = [ 'ui.router', 'ngRoute', 'ngAnimate', 'ngCookies'];
 if (msie === 7 || msie === 6){
     modules = ['ui.router', 'ngRoute'];
 }

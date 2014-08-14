@@ -834,7 +834,7 @@ var _isFixed = !_isIE6 && !_isMobile;
 
 
 var artDialog = function (options, ok, cancel) {
-
+    debugger
     var originalOptions = options = options || {};
     
 
@@ -1543,7 +1543,7 @@ dialog.oncreate = function (api) {
             frameborder: 'no',
             scrolling: 'no'
         })
-        .on('load', function () {
+        .load(function () {
             var test;
             
             try {
@@ -1605,7 +1605,7 @@ dialog.oncreate = function (api) {
         }
     }
 
-
+    debugger
     // 拖拽支持
     $(api.node).on(drag.types.start, '[i=title]', function (event) {
         // 排除气泡类型的对话框

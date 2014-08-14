@@ -79,6 +79,7 @@ app.factory('BaseFactory', ['$rootScope', '$http', '$q', 'API_END_POINT',
                     $rootScope.isLogin = false;
                     $location.path('/login');
                 });
+                return deferred.promise;
             }
         };
 }]);

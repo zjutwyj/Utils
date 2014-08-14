@@ -92,7 +92,7 @@ var sEditFn = function(target){
             laytheme.style['groupStyle'] = data.css;
             $("#result-div").html(data.css);
         }
-    }).show(target);
+    }).show();
 }
 var contextMenuItem = {
     'hunk_navigator_two' : {

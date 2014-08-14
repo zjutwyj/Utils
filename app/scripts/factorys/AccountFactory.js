@@ -15,6 +15,12 @@
  *              }, function(){
  *                  console.log('登录失败');
  *              });
+ *      // 判断是否已登录
+ *      isLogin: AccountFactory.isLogin().then(function(data){
+ *              console.log("true");
+ *      }, function(){
+ *              console.log("false");
+ *      })
  *      // 退出登录
  *      logout : AccountFactory.logout().then(function(){
  *           console.log('logout success');
@@ -84,15 +90,26 @@
  *          console.log('注册失败');
  *      })
  */
-app.factory('AccountFactory', ['BaseFactory', function(BaseFactory){
+app.factory('AccountFactory', ['BaseFactory', '$q', '$cookies',
+    function(BaseFactory, $q, $cookies){
     return {
         login: function (target, params) {
-            return BaseFactory.save(target, 'login', {
+            var deferred = $q.defer();
+            BaseFactory.save(target, 'login', {
                 id: 'user_id'
-            }, params);
+            }, params).then(function(data){
+                $cookies.isLogin = target.username;
+                deferred.resolve(data);
+            });
+            return deferred.promise;
         },
         logout: function(){
-            return BaseFactory.save({}, 'logout');
+            var deferred = $q.defer();
+            BaseFactory.save({}, 'logout').then(function(data){
+                $cookies.isLogin = false;
+                deferred.resolve(data);
+            });
+            return deferred.promise;
         },
         isLogin: function(){
             var deferred = $q.defer();

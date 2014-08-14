@@ -834,7 +834,6 @@ var _isFixed = !_isIE6 && !_isMobile;
 
 
 var artDialog = function (options, ok, cancel) {
-
     var originalOptions = options = options || {};
     
 
@@ -1543,7 +1542,7 @@ dialog.oncreate = function (api) {
             frameborder: 'no',
             scrolling: 'no'
         })
-        .on('load', function () {
+        .load(function () {
             var test;
             
             try {
@@ -1604,7 +1603,6 @@ dialog.oncreate = function (api) {
             } catch (e) {} 
         }
     }
-
 
     // 拖拽支持
     $(api.node).on(drag.types.start, '[i=title]', function (event) {
