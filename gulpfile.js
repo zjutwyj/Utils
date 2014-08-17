@@ -57,32 +57,6 @@ var paths = {
             ],
             dist: 'app/scripts',
             name: 'app.min.js'
-        },
-        doc: {
-            source: [
-                'app/scripts/utils/Est.source.js',
-                'app/scripts/app.js',
-                // directives
-                'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
-                'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
-                'app/scripts/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
-                'app/scripts/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
-                'app/scripts/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
-                'app/scripts/directives/ng-enter/ng-enter.js', // 回车事件
-                'app/scripts/directives/ng-focus/ng-focus.js', // 获取焦点
-                'app/scripts/directives/ng-format/ng-format.js', // 格式化输入的内容
-                'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
-                'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
-                'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
-                'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
-                // filters
-                'app/scripts/filters/filter-state/filter-state.js', // 状态
-                'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
-                'app/scripts/filters/filter-characters/filter-characters.js', // 字符串截取
-                // factorys
-                'app/scripts/factorys/*.js'
-            ],
-            dist: './app/doc'
         }
     },
     Account: {
@@ -185,6 +159,34 @@ var paths = {
             ],
             dist: 'app/vendor/seditor/themes/default',
             name: 'seditor.min.css'
+        }
+    },
+    doc : {
+        doc: {
+            source: [
+                'app/scripts/utils/Est.source.js',
+                'app/scripts/app.js',
+                // directives
+                'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
+                'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+                'app/scripts/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
+                'app/scripts/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
+                'app/scripts/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
+                'app/scripts/directives/ng-enter/ng-enter.js', // 回车事件
+                'app/scripts/directives/ng-focus/ng-focus.js', // 获取焦点
+                'app/scripts/directives/ng-format/ng-format.js', // 格式化输入的内容
+                'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
+                'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+                'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
+                'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
+                // filters
+                'app/scripts/filters/filter-state/filter-state.js', // 状态
+                'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
+                'app/scripts/filters/filter-characters/filter-characters.js', // 字符串截取
+                // factorys
+                'app/scripts/factorys/*.js'
+            ],
+            dist: './app/doc'
         }
     }
 };
@@ -290,9 +292,6 @@ gulp.task('watch.Est', function(){
 gulp.task('watch.Est.min', function(){
     gulp.watch(paths.Est.scripts.source, ['Est.min']);
 });
-gulp.task('doc', function(){
-    doTask('doc', false);
-});
 gulp.task('normal', function(){
     startTask(false);
 });
@@ -318,6 +317,17 @@ gulp.task('js', ['fileupload', 'ueditor', 'gallery']);
 gulp.task('js.min', ['fileupload.min', 'ueditor.min', 'gallery.min']);
 gulp.task('all', ['js', 'css']);
 gulp.task('all.min', ['js.min', 'css.min']);
+gulp.task('acecss', function(){
+    doTask('acecss', true);
+});
+gulp.task('acecss.min', function(){
+    doTask('acecss', false);
+});
+
+/** doc */
+gulp.task('doc', function(){
+    doTask('doc', false);
+});
 
 /** patch */
 gulp.task('patch', function(){
@@ -365,12 +375,6 @@ gulp.task('seditor.min', function(){
 
 // ======================================================================================
 /** 项目 jhw_v2  output: app -> scripts -> app.min.js*/
-gulp.task('acecss', function(){
-    doTask('acecss', true);
-});
-gulp.task('acecss.min', function(){
-    doTask('acecss', false);
-});
 gulp.task('jhw', function(){
     doTask('jhw', true);
 });

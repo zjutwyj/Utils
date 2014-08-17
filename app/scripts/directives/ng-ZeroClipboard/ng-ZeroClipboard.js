@@ -12,17 +12,21 @@
  */
 app.directive('clipboard', ['$rootScope',function($rootScope){
     return function(scope, element, attrs){
+        ZeroClipboard.config( { swfPath: "swf/ZeroClipboard.swf" } );
         var client = new ZeroClipboard( element, {
             moviePath: "swf/ZeroClipboard.swf"
         } );
-        client.on( "mousedown", function(client) {
-            client.on( "complete", function(client, args) {
+        client.on( 'ready', function(event) {
+            client.on( 'aftercopy', function(event) {
                 if (scope.ok){
                     scope.ok();
                 } else{
                     $rootScope.showMsg('复制成功');
                 }
             } );
+        } );
+        client.on( 'error', function(event) {
+            ZeroClipboard.destroy();
         } );
     }
 }]);
