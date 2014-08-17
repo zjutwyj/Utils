@@ -13,9 +13,7 @@
 app.directive('clipboard', ['$rootScope',function($rootScope){
     return function(scope, element, attrs){
         ZeroClipboard.config( { swfPath: "swf/ZeroClipboard.swf" } );
-        var client = new ZeroClipboard( element, {
-            moviePath: "swf/ZeroClipboard.swf"
-        } );
+        var client = new ZeroClipboard(element);
         client.on( 'ready', function(event) {
             client.on( 'aftercopy', function(event) {
                 if (scope.ok){
