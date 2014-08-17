@@ -12,38 +12,100 @@ var minifyCSS = require('gulp-minify-css');
 var del = require('del');
 
 var paths = {
-    app :{
-      scripts: {
-        source: [
-            'app/vendor/jquery/jquery.min.js',
-            'app/vendor/angular-custom/angular.js',
-            'app/vendor/bootstrap/bootstrap.js',
-            'app/scripts/utils/Est.source.js',
-            'app/vendor/zeroclipboard/ZeroClipboard.min.js',
-            'app/vendor/angular-resource.min.js',
-            'app/vendor/angular-cookies/angular-cookies.min.js',
-            'app/vendor/angular-route/angular-route.min.js',
-            'app/vendor/ng-table/ng-table.min.js',
-            'app/vendor/angular-nestedsortable/angular-nested-sortable.min.js',
-            'app/vendor/typeahead/typeahead.bundle.min.js',
-            'app/vendor/datetime/bootstrap-datepicker.min.js',
-            'app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
-            'app/styles/theme/ace/scripts/ace-element.min.js',
-            'app/styles/theme/ace/scripts/ace.min.js',
-            'app/styles/theme/ace/scripts/ace-extra.min.js',
-            'app/vendor/jq-upload/jquery-upload.min.js',
-            'app/vendor/image-gallery/gallery.min.js',
-            'app/scripts/app.js',
-            'app/scripts/directives/directive.js',
-            'app/scripts/directives/angular-ueditor/ng-ueditor.src.js',
-            'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
-            'app/scripts/directives/ui-bootstrap/*.js',
-            'app/scripts/filters/filter.js',
-            'app/scripts/factorys/*.js'
-        ],
-          dist: 'app/scripts',
-          name: 'app.min.js'
-      }
+    jhw: {
+        scripts: {
+            source: [
+                'app/vendor/jquery/jquery.min.js',
+                'app/vendor/angular-custom/angular.js',
+                'app/vendor/bootstrap/bootstrap.js',
+                'app/scripts/utils/Est.source.js',
+                'app/vendor/zeroclipboard/ZeroClipboard.js', // required: swf/ZeroClipboard.swf
+                'app/vendor/angular-resource.min.js',
+                'app/vendor/angular-cookies/angular-cookies.min.js',
+                'app/vendor/angular-route/angular-route.min.js',
+                'app/vendor/ng-table/ng-table.min.js',
+                'app/vendor/angular-nestedsortable/angular-nested-sortable.min.js',
+                'app/vendor/typeahead/typeahead.bundle.min.js',
+                'app/vendor/datetime/bootstrap-datepicker.min.js',
+                'app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+                'app/styles/theme/ace/scripts/ace-element.min.js',
+                'app/styles/theme/ace/scripts/ace.min.js',
+                'app/styles/theme/ace/scripts/ace-extra.min.js',
+                'app/vendor/jq-upload/jquery-upload.min.js',
+                'app/vendor/image-gallery/gallery.min.js',
+                // app
+                'app/scripts/app.js',
+                // directives
+                'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
+                'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+                'app/scripts/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
+                'app/scripts/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
+                'app/scripts/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
+                'app/scripts/directives/ng-enter/ng-enter.js', // 回车事件
+                'app/scripts/directives/ng-focus/ng-focus.js', // 获取焦点
+                'app/scripts/directives/ng-format/ng-format.js', // 格式化输入的内容
+                'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
+                'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+                'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
+                'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
+                // filters
+                'app/scripts/filters/filter-state/filter-state.js', // 状态
+                'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
+                'app/scripts/filters/filter-characters/filter-characters.js', // 字符串截取
+                // factorys
+                'app/scripts/factorys/*.js'
+            ],
+            dist: 'app/scripts',
+            name: 'app.min.js'
+        },
+        doc: {
+            source: [
+                'app/scripts/utils/Est.source.js',
+                'app/scripts/app.js',
+                // directives
+                'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
+                'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+                'app/scripts/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
+                'app/scripts/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
+                'app/scripts/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
+                'app/scripts/directives/ng-enter/ng-enter.js', // 回车事件
+                'app/scripts/directives/ng-focus/ng-focus.js', // 获取焦点
+                'app/scripts/directives/ng-format/ng-format.js', // 格式化输入的内容
+                'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
+                'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+                'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
+                'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
+                // filters
+                'app/scripts/filters/filter-state/filter-state.js', // 状态
+                'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
+                'app/scripts/filters/filter-characters/filter-characters.js', // 字符串截取
+                // factorys
+                'app/scripts/factorys/*.js'
+            ],
+            dist: './app/doc'
+        }
+    },
+    Account: {
+        scripts:{
+            source: ['app/vendor/jquery/jquery.min.js',
+                'app/scripts/utils/Est.min.js',
+                'app/vendor/angular-custom/angular.js',
+                'app/vendor/bootstrap/bootstrap.min.js',
+                'app/vendor/angular-resource/angular-resource.min.js',
+                'app/vendor/angular-route/angular-route.min.js',
+                'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
+                'app/vendor/angular-animate/angular-animate.min.js',
+                'app/vendor/angular-cookies/angular-cookies.min.js',
+                'app/modules/Account/app.js',
+                'app/scripts/factorys/BaseFactory.js',
+                'app/scripts/factorys/AccountFactory.js'],
+            dist: 'app/modules/Account',
+            name: 'app.min.js'
+        },
+        doc: {
+            source: ['app/scripts/utils/Est.source.js','app/scripts/factorys/AccountFactory.js', 'app/modules/Account/app.js'],
+            dist: 'app/modules/Account/doc'
+        }
     },
     patch : {
         scripts: {
@@ -55,21 +117,6 @@ var paths = {
                 'app/vendor/css3-mediaqueries/css3-mediaqueries.js'],
             dist: 'app/scripts/patch',
             name: 'patch.min.js'
-        }
-    },
-    doc : {
-        doc : {
-            source: ['app/scripts/utils/Est.source.js',
-                'app/scripts/app.js',
-                'app/scripts/directives/directive.js',
-                'app/scripts/filters/filter.js',
-                'app/scripts/factorys/*.js',
-                'app/scripts/directives/ui-bootstrap/ui.bootstrap.tabs.js',
-                'app/scripts/directives/ui-bootstrap/ui.bootstrap.tooltip.js',
-                'app/scripts/directives/ui-bootstrap/ui.bootstrap.modal.js',
-                'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js',
-                'app/scripts/directives/angular-ueditor/ng-ueditor.src.js'],
-            dist: './app/doc'
         }
     },
     Est : {
@@ -127,28 +174,6 @@ var paths = {
             name: 'gallery.min.js'
         }
     },
-    Account: {
-        scripts:{
-            source: ['app/vendor/jquery/jquery.min.js',
-                'app/scripts/utils/Est.min.js',
-                'app/vendor/angular-custom/angular.js',
-                'app/vendor/bootstrap/bootstrap.min.js',
-                'app/vendor/angular-resource/angular-resource.min.js',
-                'app/vendor/angular-route/angular-route.min.js',
-                'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
-                'app/vendor/angular-animate/angular-animate.min.js',
-                'app/vendor/angular-cookies/angular-cookies.min.js',
-                'app/modules/Account/app.js',
-                'app/scripts/factorys/BaseFactory.js',
-                'app/scripts/factorys/AccountFactory.js'],
-            dist: 'app/modules/Account',
-            name: 'app.min.js'
-        },
-        doc: {
-            source: ['app/scripts/utils/Est.source.js','app/scripts/factorys/AccountFactory.js', 'app/modules/Account/app.js'],
-            dist: 'app/modules/Account/doc'
-        }
-    },
     seditor: {
         scripts:{
             source: ['app/vendor/seditor/src/seditorutil.js', 'app/vendor/seditor/src/seditor.js'],
@@ -163,7 +188,6 @@ var paths = {
         }
     }
 };
-
 function doTask(item, debug){
     for (var key in paths[item]) {
         switch (key) {
@@ -231,14 +255,11 @@ function doTask(item, debug){
         }
     }
 }
-
 function startTask(debug) {
     for (var item in paths) {
         doTask(item, debug);
     }
 }
-
-
 // 使用connect启动一个Web服务器
 gulp.task('connect', function () {
     connect.server({
@@ -250,11 +271,9 @@ gulp.task('html', function () {
     gulp.src('./test/*.html')
         .pipe(connect.reload());
 });
-
 gulp.task('clean', function(cb) {
     del(['doc'], cb);
 });
-
 // 创建watch任务去检测文件,当文件改动之后，去调用一个Gulp的Task
 gulp.task('watch', function() {
     gulp.watch(paths, ['begin']);
@@ -265,29 +284,14 @@ gulp.task('EstTask', function(){
 gulp.task('Est.minTask', function(){
     doTask('Est', false);
 });
-gulp.task('Est', ['EstTask']);
-gulp.task('Est.min',['Est.minTask']);
 gulp.task('watch.Est', function(){
     gulp.watch(paths.Est.scripts.source, ['Est'])
 });
 gulp.task('watch.Est.min', function(){
     gulp.watch(paths.Est.scripts.source, ['Est.min']);
 });
-
-gulp.task('app', function(){
-    doTask('app', true);
-});
-gulp.task('app.min', function(){
-    doTask('app', false);
-});
 gulp.task('doc', function(){
     doTask('doc', false);
-});
-gulp.task('patch', function(){
-    doTask('patch', true);
-});
-gulp.task('patch.min', function(){
-    doTask('patch', false);
 });
 gulp.task('normal', function(){
     startTask(false);
@@ -295,46 +299,6 @@ gulp.task('normal', function(){
 gulp.task('debug', function(){
     startTask(true);
 });
-gulp.task('fileupload', function(){
-    doTask('fileupload', true);
-});
-gulp.task('fileupload.min', function(){
-    doTask('fileupload', false);
-});
-gulp.task('ueditor', function(){
-    doTask('ueditor', true);
-});
-gulp.task('ueditor.min', function(){
-    doTask('ueditor', false);
-});
-gulp.task('gallery', function(){
-    doTask('gallery', true);
-});
-gulp.task('gallery.min', function(){
-    doTask('gallery', false);
-});
-
-gulp.task('acecss', function(){
-    doTask('acecss', true);
-});
-gulp.task('acecss.min', function(){
-    doTask('acecss', false);
-});
-gulp.task('seditor', function(){
-    doTask('seditor', true);
-});
-gulp.task('seditor.min', function(){
-    doTask('seditor', false);
-});
-
-// 登录注册
-gulp.task('Account', function(){
-    doTask('Account', true);
-});
-gulp.task('Account.min', function(){
-    doTask('Account', false);
-});
-
 gulp.task('default', [ 'normal']);
 gulp.task('watch.min', function(){
     gulp.watch(paths.fileupload.scripts.source, ['fileupload.min']);
@@ -348,12 +312,76 @@ gulp.task('watch', function(){
     gulp.watch(paths.gallery.scripts.source, ['gallery']);
     gulp.watch(paths.acecss.styles.source, ['acecss']);
 });
-
 gulp.task('css', ['acecss']);
 gulp.task('css.min', ['acecss.min']);
-
 gulp.task('js', ['fileupload', 'ueditor', 'gallery']);
 gulp.task('js.min', ['fileupload.min', 'ueditor.min', 'gallery.min']);
-
 gulp.task('all', ['js', 'css']);
 gulp.task('all.min', ['js.min', 'css.min']);
+
+/** patch */
+gulp.task('patch', function(){
+    doTask('patch', true);
+});
+gulp.task('patch.min', function(){
+    doTask('patch', false);
+});
+
+/** Est */
+gulp.task('Est', ['EstTask']);
+gulp.task('Est.min',['Est.minTask']);
+
+/** fileupload */
+gulp.task('fileupload', function(){
+    doTask('fileupload', true);
+});
+gulp.task('fileupload.min', function(){
+    doTask('fileupload', false);
+});
+
+/** gallery */
+gulp.task('gallery', function(){
+    doTask('gallery', true);
+});
+gulp.task('gallery.min', function(){
+    doTask('gallery', false);
+});
+
+/** ueditor */
+gulp.task('ueditor', function(){
+    doTask('ueditor', true);
+});
+gulp.task('ueditor.min', function(){
+    doTask('ueditor', false);
+});
+
+/** seditor */
+gulp.task('seditor', function(){
+    doTask('seditor', true);
+});
+gulp.task('seditor.min', function(){
+    doTask('seditor', false);
+});
+
+// ======================================================================================
+/** 项目 jhw_v2  output: app -> scripts -> app.min.js*/
+gulp.task('acecss', function(){
+    doTask('acecss', true);
+});
+gulp.task('acecss.min', function(){
+    doTask('acecss', false);
+});
+gulp.task('jhw', function(){
+    doTask('jhw', true);
+});
+gulp.task('jhw.min', function(){
+    doTask('jhw', false);
+});
+
+/** 项目 Account  output: app -> modules -> Account -> app.min.js*/
+gulp.task('Account', function(){
+    doTask('Account', true);
+});
+gulp.task('Account.min', function(){
+    doTask('Account', false);
+});
