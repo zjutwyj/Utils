@@ -90,15 +90,14 @@
  *          console.log('注册失败');
  *      })
  */
-app.factory('AccountFactory', ['BaseFactory', '$q', '$cookies',
-    function(BaseFactory, $q, $cookies){
+app.factory('AccountFactory', ['BaseFactory', '$q',
+    function(BaseFactory, $q){
     return {
         login: function (target, params) {
             var deferred = $q.defer();
             BaseFactory.save(target, 'login', {
                 id: 'user_id'
             }, params).then(function(data){
-                $cookies.isLogin = target.username;
                 deferred.resolve(data);
             });
             return deferred.promise;
@@ -106,7 +105,6 @@ app.factory('AccountFactory', ['BaseFactory', '$q', '$cookies',
         logout: function(){
             var deferred = $q.defer();
             BaseFactory.save({}, 'logout').then(function(data){
-                $cookies.isLogin = false;
                 deferred.resolve(data);
             });
             return deferred.promise;

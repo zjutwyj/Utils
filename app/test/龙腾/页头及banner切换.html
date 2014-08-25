@@ -1,0 +1,166 @@
+
+
+<!--[if lte IE 6]>
+<script src="http://easthardware.com/js/DD_belatedPNG_0.0.8a-min.js" type="text/javascript">
+</script>
+<script type="text/javascript">DD_belatedPNG.fix('div, ul, img, li, input , a');//此处修改需要控制的元素、class
+</script><![endif]-->
+<div class="logo_bg">
+    <a title="Huachuan Electric Appliance Co.,Ltd." class="logoa" href="teachnic.html"></a>
+    <div class="top_search">
+        <input name="keywords" class="searchb" id="keywords_text_111" type="text" /> <input title="搜索" class="searcha" onclick="toSearch111()" type="button" />
+    </div>
+    <div class="link">
+        <a href="#"></a>    <a href="#"></a>    <a href="#"></a>    <a href="#"></a>    <a href="#"></a>
+    </div>
+</div><!--搜索js-->
+<script>function toSearch111(){
+    if ($("#keywords_text_111").val()==""){
+        alert('请输入产品型号!')
+        return;
+    }
+    $.ajax({
+        url : "http://easthardware.com/u/deleteSearch",
+        data : {
+            enterpriseId : enterpriseId
+        },
+        dataType : "jsonp",
+        success : function(msg){
+            location="/search-"+$("#keywords_text_111").val()+",,.html";
+
+        }
+    })}
+</script><!--导航栏js-->
+<script>$(function(){
+    var _href = window.location.href;
+    $.each($(".nav"), function(){
+        if(_href.indexOf($("a",$(this)).attr("href"))>-1)
+            $(this).addClass("currenta");
+    });
+});
+</script>
+<div id="mainnav">
+    <ul>
+        <li class="nav">
+            <a href="technic.html">首页</a>
+        </li>
+        <li class="nav">
+            <a href="company.html">关于华川</a>
+        </li>
+        <li class="nav">
+            <a href="supply.html">新品推荐</a>
+        </li>
+        <li class="nav">
+            <a href="product.html">产品展示</a>
+        </li>
+        <li class="nav">
+            <a href="cert.html">荣誉证书</a>
+        </li>
+        <li class="nav">
+            <a href="contact.html">联系我们</a>
+        </li>
+        <li class="nav" id="english">
+            <a title="English" href="http://en.chinahuachuan.com/technic.html"></a>
+        </li>
+    </ul>
+</div><!--图片切换js-->
+<script>$(function(){
+    $(".prev").click(function(){
+        if($("#ifocus_btn ul li.current").attr("id")=='img1')
+            $("#ifocus_btn ul li#img6").mouseover();
+        else
+            $("#ifocus_btn ul li.current").prev().mouseover();
+    })
+    $(".next").click(function(){
+        if($("#ifocus_btn ul li.current").attr("id")=="img6")
+            $("#ifocus_btn ul li#img1").mouseover();
+        else
+            $("#ifocus_btn ul li.current").next().mouseover();
+    })
+    var tt = setInterval(function(){
+        var $div = $("#ifocus_btn ul li.current");
+        if($div.attr("id") == 'img4')
+            $("#ifocus_btn ul li").first().mouseover();
+        else
+            $div.next().mouseover();
+    },5000);
+    $("#ifocus_btn ul li").mouseover(function(){
+        $("#ifocus_btn ul li.current").removeClass("current").addClass("normal");
+        $(this).addClass("current");
+        $("#ifocus_piclist ul li:visible").hide();
+        $("."+$(this).attr("id")).fadeIn("slow");
+    })
+})
+function checkLi(){
+    $("#ifocus_btn ul li.current").next().mouseover();
+}
+</script>
+<div class="index_flash">
+    <a class="prev sx"></a><a class="next sx"></a>
+    <div id="ifocus">
+        <div id="ifocus_pic">
+            <div id="ifocus_piclist" style="left: 0px; top: 0px;">
+                <ul>
+                    <li class="img1">
+                        <a href=""><img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/a5cbd7c3-005a-49b5-bc01-e12d97bc8858.jpg" /></a>
+                    </li>
+                    <li class="img3" style="display: none;">
+                        <a href=""><img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/55af69f3-6f72-48f2-882d-cef7b3585984.jpg" /></a>
+                    </li>
+                    <li class="img4" style="display: none;">
+                        <a href=""><img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/597d0d9b-e792-45fb-a163-d0caeb2c3968.jpg" /></a>
+                    </li>
+                    <li class="img5" style="display: none;">
+                        <a href=""><img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/20579418-5b8b-468a-8cf1-5cb2fd673337.jpg" /></a>
+                    </li>
+                    <li class="img6" style="display: none;">
+                        <a href=""><img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/076e890e-fb53-4466-958e-9df25e2c38af.jpg" /></a>
+                    </li>
+                    <li class="img2" style="display: none;">
+                        <a href=""><img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/f73bf18b-2246-4327-8b47-db348090b248.jpg" /></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="ifocus_btn">
+            <ul>
+                <li class="current" id="img1">
+                    <img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/97d5c41b-076f-46ca-9121-04234946cc43.jpg" />
+                </li>
+                <li class="normal" id="img3">
+                    <img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/4019c617-0a60-4ca2-af37-10e36aa4a885.jpg" />
+                </li>
+                <li class="normal" id="img4">
+                    <img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/2aad6ed9-1ab3-42ed-92bb-d9df7064ce83.jpg" />
+                </li>
+                <li class="normal" id="img5">
+                    <img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/7a867bc8-884a-4c96-8cc5-343c51409199.jpg" />
+                </li>
+                <li class="normal" id="img6">
+                    <img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/0ab97464-9f22-4ad1-b71d-5ac18459d0c3.jpg" />
+                </li>
+                <li class="normal" id="img2">
+                    <img alt="" src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/12/21/b67dd216-6a16-4419-9adc-25b566fc3389.jpg" />
+                </li>
+            </ul>
+        </div>
+    </div>
+</div><!--登录注册js-->
+<script>function to_login(){
+    $("#loginLink").click();
+}
+function to_register(){
+    $("#registerLink").click();
+}
+</script>
+<script type="text/javascript">$(function(){
+    setTimeout(function(){
+        $(".ygtvlabel").mouseover(function(){
+            $(this).css("color","#fe0000");
+        });
+        $(".ygtvlabel").mouseleave(function(){
+            $(this).css("color","#918f90");
+        });
+    },0);
+})
+</script>

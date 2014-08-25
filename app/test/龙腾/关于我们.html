@@ -1,0 +1,151 @@
+<div class="foota">
+    <div class="aboutus mk">
+        <div class="bodytitle">
+            关于我们
+        </div>
+        <div class="bodycont">
+            <img alt="浙江省永康市华川电器有限公司"
+                 src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/06/14/68dfd84e-3def-4029-b1f7-88fcc93d0e06.jpg"/>
+
+            <p>
+                浙江省永康市华川电器有限公司座落在国家重点风景名胜区——方岩，是一家专业生产不锈钢真空保温杯、保温瓶、旅游壶、广口壶、咖啡壶、酒壶、运动壶、汽车杯、学士杯、真空玻璃杯等系列产品的企业。......<a
+                    href="company.html">更多</a>
+            </p>
+        </div>
+    </div>
+    <div class="contact mk">
+        <div class="bodytitle">
+            联系我们
+        </div>
+        <div class="bodycont">
+            <img alt="浙江省永康市华川电器有限公司"
+                 src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/06/14/1ed62bfa-fc49-42a3-b807-770b39ee598c.jpg"/>
+
+            <p>
+                浙江省永康市华川电器有限公司
+            </p>
+
+            <p>
+                地址:永康市胡库工业区
+            </p>
+
+            <p>
+                手机:13868950228
+            </p>
+
+            <p>
+                电话:0579-87063188
+            </p>
+
+            <p>
+                传真:0579-87063288
+            </p>
+
+            <p>
+                联系人:胡先生
+            </p>
+
+            <p>
+                邮编:321200
+            </p>
+
+            <p>
+                网站:<a href="http://www.chinahuachuan.com">www.chinahuachuan.com</a>
+            </p>
+
+            <p>
+                E-mail:<a href="mailto:huachuan@chinahuachuan.com">huachuan@chinahuachuan.com</a>
+            </p>
+        </div>
+    </div>
+    <div class="certa mk">
+        <div class="bodytitle">
+            荣誉证书
+        </div>
+        <div class="bodycont">
+            <a href="cert.html"><img alt="浙江省永康市华川电器有限公司"
+                                     src="http://img.abbcc.net/upload/h/h1/hccups/picture/2013/12/28/9a79caf3-e412-41b6-b2df-917b32a6b441.jpg"
+                                     border="0"/></a>
+        </div>
+    </div>
+    <div class="login_a mk">
+        <div class="bodytitle">
+            后台登录
+        </div>
+        <div class="bodycont">
+            <div class="sy_login">
+                用户名：<input name="txtUserName" class="textbox" id="txtUserName"/><br/>
+                密　码：<input name="txtUserPassword" class="textbox" id="txtUserPassword" type="password"/><br/>
+                验证码：<input name="txtCode" id="txtCode" size="4"/><img class="code_img"
+                                                                      src="http://www.easthardware.com/veriImg"
+                                                                      border="0" alt=""/><a id="LinkButton1"
+                                                                                            onclick="refreshCode1()"
+                                                                                            href="javascript:;">不清楚，再来一张</a><br/>
+                <input id="btnLogin" type="button" value=" 登 录 "/>
+            </div>
+            <div class="followa">
+                关注我们
+            </div>
+            <img src="http://img.en.easthardware.net/upload/h/h1/hccups/picture/2013/06/14/939a8e0e-87dd-4a12-88cd-0e9cb4e6ed81.jpg"
+                 alt=""/>
+        </div>
+    </div>
+</div>
+<div align="center" class="footb">
+    <p>
+        版权所有浙江省永康市华川电器有限公司 技术支持：东方五金网
+    </p>
+</div>
+<script>$(function () {
+    $("#btnLogin").click(function () {
+        var username = $("#txtUserName").val();
+        var password = $("#txtUserPassword").val();
+        var imgCode = $("#txtCode").val();
+        if (username == '') {
+            alert("用户名不能为空!");
+        }
+        if (password == '') {
+            alert("密码不能为空!");
+            return;
+        }
+        if (imgCode == '') {
+            alert("验证码不能为空!");
+            return;
+        }
+        $.ajax({
+            url: "http://www.easthardware.com/rest/user/login",
+            data: {
+                username: username,
+                password: password,
+                imgCode: imgCode
+            },
+            dataType: "jsonp",
+            success: function (msg) {
+                var r = msg.result;
+
+                if (r == "10") {
+                    alert("验证码错误!");
+                    return;
+                }
+                if (r == "0") {
+                    alert("账号未审核");
+                    return;
+                }
+                if (r == "-1") {
+                    alert("账号不存在");
+                    return;
+                }
+                if (r == "1") {
+                    alert("登陆成功!");
+                    location.href = "http://www.easthardware.com/user_v2/index.html";
+                    return;
+                }
+
+            }
+        });
+    })
+})
+function refreshCode1() {
+    $(".code_img").attr("src", $(".code_img").attr("src") + "?" + Math.random())
+}
+</script>
