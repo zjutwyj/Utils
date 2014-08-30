@@ -11,6 +11,7 @@ var app = angular.module('angularOneApp', [
     'ngAPI',
     'ngTable',
     'ngUeditor',
+    'toastr',
     'ui.bootstrap.treeview',
     'blueimp.fileupload',
     'ui.nestedSortable',
@@ -21,8 +22,8 @@ var app = angular.module('angularOneApp', [
 angular.module('ie7support', []).config(['$sceProvider', function($sceProvider) {
     // Completely disable SCE to support IE7.
 }]);
-app.run(['$route', '$rootScope', '$http', '$timeout', '$location', '$q', '$modal',
-    function($route, $rootScope, $http, $timeout, $location, $q, $modal){
+app.run(['$route', '$rootScope', '$http', '$timeout', '$location', '$q', '$modal','toastr',
+    function($route, $rootScope, $http, $timeout, $location, $q, $modal, toastr){
         $rootScope.WEB_DESIGN = false; // 是否是设计模式
         $rootScope.edited = false;
         $rootScope.editNum = 0;
@@ -45,14 +46,33 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', '$q', '$modal
         $rootScope.showMsg = function (msg, opts) {
             var opts = opts || {};
             var time = opts.time || 2000;
-            $rootScope.alerts.length = 0;
+            opts.type = opts.type || 'success';
+            // 样式一
+            switch (opts.type){
+                case 'success':
+                    toastr.success(msg);
+                    break;
+                case 'info':
+                    toastr.info(msg);
+                    break;
+                case 'warning':
+                    toastr.warning(msg);
+                    break;
+                case 'danger':
+                    toastr.error(msg);
+                    break;
+            }
+
+
+            // 样式二
+            /*$rootScope.alerts.length = 0;
             $rootScope.alerts.push({
                 type : opts.type || '',
                 msg: msg
             });
             $timeout(function () {
                 $rootScope.closeAlert(0);
-            }, time);
+            }, time);*/
         };
         // js跳转url
         /**

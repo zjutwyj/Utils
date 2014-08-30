@@ -48,6 +48,7 @@ var paths = {
                 'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
                 'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
                 'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
+                'app/scripts/directives/ng-toastr/angular-toastr.js', // 气泡提示
                 // filters
                 'app/scripts/filters/filter-state/filter-state.js', // 状态
                 'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
@@ -149,9 +150,10 @@ var paths = {
             source: ['app/styles/theme/ace/jhw.min.css',
                 'app/styles/theme/ace/jhw-rtl.css',
                 'app/styles/theme/ace/jhw-skins.css',
-                'app/styles/theme/ace/blueimp-gallery.min.css',
-                'app/styles/theme/ace/bootstrap-image-gallery.min.css',
-                'app/styles/theme/ace/ng-table.css'
+                'app/styles/theme/ace/blueimp-gallery.min.css', // 图片上传
+                'app/styles/theme/ace/bootstrap-image-gallery.min.css', // 相册图片弹出框样式
+                'app/styles/theme/ace/ng-table.css', // 列表
+                'app/scripts/directives/ng-toastr/angular-toastr.css' // 气泡提示
             ],
             dist: 'app/styles/theme/ace',
             name: 'jhw.merge.min.css'
