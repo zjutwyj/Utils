@@ -81,6 +81,32 @@ var paths = {
             dist: 'app/modules/Account/doc'
         }
     },
+    Design: {
+        scripts:{
+            source: [
+                // base
+                'app/vendor/jquery/jquery.min.js',
+                'app/scripts/utils/Est.min.js',
+                'app/vendor/angular-custom/angular.js',
+                'app/vendor/angular-resource/angular-resource.min.js',
+                'app/vendor/angular-route/angular-route.min.js',
+                'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
+                'app/vendor/angular-cookies/angular-cookies.min.js',
+                // app
+                'app/modules/Design/app.js',
+                'app/modules/Design/config.js',
+                // directives
+                'app/scripts/directives/ui-bootstrap/*.js',
+                'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+                // factorys
+                'app/scripts/factorys/BaseFactory.js',
+                'app/scripts/factorys/AccountFactory.js',
+                'app/scripts/factorys/DesignFactory.js'
+            ],
+            dist: 'app/modules/Design',
+            name: 'app.min.js'
+        }
+    },
     patch : {
         scripts: {
             source: ['app/vendor/es5-shim/es5-shim.js',
@@ -134,7 +160,7 @@ var paths = {
     ueditor: {
         scripts:{
             source: ['app/vendor/ueditor1_4_3/ueditor.config.js',
-                'app/vendor/ueditor1_4_3/ueditor.all.min.js',
+                'app/vendor/ueditor1_4_3/ueditor.all.js',
                 'app/vendor/ueditor1_4_3/lang/zh-cn/zh-cn.js'],
             dist: 'app/vendor/ueditor1_4_3',
             name: 'ueditor.merge.min.js'
@@ -372,7 +398,6 @@ gulp.task('seditor', function(){
 gulp.task('seditor.min', function(){
     doTask('seditor', false);
 });
-
 // ======================================================================================
 /** 项目 jhw_v2  output: app -> scripts -> app.min.js*/
 gulp.task('jhw', function(){
@@ -388,4 +413,12 @@ gulp.task('Account', function(){
 });
 gulp.task('Account.min', function(){
     doTask('Account', false);
+});
+
+/** 项目 jhw_v2 -> modules -> Design  output: app -> modules -> Design -> app.min.js*/
+gulp.task('Design', function(){
+    doTask('Design', true);
+});
+gulp.task('Design.min', function(){
+    doTask('Design', false);
 });

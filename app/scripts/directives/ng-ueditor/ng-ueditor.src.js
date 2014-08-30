@@ -29,7 +29,7 @@
             }
         }
         checkLoaded();
-        $timeout(checkLoaded, 100);
+        $timeout(checkLoaded, 500);
     }])
 
     /**
@@ -57,7 +57,12 @@
                 }
                 var onLoad = function () {
                     var id = attrs['id'];
-                    $rootScope.ueContainer[id] =UE.getEditor(id);
+                    try{
+                        if (!$rootScope.ueContainer) $rootScope.ueContainer = {};
+                        $rootScope.ueContainer[id] =UE.getEditor(id);
+                    } catch(e){
+                        console.error(e);
+                    }
                     element.bind('$destroy', function () {
                         $rootScope.ueContainer[id].destroy();//移除编辑器
                     });
@@ -141,9 +146,16 @@
                             $rootScope.ueContainer[id].execCommand('insertHtml',$rootScope.codestr);
                         });
                     });
+                    /*$rootScope.ueContainer[id].ready(function(){
+                        this.setContent(element.val(0));
+                        this.setHeight(320);
+                    });*/
+
                     $timeout(function(){
-                        $rootScope.ueContainer[id].setContent(element.val());
-                    },1000);
+                            $rootScope.ueContainer[id].setContent(element.val());
+                            // 设置高度
+                            $rootScope.ueContainer[id].setHeight(320);
+                    },1500);
                     /*var safeApply = function(scope, fn) {
                         (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);
                     }

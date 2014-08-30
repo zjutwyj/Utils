@@ -1661,6 +1661,52 @@
         return res;
     }
     Est.imageCrop = imageCrop;
+    /**
+     * @description 图片上传预览
+     * @method [图片] - setImagePreview
+     * @param {Object} option option.inputFile : file input表单元素,  option.imgNode : 待显示的img元素
+     * @return {boolean} 返回 true 与 false
+     * @author wyj on 14/8/30
+     * @example
+     *       Est.imagePreview({
+     *              inputFile: $("input[type=file]").get(0),
+     *              imgNode: $(".img").get(0)
+     *       });
+     */
+    function imagePreview(option) {
+        var uid = nextUid();
+        var docObj = option['inputFile']; // file input表单元素
+        var imgObjPreview = option['imgNode']; // 待显示的img元素
+
+        if (docObj.files && docObj.files[0]){
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0] + "?id=" + uid);
+        } else{
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text + "?id=" + uid;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            //localImagId.style.width = "96px";
+            //localImagId.style.height = "96px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try{
+                localImagId.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            }catch(e){
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+    Est.imagePreview = imagePreview;
+
 
     // GirdUtils
     /**
