@@ -11,7 +11,39 @@ var yuidoc = require("gulp-yuidoc");
 var minifyCSS = require('gulp-minify-css');
 var bower = require('gulp-bower');
 var wiredep = require('wiredep').stream;
+var livereload = require('gulp-livereload');
+var usemin = require('gulp-usemin');
+var htmlmin = require('gulp-htmlmin');
 var del = require('del');
+
+var SRCDIR = './app',
+    TMPDIR = './.tmp',
+    DISTDIR = './dist',
+    src = {
+        all: [SRCDIR + '/**', TMPDIR + '/**'],
+        html: [SRCDIR + '/index.html', SRCDIR + '/login.html'],
+        scripts: [SRCDIR + '/scripts/**/*.js', TMPDIR + '/scripts/**/*.js'],
+        styles: [SRCDIR + '/styles/**/*.css', TMPDIR + '/styles/**/*.css']
+    },
+    dist = {
+        all: DISTDIR + '/**',
+        scripts: DISTDIR + '/scripts',
+        styles: DISTDIR + '/styles',
+        images: DISTDIR + '/images',
+        font: DISTDIR + '/font',
+        source: DISTDIR + '/vendor'
+    };
+
+gulp.task('usemin', function() {
+    gulp.src(src.html)
+        .pipe(usemin({
+            css: [minifyCSS(), 'concat'],
+            html: [htmlmin({empty: true})],
+            js: [uglify(), rev()]
+        }))
+        .pipe(gulp.dest(dist.html));
+});
+
 
 var paths = {
     jhw: {
@@ -306,6 +338,15 @@ gulp.task('html', function () {
 gulp.task('clean', function(cb) {
     del(['doc'], cb);
 });
+
+gulp.task('livereload', function () {    // livereload，是自定义的，写成live或者别的也行
+    var server = livereload();
+    // app/**/*.*的意思是 app文件夹下的 任何文件夹 的 任何文件
+    gulp.watch('app/**/*.*', function (file) {
+        server.changed(file.path);
+    });
+});
+
 // 创建watch任务去检测文件,当文件改动之后，去调用一个Gulp的Task
 gulp.task('watch', function() {
     gulp.watch(paths, ['begin']);
@@ -425,16 +466,4 @@ gulp.task('Design', function(){
 });
 gulp.task('Design.min', function(){
     doTask('Design', false);
-});
-
-
-var src = {
-    SRCDIR : './app',
-    DISDIR: './dist',
-    html: 'index.html'
-}
-gulp.task('bower', function () {
-    gulp.src(src.SRCDIR + src.html)
-        .pipe(wiredep())
-        .pipe(gulp.dest(src.DISDIR +src.html ));
 });
