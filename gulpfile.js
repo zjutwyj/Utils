@@ -19,7 +19,7 @@ var bower = require('gulp-bower');
 var wiredep = require('wiredep').stream;
 
 /** 辅助相关 */
-var connect = require('gulp-connect');
+var connect = require('gulp-webserver');
 var livereload = require('gulp-livereload');
 
 /** ==================================================== 项目发布 ====================================================*/
@@ -69,14 +69,28 @@ gulp.task('livereload', function () {    // livereload，是自定义的，写�
     gulp.watch('app/**/*.*', function (file) {
         server.changed(file.path);
     });
+    gulp.watch('doc/**/*.*', function (file) {
+        server.changed(file.path);
+    });
+    gulp.watch('test/**/*.*', function (file) {
+        server.changed(file.path);
+    });
 });
 
 // 使用connect启动一个Web服务器
 gulp.task('connect', function () {
-    connect.server({
-        root: 'test',
-        livereload: true
-    });
+    console.log('启动浏览器');
+    gulp.src(['test'])
+        .pipe(connect({
+            host: 'example.com',
+            port: 9004,
+            livereload: true,
+            directoryListing: true,
+            open: true
+        }));
+
+    console.log('启动浏览器自动刷新');
+    gulp.start('livereload');
 });
 
 gulp.task('html', function () {

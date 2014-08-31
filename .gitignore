@@ -6,6 +6,7 @@ npm-debug.log
 /bower_components
 /app/bower_components
 /dist
+/doc
 /.sass-cache
 *.iml
 *.swp
