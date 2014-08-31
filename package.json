@@ -50,5 +50,8 @@
     "del": "~0.1.1",
     "gulp-yuidoc": "~0.1.2",
     "promise": "~5.0.0"
+  },
+  "dependencies": {
+    "wiredep": "~1.8.5"
   }
 }

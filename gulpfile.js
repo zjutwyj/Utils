@@ -9,6 +9,8 @@ var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var yuidoc = require("gulp-yuidoc");
 var minifyCSS = require('gulp-minify-css');
+var bower = require('gulp-bower');
+var wiredep = require('wiredep').stream;
 var del = require('del');
 
 var paths = {
@@ -423,4 +425,16 @@ gulp.task('Design', function(){
 });
 gulp.task('Design.min', function(){
     doTask('Design', false);
+});
+
+
+var src = {
+    SRCDIR : './app',
+    DISDIR: './dist',
+    html: 'index.html'
+}
+gulp.task('bower', function () {
+    gulp.src(src.SRCDIR + src.html)
+        .pipe(wiredep())
+        .pipe(gulp.dest(src.DISDIR +src.html ));
 });
