@@ -1,21 +1,28 @@
 var gulp = require('gulp');
 
-var coffee = require('gulp-coffee');
+/** 项目发布相关 */
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var imagemin = require('gulp-imagemin');
-var connect = require('gulp-connect');
-var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
-var yuidoc = require("gulp-yuidoc");
 var minifyCSS = require('gulp-minify-css');
-var bower = require('gulp-bower');
-var wiredep = require('wiredep').stream;
-var livereload = require('gulp-livereload');
 var usemin = require('gulp-usemin');
 var htmlmin = require('gulp-htmlmin');
 var rev = require('gulp-rev');
 var del = require('del');
+
+/** 打包压缩相关 */
+var coffee = require('gulp-coffee');
+var jshint = require('gulp-jshint');
+var stylish = require('jshint-stylish');
+var yuidoc = require("gulp-yuidoc");
+var bower = require('gulp-bower');
+var wiredep = require('wiredep').stream;
+
+/** 辅助相关 */
+var connect = require('gulp-connect');
+var livereload = require('gulp-livereload');
+
+/** ==================================================== 项目发布 ====================================================*/
 
 var SRCDIR = './app',
     TMPDIR = './.tmp',
@@ -36,6 +43,10 @@ var SRCDIR = './app',
         source: DISTDIR + '/vendor'
     };
 
+gulp.task('dist-clean', function (callback) {
+    del(dist.all, callback);
+});
+
 gulp.task('usemin', function() {
     gulp.src(src.html)
         .pipe(usemin({
@@ -45,12 +56,35 @@ gulp.task('usemin', function() {
         }))
         .pipe(gulp.dest(dist.all));
 });
-gulp.task('dist-clean', function (callback) {
-    del(dist.all, callback);
-});
+
 gulp.task('publish',['dist-clean'], function(){
 
 });
+
+/** ========================================== 辅助开发 ==============================================================*/
+
+gulp.task('livereload', function () {    // livereload，是自定义的，写成live或者别的也行
+    var server = livereload();
+    // app/**/*.*的意思是 app文件夹下的 任何文件夹 的 任何文件
+    gulp.watch('app/**/*.*', function (file) {
+        server.changed(file.path);
+    });
+});
+
+// 使用connect启动一个Web服务器
+gulp.task('connect', function () {
+    connect.server({
+        root: 'test',
+        livereload: true
+    });
+});
+
+gulp.task('html', function () {
+    gulp.src('./test/*.html')
+        .pipe(connect.reload());
+});
+
+/** ========================================== 压缩打包 ==============================================================*/
 
 var paths = {
     jhw: {
@@ -255,7 +289,7 @@ var paths = {
                 // factorys
                 'app/scripts/factorys/*.js'
             ],
-            dist: './app/doc'
+            dist: './doc'
         }
     }
 };
@@ -326,85 +360,22 @@ function doTask(item, debug){
         }
     }
 }
-function startTask(debug) {
-    for (var item in paths) {
-        doTask(item, debug);
-    }
-}
-// 使用connect启动一个Web服务器
-gulp.task('connect', function () {
-    connect.server({
-        root: 'test',
-        livereload: true
-    });
-});
-gulp.task('html', function () {
-    gulp.src('./test/*.html')
-        .pipe(connect.reload());
-});
-gulp.task('clean', function(cb) {
+
+gulp.task('doc-clean', function(cb) {
     del(['doc'], cb);
-});
-
-gulp.task('livereload', function () {    // livereload，是自定义的，写成live或者别的也行
-    var server = livereload();
-    // app/**/*.*的意思是 app文件夹下的 任何文件夹 的 任何文件
-    gulp.watch('app/**/*.*', function (file) {
-        server.changed(file.path);
-    });
-});
-
-// 创建watch任务去检测文件,当文件改动之后，去调用一个Gulp的Task
-gulp.task('watch', function() {
-    gulp.watch(paths, ['begin']);
-});
-gulp.task('EstTask', function(){
-    doTask('Est', true);
-});
-gulp.task('Est.minTask', function(){
-    doTask('Est', false);
-});
-gulp.task('watch.Est', function(){
-    gulp.watch(paths.Est.scripts.source, ['Est'])
-});
-gulp.task('watch.Est.min', function(){
-    gulp.watch(paths.Est.scripts.source, ['Est.min']);
-});
-gulp.task('normal', function(){
-    startTask(false);
-});
-gulp.task('debug', function(){
-    startTask(true);
-});
-gulp.task('default', [ 'normal']);
-gulp.task('watch.min', function(){
-    gulp.watch(paths.fileupload.scripts.source, ['fileupload.min']);
-    gulp.watch(paths.ueditor.scripts.source, ['ueditor.min']);
-    gulp.watch(paths.gallery.scripts.source, ['gallery.min']);
-    gulp.watch(paths.acecss.styles.source, ['acecss.min']);
-});
-gulp.task('watch', function(){
-    gulp.watch(paths.fileupload.scripts.source, ['fileupload']);
-    gulp.watch(paths.ueditor.scripts.source, ['ueditor']);
-    gulp.watch(paths.gallery.scripts.source, ['gallery']);
-    gulp.watch(paths.acecss.styles.source, ['acecss']);
-});
-gulp.task('css', ['acecss']);
-gulp.task('css.min', ['acecss.min']);
-gulp.task('js', ['fileupload', 'ueditor', 'gallery']);
-gulp.task('js.min', ['fileupload.min', 'ueditor.min', 'gallery.min']);
-gulp.task('all', ['js', 'css']);
-gulp.task('all.min', ['js.min', 'css.min']);
-gulp.task('acecss', function(){
-    doTask('acecss', true);
-});
-gulp.task('acecss.min', function(){
-    doTask('acecss', false);
 });
 
 /** doc */
 gulp.task('doc', function(){
     doTask('doc', false);
+});
+
+/** acecss */
+gulp.task('acecss', function(){
+    doTask('acecss', true);
+});
+gulp.task('acecss.min', function(){
+    doTask('acecss', false);
 });
 
 /** patch */
@@ -416,8 +387,12 @@ gulp.task('patch.min', function(){
 });
 
 /** Est */
-gulp.task('Est', ['EstTask']);
-gulp.task('Est.min',['Est.minTask']);
+gulp.task('Est', function(){
+    doTask('Est', true);
+});
+gulp.task('Est.min',function(){
+    doTask('Est', false);
+});
 
 /** fileupload */
 gulp.task('fileupload', function(){
@@ -450,7 +425,16 @@ gulp.task('seditor', function(){
 gulp.task('seditor.min', function(){
     doTask('seditor', false);
 });
-// ======================================================================================
+
+/** 全部 */
+gulp.task('all', ['doc-clean', 'doc', 'acecss', 'patch', 'Est', 'fileupload', 'gallery', 'ueditor', 'seditor']);
+gulp.task('all.min', ['doc-clean', 'doc', 'acecss.min', 'patch.min', 'Est.min', 'fileupload.min', 'gallery.min', 'ueditor.min', 'seditor.min']);
+
+gulp.task('watch', function(){
+    gulp.watch(paths.fileupload.scripts.source, ['fileupload']);
+});
+
+// =====================================================================================================================
 /** 项目 jhw_v2  output: app -> scripts -> app.min.js*/
 gulp.task('jhw', function(){
     doTask('jhw', true);
