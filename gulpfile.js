@@ -14,6 +14,7 @@ var wiredep = require('wiredep').stream;
 var livereload = require('gulp-livereload');
 var usemin = require('gulp-usemin');
 var htmlmin = require('gulp-htmlmin');
+var rev = require('gulp-rev');
 var del = require('del');
 
 var SRCDIR = './app',
@@ -21,12 +22,13 @@ var SRCDIR = './app',
     DISTDIR = './dist',
     src = {
         all: [SRCDIR + '/**', TMPDIR + '/**'],
-        html: [SRCDIR + '/index.html', SRCDIR + '/login.html'],
+        html: [SRCDIR + '/index.html'],
         scripts: [SRCDIR + '/scripts/**/*.js', TMPDIR + '/scripts/**/*.js'],
         styles: [SRCDIR + '/styles/**/*.css', TMPDIR + '/styles/**/*.css']
     },
     dist = {
         all: DISTDIR + '/**',
+        html: DISTDIR + '/index.html',
         scripts: DISTDIR + '/scripts',
         styles: DISTDIR + '/styles',
         images: DISTDIR + '/images',
@@ -41,9 +43,14 @@ gulp.task('usemin', function() {
             html: [htmlmin({empty: true})],
             js: [uglify(), rev()]
         }))
-        .pipe(gulp.dest(dist.html));
+        .pipe(gulp.dest(dist.all));
 });
+gulp.task('dist-clean', function (callback) {
+    del(dist.all, callback);
+});
+gulp.task('publish',['dist-clean'], function(){
 
+});
 
 var paths = {
     jhw: {
