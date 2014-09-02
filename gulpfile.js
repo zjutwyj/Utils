@@ -43,23 +43,30 @@ var SRCDIR = './app',
         source: DISTDIR + '/vendor'
     };
 
-gulp.task('dist-clean', function (callback) {
-    del(dist.all, callback);
-});
-
 gulp.task('usemin', function() {
-    gulp.src(src.html)
+    return gulp.src(src.html)
         .pipe(usemin({
             css: [minifyCSS(), 'concat'],
             html: [htmlmin({empty: true})],
             js: [uglify(), rev()]
         }))
-        .pipe(gulp.dest(dist.all));
+        .pipe(gulp.dest(DISTDIR));
 });
 
-gulp.task('publish',['dist-clean'], function(){
-
+// 清除dist目录
+gulp.task('dist-clean', function (callback) {
+    del(dist.all, callback);
 });
+// 移动文件
+gulp.task('moveFiles', function(){
+    return gulp.src(src.all).pipe(gulp.dest(DISTDIR));
+});
+// 项目发布
+gulp.task('publish',['dist-clean'],
+    function(){
+        return [gulp.start('moveFiles'), gulp.start('usemin')];
+    });
+
 
 /** ========================================== 辅助开发 ==============================================================*/
 
