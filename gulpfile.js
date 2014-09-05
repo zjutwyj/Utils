@@ -312,6 +312,35 @@ var paths = {
             ],
             dist: './doc'
         }
+    },
+    test : {
+        scripts: {
+            source: [
+                './test/scripts/jquery.min.js',
+                './test/scripts/Est.source.js',
+                './test/scripts/jquery-ui.min.js',
+                './test/scripts/jquery.fullPage.min.js',
+                './test/scripts/form.js',
+                './test/scripts/popwin.js',
+                './test/scripts/ApplicationCache.js',
+                './test/scripts/android.js'
+            ],
+            name: 'base.js',
+            dist: './test/scripts'
+        },
+        styles: {
+            source: [
+                './test/styles/*.css'
+            ],
+            dist: './test/styles',
+            name: 'base.css'
+        },
+        images: {
+            source: [
+                './test/images/*.*'
+            ],
+            dist: './test/images'
+        }
     }
 };
 function doTask(item, debug){
@@ -389,6 +418,14 @@ gulp.task('doc-clean', function(cb) {
 /** doc */
 gulp.task('doc', function(){
     doTask('doc', false);
+});
+
+/** test*/
+gulp.task('test', function(){
+    doTask('test', true);
+});
+gulp.task('test.min', function(){
+    doTask('test', false);
 });
 
 /** acecss */

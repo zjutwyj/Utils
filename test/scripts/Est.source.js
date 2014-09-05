@@ -1738,7 +1738,6 @@
         // 获取canvas和context
         var canvas = opts.canvas,
             context = canvas.getContext('2d'),
-            context.fillRect(0, 0, opts.desw, opts.desh);
             image = opts.image,
         // now default all the dimension info
             srcx = opts.srcx || 0,
