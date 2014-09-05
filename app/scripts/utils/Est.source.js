@@ -1717,6 +1717,7 @@
 
     /**
      * @description 绘制canvas图片 解决苹果屏幕模糊问题
+     * @method [图片] - drawImage
      * @param {Object} opts 详见例子
      * @author wyj on 14.9.4
      * @example
@@ -1738,7 +1739,6 @@
         // 获取canvas和context
         var canvas = opts.canvas,
             context = canvas.getContext('2d'),
-            context.fillRect(0, 0, opts.desw, opts.desh);
             image = opts.image,
         // now default all the dimension info
             srcx = opts.srcx || 0,

@@ -317,7 +317,7 @@ var paths = {
         scripts: {
             source: [
                 './test/scripts/jquery.min.js',
-                './test/scripts/Est.source.js',
+                './app/scripts/utils/Est.source.js',
                 './test/scripts/jquery-ui.min.js',
                 './test/scripts/jquery.fullPage.min.js',
                 './test/scripts/form.js',
