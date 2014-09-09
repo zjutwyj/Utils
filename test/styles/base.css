@@ -298,6 +298,106 @@
 100%{-moz-transform:scale(2);opacity:.3}}
 @keyframes video_btnPlay{0%{transform:scale(1);opacity:.8}
 100%{transform:scale(2);opacity:.3}}
+@-webkit-keyframes start{0%,30%{opacity:0;-webkit-transform:translate(0,10px)}
+60%{opacity:1;-webkit-transform:translate(0,0)}
+100%{opacity:0;-webkit-transform:translate(0,-8px)}}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}
+100%{-webkit-transform:rotateZ(-360deg)}}
+@-webkit-keyframes case1{0%{height:0}
+50%{height:33px}
+100%{height:0}}
+@-webkit-keyframes case2{0%{height:0}
+50%{height:38px}
+100%{height:0}}
+@-webkit-keyframes case3{0%{height:0}
+50%{height:35px}
+100%{height:0}}
+@-webkit-keyframes video_btnPlay{0%{-webkit-transform:scale(1);opacity:.8}
+100%{-webkit-transform:scale(2);opacity:.3}}
+@-moz-keyframes video_btnPlay{0%{-moz-transform:scale(1);opacity:.8}
+100%{-moz-transform:scale(2);opacity:.3}}
+@keyframes video_btnPlay{0%{transform:scale(1);opacity:.8}
+100%{transform:scale(2);opacity:.3}}
+@-webkit-keyframes start{0%,30%{opacity:0;-webkit-transform:translate(0,10px)}
+60%{opacity:1;-webkit-transform:translate(0,0)}
+100%{opacity:0;-webkit-transform:translate(0,-8px)}}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}
+100%{-webkit-transform:rotateZ(-360deg)}}
+@-webkit-keyframes case1{0%{height:0}
+50%{height:33px}
+100%{height:0}}
+@-webkit-keyframes case2{0%{height:0}
+50%{height:38px}
+100%{height:0}}
+@-webkit-keyframes case3{0%{height:0}
+50%{height:35px}
+100%{height:0}}
+@-webkit-keyframes video_btnPlay{0%{-webkit-transform:scale(1);opacity:.8}
+100%{-webkit-transform:scale(2);opacity:.3}}
+@-moz-keyframes video_btnPlay{0%{-moz-transform:scale(1);opacity:.8}
+100%{-moz-transform:scale(2);opacity:.3}}
+@keyframes video_btnPlay{0%{transform:scale(1);opacity:.8}
+100%{transform:scale(2);opacity:.3}}
+@-webkit-keyframes start{0%,30%{opacity:0;-webkit-transform:translate(0,10px)}
+60%{opacity:1;-webkit-transform:translate(0,0)}
+100%{opacity:0;-webkit-transform:translate(0,-8px)}}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}
+100%{-webkit-transform:rotateZ(-360deg)}}
+@-webkit-keyframes case1{0%{height:0}
+50%{height:33px}
+100%{height:0}}
+@-webkit-keyframes case2{0%{height:0}
+50%{height:38px}
+100%{height:0}}
+@-webkit-keyframes case3{0%{height:0}
+50%{height:35px}
+100%{height:0}}
+@-webkit-keyframes video_btnPlay{0%{-webkit-transform:scale(1);opacity:.8}
+100%{-webkit-transform:scale(2);opacity:.3}}
+@-moz-keyframes video_btnPlay{0%{-moz-transform:scale(1);opacity:.8}
+100%{-moz-transform:scale(2);opacity:.3}}
+@keyframes video_btnPlay{0%{transform:scale(1);opacity:.8}
+100%{transform:scale(2);opacity:.3}}
+@-webkit-keyframes start{0%,30%{opacity:0;-webkit-transform:translate(0,10px)}
+60%{opacity:1;-webkit-transform:translate(0,0)}
+100%{opacity:0;-webkit-transform:translate(0,-8px)}}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}
+100%{-webkit-transform:rotateZ(-360deg)}}
+@-webkit-keyframes case1{0%{height:0}
+50%{height:33px}
+100%{height:0}}
+@-webkit-keyframes case2{0%{height:0}
+50%{height:38px}
+100%{height:0}}
+@-webkit-keyframes case3{0%{height:0}
+50%{height:35px}
+100%{height:0}}
+@-webkit-keyframes video_btnPlay{0%{-webkit-transform:scale(1);opacity:.8}
+100%{-webkit-transform:scale(2);opacity:.3}}
+@-moz-keyframes video_btnPlay{0%{-moz-transform:scale(1);opacity:.8}
+100%{-moz-transform:scale(2);opacity:.3}}
+@keyframes video_btnPlay{0%{transform:scale(1);opacity:.8}
+100%{transform:scale(2);opacity:.3}}
+@-webkit-keyframes start{0%,30%{opacity:0;-webkit-transform:translate(0,10px)}
+60%{opacity:1;-webkit-transform:translate(0,0)}
+100%{opacity:0;-webkit-transform:translate(0,-8px)}}
+@-webkit-keyframes reverseRotataZ{0%{-webkit-transform:rotateZ(0deg)}
+100%{-webkit-transform:rotateZ(-360deg)}}
+@-webkit-keyframes case1{0%{height:0}
+50%{height:33px}
+100%{height:0}}
+@-webkit-keyframes case2{0%{height:0}
+50%{height:38px}
+100%{height:0}}
+@-webkit-keyframes case3{0%{height:0}
+50%{height:35px}
+100%{height:0}}
+@-webkit-keyframes video_btnPlay{0%{-webkit-transform:scale(1);opacity:.8}
+100%{-webkit-transform:scale(2);opacity:.3}}
+@-moz-keyframes video_btnPlay{0%{-moz-transform:scale(1);opacity:.8}
+100%{-moz-transform:scale(2);opacity:.3}}
+@keyframes video_btnPlay{0%{transform:scale(1);opacity:.8}
+100%{transform:scale(2);opacity:.3}}
 *{margin:0;padding:0}
 h1{text-align:center;font-size:2.5em;line-height:1.5}
 h2{text-align:center;font-size:1.5em}
