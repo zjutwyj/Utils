@@ -1722,6 +1722,7 @@
      * @author wyj on 14.9.4
      * @example
      * Est.drawImage({
+                context2D: context2D, // canvas.getContext("2d")
 				canvas: canvas, // 画布
 				image: imageObj, // image对象
 				desx: result.marginLeft, // 开始剪切的 x 坐标位置
@@ -1738,7 +1739,7 @@
         }
         // 获取canvas和context
         var canvas = opts.canvas,
-            context = canvas.getContext('2d'),
+            context = opts.context2D || canvas.getContext('2d'),
             image = opts.image,
         // now default all the dimension info
             srcx = opts.srcx || 0,
