@@ -20,6 +20,20 @@ app.factory('DesignFactory', ['BaseFactory', '$q', '$http','API_END_POINT',
                         deferred.reject(data);
                     });
                 return deferred.promise;
+            },
+            layout: function(){
+                var deferred = $q.defer();
+                BaseFactory.query('layout').then(function(data){
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            },
+            userdefined: function(){
+                var deferred = $q.defer();
+                BaseFactory.query('layout/userdefined').then(function(data){
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
             }
         }
     }]);

@@ -198,6 +198,8 @@ var paths = {
                 // factorys
                 'app/scripts/factorys/BaseFactory.js',
                 'app/scripts/factorys/AccountFactory.js',
+                'app/scripts/factorys/ProductCategoryFactory.js',
+                'app/scripts/factorys/NewsCategoryFactory.js',
                 'app/scripts/factorys/DesignFactory.js'
             ],
             dist: 'app/modules/Design',
