@@ -123,7 +123,11 @@ QUnit.test("Est.deepTrim('a b c'); => ", function(assert){
 
 QUnit.test("Est.nextUid()", function(assert){
     var result = Est.nextUid();
-    assert.equal(result, '001', result);
+    assert.equal(result, '002', result);
     var result2 = Est.nextUid();
-    assert.equal(result2, '002', result2);
+    assert.equal(result2, '003', result2);
+});
+QUnit.test("Est.reverse", function(assert){
+    var result = Est.reverse("abc");
+    assert.equal(result, 'cba', 'passed!');
 });

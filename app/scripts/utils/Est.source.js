@@ -14,7 +14,7 @@
     var slice = Array.prototype.slice, push = Array.prototype.push, toString = Object.prototype.toString,
         hasOwnProperty   = Object.prototype.hasOwnProperty, concat = Array.prototype.concat;
     /**
-     * @description ECMAScript 5 原先方法
+     * @description ECMAScript 5 原生方法
      * @method [变量] - nativeIsArray nativeKeys nativeBind
      */
     var nativeIsArray = Array.isArray, nativeKeys = Object.keys, nativeBind = Object.prototype.bind;
@@ -782,6 +782,66 @@
     }
     Est.cloneDeep = cloneDeep;
 
+    /**
+     * @description 返回一个设置参数的对象
+     * @method [对象] - setArguments
+     * @param args
+     * @author wyj on 14.9.12
+     *
+     */
+    function setArguments(args){
+        this.value = [].slice.call(args);
+    }
+    Est.setArguments = setArguments;
+
+    /**
+     * @description 面向方面AOP编程功能
+     * @method [对象] - inject
+     * @param {Function} aOrgFunc 原始方法
+     * @param {Function} aBeforeExec 在原始方法前切入的方法 【注】 必须这样返回修改的参数： return new Est.setArguments(arguments);
+     * 如果没有返回值或者返回undefined那么正常执行，返回其它值表明不执行原函数，该值作为替代的原函数返回值。
+     * @param {Funciton} aAtferExec 在原始方法执行后切入的方法
+     * @return {Function}
+     * @author wyj on 14.9.12
+     * @example
+     *      var doTest = function (a) {return a};
+     function beforeTest(a) { alert('before exec: a='+a); a += 3; return new Arguments(arguments);};
+     //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
+     function afterTest(a, result, isDenied) { alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied); return result+5;};
+
+     doTest = Inject(doTest, beforeTest, afterTest);
+
+     alert (doTest(2));
+     the result should be 10.
+     */
+    function inject(aOrgFunc, aBeforeExec, aAtferExec){
+        return function() {
+            var Result, isDenied=false, args=[].slice.call(arguments);
+            if (typeof(aBeforeExec) == 'function') {
+                Result = aBeforeExec.apply(this, args);
+                if (Result instanceof Est.setArguments) //(Result.constructor === Arguments)
+                    args = Result.value;
+                else if (isDenied = Result !== undefined)
+                    args.push(Result)
+            }
+
+            !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
+
+            if (typeof(aAtferExec) == 'function')
+                Result = aAtferExec.apply(this, args.concat(isDenied));
+            else
+                Result = undefined;
+
+            return (Result !== undefined ? Result : args.pop());
+        }
+    }
+    Est.inject = inject;
+
+
+
+
+
+
     // StringUtils =============================================================================================================================================
     /**
      * @description 产生唯一身份标识， 如'012ABC', 若为数字较容易数字溢出
@@ -1204,6 +1264,26 @@
         return str.toString().replace(/\s*/gm, '');
     }
     Est.deepTrim = deepTrim;
+
+    /**
+     * @description 字符串反转
+     * @method [字符串] - reverse
+     * @param {String} str 原字符串
+     * @return {String} 返回新字符串
+     * @author wyj on 14/5/6
+     * @example
+     *     Est.reverse('abc'); => 'cba'
+     */
+    function reverse(str){
+        var result = '',
+            length = str.length;
+        while (length--) {
+            result += str[length];
+        }
+        return result;
+    }
+    Est.reverse = reverse;
+
     // ArrayUtils ===============================================================================================================================================
     /**
      * @description 根据索引值移除数组元素
@@ -1739,7 +1819,7 @@
         }
         // 获取canvas和context
         var canvas = opts.canvas,
-            context = opts.context2D || canvas.getContext('2d'),
+            context = opts.context2D,
             image = opts.image,
         // now default all the dimension info
             srcx = opts.srcx || 0,
@@ -2219,6 +2299,26 @@
         return fmt;
     }
     Est.dateFormat = dateFormat;
+
+    /**
+     * @description 获取每月的天数
+     * @method [时间] - getDays
+     * @param Year
+     * @param Mon
+     * @return {number}
+     * @author wyj on 14.9.14
+     * @example
+     *      var days = Est.getDays('2014', '9'); => 31  // 这里的9表示 8月份
+     */
+    function getDays(Year, Mon) { var days =
+        (/^0$|^2$|^4$|^6$|^7$|^9$|^11$/.test(Mon)) ? 31 :
+            (/^3$|^5$|^8$|^10$/.test(Mon)) ? 30 :
+                (/^1$/.test(Mon)) ?
+                    ((!(Year % 400) || (!(Year % 4) && (Year % 100))) ? 29 : 28) : 0; return days;
+    }
+    Est.getDays = getDays;
+
+
     // DomUtils
     /**
      * @description 清空该元素下面的所有子节点【大数据量时】 在数据量小的情况下可以用jQuery的empty()方法

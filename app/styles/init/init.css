@@ -1,0 +1,316 @@
+@charset "utf-8";
+/*** v3 css* @author  Wyj* @build   20120220* @version v3*/
+html {
+    background: #fff;
+    color: #999;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: none; /* 解决谷歌字体大小最小12pxBUG */
+}
+
+* html,* html body /* 修正IE6振动bug */ {
+    background-image: url(about:blank);
+    background-attachment: fixed;
+}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
+    {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    _height: 100%;
+}
+/* html5 */
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
+    {
+    display: block;
+}
+
+/* 表单元素并不继承父级 font */
+body,button,input,select,textarea {
+    font: 12px Tahoma,Arial,Microsoft YaHei,'微软雅黑',宋体,sans-serif;
+    background: #fff;
+}
+
+input,select,textarea {
+    font-size: 100%;
+}
+/* 去掉各Table cell 的边距并让其边重合 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+}
+/* IE bug fixed: th 不继承 text-align*/
+th {
+    text-align: inherit;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    *color: #fff
+}
+/* 设置img边框为1像素白色，解决淡入淡出闪动bug */
+fieldset,img {
+    border: 0px solid #fff;
+    vertical-align: middle;
+}
+/* 设置图片插值模式为二次立方 */
+img {
+    -ms-interpolation-mode: bicubic;
+}
+
+/* 去掉 firefox 下此元素的边框 */
+abbr,acronym {
+    border: 0;
+    font-variant: normal;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+address,caption,cite,code,dfn,em,th,var {
+    font-style: normal;
+    font-weight: 500;
+}
+
+code,kbd,pre,samp {
+    font-family: "Courier New", Courier, monospace;
+}
+
+ol,ul {
+    list-style: none;
+}
+
+caption,th {
+    text-align: left;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: bold;
+    font-size: 100%;
+}
+
+p {
+    line-height: 2em;
+}
+
+q:before,q:after {
+    content: '';
+}
+
+sup {
+    vertical-align: text-top;
+}
+
+sub {
+    vertical-align: text-bottom;
+}
+
+label {
+    display: inline-block;
+    text-align: right;
+    cursor: pointer;
+}
+
+:focus {
+    outline: 0;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #FF7300;
+}
+
+ins,a {
+    text-decoration: none;
+    color: #777;
+}
+.vm{
+    vertical-align: middle;
+}
+/* 清除浮动 */
+.clear {
+    clear: both;
+}
+/* 万能闭合 */
+.clearfix:after,body:after,html:after,.container:after,.cont:after,.title:after
+    {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.clearfix {
+    zoom: 1; /* for IE6 IE7 */
+}
+
+/*显示隐藏*/
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+/*块级与内联*/
+.block {
+    display: block;
+}
+
+.inline {
+    display: inline;
+}
+/* 设置内联, 减少IE6或更低版本的浮动带来的bug（浮向边界margin加倍显示） */
+.left,.right {
+    display: inline;
+}
+
+.left {
+    float: left !important;
+}
+
+.right {
+    float: right !important;
+}
+/*鼠标手形*/
+.pointer {
+    cursor: pointer;
+}
+
+.pointer:hover {
+    color: #FF7B01;
+    text-decoration: underline;
+}
+/*下划线*/
+.underline {
+    text-decoration: underline;
+}
+/* 加粗 */
+.bold {
+    font-weight: bold;
+}
+/* 居中 */
+.center {
+    text-align: center;
+}
+/* 无边框 */
+.noborder {
+    border: none !important;
+}
+/* 禁用中文输入法 */
+.ime-disabled {
+    ime-mode: disabled !important;
+}
+
+/* 左或上5像素边距 */
+body .mt5 {
+    margin-top: 5px;
+}
+
+body .ml5 {
+    margin-right: 5px;
+}
+
+body .mb5 {
+    margin-bottom: 5px;
+}
+/* 去除补丁 */
+body .p0 {
+    padding: 0;
+}
+/* 去除边距 */
+body .m0 {
+    margin: 0;
+}
+
+/* 字体颜色 */
+.white {
+    color: #fff;
+}
+
+.gray {
+    color: #999;
+}
+
+.lessGray {
+    color: #ccc;
+}
+
+.blue {
+    color: #3764DF;
+}
+
+.darkBlue {
+    color: #00349A;
+}
+
+.skyBlue {
+    color: #06c;
+}
+
+.yellow {
+    color: #FF9F22;
+}
+
+.purple {
+    color: #6D4594;
+}
+
+.green {
+    color: #00823F;
+}
+
+.lessGreen {
+    color: #9C0;
+}
+
+.pink {
+    color: #FF2F4F;
+}
+
+.lessPink {
+    color: #F99;
+}
+
+.orange {
+    color: #FF7300;
+}
+
+.red {
+    color: #F00;
+}
+
+.brown {
+    color: #610303;
+}
+
+.rice {
+    color: #FFE9AF;
+}
+
+.black {
+    color: #333;
+}
+/* 背景颜色 */
+.bg-white {
+    background-color: #fff;
+}
+
+.bg-gray {
+    background-color: #efefef;
+}
+
+.bg-lessGray {
+    background-color: #F9F9F9;
+}
+
+.bg-leastGray {
+    background-color: #fafafa;
+}

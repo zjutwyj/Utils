@@ -11,3 +11,7 @@ QUnit.test("Est.dateFormat", function(assert){
     var result = '2014-06-19';
     assert.equal(format, result, 'passed!');
 });
+QUnit.test("Est.getDays", function(assert){
+    var days = Est.getDays('2014', '9');
+    assert.equal(days, 31, 'passed');
+});

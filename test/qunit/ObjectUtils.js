@@ -5,6 +5,24 @@
  */
 QUnit.module( "【ObjectUtils】" );
 
+
+QUnit.test("Est.inject", function(assert){
+    var doTest = function (a) {
+        return a
+    };
+    function beforeTest(a) {
+         a += 3;
+        return new Est.setArguments(arguments);
+    };
+    function afterTest(a, result, isDenied) {
+        return result+5;
+    };
+
+    doTest = Est.inject(doTest, beforeTest, afterTest);
+    var result = doTest(2);
+    assert.equal(result, 10, "passed!");
+});
+
 QUnit.test("Est.pick", function(assert){
     var object1 = {name:'a', sort: '1', sId: '000002'};
     var object2 = Est.pick(object1, ['name', 'sort']);
@@ -25,7 +43,7 @@ QUnit.asyncTest('Est.promise', function(assert){
         return new Est.promise(function(resolve, reject){
             setTimeout(function(){
                 resolve('ok');
-            }, 2000);
+            }, 1);
         });
     }
     result().then(function(data){
@@ -87,7 +105,7 @@ QUnit.test("Est.hasKey", function(assert){
 QUnit.test("Est.hashKey", function(assert){
     var obj = {};
     var value = Est.hashKey(obj);
-    assert.equal(value, 'object:003', "passed!");
+    assert.equal(value, 'object:001', "passed!");
 });
 
 QUnit.test("Est.isEmpty", function(assert){
