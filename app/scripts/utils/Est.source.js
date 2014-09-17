@@ -847,28 +847,31 @@
      * @description 产生唯一身份标识， 如'012ABC', 若为数字较容易数字溢出
      * @method [字符串] - nextUid
      * @return {string}
+     * @param {String} prefix 前缀
      * @author wyj on 14/6/23
      * @example
      *      var uid = Est.nextUid(); => '001'
      */
-    function nextUid() {
+    function nextUid(prefix) {
         var index = uid.length, digit;
+        if (typeOf(prefix) === "undefined")
+            prefix = '';
         while (index) {
             index--;
             digit = uid[index].charCodeAt(0);
             if (digit == 57 /*'9'*/) {
                 uid[index] = 'A';
-                return uid.join('');
+                return prefix + uid.join('');
             }
             if (digit == 90  /*'Z'*/) {
                 uid[index] = '0';
             } else {
                 uid[index] = String.fromCharCode(digit + 1);
-                return uid.join('');
+                return prefix + uid.join('');
             }
         }
         uid.unshift('0');
-        return uid.join('');
+        return prefix + uid.join('');
     }
     Est.nextUid = nextUid;
     /**
@@ -2368,10 +2371,15 @@
      * @example
      *      (function($, Est){ $.getUrlParam = Est.getUrlParam;})(jQuery, Est);
      *      console.log($.getUrlParam('name'));
+
+            Est.getUrlParam('name', url); // 指定url
+
      */
     function getUrlParam(name, url){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-        var path = url.substring(url.indexOf('?'), url.length) || window.location.search;
+        if (typeOf(url) !== 'undefined')
+            url = url.substring(url.indexOf('?'), url.length);
+        var path = url || window.location.search;
         var r = path.substr(1).match(reg);
         if (r!=null) return unescape(r[2]); return null;
     }
@@ -2470,6 +2478,7 @@
      * 传递一个 {name: function}定义的哈希添加到Est对象，以及面向对象封装。
      * @method [对象] - mixin
      * @param obj
+     * @param {Boolean} isExtend 是否是Est的扩展
      * @author wyj on 14/5/22
      * @example
      *      Est.mixin({
@@ -2479,17 +2488,19 @@
      *      });
      *      Est("fabio").capitalize(); => "Fabio"
      */
-    Est.mixin = function(obj) {
+    Est.mixin = function(obj, isExtend) {
+        var ctx = Est;
+        if (typeOf(isExtend) === 'boolean' && isExtend) ctx = obj;
         Est.each(Est.functions(obj), function(name) {
-            var func = Est[name] = obj[name];
-            Est.prototype[name] = function() {
+            var func = ctx[name] = obj[name];
+            ctx.prototype[name] = function() {
                 var args = [this._wrapped];
                 push.apply(args, arguments);
-                return result.call(this, func.apply(Est, args));
+                return result.call(this, func.apply(ctx, args));
             };
         });
     };
-    Est.mixin(Est);
+    Est.mixin(Est, true);
     Est.extend(Est.prototype, {
         chain: function() {
             this._chain = true;

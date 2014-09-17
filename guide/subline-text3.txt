@@ -1,0 +1,16 @@
+1.Package Control安装
+安装指导 　https://sublime.wbond.net/installation
+
+2.插件安装
+通过快捷键 Ctrl+Shift+P 打开Package Control来安装插件了。在打开的输入框中输入 install ，会根据你的输入自动提示，选择 Install Package 回车。
+重启后查看是否存在 Preferences -> Package Ctroller， 则安装成功。
+
+3.推荐插件
+1）	SideBar Enhancements　　这个插件改进了侧边栏，增加了许多功能
+
+2）	Emmet  一种快速编写HTML/CSS代码的方法 
+	- 官方文档：http://docs.emmet.io/ 
+	- 速查表：http://docs.emmet.io/cheat-sheet/
+
+3) 	BracketHighlighter 高亮显示匹配的括号、引号和标签
+4)	Better Completion 代码自动提示 https://github.com/Pleasurazy/Sublime-Better-Completion
