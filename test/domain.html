@@ -1,0 +1,106 @@
+<!DOCTYPE html >
+	<html>
+	<head lang = "en">
+	<meta charset = "UTF-8">
+	<title> </title>
+	<script src = "../app/vendor/jquery.min.js" > </script>
+	<!-- <script type="text/javascript" src="scripts/flXHR.js"></script>  -->
+	<script type="text/javascript" src="scripts/jquery.xhr.js"></script> 
+            <script type="text/javascript" src="scripts/jquery.flXHRproxy.js"></script> 
+</head>
+<body>
+<div id="success"></div>
+
+
+ <script type="text/javascript">
+    
+
+
+
+var usecount = 0;  
+  
+jQuery(document).ready(function() {  
+    jQuery.flXHRproxy.registerOptions("http://panda.www.net.cn/",{xmlResponseText:false});  
+    $.ajaxSetup({transport:'flXHRproxy'});
+ 
+	// make a post request
+	$.post(
+		"http://panda.www.net.cn/cgi-bin/check.cgi",
+		{area_domain: 'sfwefwf.com'},
+		function(json) {
+			alert("JSON Data: " + json);
+		},
+		'json'
+	);
+});  
+  
+ 
+/*$.ajax({
+                    transport:'flXHRproxy', 
+                    type : "GET",
+                    url : "http://panda.www.net.cn/cgi-bin/check.cgi?area_domain=sfwefwf.com",
+                    dataType: 'html',
+                    success: function (xhr) {
+                    	alert(xhr
+                        $(".drag-desired").html(xhr);
+                        $.event.trigger('init-draggable-products');
+                    },
+                    error: function (xhr) {
+                        $('#errorDisplay').html('Error: '+ xhr.status + '' + xhr.statusText);
+                    }
+            });*/
+
+
+
+
+
+
+
+
+
+
+
+
+    /*$.get('http://panda.www.net.cn/cgi-bin/check.cgi?area_domain=sfwefwf.com', function(result){
+
+    	alert(result);
+    });*/
+
+/*$( "#success" ).load( "http://panda.www.net.cn/cgi-bin/check.cgi?area_domain=sfwefwf.com", function( response, status, xhr ) {
+	xhr.withCredentials = true;
+  if ( status == "error" ) {
+    var msg = "Sorry but there was an error: ";
+    $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
+  }
+});*/
+
+/*jQuery.ajax({
+  type: "GET",
+  url: "http://panda.www.net.cn/cgi-bin/check.cgi?area_domain=sfwefwf.com",
+  async: false,
+  dataType:'jsonp xml',
+  success: function(data) {
+    alert(data.responseXML);
+  },
+  error: function(err){
+    alert("error: " + err.status);
+  }
+});*/
+
+
+   /* $.ajax({
+    url: 'http://panda.www.net.cn/cgi-bin/check.cgi?area_domain=sfwefwf.com',
+    type: 'get',
+    dataType: 'jsonp',
+    crossDomain: true,
+    error: function(){
+        alert('Error loading XML document');
+    },
+    success: function(xml){
+        alert(xml);
+    }
+});*/
+        
+    </script>
+</body>
+</html>

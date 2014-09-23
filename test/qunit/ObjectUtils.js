@@ -5,7 +5,21 @@
  */
 QUnit.module( "【ObjectUtils】" );
 
+QUnit.test("Est.chain", function(assert){
+    var characters = [
+        { 'name': 'barney',  'age': 36 },
+        { 'name': 'fred',    'age': 40 },
+        { 'name': 'pebbles', 'age': 1 }
+    ];
 
+    var youngest = Est.chain(characters)
+        .sortBy('age').take(0)
+        .pluck('age').value();
+        // → 'pebbles is 1'
+    assert.equal(youngest, 1, 'passed!');
+    var youngesttwo = Est(characters).sortBy('age').take().pluck('age').value();
+    assert.equal(youngesttwo, 1, 'passed!');
+});
 QUnit.test("Est.inject", function(assert){
     var doTest = function (a) {
         return a

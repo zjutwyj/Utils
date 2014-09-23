@@ -40,11 +40,15 @@
      * @description 创建Est对象
      * @method [对象] - Est
      */
-    var Est = function(obj) {
-        if (obj instanceof Est) return obj;
-        if (!(this instanceof Est)) return new Est(obj);
-        this._wrapped = obj;
+    var Est = function(value) {
+        return (value && typeof value == 'object' && typeOf(value) !== 'array' && hasOwnProperty.call(value, '_wrapped'))
+            ? value
+            : new wrapper(value, true);
     };
+    function wrapper(value, chainAll) {
+        this._chain = !!chainAll;
+        this._wrapped = value;
+    }
     Est.version = '1.1.0';
     /**
      * @description 用于node.js 导出
@@ -198,7 +202,7 @@
     /**
      * @description 返回一个封装的对象. 在封装的对象上调用方法会返回封装的对象本身, 直道 value 方法调用为止.
      * @method [对象] - chain
-     * @param obj
+     * @param value
      * @return {*}
      * @author wyj on 14/5/22
      * @example
@@ -210,8 +214,10 @@
      *          .value();
      *      => "moe is 21"
      */
-    Est.chain = function(obj) {
-        return Est(obj).chain();
+    Est.chain = function(value) {
+        value = new wrapper(value);
+        value._chain= true;
+        return value;
     };
     /**
      * @description 如果对象 object 中的属性 property 是函数, 则调用它, 否则, 返回它。
@@ -224,8 +230,9 @@
      *      Est.result(object, 'cheese'); => "crumpets"
      *      Est.result(object, 'stuff'); => "nonsense"
      */
-    var result = function(obj) {
-        return this._chain ? Est(obj).chain() : obj;
+    var result = function(obj, context) {
+        //var ctx = typeOf(context) !== 'undefined' ? context : Est;
+        return this._chain ? new wrapper(obj, true) : obj;
     };
 
     /**
@@ -724,7 +731,7 @@
             }
             result = isArr ? Array(value.length) : {};
         } else{
-            result = isArr ? arraySlice(value) : extend({}, value);
+            result = isArr ? arraySlice(value, 0, value.length) : extend({}, value);
         }
         if (isArr) {
             if (hasOwnProperty.call(value, 'index')) {
@@ -1651,10 +1658,10 @@
     Est.sortBy = sortBy;
     /**
      * @description 截取数组
-     * @method [数组] - arraySlice
+     * @method [数组] - arraySlice / take
      * @param array
      * @param start
-     * @param end
+     * @param end 若未设置值， 则取索引为start的一个值
      * @return {*}
      * @author wyj on 14/7/7
      * @example
@@ -1663,7 +1670,7 @@
     function arraySlice(array, start, end) {
         start || (start = 0);
         if (typeof end == 'undefined') {
-            end = array ? array.length : 0;
+            end = start < array.length -1 ? (start + 1) : array.length;
         }
         var index = -1,
             length = end - start || 0,
@@ -1674,7 +1681,7 @@
         }
         return result;
     }
-    Est.arraySlice = arraySlice;
+    Est.take = Est.arraySlice = arraySlice;
 
     // ImageUtils ==============================================================================================================================================
 
@@ -2490,26 +2497,32 @@
      */
     Est.mixin = function(obj, isExtend) {
         var ctx = Est;
-        if (typeOf(isExtend) === 'boolean' && isExtend) ctx = obj;
+        if (typeOf(isExtend) === 'boolean' && !isExtend) ctx = obj;
         Est.each(Est.functions(obj), function(name) {
             var func = ctx[name] = obj[name];
             ctx.prototype[name] = function() {
-                var args = [this._wrapped];
+                var args = [];
+                if (typeOf(this._wrapped) !== 'undefined') 
+                    args.push(this._wrapped);
                 push.apply(args, arguments);
-                return result.call(this, func.apply(ctx, args));
+                return result.apply(this, [func.apply(ctx, args), ctx]);
             };
+        });
+        wrapper.prototype = ctx.prototype;
+        Est.extend(ctx.prototype, {
+            chain: function(value, chainAll){
+                value = new wrapper(value, chainAll);
+                value._chain= true;
+                return value;
+            },
+            value: function(){
+                return this._wrapped;
+            }
         });
     };
     Est.mixin(Est, true);
-    Est.extend(Est.prototype, {
-        chain: function() {
-            this._chain = true;
-            return this;
-        },
-        value: function() {
-            return this._wrapped;
-        }
-    });
+    
+   
     /**
      * @description For request.js
      * @method [定义] - define
