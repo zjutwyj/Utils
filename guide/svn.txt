@@ -1,0 +1,4 @@
+查看svn安装的位置：
+whereis svnversion
+查看svn的版本：
+/usr/bin/svnversion --version

@@ -1,0 +1,30 @@
+1.通用快捷键
+1） Ctrl + Shift + N: 打开工程中的文件，目的是打开当前工程下任意目录的文件。
+2） Ctrl + B: 跳到变量申明处
+3） Ctrl + Alt + T: 围绕包裹代码(包括zencoding的Wrap with Abbreviation)
+4） Ctrl + Alt + F12 显示文件目录
+5） Ctrl + X: 剪切(删除)行，不选中，直接剪切整个行，如果选中部分内容则剪切选中的内容
+6） Ctrl + R: 替换
+7） Ctrl + Shift + Up: 行移动
+8） Shift + Alt + Up: 块移动(if(){},while(){}语句块的移动)
+9） Shift + F6 重构变量名称
+
+
+
+Ctrl + J: 输出模板
+ctrl + []: 匹配 {}[]
+ctrl + F12: 可以显示当前文件的结构
+alt + left/right:标签切换
+
+
+
+ctrl + d: 行复制
+ctrl + shift + ]/[: 选中块代码
+ctrl + / : 单行注释
+ctrl + shift + / : 块注释
+ctrl + shift + i : 显示当前CSS选择器或者JS函数的详细信息
+ctrl + '-/+': 可以折叠项目中的任何代码块，它不是选中折叠，而是自动识别折叠。
+ctrl + '.': 折叠选中的代码的代码。
+shift + esc: 当前激活的任意小窗口最小化，也可以是alt+数字键，数字在小窗口有显示。
+alt + '7': 显示当前的函数结构。
+如果是*.html页面，则在文件名下的导航栏某DOM结构上右键，可以全选当前DOM结构。

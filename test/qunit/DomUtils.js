@@ -10,3 +10,10 @@ QUnit.test("Est.clearAllNode", function(assert){
     var size = $("#clearAllNodeDiv span").size();
     assert.equal(size,  0, 'passed!');
 });
+
+QUnit.test("Est.center", function(assert){
+	var result = Est.center(1000, 800, 100, 50);
+	var result2 = Est.center('1000.8', '800', '100', '50');
+	assert.deepEqual(result, {left:450, top:375}, 'passed!');
+	assert.deepEqual(result2, {left:450, top:375}, 'passed!');
+});

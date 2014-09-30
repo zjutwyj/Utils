@@ -2,7 +2,6 @@
 /*** v3 css* @author  Wyj* @build   20120220* @version v3*/
 html {
     background: #fff;
-    color: #999;
     overflow-y: scroll;
     -webkit-text-size-adjust: none; /* 解决谷歌字体大小最小12pxBUG */
 }

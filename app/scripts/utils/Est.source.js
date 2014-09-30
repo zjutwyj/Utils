@@ -43,7 +43,7 @@
     var Est = function(value) {
         return (value && typeof value == 'object' && typeOf(value) !== 'array' && hasOwnProperty.call(value, '_wrapped'))
             ? value
-            : new wrapper(value, true);
+            : new wrapper(value);
     };
     function wrapper(value, chainAll) {
         this._chain = !!chainAll;
@@ -379,7 +379,7 @@
     }
     Est.getType = getType;
     /**
-     * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined)
+     * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined) 不包括数字0和1
      * @method [对象] - isEmpty
      * @param {Object} value
      * @return {boolean}
@@ -389,6 +389,7 @@
      */
     function isEmpty(value) {
         var result = true;
+        if (typeOf(value) === 'number') return false;
         if (!value) return result;
         var className = toString.call(value),
             length = value.length;
@@ -844,9 +845,52 @@
     }
     Est.inject = inject;
 
+    // FormUtils =============================================================================================================================================
 
-
-
+    /**
+     * @description 表单验证
+     * @method [表单] - validation
+     * @param  {String} str  待验证字符串 str可为数组 判断所有元素是否都为数字
+     * @param  {String} type 验证类型 
+     * @return {Boolean}      返回true/false
+     * @author wyj on 14.9.29
+     * @example
+     *      var result_n = Est.validation(number, 'number'); // 数字或带小数点数字
+            var result_e = Est.validation(email, 'email'); // 邮箱
+            var result_c = Est.validation(cellphone, 'cellphone'); // 手机号码
+            var result_d = Est.validation(digits, 'digits'); // 纯数字， 不带小数点
+            var result_u = Est.validation(url, 'url'); // url地址
+     */
+    function validation(str, type){
+        var pattern, flag = true;
+        switch (type){
+            case 'cellphone':
+                pattern = /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/;
+                break;
+            case 'email':
+                pattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+                break;
+            case 'url':
+                pattern = /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+                break;
+            case 'number':
+                // 可带小数点 如：0.33， 35.325
+                pattern = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+                break;
+            case 'digits':
+                // 还可带小数点
+                pattern = /^\d+$/;
+                break;
+        }
+        if (this.typeOf(str) === 'array'){
+            this.each(str, function(item){
+                if (!pattern.test(item)) 
+                    flag = false;
+            });
+        } else { flag = pattern.test(str);}
+        return flag;
+    }
+    Est.validation = validation;
 
 
     // StringUtils =============================================================================================================================================
@@ -2348,6 +2392,28 @@
     }
     Est.clearAllNode = clearAllNode;
 
+    /**
+     * @description 获取元素居中显示距离左与上的像素值
+     * @method [] - center
+     * @param  {number} clientWidth  [浏览器宽度]
+     * @param  {number} clientHeight [浏览器高度]
+     * @param  {number} width        [元素宽度]
+     * @param  {number} height       [元素高度]
+     * @return {object}              [返回left, top的对象]
+     * @example
+     *      var result = Est.center(1000, 800, 100, 50);
+            var result2 = Est.center('100.8', '800', '100', '50');
+            assert.deepEqual(result, {left:450, top:375}, 'passed!');
+            assert.deepEqual(result2, {left:450, top:375}, 'passed!');
+     */
+    function center(clientWidth, clientHeight, width, height){
+        if (!this.validation([clientWidth, clientHeight, width, height], 'number')) 
+            return {left: 0, top: 0};
+        return { left: (parseInt(clientWidth, 10) - parseInt(width, 10)) / 2, top: (parseInt(clientHeight, 10) - parseInt(height, 10)) / 2}
+    }
+    Est.center = center;
+
+
     // BrowerUtils
     /**
      * @description 判断是否是IE浏览器，并返回版本号
@@ -2474,8 +2540,7 @@
     }
     Est.dashedFrame = dashedFrame;
 
-
-
+    
 
 
 

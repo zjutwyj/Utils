@@ -287,6 +287,13 @@ var paths = {
             name: 'seditor.min.css'
         }
     },
+    drawcanvas: {
+        scripts:{
+            source: ['app/vendor/drawcanvas/drawcanvas.js'],
+            dist: 'app/vendor/drawcanvas',
+            name: 'drawcanvas.min.js'
+        }
+    },
     doc : {
         doc: {
             source: [
@@ -353,8 +360,8 @@ function doTask(item, debug){
                     gulp.task(item + key, function () {
                         if (debug) {
                             return gulp.src(paths[item].scripts.source)
-                              /*  .pipe(jshint())
-                                .pipe(jshint.reporter(stylish))*/
+                               .pipe(jshint())
+                                .pipe(jshint.reporter(stylish))
                                 .pipe(concat(paths[item].scripts.name))
                                 .pipe(gulp.dest(paths[item].scripts.dist));
                         }
@@ -484,6 +491,14 @@ gulp.task('seditor', function(){
 });
 gulp.task('seditor.min', function(){
     doTask('seditor', false);
+});
+
+/** drawcanvas */
+gulp.task('drawcanvas', function(){
+    doTask('drawcanvas', true);
+});
+gulp.task('drawcanvas.min', function(){
+    doTask('drawcanvas', false);
 });
 
 /** 全部 */

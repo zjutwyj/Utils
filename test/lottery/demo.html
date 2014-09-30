@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title></title>
+    <script src="../../app/vendor/jquery/jquery.min.js"></script>
+    <script src="../../app/scripts/utils/Est.min.js"></script>
+    <script src="lottery.js"></script>
+    <style>
+        body{
+            background: url(sample1.jpg) no-repeat scroll 0 0 transparent;
+        }
+        canvas{position:absolute;-webkit-transition:all .8s;z-index:9999999;top:0; left: 0;}
+        .canvas_hide{opacity:0}
+        .lottery{position:absolute;left:0;top:0;opacity:0;-webkit-transition:all .4s .4s ease;z-index:100;}
+        .lottery.show{opacity:1}
+    </style>
+</head>
+<body>
+<div id="lottery" class="lottery" data-src="lottery_gray.jpg"></div>
+<script type="text/javascript">
+    // 刮刮卡
+    canvasSrc = $("#lottery").attr("data-src");
+    var canvas = null;
+    var context2D = null;
+    var width = 0;
+    var height = 0;
+
+    function getClientSize(){
+        var height_o = "innerHeight" in window ? window.innerHeight: document.documentElement.offsetHeight;
+        var width_o = "innerWidth" in window ? window.innerWidth : document.documentElement.offsetWidth;
+        height = Math.max($(window).height(), height_o);
+        width = Math.max($(window).width(), width_o);
+    }
+    // 获取屏幕尺寸
+    getClientSize();
+
+    if (!Est.isEmpty(canvasSrc)) {
+        /*canvas = document.getElementById("canvas");
+         context2D = canvas.getContext("2d");*/
+        var array_paint = [];
+        // 刮开层使用图片
+        getClientSize();
+       $('#lottery').lottery({
+            coverType: 'text',
+            cover: '恭喜你， 中了一等奖',
+            fontSize: 12,
+            lineWidth: 20,
+            fillImage: true,
+            width: 200,
+            height: 100,
+            left:50,
+            top:50,
+            cbdelay: 300,
+            shaveable: false,
+            zIndex: 888,
+            callback: function(percent){
+                console.log(percent);
+                if(percent > 30){
+                   //$(this).parent().removeClass('show').on('webkitTransitionEnd', function(){ });
+                   //$(this).hide();
+                }
+            },
+            success: function(){
+                setTimeout(function(){
+                    $(".loading").remove();
+                }, 1000);
+                $(this.conNode).addClass('show').on('webkitTransitionEnd', function(){
+
+                });
+            }
+        });
+        $('#lottery').lottery({
+            coverType: 'image',
+            cover: 'lottery_gray.jpg',
+            lineWidth: 10,
+            fillImage: true,
+            width: 200,
+            height: 100,
+            cbdelay: 300,
+            shaveable: true,
+            left: 50,
+            top: 50,
+            zIndex: 9999999999999,
+            callback: function(percent){
+                console.log(percent);
+                if(percent > 30){
+                    //$(this).parent().removeClass('show').on('webkitTransitionEnd', function(){ });
+                    $(this).hide();
+                }
+            },
+            success: function(){
+                setTimeout(function(){
+                    $(".loading").remove();
+                }, 1000);
+                $(this.conNode).addClass('show').on('webkitTransitionEnd', function(){
+
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>
