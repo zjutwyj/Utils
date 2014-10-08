@@ -225,6 +225,13 @@ var paths = {
             name: 'Est.min.js'
         }
     },
+    Canvas : {
+        scripts: {
+            source: ['app/scripts/utils/Canvas.source.js'],
+            dist: 'app/scripts/utils',
+            name: 'Canvas.min.js'
+        }
+    },
     fileupload: {
         scripts: {
             source: ['app/modules/Upload/vendor/jq-upload/jquery.ui.widget.js',
@@ -289,8 +296,8 @@ var paths = {
     },
     drawcanvas: {
         scripts:{
-            source: ['app/vendor/drawcanvas/drawcanvas.js'],
-            dist: 'app/vendor/drawcanvas',
+            source: ['./app/vendor/drawcanvas/drawcanvas.js'],
+            dist: './app/vendor/drawcanvas',
             name: 'drawcanvas.min.js'
         }
     },
@@ -459,6 +466,14 @@ gulp.task('Est', function(){
 });
 gulp.task('Est.min',function(){
     doTask('Est', false);
+});
+
+/** Canvas */
+gulp.task('Canvas', function(){
+    doTask('Canvas', true);
+});
+gulp.task('Canvas.min',function(){
+    doTask('Canvas', false);
 });
 
 /** fileupload */

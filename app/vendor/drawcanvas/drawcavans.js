@@ -26,7 +26,7 @@
         this.left = opts.left || 0;
         this.top = opts.top || 0;
         this.fontSize = opts.fontSize || 12;
-        this.positionType = opts.positionType || 'fixed';
+        this.position = opts.position || 'fixed';
     }
     DrawCanvans.prototype = {
         createElement: function(tag, attrs) {
@@ -101,7 +101,6 @@
                     }
                 }, !1)
             }
-
             this.mask.addEventListener(clickType, function(e) {
                 if (Est.typeOf(ctx.beforeCallback) === 'function'){
                     if (!ctx.beforeCallback()) return;
@@ -193,8 +192,8 @@
 
         },
         init: function(target, lotteryType) {
-            var style1 = {style: "position:"+this.positionType+";left:" + this.left + "px;top:" + this.top + "px;width:"+this.width+"px;height:"+this.height+"px;background-color:transparent;"};
-            var style2 = {style: "position:"+this.positionType+";left:"+ this.left + "px;top:" + this.top + "px;width:"+this.width+"px;height:"+this.height+"px;background-color:transparent;"};
+            var style1 = {style: "position:"+this.position+";left:" + this.left + "px;top:" + this.top + "px;width:"+this.width+"px;height:"+this.height+"px;background-color:transparent;"};
+            var style2 = {style: "position:"+this.position+";left:"+ this.left + "px;top:" + this.top + "px;width:"+this.width+"px;height:"+this.height+"px;background-color:transparent;"};
             if (target){
                 this.lottery = target;
                 this.lottery.width = this.width;

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>QUnit Example</title>
+<link rel="stylesheet" href="qunit/qunit-1.14.0.css">
+<script src="../app/vendor/jquery.min.js"></script>
+<script src="../app/scripts/utils/Est.min.js"></script>
+<script src="../app/scripts/utils/Canvas.min.js"></script>
+<script>
+
+</script>
+</head>
+<body id="wide_product" class="moveChild">
+
+<script type="text/javascript">
+    var width = 300;
+    var len = 6;
+    var deg = Math.round(360 / len);
+    var colors = ['#FECB03', '#2FB753', '#6B3983', '#DE47CD', '#A33EE5', '#2E9CD9', '#E73EAA', '#2FB753', '#FECB03', '#6B3983', '#A33EE5', '#DE47CD', '#2E9CD9', '#E73EAA'];
+    var radius = width / 2;
+    var inner_width = 9;
+    var color = null;
+    var step = 0;
+
+    var $sector = $("<canvas id='sector'></canvas>");
+    $sector.attr({"width": width, "height": width});
+    $sector.css({ position:'absolute', left: 0, top: 0, 'z-index': 98});
+    $("body").append($sector);
+
+
+    function drawSector(canvas, left, top, radius, sdeg, edeg, color, opacity){
+        Canvas.drawSector(canvas,  left, top, radius, sdeg, edeg, {
+            before : function(){},
+            after: function(ctx){
+                ctx.globalAlpha = opacity;
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+        });
+    }
+    // 画扇形
+    var sector = $sector.get(0);
+    drawSector(sector,  radius, radius, radius - inner_width, 0, 360, '#fff', 1);
+    for (var i = 0; i < len; i++){
+        color = i % 2 === 0 ? '#e6e4db' : colors[Math.ceil(i / 2)];
+        drawSector(sector,  radius, radius, radius - inner_width, i * deg + 90 - deg / 2, (i +1) * deg + 90 - deg / 2, color, 0.6);
+        drawSector(sector,  radius, radius, (radius - inner_width) * 0.8, i * deg + 90 - deg / 2, (i +1) * deg + 90 - deg / 2, color, 0.75);
+        drawSector(sector,  radius, radius, (radius - inner_width) * 0.75, i * deg + 90 - deg / 2, (i +1) * deg + 90 - deg / 2, color, 1);
+    }
+    // 画奖品图片
+    Est.each([1, 2, 3, 4, 5, 6], function(item, i){
+        var pic_w = Math.PI * (radius - inner_width)/ len;
+        var degree = ((step + 1) * deg / 2 + 90) > 360 ? ((step + 1) * deg / 2 + 90) - 360 : ((step + 1) * deg / 2 + 90);
+        var location = Canvas.getCircleLocation(radius, radius, radius / 2, degree);
+        step = step + 1;
+        $('.rotate .rotate-bg').lottery({
+            coverType: 'image',
+            cover: '/images/apply.png',
+            lineWidth: 20,
+            fillImage: true,
+            width: 54,
+            height: 54,
+            shaveable: false,
+            cbdelay:10,
+            left: location.x - 27,
+            top: location.y - 27,
+            zIndex: 9999999,
+            position:'absolute',
+            callback: function(percent){ },
+            success: function(){ }
+        });
+    });
+</script>
+</body>
+</html>

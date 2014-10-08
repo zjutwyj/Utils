@@ -2566,9 +2566,13 @@
         Est.each(Est.functions(obj), function(name) {
             var func = ctx[name] = obj[name];
             ctx.prototype[name] = function() {
-                var args = [];
-                if (typeOf(this._wrapped) !== 'undefined') 
+                try {
+                    var args = [];
+                    if (typeof this._wrapped !== 'undefined') 
                     args.push(this._wrapped);
+                } catch(e){
+                    console.error("_wrapped is not defined");
+                }
                 push.apply(args, arguments);
                 return result.apply(this, [func.apply(ctx, args), ctx]);
             };
