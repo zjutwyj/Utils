@@ -1242,6 +1242,47 @@
         });
     }
     Est.format = format;
+
+    /**
+     * @description 比format更强大的模板引擎， 支持多层嵌套
+     * @method [字符串] - template
+     * @param {String} html 待格式化字符串
+     * @param {Object} options 替换对象
+     * @return {String} result
+     * @author wyj on 14.10.9
+     * @example
+     *      var template = '<p>Hello, my name is {{this.name}}. I\'m {{this.profile.age}} years old.</p>';
+            console.log(TemplateEngine(template, {
+                name: "Krasimir Tsonev",
+                profile: { age: 29 }
+            }));
+     */
+    function template(html, options) {
+        var re = /{{(.+?)}}/g,
+            reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g,
+            code = 'with(obj) { var r=[];\n',
+            cursor = 0,
+            match,
+            result;
+        var add = function(line, js) {
+            js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
+                (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
+            return add;
+        }
+        while(match = re.exec(html)) {
+            add(html.slice(cursor, match.index))(match[1], true);
+            cursor = match.index + match[0].length;
+        }
+        add(html.substr(cursor, html.length - cursor));
+        code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, '');
+        try { result = new Function('obj', code).apply(options, [options]); }
+        catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
+        return result;
+    }
+    Est.template = template;
+
+
+
     /**
      * @description 移除字符串左端的空白
      * @method [字符串] - ltrim

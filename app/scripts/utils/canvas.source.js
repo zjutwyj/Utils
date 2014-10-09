@@ -100,6 +100,7 @@
             desw = opts.desw || srcw,
             desh = opts.desh || srch,
             auto = opts.auto,
+            opacity = opts.opacity || 1,
         // finally query the various pixel ratios
             devicePixelRatio = window.devicePixelRatio || 1,
             backingStoreRatio = context.webkitBackingStorePixelRatio ||
@@ -128,6 +129,7 @@
             // our canvas element
             context.scale(ratio, ratio);
         }
+        context.globalAlpha = opacity;
         context.drawImage(opts.image, srcx, srcy, srcw, srch, desx, desy, desw, desh);
     }
 

@@ -103,6 +103,15 @@ QUnit.test("Est.format('#{name} is a #{sex}', {name : 'Jhon',sex : 'man'}); => "
     assert.equal(result, 'Jhon is a man', "Est.format('#{name} is a #{sex}', {name : 'Jhon',sex : 'man'}); => " + Est.format('#{name} is a #{sex}', {name : 'Jhon',sex : 'man'}));
 });
 
+QUnit.test("Est.template", function(assert){
+    var template = '<p>Hello, my name is {{this.name}}. I\'m {{this.profile.age}} years old.</p>';
+    var result = Est.template(template, {
+        name: "Krasimir Tsonev",
+        profile: { age: 29 }
+    });
+    assert.equal(result, "<p>Hello, my name is Krasimir Tsonev. I'm 29 years old.</p>", 'passed!');
+});
+
 QUnit.test("Est.ltrim('  dd    '); => ", function(assert){
     var result = Est.ltrim('  dd    ');
     assert.equal(result, 'dd    ', "Est.ltrim('  dd    '); => " + Est.ltrim('  dd    '));

@@ -329,19 +329,31 @@ var paths = {
             dist: './doc'
         }
     },
+    wwy: {
+        scripts: {
+            source: [
+                './app/vendor/jquery/jquery.min.js',
+                './app/scripts/utils/Est.source.js',
+                './app/scripts/utils/Canvas.source.js',
+                './app/vendor/jquery-ui/jquery-ui.js',
+                './app/vendor/fullPage/jquery.fullPage.min.js',
+                './app/vendor/jquery-form/form.js',
+                './app/vendor/popwin/popwin.js',
+                './app/vendor/ApplicationCache/ApplicationCache.js',
+                './app/vendor/android/android.js',
+                './app/vendor/rotate/rotate.js',
+                './app/vendor/drawCanvas/drawCanvas.js'
+            ],
+            name: 'base.js',
+            dist: './app/modules/Wwy'
+        }
+    },
     test : {
         scripts: {
             source: [
-                './test/scripts/jquery.min.js',
-                './app/scripts/utils/Est.source.js',
-                './test/scripts/jquery-ui.min.js',
-                './test/scripts/jquery.fullPage.min.js',
-                './test/scripts/form.js',
-                './test/scripts/popwin.js',
-                './test/scripts/ApplicationCache.js',
-                './test/scripts/android.js'
+               './app/modules/Wwy/core.js'
             ],
-            name: 'base.js',
+            name: 'core.js',
             dist: './test/scripts'
         },
         styles: {
@@ -443,6 +455,15 @@ gulp.task('test', function(){
 gulp.task('test.min', function(){
     doTask('test', false);
 });
+
+/** wwy*/
+gulp.task('wwy', function(){
+    doTask('wwy', true);
+});
+gulp.task('wwy.min', function(){
+    doTask('wwy', false);
+});
+
 
 /** acecss */
 gulp.task('acecss', function(){
