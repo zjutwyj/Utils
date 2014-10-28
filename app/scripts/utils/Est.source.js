@@ -35,6 +35,11 @@
      */
     var maxPoolSize = 40;
     var arrayPool = [], objectPool = [];
+    /** 缓存对象 */
+    var cache = {};
+    /** url 路由 */
+    var routes = {};
+    var el = null, current = null;
 
     /**
      * @description 创建Est对象
@@ -681,7 +686,7 @@
     }
     Est.getArray = getArray;
     /**
-     * @description 获取对象池
+     * @description 获取对象池 主要用于优化性能
      * @method [对象] - getObject
      * @return {Object}
      * @author wyj on 14/7/1
@@ -812,15 +817,23 @@
      * @return {Function}
      * @author wyj on 14.9.12
      * @example
-     *      var doTest = function (a) {return a};
-     function beforeTest(a) { alert('before exec: a='+a); a += 3; return new Arguments(arguments);};
-     //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
-     function afterTest(a, result, isDenied) { alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied); return result+5;};
+     *      var doTest = function (a) {
+     *          return a
+     *      };
+            function beforeTest(a) {
+                alert('before exec: a='+a);
+                a += 3;
+                return new Arguments(arguments);
+            };
+            //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
+            function afterTest(a, result, isDenied) {
+                alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
+                return result+5;
+            };
 
-     doTest = Inject(doTest, beforeTest, afterTest);
+            doTest = Est.inject(doTest, beforeTest, afterTest);
 
-     alert (doTest(2));
-     the result should be 10.
+            alert (doTest(2)); // the result should be 10.
      */
     function inject(aOrgFunc, aBeforeExec, aAtferExec){
         return function() {
@@ -844,6 +857,34 @@
         }
     }
     Est.inject = inject;
+
+    /**
+     * @description 对象路由控制
+     * @method [对象] - keyRoute
+     * @param {Object} handle 待控制对象
+     * @param {String} pathname 路由名称
+     * @param {Object} response 参数
+     * @author wyj on 14/8/1
+     * @example
+     *		var handle = {
+     * 			route1: function(reponse){
+
+     			},
+     			route2: function(){
+
+     			}
+     		}
+     * 		Est.keyRoute(handle, 'route1', {});
+     */
+    function keyRoute(handle, pathname, response){
+        if (Est.typeOf(handle[pathname]) === 'function'){
+            return handle[pathname](response);
+        } else{
+            console.log("No request handler found for " + pathname);
+        }
+    }
+    Est.keyRoute = keyRoute;
+
 
     // FormUtils =============================================================================================================================================
 
@@ -1244,42 +1285,68 @@
     Est.format = format;
 
     /**
-     * @description 比format更强大的模板引擎， 支持多层嵌套
+     * @description 比format更强大的模板引擎， 支持字符串模板、变量嵌套、四则运算、比较操作符、三元运算符
      * @method [字符串] - template
-     * @param {String} html 待格式化字符串
-     * @param {Object} options 替换对象
+     * @param {String} str 待格式化字符串
+     * @param {Object} data 替换对象
      * @return {String} result
      * @author wyj on 14.10.9
      * @example
-     *      var template = '<p>Hello, my name is {{this.name}}. I\'m {{this.profile.age}} years old.</p>';
-            console.log(TemplateEngine(template, {
-                name: "Krasimir Tsonev",
-                profile: { age: 29 }
-            }));
+     *         // 字符串
+     var result3 =Est.template('hello {{name}}', { name: 'feenan'}); => "hello feenan"
+
+     // 变量嵌套
+     var result8 =Est.template('hello {{person.age}}', { person: {age: 50}}); => "hello 50"
+
+     // 四则运算
+     var result4 =Est.template('(1+2)*age = {{ (1+2)*age}}', {age: 18}); => (1+2)*age = 54
+
+     // 比较操作符
+     var result5 =Est.template('{{1>2}}', {}); => false
+     var result6 =Est.template('{{age > 18}}', {age: 20}); => true
+
+     // 三元运算符
+     var result7 =Est.template('{{ 2 > 1 ? name : ""}}', {name: 'feenan'}); => feenan
+
+     // 综合
+     var tmpl1 = '<div id="{{id}}" class="{{(i % 2 == 1 ? " even" : "")}}"> ' +
+     '<div class="grid_1 alpha right">' +
+     '<img class="righted" src="{{profile_image_url}}"/>' +
+     '</div>' +
+     '<div class="grid_6 omega contents">' +
+     '<p><b><a href="/{{from_user}}">{{from_user}}</a>:</b>{{info.text}}</p>' +
+     '</div>' +
+     '</div>';
+     var result = Est.template(tmpl1, {
+        i: 5,
+        id: "form_user",
+        from_user: "Krasimir Tsonev",
+        profile_image_url: "http://www.baidu.com/img/aaa.jpg",
+        info: {
+            text: "text"
+        }
+    });
      */
-    function template(html, options) {
-        var re = /{{(.+?)}}/g,
-            reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g,
-            code = 'with(obj) { var r=[];\n',
-            cursor = 0,
-            match,
-            result;
-        var add = function(line, js) {
-            js? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
-                (code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
-            return add;
-        }
-        while(match = re.exec(html)) {
-            add(html.slice(cursor, match.index))(match[1], true);
-            cursor = match.index + match[0].length;
-        }
-        add(html.substr(cursor, html.length - cursor));
-        code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, '');
-        try { result = new Function('obj', code).apply(options, [options]); }
-        catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
-        return result;
+    function template(str, data){
+        var fn = !/\W/.test(str) ?
+            cache[str] = cache[str] || template(str) :
+            new Function("obj",
+                    "var p=[],print=function(){p.push.apply(p,arguments);};" +
+                    "with(obj){p.push('" +
+                    str
+                        .replace(/[\r\t\n]/g, " ")
+                        .split("{{").join("\t")
+                        .replace(/((^|}})[^\t]*)'/g, "$1\r")
+                        .replace(/\t(.*?)}}/g, "',$1,'")
+                        .split("\t").join("');")
+                        .split("}}").join("p.push('")
+                        .split("\r").join("\\'")
+                    + "');}return p.join('');");
+        return data ? fn( data ) : fn;
     }
     Est.template = template;
+
+
 
 
 
@@ -1744,13 +1811,15 @@
     /**
      * @description 截取数组
      * @method [数组] - arraySlice / take
-     * @param array
-     * @param start
-     * @param end 若未设置值， 则取索引为start的一个值
+     * @param {Array} array 数据
+     * @param {Number} start 起始
+     * @param {Number} end 若未设置值， 则取索引为start的一个值
      * @return {*}
      * @author wyj on 14/7/7
      * @example
-     *
+     *      var youngest = Est.chain(characters)
+            .sortBy('age').take(0)   // 获取第一个值
+            .pluck('age').value();
      */
     function arraySlice(array, start, end) {
         start || (start = 0);
@@ -1891,7 +1960,7 @@
     Est.imagePreview = imagePreview;
 
     /**
-     * @description 绘制canvas图片 解决苹果屏幕模糊问题
+     * @description 绘制canvas图片 解决苹果屏幕模糊问题 注意：此方法将移除， 转移到Canvas.min.js中
      * @method [图片] - drawImage
      * @param {Object} opts 详见例子
      * @author wyj on 14.9.4
@@ -2435,7 +2504,7 @@
 
     /**
      * @description 获取元素居中显示距离左与上的像素值
-     * @method [] - center
+     * @method [文档] - center
      * @param  {number} clientWidth  [浏览器宽度]
      * @param  {number} clientHeight [浏览器高度]
      * @param  {number} width        [元素宽度]
@@ -2529,32 +2598,84 @@
         };
     }
     Est.urlResolve = urlResolve;
-   	/**
-     * @description 路由控制
+
+    /**
+     * @description url 路由
      * @method [浏览器] - route
-     * @param {Object} handle 待控制对象
-     * @param {String} pathname 路由名称
-     * @param {Object} response 参数
-     * @author wyj on 14/8/1
+     * @param {String} path
+     * @param {String} templateId
+     * @param controller
+     * @author wyj on 14.10.28
      * @example
-     *		var handle = {
-     * 			route1: function(reponse){
-	
-     			},
-     			route2: function(){
-	
-     			}
-     		}
-     * 		Est.route(handle, 'route1', {});
-   	 */
-    function route(handle, pathname, response){
-        if (Est.typeOf(handle[pathname]) === 'function'){
-            return handle[pathname](response);
-        } else{
-            console.log("No request handler found for " + pathname);
+     *      // HTML
+     *      <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#/page1">Page 1</a></li>
+                <li><a href="#/page2">Page 2</a></li>
+            </ul>
+            <div id="view"></div>
+            <script type="text/html" id="home">
+                <h1>Router FTW!</h1>
+            </script>
+            <script type="text/html" id="template1">
+                <h1>Page 1: {{greeting}}></h1>
+                <p>{{moreText}}></p>
+            </script>
+            <script type="text/html" id="template2">
+                <h1>Page 2: {{heading}}></h1>
+                <p>Lorem ipsum...</p>
+            </script>
+     *
+     *      // JAVASCRIPT
+     *      route('/', 'home', function(){});
+            route('/page1', 'template1', function () {
+                this.greeting = 'Hello world!';
+                this.moreText = 'Loading...';
+                setTimeout(function () {
+                    this.moreText = 'Bacon ipsum...';
+                }.bind(this), 500);
+            });
+            route('/page2', 'template2', function () {
+                this.heading = 'I\'m page two!';
+            });
+     *
+     */
+    function route (path, templateId, controller) {
+        if (typeof templateId === 'function') {
+            controller = templateId;
+            templateId = null;
+        }
+        routes[path] = {templateId: templateId, controller: controller};
+    }
+    function router () {
+        var url = location.hash.slice(1) || '/';
+        var route = routes[url];
+        if (route && !route.templateId) {
+            return route.controller ? new route.controller : null;
+        }
+        el = el || document.getElementById('view');
+        if (current) {
+            Object.unobserve(current.controller, current.render);
+            current = null;
+        }
+        if (el && route && route.controller) {
+            current = {
+                controller: new route.controller,
+                template: template(document.getElementById(route.templateId).innerHTML),
+                render: function () {
+                    el.innerHTML = this.template(this.controller);
+                }
+            };
+            current.render();
+            Object.observe(current.controller, current.render.bind(current));
         }
     }
+    if (window){
+        window.addEventListener('hashchange', router);
+        window.addEventListener('load', router);
+    }
     Est.route = route;
+
     /**
      * @description 给元素添加虚线框
      * @method [浏览器] - dashedFrame

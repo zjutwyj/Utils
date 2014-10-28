@@ -19,7 +19,7 @@
 7）	tag 	标签格式化
 
 
-4.通用快捷键
+4.常用快捷键
 1)	Ctrl+Shift+P 打开Package Control, 输入install  即可搜索并安装插件
 2）	Ctrl + P   	根据文件名打开文件 当输入“ ：” + 数字 表示定位到行号
 3）	Ctrl + R	查找函数方法
@@ -27,16 +27,17 @@
 5）	Ctrl + D 	选中某个变量时  按下Ctrl+D 可以同时修改多个相同名称的变量
 6)	Ctrl + F	查找内容 按F3可以定位到下一个
 7）	Ctrl + Shift + F 	全文搜索 带替换功能
+9）Ctrl+L 选择整行（按住-继续选择下行）
+10） Ctrl+Shift+K 删除整行
+11) Ctrl+D 选词 （按住-继续选择下个相同的字符串）
 
 
-Ctrl+L 选择整行（按住-继续选择下行）
 Ctrl+KK 从光标处删除至行尾
-Ctrl+Shift+K 删除整行
+
 Ctrl+Shift+D 复制光标所在整行，插入在该行之前
 Ctrl+J 合并行（已选择需要合并的多行时）
 Ctrl+KU 改为大写
 Ctrl+KL 改为小写
-Ctrl+D 选词 （按住-继续选择下个相同的字符串）
 Ctrl+M 光标移动至括号内开始或结束的位置
 Ctrl+Shift+M 选择括号内的内容（按住-继续选择父括号）
 Ctrl+/ 注释整行（如已选择内容，同“Ctrl+Shift+/”效果）

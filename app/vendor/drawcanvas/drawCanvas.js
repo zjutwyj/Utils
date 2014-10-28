@@ -137,7 +137,7 @@
                     if (ctx.fillImage){
                         var result = ctx.imageCrop(this.naturalWidth, this.naturalHeight, this.width, this.height, true);
                         ctx.resizeCanvas(ctx.background, ctx.width, ctx.height, ctx.left, ctx.top),
-                            Est.drawImage({
+                            Canvas.drawImage({
                                 context2D: ctx.backCtx,
                                 canvas : ctx.mask,
                                 image : this,
@@ -196,7 +196,7 @@
                     if (ctx.fillImage){
                         var result = Est.imageCrop(this.naturalWidth, this.naturalHeight, this.width, this.height, true);
                         //e.resizeCanvas(e.background, e.width, e.height), 
-                        Est.drawImage({
+                        Canvas.drawImage({
                             context2D: ctx.maskCtx,
                             canvas : ctx.mask,
                             image : this,

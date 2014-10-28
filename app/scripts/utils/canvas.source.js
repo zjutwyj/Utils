@@ -6,8 +6,7 @@
  * @constructor Canvas
  */
 ;
-(function () {
-    'use strict';
+(function () {'use strict';
     var root = this;
     /**
      * @description 创建Canvas对象
@@ -16,12 +15,10 @@
     var Canvas = function (value) {
         return (value && typeof value == 'object' && Est.typeOf(value) !== 'array' && Object.prototype.hasOwnProperty.call(value, '_wrapped')) ? value : new Wrapper(value);
     };
-
     function Wrapper(value, chainAll) {
         this._chain = !!chainAll;
         this._wrapped = value;
     }
-
     Canvas.version = '1.1.0';
     /**
      * @description 用于node.js 导出
@@ -35,10 +32,9 @@
     } else {
         root.Canvas = Canvas;
     }
-
     /**
      * @description 创建元素
-     * @method createElement
+     * @method [文档] - createElement
      * @param  {String} tag   标签名称
      * @param  {Object} attrs 属性
      * @return {Element}       元素
@@ -57,9 +53,24 @@
             node.setAttribute(key, attrs[key]);
         return node
     }
-
     Canvas.createElement = createElement;
-
+    /**
+     * @description 清空画布
+     * @method [清除] - clearRect
+     * @param  {Canvas} canvas 画布对象
+     * @param  {Number} left   
+     * @param  {Number} top    
+     * @param  {Number} width  
+     * @param  {Number} height 
+     * @return {context} 
+     * @author wyj on 14.10.10       
+     */
+    function clearRect(canvas, left, top, width, height){
+       var context = canvas.getContext("2d");
+       context.clearRect(left, top, width, height);
+       return context; 
+    }
+    Canvas.clearRect = clearRect;
     /**
      * @description 绘制canvas图片 解决苹果屏幕模糊问题
      * @method [图片] - drawImage
@@ -132,12 +143,10 @@
         context.globalAlpha = opacity;
         context.drawImage(opts.image, srcx, srcy, srcw, srch, desx, desy, desw, desh);
     }
-
     Canvas.drawImage = drawImage;
-
     /**
      * @description 绘制文字
-     * @mehtod drawText
+     * @method [文字] - drawText
      * @param  {Canvas} canvas canvas对象
      * @param {String} text 文字
      * @param  {Object} options   配置属性
@@ -177,11 +186,10 @@
         this.opts.after.call(null, ctx);
         return ctx;
     }
-
     Canvas.drawText = drawText;
     /**
      * @description 画扇形
-     * @method drawSector
+     * @method [扇形] - drawSector
      * @param {Canvas} canvas canvas对象
      * @param {Number} x 起始x轴坐标
      * @param {Number} y 起始y轴坐标
@@ -246,12 +254,10 @@
         }
         return ctx;
     }
-
     Canvas.drawSector = drawSector;
-
     /**
      * @description 旋转画布
-     * @method drawRotated
+     * @method [旋转] - drawRotated
      * @param  {Canvas}   canvas   [description]
      * @param  {Bumber}   degrees  [description]
      * @param  {Function} callback [description]
@@ -272,40 +278,10 @@
         // we’re done with the rotating so restore the unrotated context
         context.restore();
     }
-
     Canvas.drawRotated = drawRotated;
-
-    /**
-     * to be removed
-     * @param  {[type]} canvas  [description]
-     * @param  {[type]} text    [description]
-     * @param  {[type]} clientX [description]
-     * @param  {[type]} clientY [description]
-     * @param  {[type]} radius  [description]
-     * @param  {[type]} degree  [description]
-     * @return {[type]}         [description]
-     */
-    function fillTextCircle(canvas, text, clientX, clientY, radius, degree) {
-        var numRadsPerLetter = 2 * Math.PI / text.length;
-        var ctx = canvas.getContext("2d");
-        ctx.save();
-        ctx.translate(clientX, clientY);
-        ctx.rotate(degree * Math.PI / 180);
-
-        for (var i = 0; i < text.length; i++) {
-            ctx.save();
-            ctx.rotate(i * numRadsPerLetter);
-            ctx.fillText(text[i], 0, -radius);
-            ctx.restore();
-        }
-        ctx.restore();
-    }
-
-    Canvas.fillTextCircle = fillTextCircle;
-
     /**
      * @description 获取圆上某点 水平与圆心平行的夹角， 类似于转盘外侧的文字
-     * @method getDegreeByCircle
+     * @method [角度] - getDegreeByCircle
      * @param {Number} rotateDeg 以x轴为起点所占有的角度值
      * @param {Number} deg 总共有几等份
      * @param {Nubmer} dx 当前第几个
@@ -352,12 +328,10 @@
         }
         return rotateDeg;
     }
-
     Canvas.getDegreeByCircle = getDegreeByCircle;
-
     /**
      * @description 计算半径为radius的点在圆中的坐标
-     * @method getCircleLocation
+     * @method [位置] - getCircleLocation
      * @param {number} centerX 中心点x坐标
      * @param {number} centerY 中心点y坐标
      * @param {number} radius 圆半径
@@ -398,10 +372,7 @@
             y: posY
         }
     }
-
     Canvas.getCircleLocation = getCircleLocation;
-
-
     Est.mixin(Canvas, false);
     /**
      * @description For request.js

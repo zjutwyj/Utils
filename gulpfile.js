@@ -305,6 +305,7 @@ var paths = {
         doc: {
             source: [
                 'app/scripts/utils/Est.source.js',
+                'app/scripts/utils/Canvas.source.js',
                 'app/scripts/app.js',
                 // directives
                 'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
@@ -346,6 +347,16 @@ var paths = {
             ],
             name: 'base.js',
             dist: './app/modules/Wwy'
+        }
+    },
+    ProductImport : {
+        scripts: {
+            source: [
+                './app/vendor/jquery/jquery.min.js',
+                './app/scripts/utils/Est.min.js'
+            ],
+            name: 'base.js',
+            dist: './app/modules/ProductImport'
         }
     },
     test : {
@@ -568,4 +579,12 @@ gulp.task('Design', function(){
 });
 gulp.task('Design.min', function(){
     doTask('Design', false);
+});
+
+/** 项目 jhw_v2 -> modules -> ProductImport  output: app -> modules -> ProductImport -> base.js*/
+gulp.task('ProductImport', function(){
+    doTask('ProductImport', true);
+});
+gulp.task('ProductImport.min', function(){
+    doTask('ProductImport', false);
 });

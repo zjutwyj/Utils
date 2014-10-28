@@ -104,13 +104,72 @@ QUnit.test("Est.format('#{name} is a #{sex}', {name : 'Jhon',sex : 'man'}); => "
 });
 
 QUnit.test("Est.template", function(assert){
-    var template = '<p>Hello, my name is {{this.name}}. I\'m {{this.profile.age}} years old.</p>';
-    var result = Est.template(template, {
-        name: "Krasimir Tsonev",
-        profile: { age: 29 }
+    // 字符串
+    var result3 =Est.template('hello {{name}}', { name: 'feenan'});
+    assert.equal(result3, "hello feenan", "字符串模板 测试通过");
+
+    // 变量嵌套
+    var result8 =Est.template('hello {{person.age}}', { person: {age: 50}});
+    assert.equal(result8, "hello 50", "变量嵌套 测试通过");
+
+    // 四则运算
+    var result4 =Est.template('(1+2)*age = {{ (1+2)*age}}', {age: 18});
+    assert.equal(result4, "(1+2)*age = 54", "四则运算测试通过");
+
+    // 比较操作符
+    var result5 =Est.template('{{1>2}}', {}); // false
+    assert.equal(result5, "false", "比较操作符1测试通过");
+    var result6 =Est.template('{{age > 18}}', {age: 20}); // true
+    assert.equal(result6, "true", "比较操作符2测试通过");
+
+    // 三元运算符
+    var result7 =Est.template('{{ 2 > 1 ? name : ""}}', {name: 'feenan'}); // feenan
+    assert.equal(result7, "feenan", "三元运算符测试通过");
+
+    // 综合
+    var tmpl1 = '<div id="{{id}}" class="{{(i % 2 == 1 ? " even" : "")}}"> ' +
+        '<div class="grid_1 alpha right">' +
+        '<img class="righted" src="{{profile_image_url}}"/>' +
+        '</div>' +
+        '<div class="grid_6 omega contents">' +
+        '<p><b><a href="/{{from_user}}">{{from_user}}</a>:</b>{{info.text}}</p>' +
+        '</div>' +
+        '</div>';
+    var result = Est.template(tmpl1, {
+        i: 5,
+        id: "form_user",
+        from_user: "Krasimir Tsonev",
+        profile_image_url: "http://www.baidu.com/img/aaa.jpg",
+        info: {
+            text: "text"
+        }
     });
-    assert.equal(result, "<p>Hello, my name is Krasimir Tsonev. I'm 29 years old.</p>", 'passed!');
+    assert.equal(result, "<div id=\"form_user\" class=\" even\"> " +
+        "<div class=\"grid_1 alpha right\">" +
+        "<img class=\"righted\" src=\"http://www.baidu.com/img/aaa.jpg\"/>" +
+        "</div>" +
+        "<div class=\"grid_6 omega contents\">" +
+        "<p><b><a href=\"/Krasimir Tsonev\">Krasimir Tsonev</a>:</b>text</p>" +
+        "</div>" +
+        "</div>", '综合1 测试通过!');
+
+    // 可读性差 放弃
+    /*var tmpl2 = '{{ for ( var i = 0; i < users.length; i++ ) { }}' +
+        '<li><a href="{{=users[i].url}}">{{=users[i].name}}</a></li>'+
+        '{{ } }}';
+    var result2 = Est.$template(tmpl2, {
+        users : [{ name: "user1", url: "url1" }, { name: "user2", url: "url2" }, { name: "user3", url: "url3" }, { name: "user4", url: "url4" }, { name: "user5", url: "url5" }]
+    });
+    assert.equal(result2, "<li><a href=\"url1\">user1</a></li>" +
+        "<li><a href=\"url2\">user2</a></li>" +
+        "<li><a href=\"url3\">user3</a></li>" +
+        "<li><a href=\"url4\">user4</a></li>" +
+        "<li><a href=\"url5\">user5</a></li>", "for 嵌套测试通过!");*/
+
+
+
 });
+
 
 QUnit.test("Est.ltrim('  dd    '); => ", function(assert){
     var result = Est.ltrim('  dd    ');

@@ -21,15 +21,15 @@ QUnit.test("Est.urlResolve", function(assert){
         "hash": "",
         "host": "localhost:63342",
         "hostname": "localhost",
-        "href": "http://localhost:63342/Utils/test/qunit.html",
-        "pathname": "/Utils/test/qunit.html",
+        "href": "http://localhost:63342/Utils/test/Est_qunit.html",
+        "pathname": "/Utils/test/Est_qunit.html",
         "port": "63342",
         "protocol": "http",
         "search": ""
     }, "passed!");
 });
 
-QUnit.test('Est.route', function(assert){
+QUnit.test('Est.keyRoute', function(assert){
     var piece = {
         "route1": function(data){
             return "route1" + data;
@@ -38,6 +38,6 @@ QUnit.test('Est.route', function(assert){
             return "route2" + data;
         }
     }
-    var result = Est.route(piece, "route2", "route");
+    var result = Est.keyRoute(piece, "route2", "route");
     assert.equal(result, 'route2route', 'passed');
 });
