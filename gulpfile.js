@@ -158,7 +158,8 @@ var paths = {
     },
     Account: {
         scripts:{
-            source: ['app/vendor/jquery/jquery.min.js',
+            source: [
+                'app/vendor/jquery/jquery.min.js',
                 'app/scripts/utils/Est.min.js',
                 'app/vendor/angular-custom/angular.js',
                 'app/vendor/bootstrap/bootstrap.min.js',
@@ -169,7 +170,8 @@ var paths = {
                 'app/vendor/angular-cookies/angular-cookies.min.js',
                 'app/modules/Account/app.js',
                 'app/scripts/factorys/BaseFactory.js',
-                'app/scripts/factorys/AccountFactory.js'],
+                'app/scripts/factorys/AccountFactory.js'
+            ],
             dist: 'app/modules/Account',
             name: 'app.min.js'
         },
@@ -349,6 +351,45 @@ var paths = {
             dist: './app/modules/Wwy'
         }
     },
+    jihui88: {
+        scripts: {
+            source: [
+                'app/vendor/seajs/sea.js'
+            ],
+            name: 'base.js',
+            dist: './app/modules/Jihui88'
+        },
+        styles: {
+            source: [
+                './app/styles/init/init.css',
+                './app/vendor/artDialog_v6/css/ui-dialog.css'
+            ],
+            dist: './app/modules/Jihui88',
+            name: 'base.css'
+        }
+    },
+    jihui88_angular: {
+        scripts: {
+            source: [
+                'app/vendor/jquery/jquery.min.js',
+                'app/scripts/utils/Est.min.js',
+                'app/vendor/zeroclipboard/ZeroClipboard.js',
+                'app/vendor/angular-custom/angular.js',
+                'app/vendor/angular-resource/angular-resource.min.js',
+                'app/vendor/angular-route/angular-route.min.js',
+                'app/vendor/angular-ui-router/release/angular-ui-router.min.js',
+                'app/vendor/angular-cookies/angular-cookies.min.js',
+                'app/vendor/jq-upload/jquery-upload.min.js',
+                'app/modules/Jihui88/app.js',
+                'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js',
+                'app/scripts/directives/ng-ueditor/ng-ueditor.src.js',
+                'app/scripts/factorys/BaseFactory.js',
+                'app/scripts/factorys/AccountFactory.js'
+            ],
+            name: 'base.js',
+            dist: './app/modules/Jihui88'
+        }
+    },
     ProductImport : {
         scripts: {
             source: [
@@ -390,8 +431,8 @@ function doTask(item, debug){
                     gulp.task(item + key, function () {
                         if (debug) {
                             return gulp.src(paths[item].scripts.source)
-                               .pipe(jshint())
-                                .pipe(jshint.reporter(stylish))
+                               /*.pipe(jshint())
+                                .pipe(jshint.reporter(stylish))*/
                                 .pipe(concat(paths[item].scripts.name))
                                 .pipe(gulp.dest(paths[item].scripts.dist));
                         }
@@ -547,6 +588,22 @@ gulp.task('drawcanvas', function(){
 gulp.task('drawcanvas.min', function(){
     doTask('drawcanvas', false);
 });
+
+/** jihui88 */
+gulp.task('jihui88', function(){
+    doTask('jihui88', true);
+});
+gulp.task('jihui88.min', function(){
+    doTask('jihui88', false);
+});
+
+gulp.task('jihui881', function(){
+    doTask("jihui881", true);
+});
+gulp.task('jihui881.min', function(){
+    doTask('jihui881', false);
+});
+
 
 /** 全部 */
 gulp.task('all', ['doc-clean', 'doc', 'acecss', 'patch', 'Est', 'fileupload', 'gallery', 'ueditor', 'seditor']);

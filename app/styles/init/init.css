@@ -11,7 +11,7 @@ html {
     background-attachment: fixed;
 }
 
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,menu,nav,section
     {
     margin: 0;
     padding: 0;
@@ -21,14 +21,14 @@ body {
     _height: 100%;
 }
 /* html5 */
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
+article,aside,details,figcaption,figure,footer,header,menu,nav,section
     {
     display: block;
 }
 
 /* 表单元素并不继承父级 font */
 body,button,input,select,textarea {
-    font: 12px Tahoma,Arial,Microsoft YaHei,'微软雅黑',宋体,sans-serif;
+    font: 12px Tahoma,Arial,Microsoft YaHei,'微软雅黑','宋体',sans-serif;
     background: #fff;
 }
 
