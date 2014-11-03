@@ -335,7 +335,7 @@ var paths = {
     wwy: {
         scripts: {
             source: [
-                './app/vendor/jquery/jquery.min.js',
+                './app/vendor/jquery/jquery.js',
                 './app/scripts/utils/Est.source.js',
                 './app/scripts/utils/Canvas.source.js',
                 './app/vendor/jquery-ui/jquery-ui.js',
