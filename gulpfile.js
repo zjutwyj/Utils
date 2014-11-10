@@ -354,7 +354,8 @@ var paths = {
     jihui88: {
         scripts: {
             source: [
-                'app/vendor/seajs/sea.js'
+                'app/vendor/seajs/sea.js',
+                'app/vendor/pace/pace.js'
             ],
             name: 'base.js',
             dist: './app/modules/Jihui88'

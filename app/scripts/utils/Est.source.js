@@ -2082,7 +2082,7 @@
     Est.girdJustify = girdJustify;
     // TreeUtils
     /**
-     * @description 构建树
+     * @description 构建树 注意：categoryId， belongId别弄错， 否则会报‘Maximum call stack size exceeded’错误
      * @method [树] - bulidSubNode
      * @param {Array} rootlist 根节点列表
      * @param {Array} totalList 总列表 {String}
@@ -2170,6 +2170,33 @@
         return rootlist;
     }
     Est.bulidSelectNode = bulidSelectNode;
+
+
+    /**
+     * @description 扩展树
+     * @method [树] - extendTree
+     * @param {Array} rootlist 根节点列表
+     * @author wyj on 14/5/15
+     * @example
+     *      Est.extendNode(rootlist);
+     */
+    function extendTree(treelist, opts){
+        var list = [];
+        function extendNode(rootlist) {
+            for (var i = 0, len = rootlist.length; i < len; i++) {
+                list.push(rootlist[i]);
+                if (rootlist[i].hasChild) {
+                    extendNode(rootlist[i].cates);
+                }
+            }
+            return rootlist;
+        }
+        extendNode(treelist);
+        return list;
+    }
+
+    Est.extendTree = extendTree;
+
     /**
      * @description 构建树
      * @method [树] - bulidTreeNode
@@ -2670,7 +2697,7 @@
             Object.observe(current.controller, current.render.bind(current));
         }
     }
-    if (window){
+    if (window && window.addEventListener){
         window.addEventListener('hashchange', router);
         window.addEventListener('load', router);
     }
@@ -2762,7 +2789,14 @@
         define('Est', [], function() {
             return Est;
         });
-    } else{
+    }
+    else if (typeof define === 'function' && define.cmd){
+        // seajs
+        define('Est', [], function(require, exports, module){
+            module.exports = Est;
+        });
+    }
+    else{
         Est.define('Est', [], function(){
             return Est;
         });
