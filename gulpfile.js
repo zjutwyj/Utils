@@ -130,7 +130,7 @@ var paths = {
                 'app/vendor/jq-upload/jquery-upload.min.js',
                 'app/vendor/image-gallery/gallery.min.js',
                 // app
-                'app/scripts/app.js',
+                'app/modules/jhw_v2/app.js',
                 // directives
                 'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
                 'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
@@ -355,6 +355,7 @@ var paths = {
         scripts: {
             source: [
                 'app/vendor/seajs/sea.js',
+                'app/vendor/seajs/seajs-text-debug.js',
                 'app/vendor/pace/pace.js'
             ],
             name: 'base.js',
@@ -422,7 +423,20 @@ var paths = {
             ],
             dist: './test/images'
         }
+    },
+  userManagement: {
+    scripts: {
+      source: [
+        'app/vendor/seajs/sea.js',
+        'app/vendor/seajs/seajs-text-debug.js',
+        'app/vendor/pace/pace.js',
+        'app/scripts/utils/Est.source.js',
+        'app/modules/userManagement/app.js'
+      ],
+      name: 'base.js',
+      dist: './app/modules/userManagement'
     }
+  }
 };
 function doTask(item, debug){
     for (var key in paths[item]) {
@@ -604,7 +618,12 @@ gulp.task('jihui881', function(){
 gulp.task('jihui881.min', function(){
     doTask('jihui881', false);
 });
-
+gulp.task('userManagement', function(){
+  doTask("userManagement", true);
+});
+gulp.task('userManagement.min', function(){
+  doTask('userManagement', false);
+});
 
 /** 全部 */
 gulp.task('all', ['doc-clean', 'doc', 'acecss', 'patch', 'Est', 'fileupload', 'gallery', 'ueditor', 'seditor']);

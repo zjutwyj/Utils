@@ -5,6 +5,43 @@
  */
 QUnit.module( "【ObjectUtils】" );
 
+QUnit.test('Est.getValue', function(assert){
+  var object = {
+    item: {
+      name: 'aaa'
+    }
+  }
+  var object2 = {
+    item: {
+      name: 'aaa'
+    }
+  }
+  var result = Est.getValue(object, 'item.name');
+  assert.equal(result, 'aaa', 'passed');
+  assert.deepEqual(object, object2, 'passed');
+});
+
+QUnit.test('Est.setValue', function(assert){
+  var object = {
+    item: {
+      name: 'aaa'
+    },
+    item2: {
+      name: 'bbb'
+    }
+  }
+  var object2 = {
+    item: {
+      name: 'bbb'
+    },
+    item2: {
+      name: 'bbb'
+    }
+  }
+  Est.setValue(object, 'item.name', 'bbb');
+  assert.deepEqual(object, object2, 'passed');
+
+});
 QUnit.test("Est.chain", function(assert){
     var characters = [
         { 'name': 'barney',  'age': 36 },

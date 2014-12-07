@@ -26,7 +26,146 @@ QUnit.test("Est.bulidSelectNode", function(assert){
     Est.bulidSelectNode(root, 2, {
         name : 'name'
     });
-    var result = [ { "alias": null, "belong_id": "/", "category_id": "Category_00000000000000000002290", "cates": [], "cdesc": "默认分类", "grade": "01", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　|-默认分类", "sort": "4" }, { "alias": null, "belong_id": "/", "category_id": "Category_00000000000000000002306", "cates": [ { "alias": null, "belong_id": "Category_00000000000000000002306", "category_id": "Category_00000000000000000002312", "cates": [ { "alias": null, "belong_id": "Category_00000000000000000002312", "category_id": "Category_00000000000000000002316", "cates": [], "cdesc": "", "grade": "03", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　　　　　|-14寸", "sort": "9" }, { "alias": null, "belong_id": "Category_00000000000000000002312", "category_id": "Category_00000000000000000002315", "cates": [], "cdesc": "", "grade": "03", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　　　　　|-13寸", "sort": "8" } ], "cdesc": "", "grade": "02", "hasChild": true, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　　　|-苹果", "sort": "7" }, { "alias": null, "belong_id": "Category_00000000000000000002306", "category_id": "Category_00000000000000000002314", "cates": [], "cdesc": "", "grade": "02", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　　　|-联想", "sort": "6" }, { "alias": null, "belong_id": "Category_00000000000000000002306", "category_id": "Category_00000000000000000002313", "cates": [], "cdesc": "", "grade": "02", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　　　|-华硕", "sort": "5" } ], "cdesc": "", "grade": "01", "hasChild": true, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　|-电脑", "sort": "3" }, { "alias": null, "belong_id": "/", "category_id": "Category_00000000000000000002307", "cates": [], "cdesc": "", "grade": "01", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　|-包包", "sort": "2" }, { "alias": null, "belong_id": "/", "category_id": "Category_00000000000000000002305", "cates": [], "cdesc": "", "grade": "01", "hasChild": false, "hunkdisplay": null, "image": null, "isdisplay": "1", "key": null, "name": "　　|-手机", "sort": "1" } ];
+    var result =
+        [
+            {
+                "alias": null,
+                "belong_id": "/",
+                "category_id": "Category_00000000000000000002290",
+                "cates": [],
+                "cdesc": "默认分类",
+                "grade": "01",
+                "hasChild": false,
+                "hunkdisplay": null,
+                "image": null,
+                "isdisplay": "1",
+                "key": null,
+                "name": "|-默认分类",
+                "sort": "4"
+            },
+            {
+                "alias": null,
+                "belong_id": "/",
+                "category_id": "Category_00000000000000000002306",
+                "cates": [
+                    {
+                        "alias": null,
+                        "belong_id": "Category_00000000000000000002306",
+                        "category_id": "Category_00000000000000000002312",
+                        "cates": [
+                            {
+                                "alias": null,
+                                "belong_id": "Category_00000000000000000002312",
+                                "category_id": "Category_00000000000000000002316",
+                                "cates": [],
+                                "cdesc": "",
+                                "grade": "03",
+                                "hasChild": false,
+                                "hunkdisplay": null,
+                                "image": null,
+                                "isdisplay": "1",
+                                "key": null,
+                                "name": "　　　　　　|-14寸",
+                                "sort": "9"
+                            },
+                            {
+                                "alias": null,
+                                "belong_id": "Category_00000000000000000002312",
+                                "category_id": "Category_00000000000000000002315",
+                                "cates": [],
+                                "cdesc": "",
+                                "grade": "03",
+                                "hasChild": false,
+                                "hunkdisplay": null,
+                                "image": null,
+                                "isdisplay": "1",
+                                "key": null,
+                                "name": "　　　　　　|-13寸",
+                                "sort": "8"
+                            }
+                        ],
+                        "cdesc": "",
+                        "grade": "02",
+                        "hasChild": true,
+                        "hunkdisplay": null,
+                        "image": null,
+                        "isdisplay": "1",
+                        "key": null,
+                        "name": "　　　　|-苹果",
+                        "sort": "7"
+                    },
+                    {
+                        "alias": null,
+                        "belong_id": "Category_00000000000000000002306",
+                        "category_id": "Category_00000000000000000002314",
+                        "cates": [],
+                        "cdesc": "",
+                        "grade": "02",
+                        "hasChild": false,
+                        "hunkdisplay": null,
+                        "image": null,
+                        "isdisplay": "1",
+                        "key": null,
+                        "name": "　　　　|-联想",
+                        "sort": "6"
+                    },
+                    {
+                        "alias": null,
+                        "belong_id": "Category_00000000000000000002306",
+                        "category_id": "Category_00000000000000000002313",
+                        "cates": [],
+                        "cdesc": "",
+                        "grade": "02",
+                        "hasChild": false,
+                        "hunkdisplay": null,
+                        "image": null,
+                        "isdisplay": "1",
+                        "key": null,
+                        "name": "　　　　|-华硕",
+                        "sort": "5"
+                    }
+                ],
+                "cdesc": "",
+                "grade": "01",
+                "hasChild": true,
+                "hunkdisplay": null,
+                "image": null,
+                "isdisplay": "1",
+                "key": null,
+                "name": "|-电脑",
+                "sort": "3"
+            },
+            {
+                "alias": null,
+                "belong_id": "/",
+                "category_id": "Category_00000000000000000002307",
+                "cates": [],
+                "cdesc": "",
+                "grade": "01",
+                "hasChild": false,
+                "hunkdisplay": null,
+                "image": null,
+                "isdisplay": "1",
+                "key": null,
+                "name": "　　|-包包",
+                "sort": "2"
+            },
+            {
+                "alias": null,
+                "belong_id": "/",
+                "category_id": "Category_00000000000000000002305",
+                "cates": [],
+                "cdesc": "",
+                "grade": "01",
+                "hasChild": false,
+                "hunkdisplay": null,
+                "image": null,
+                "isdisplay": "1",
+                "key": null,
+                "name": "　　|-手机",
+                "sort": "1"
+            }
+        ];
     assert.deepEqual(root, result, "passed!");
 })
 

@@ -120,7 +120,7 @@ app.run(['$route', '$rootScope', '$http', '$timeout', '$location', '$q', '$modal
          */
         $rootScope.open = function (msg, action, opts) {
             var modalInstance = $modal.open({
-                templateUrl: 'templates/msg/msg.html',
+                templateUrl: '../../templates/msg/msg.html',
                 controller: ['$scope', '$modalInstance', 'item',function($scope, $modalInstance, item){
                     $scope.ok_text = "确定";
                     $scope.cancel_text = "关闭";
