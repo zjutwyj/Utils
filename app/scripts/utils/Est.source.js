@@ -331,7 +331,7 @@
 
     function finale() {
       setTimeout(function () {
-        deferreds.forEach(function (deferred) {
+        each(deferreds, function(deferred){
           handle(deferred);
         });
       }, 0);
@@ -1558,7 +1558,7 @@
 
   Est.rtrim = rtrim;
   /**
-   * @description 移除字符串两端的空白
+   * @description 移除字符串两端的空白, 当字符串为undefined时， 返回null
    * @method [字符串] - trim
    * @param {String} str 原字符串
    * @return {String} 返回新字符串
@@ -1567,6 +1567,7 @@
    *     Est.trim('  dd    '); => 'dd'
    */
   function trim(str) {
+    if (isEmpty(str)) return null;
     for (var i = 0; i < str.length; i++) {
       if (whitespace.indexOf(str.charAt(i)) === -1) {
         str = str.substring(i);

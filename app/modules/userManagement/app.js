@@ -4,18 +4,88 @@
  * @author yongjin<zjut_wyj@163.com> 2014/12/7
  */
 // 所有实例化对象的容器
-window.Application = function (options) {
+var Application = function (options) {
   this.options = options;
   Est.extend(this, options);
   this.initialize.apply(this, arguments);
 };
 Est.extend(Application.prototype, {
-  initialize: function() {},
+  initialize: function() {
+    this.data = { itemActiveList: [] };
+    this.instance = {};
+    this.modules = {};
+    this.routes = {};
+    this.templates = {};
+    this.evet = {};
+  },
+  getEvet: function(name){
+    return this.evet[name];
+  },
+  setEvet: function(name, val){
+    this['evet'][name] = val;
+  },
   getView: function(name){
-    return this[name];
+    return this['instance'][name];
   },
   addView: function(name, instance){
-    this[name] = instance;
+    if (name in this['instance']){
+      console.log('实例化对象重复' + name);
+    }
+    this['instance'][name] = instance;
+  },
+  hasView: function(name){
+    return name in this['instance'];
+  },
+  removeView: function(name){
+    delete this['instance'][name];
+  },
+  emptyView: function(){
+    Est.each(this['instance'], function(key){
+      debug(key);
+    });
+    this['instance'] = {};
+  },
+  setData: function(name, data){
+    if (name in this['data']){
+      console.log('数据对象重复' + name);
+    }
+    this['data'][name] = data;
+  },
+  hasData: function(name){
+    return name in this['data'];
+  },
+  getData: function(name){
+    return this['data'][name];
+  },
+  removeData: function(name){
+    delete this[name];
+  },
+  addModule: function(name, val){
+    if (name in this['modules']){
+       console.error('已存在的模块：' + name);
+    }
+    this['modules'][name] = val;
+  },
+  getModules: function(){
+    return this['modules'];
+  },
+  addRoute: function(name, fn){
+    if (name in this['routes']){
+      console.error('已存在的路由:' + name);
+    }
+    this['routes'][name] = fn;
+  },
+  getRoutes: function(){
+    return this['routes'];
+  },
+  addTemplate: function(name, fn){
+    if (name in this['templates']){
+      console.error('已存在的模板：' + name);
+    }
+    this['templates'][name] = fn;
+  },
+  getTemplates: function(){
+    return this['templates'];
   }
 });
 if (!window.console) {
@@ -142,3 +212,39 @@ if (!window.console) {
   });
   require("bui/config");
 })();
+
+/**
+ * 全局常量
+ * */
+var CONST = {
+  HOST: 'http://jihui88.com/member',
+  API: 'http://jihui88.com/rest/api',
+  DOMAIN: 'http://jihui88.com',
+  SEP: '/',
+  ENTER_KEY: 13,
+  COLLAPSE_SPEED: 50,
+  DEBUG: true,
+  ENTER_KEY: 13
+}
+window.CONST = CONST;
+// 所有实例化对象的容器
+var APP = {
+  debug: true
+}
+
+/**
+ * 视图管理容器
+ * */
+if (typeof app === 'undefined'){
+  app = new Application(CONST);
+}
+app.setData('loginViewList', [
+  {text: '访问者可见', value: '1'},
+  {text: '登录后可见', value: '0'}
+]);
+app.setData('adsList', [
+  {text: '广告产品', value: '2'},
+  {text: '是', value: '1'},
+  {text: '否', value: '0'}
+]);
+window.app = app;
