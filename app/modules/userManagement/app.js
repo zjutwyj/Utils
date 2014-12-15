@@ -223,14 +223,9 @@ var CONST = {
   SEP: '/',
   ENTER_KEY: 13,
   COLLAPSE_SPEED: 50,
-  DEBUG: true,
   ENTER_KEY: 13
 }
 window.CONST = CONST;
-// 所有实例化对象的容器
-var APP = {
-  debug: true
-}
 
 /**
  * 视图管理容器
@@ -246,5 +241,12 @@ app.setData('adsList', [
   {text: '广告产品', value: '2'},
   {text: '是', value: '1'},
   {text: '否', value: '0'}
+]);
+app.setData('certificateList', [
+  {text: '基本证书', value: '01'},
+  {text: '一般证书', value: '02'},
+  {text: '税务证书', value: '03'},
+  {text: '荣誉证书', value: '04'},
+  {text: '其它证书', value: '05'}
 ]);
 window.app = app;
