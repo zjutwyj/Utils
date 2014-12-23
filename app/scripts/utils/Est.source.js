@@ -38,9 +38,13 @@
    */
   var maxPoolSize = 40;
   var arrayPool = [], objectPool = [];
-  /** 缓存对象 */
+  /**
+   * @method [变量] - cache
+   * 缓存对象 */
   var cache = {};
-  /** url 路由 */
+  /**
+   * @method [变量] - routes
+   * url 路由 */
   var routes = {};
   var el = null, current = null;
 
@@ -412,7 +416,7 @@
    * @method [对象] - getValue
    * @param object
    * @param path
-   * @returns {*}
+   * @return {*}
    * @author wyj 14.12.4
    * @example
    *    var result = Est.getValue(object, 'item.name');
@@ -467,7 +471,7 @@
    * @param object
    * @param path
    * @param value
-   * @returns {boolean}
+   * @return {boolean}
    * @author wyj 14.12.4
    * @example
    *    Est.setValue(object, 'item.name', 'bbb');
@@ -2481,7 +2485,7 @@
    * @return {*}
    * @author wyj on 14/7/10
    * @example
-   *
+   *     $('.broadcrumb').html(Est.bulidBreakNav(app.getData('albumList'), 'album_id', albumId, 'name', 'parent_id'));
    *
    */
   function bulidBreakNav(list, nodeId, nodeValue, nodeLabel, nodeParentId) {
