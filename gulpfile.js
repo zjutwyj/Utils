@@ -308,6 +308,7 @@ var paths = {
       source: [
         'app/scripts/utils/Est.source.js',
         'app/scripts/utils/Canvas.source.js',
+        'app/base/*.js',
         'app/scripts/app.js',
         // directives
         'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
@@ -431,7 +432,7 @@ var paths = {
         'app/vendor/seajs/seajs-text-debug.js',
         'app/vendor/pace/pace.js',
         'app/scripts/utils/Est.source.js',
-        'app/modules/userManagement/app.js'
+        'app/backbone/Application.js'
       ],
       name: 'base.js',
       dist: './app/modules/userManagement'

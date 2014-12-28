@@ -1,9 +1,8 @@
 /**
  * @description 应用程序管理器
  * @class Application
- * @author yongjin<zjut_wyj@163.com> 2014/12/7
+ * @author yongjin<zjut_wyj@163.com> 2014/12/28
  */
-// 所有实例化对象的容器
 var Application = function (options) {
   this.options = options;
   Est.extend(this, options);
@@ -16,7 +15,6 @@ Est.extend(Application.prototype, {
     this.modules = {};
     this.routes = {};
     this.templates = {};
-    this.evet = {};
     this.panel = {};
     this.dialog = [];
   },
