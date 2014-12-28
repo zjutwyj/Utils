@@ -1,6 +1,6 @@
 /**
- * @description app
- * @namespace app
+ * @description 应用程序管理器
+ * @class Application
  * @author yongjin<zjut_wyj@163.com> 2014/12/7
  */
 // 所有实例化对象的容器
@@ -18,97 +18,241 @@ Est.extend(Application.prototype, {
     this.templates = {};
     this.evet = {};
     this.panel = {};
+    this.dialog = [];
   },
-  addPanel: function (name, options) {
+  /**
+   * 添加面板
+   *
+   * @method [面板] - addPanel
+   * @param name
+   * @param options
+   * @return {Application}
+   * @example
+   *        app.addPanel('product', new Panel());
+   */
+  addPanel: function (name, panel) {
     if (name in this['panel']) {
       console.log('已存在该面板：' + name);
-      return this;
     }
-    this.panel[name] = $(options.el || '#jhw-main').append($(options.template));
-    return this;
+    this.panel[name] = panel;
+    return panel;
   },
+  /**
+   * 获取面板
+   *
+   * @method [面板] - getPanel
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *      app.getPanelf('panel');
+   */
   getPanel: function(name){
     return this.panel[name];
   },
-  getEvet: function (name) {
-    return this.evet[name];
-  },
-  setEvet: function (name, val) {
-    this['evet'][name] = val;
-  },
-  getView: function (name) {
-    return this['instance'][name];
-  },
+  /**
+   * 视图添加
+   *
+   * @method [视图] - addView
+   * @param name
+   * @param instance
+   * @return {*}
+   * @example
+   *      app.addView('productList', new ProductList());
+   */
   addView: function (name, instance) {
-    if (name in this['instance']) { console.log('实例化对象重复' + name); }
+    if (name in this['instance']) {
+      this.removeView(name);
+      //console.log('已存在该视图对象' + name + '， 请先移除该视图再创建, app.removeView("XxxView")');
+    }
     this['instance'][name] = instance;
     return instance;
   },
-  hasView: function (name) {
-    return name in this['instance'];
+  /**
+   * 获取视图
+   *
+   * @method [视图] - getView
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *        app.getView('productList');
+   */
+  getView: function (name) {
+    return this['instance'][name];
   },
+  /**
+   * 视图移除， 移除视图绑定的事件及所有itemView的绑定事件,
+   * 并移除所有在此视图创建的对话框
+   *
+   * @method [视图] - removeView
+   * @param name
+   * @return {Application}
+   * @example
+   *        app.removeView('productList');
+   */
   removeView: function (name) {
     var view = this.getView(name);
     if (view){
-      view.$el.empty().off();
+      view._empty();
       view.stopListening();
+      view.$el.off();
     }
     delete this['instance'][name];
     return this;
   },
-  emptyView: function () {
-    Est.each(this['instance'], function (key) {
-      debug(key);
-    });
-    this['instance'] = {};
+  /**
+   * 添加对话框
+   *
+   * @emthod [对话框] - addDailog
+   * @param dialog
+   * @return {*}
+   * @example
+   *      app.addDialog('productDialog', dialog);
+   */
+  addDialog: function(dialog){
+    this.dialog.push(dialog);
+    return dialog;
   },
-  setData: function (name, data) {
+  /**
+   * 清空所有对话框, 当切换页面时移除所有对话框
+   *
+   * @method [对话框] - emptyDialog
+   * @author wyj 14.12.28
+   * @example
+   *      app.emptyDialog();
+   */
+  emptyDialog: function(){
+    Est.each(this.dialog, function(item){
+      if (item.close){
+        item.close().remove();
+      }
+    });
+  },
+  /**
+   * 添加数据
+   *
+   * @method [数据] - addData
+   * @param name
+   * @param data
+   * @author wyj 14.12.28
+   * @example
+   *      app.addData('productList', productList);
+   */
+  addData: function (name, data) {
     if (name in this['data']) {
       console.log('数据对象重复' + name);
     }
     this['data'][name] = data;
   },
-  hasData: function (name) {
-    return name in this['data'];
-  },
+  /**
+   * 获取数据
+   *
+   * @method [数据] - getData
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *        app.getData('productList');
+   */
   getData: function (name) {
     return this['data'][name];
   },
-  removeData: function (name) {
-    delete this[name];
-  },
+  /**
+   * 添加模板 分拆seajs配置文件，
+   * 实现每个模板都有自己的模块配置文件
+   *
+   * @method [模块] - addModule
+   * @param name
+   * @param val
+   * @author wyj 14.12.28
+   * @example
+   *        app.addModule('ProductList', '/modules/product/controllers/ProductList.js');
+   */
   addModule: function (name, val) {
     if (name in this['modules']) {
       console.log('已存在的模块：' + name);
     }
     this['modules'][name] = val;
   },
+  /**
+   * 获取所有模块
+   *
+   * @method [模块] - getModules
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *
+   */
   getModules: function () {
     return this['modules'];
   },
+  /**
+   * 添加路由
+   *
+   * @method [路由] - addRoute
+   * @param name
+   * @param fn
+   * @author wyj 14.12.28
+   * @example
+   *      app.addRoute('product', function(){
+   *          seajs.use(['ProductList'], function(ProductList){
+   *          });
+   *      });
+   */
   addRoute: function (name, fn) {
     if (name in this['routes']) {
       console.log('已存在的路由:' + name);
     }
     this['routes'][name] = fn;
   },
+  /**
+   * 获取所有路由
+   *
+   * @method [路由] - getRoutes
+   * @returns {*}
+   * @author wyj 14.12.28
+   *
+   */
   getRoutes: function () {
     return this['routes'];
   },
+  /**
+   * 添加模板, 目前无法解决seajs的实时获取问题
+   *
+   * @method [模板] - addTemplate
+   * @param name
+   * @param fn
+   * @author wyj 14.12.28
+   * @example
+   *        app.addTemplate('template/photo_item', function (require, exports, module) {
+              module.exports = require('modules/album/views/photo_item.html');
+            });
+   */
   addTemplate: function (name, fn) {
     if (name in this['templates']) {
       console.log('已存在的模板：' + name);
     }
     this['templates'][name] = fn;
   },
+  /**
+   * 获取所有模板
+   *
+   * @method [模板] - getTemplates
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *        app.getTemplates();
+   */
   getTemplates: function () {
     return this['templates'];
   }
 });
+/**
+ * 解决ie6无console问题*/
 if (!window.console) {
   console = (function (debug) {
     var instance = null;
-
     function Constructor() {
       if (debug) {
         this.div = document.createElement("console");
@@ -117,7 +261,6 @@ if (!window.console) {
         document.body.appendChild(this.div);
       }
     }
-
     Constructor.prototype = {
       log: function (str) {
         if (debug) {
@@ -133,7 +276,6 @@ if (!window.console) {
       }
       return instance;
     }
-
     return getInstance();
   })(false)
 }
