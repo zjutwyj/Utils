@@ -105,13 +105,14 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         this.dx = 0;
         this.views = [];
         this.$el.empty();
+        Est.extend(this._options, this.options);
         if (this._options.template) {
-          this._options.data = this.options.data || this._options.data || {};
+          this._options.data = this._options.data || {};
           this.template = HandlebarsHelper.compile(this._options.template);
           this.$el.html(this.template(this._options.data));
         }
         this._data = this._options.data;
-        this._options.max = this.options.max || 99999;
+        this._options.max = this._options.max || 99999;
         if (this._options.enterRender) {
           this._enterEvent();
         }
@@ -139,11 +140,11 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         if (!this.collection) {
           this.collection = new collection(this._options);
         }
-        if (this.options.itemId) {
-          this.collection._setItemId(this.options.itemId);
+        if (this._options.itemId) {
+          this.collection._setItemId(this._options.itemId);
         }
         //TODO 分类过滤
-        if (this._options.subRender) {
+        if (this._options.subRender && !(this._options.items)) {
           this.composite = true;
         }
         this._initItemView(this._options.item, this);
@@ -154,11 +155,11 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         if (this._options.afterLoad) {
           this._options.afterLoad.call(this, this._options);
         }
-        if (this.options.items) {
-          if (Est.typeOf(this.options.items) === 'function') {
-            this.options.items = this.options.items.apply(this, arguments);
+        if (this._options.items) {
+          if (Est.typeOf(this._options.items) === 'function') {
+            this._options.items = this._options.items.apply(this, arguments);
           }
-          Est.each(this.options.items, function (item) {
+          Est.each(this._options.items, function (item) {
             this.collection.push(new ctx.initModel(item));
           }, this);
         }
@@ -231,6 +232,9 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         });
         debug(ctx.collection);
       },
+      _filterItemRoot: function(){
+
+      },
       /**
        * 向视图添加元素
        *
@@ -245,6 +249,8 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           model.set('dx', this.dx++);
           model.set('_options', {
             _item: ctx._options.item,
+            _items: ctx._options.items ? true : false,
+            _model: ctx._options.model,
             _collection: Est.isEmpty(ctx._options.subRender) ? null : ctx.collection,
             _subRender: ctx._options.subRender,
             _collapse: ctx._options.collapse,
@@ -259,7 +265,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           });
           itemView._setInitModel(this.initModel);
           //TODO 优先级 new对象里的viewId > _options > getCurrentView()
-          itemView._setViewId(this.options.viewId || this._options.viewId || app.getCurrentView());
+          itemView._setViewId(this._options.viewId || app.getCurrentView());
           this.list.append(itemView._render().el);
           this.views.push(itemView);
         }

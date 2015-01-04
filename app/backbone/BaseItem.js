@@ -102,14 +102,18 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
           // Build child views, insert and render each
           var ctx = this;
           var childView = null;
-          var level = this.model.get('level');
+          var level = this.model.get('level') || 1;
 
           var tree = this.$(modelOptions._subRender + ':first');
           this._setupEvents(modelOptions);
 
           _.each(this.model._getChildren(modelOptions._collection), function (newmodel) {
+            if (modelOptions._items) {
+              newmodel = new modelOptions._model(newmodel);
+            }
             newmodel.set('_options', modelOptions);
             newmodel.set('level', level + 1);
+
             childView = new modelOptions._item({
               model: newmodel,
               data: ctx._options._data
@@ -138,7 +142,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @private
        * @author wyj 14.12.20
        */
-      _setViewId: function(name){
+      _setViewId: function (name) {
         this._options.viewId = name;
       },
       /**
@@ -195,11 +199,11 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
 
         if (ctx.collapsed) {
           this.$(opts._collapse + ':first').removeClass('x-caret-down');
-          this.$(opts._subRender + ':first').slideUp(CONST.COLLAPSE_SPEED).hide();
+          this.$(opts._subRender + ':first').slideUp(CONST.COLLAPSE_SPEED).addClass('hide');
         }
         else {
           this.$(opts._collapse + ':first').addClass('x-caret-down');
-          this.$(opts._subRender + ':first').slideDown(CONST.COLLAPSE_SPEED).show();
+          this.$(opts._subRender + ':first').slideDown(CONST.COLLAPSE_SPEED).removeClass('hide');
         }
       },
       /**
@@ -263,11 +267,13 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
           this.model.get('_options')._checkAppend
         this.model.set('checked', this._checkAppend ? !this.model.get('checked') : true);
 
-        if (this.model.get('checked')){
+        if (this.model.get('checked')) {
           this._itemActive({
             add: this._checkAppend
           });
-        } else { this.$el.removeClass('item-active'); }
+        } else {
+          this.$el.removeClass('item-active');
+        }
         BaseUtils.tooltip('支持shift + 鼠标左键进行多选', {
           id: 'toggleChecked',
           align: 'left',
@@ -278,13 +284,13 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         if (e.shiftKey) {
           var beginDx = app.getData('curChecked');
           var endDx = this.model.collection.indexOf(this.model);
-          Est.each(this.model.collection.models, function(model){
-            if (model.get('dx') > beginDx && model.get('dx') < endDx){
+          Est.each(this.model.collection.models, function (model) {
+            if (model.get('dx') > beginDx && model.get('dx') < endDx) {
               model.set('checked', true);
               model.view.$el.addClass('item-active');
             }
           });
-        } else{
+        } else {
           app.addData('curChecked', this.model.collection.indexOf(this.model));
         }
         e && e.stopImmediatePropagation();
@@ -299,17 +305,18 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @example
        *        this._itemActive();
        */
-      _itemActive: function(options){
+      _itemActive: function (options) {
         options = options || {};
 
         var list = app.getData('itemActiveList');
-        if (!options.add){
-          Est.each(list, function(selecter){
+        if (!options.add) {
+          Est.each(list, function (selecter) {
             var node = $('.' + selecter);
             //TODO 当为单选时
             //node.find('.toggle:first').click();
             node.removeClass('item-active');
-          }); list.length = 0;
+          });
+          list.length = 0;
         }
         this.$el.addClass('item-active');
 
@@ -323,12 +330,12 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @private
        * @author wyj 14.12.14
        */
-      _moveUp: function(e){
+      _moveUp: function (e) {
         e.stopImmediatePropagation();
         this._itemActive();
         this.collapsed = true;
-        if (!this._options.viewId){
-          debug('当前视图viewId不存在，无法完成上移操作，检查new XxxList({})options中的viewId是否定义？',{ type: 'error' });
+        if (!this._options.viewId) {
+          debug('当前视图viewId不存在，无法完成上移操作，检查new XxxList({})options中的viewId是否定义？', { type: 'error' });
           return false;
         }
         app.getView(this._options.viewId)._moveUp(this.model);
@@ -341,12 +348,12 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @private
        * @author wyj 14.12.14
        */
-      _moveDown: function(e){
+      _moveDown: function (e) {
         e.stopImmediatePropagation();
         this._itemActive();
         this.collapsed = true;
-        if (!this._options.viewId){
-          debug('当前视图viewId不存在，无法完成下移操作，检查new XxxList({})options中的viewId是否定义？',{
+        if (!this._options.viewId) {
+          debug('当前视图viewId不存在，无法完成下移操作，检查new XxxList({})options中的viewId是否定义？', {
             type: 'error'
           });
           return false;
@@ -378,7 +385,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @author wyj 14.12.31
        *
        */
-      _getPage: function(){
+      _getPage: function () {
         var paginationModel = this.model.collection.paginationModel;
         if (!paginationModel) return 1;
         return paginationModel.get('page');
@@ -446,10 +453,10 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @example
        *        this._modelBind();
        */
-      _modelBind: function(){
+      _modelBind: function () {
         var ctx = this;
         this.$("input, textarea, select").each(function () {
-          $(this).change(function(){
+          $(this).change(function () {
             var val, pass;
             var modelId = $(this).attr('id');
             if (modelId && modelId.indexOf('model') !== -1) {
@@ -543,12 +550,13 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
             id: 'edit-dialog',
             title: options.title || '修改',
             width: options.width || 1000,
-            height: options.height||'auto',
+            height: options.height || 'auto',
             url: options.url || ctx._options.detail +
               '?id=' + ctx.model.id,
             button: buttons,
             oniframeload: function () {
-              var load = options.load || function(){};
+              var load = options.load || function () {
+              };
               this.iframeNode.contentWindow.topDialog = window.detailDialog;
               this.iframeNode.contentWindow.app = app;
               load.call(this, this.iframeNode.contentWindow);
@@ -558,7 +566,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
               ctx.model.set(Est.cloneDeep(window.model));
               if (options.reload) ctx.model.fetch({
                 wait: true,
-                success: function(){
+                success: function () {
                   ctx.model.reset && ctx.model.reset();
                 }
               });
