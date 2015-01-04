@@ -78,29 +78,15 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
         });
       },
       /**
-       * 移除模型类
+       * 移除事件
        *
-       * @method [private] - _remove
-       * @return {BaseDetail}
+       * @method [private] - _empty
+       * @return {BaseView}
        * @author wyj 14.11.16
        */
-      _remove: function () {
-        debug('BaseDetail.remove');
-        this.model.destroy();
-        this.model = null;
-        return this;
-      },
-      /**
-       * 移除所有绑定的事件
-       *
-       * @method [private] - _close
-       * @author wyj 14.11.16
-       */
-      _close: function () {
-        debug('BaseDetail.close');
-        this.undelegateEvents();
-        this.stopListening();
-        this.off();
+      _empty: function () {
+        debug('BaseView.remove');
+        //this.model && this.model.remove();
       }
     });
 

@@ -90,7 +90,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @author wyj 14.11.18
        */
       _render: function () {
-        debug('11.do BaseItem._render [item display]');
+        debug('12.do BaseItem._render [item render]');
         this._onBeforeRender();
         this.$el.html(this.template(this.model.toJSON()));
         if (this._options.modelBind) this._modelBind();
@@ -268,7 +268,25 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
             add: this._checkAppend
           });
         } else { this.$el.removeClass('item-active'); }
-
+        BaseUtils.tooltip('支持shift + 鼠标左键进行多选', {
+          id: 'toggleChecked',
+          align: 'left',
+          target: $('.toggle', this.$el).get(0),
+          time: 5000
+        });
+        //TODO shift + 多选
+        if (e.shiftKey) {
+          var beginDx = app.getData('curChecked');
+          var endDx = this.model.collection.indexOf(this.model);
+          Est.each(this.model.collection.models, function(model){
+            if (model.get('dx') > beginDx && model.get('dx') < endDx){
+              model.set('checked', true);
+              model.view.$el.addClass('item-active');
+            }
+          });
+        } else{
+          app.addData('curChecked', this.model.collection.indexOf(this.model));
+        }
         e && e.stopImmediatePropagation();
       },
       /**
@@ -350,6 +368,20 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
           ctx.model.set('sort', sort);
         }, hideTip: true
         });
+      },
+      /**
+       * 获取当前列表第几页
+       *
+       * @method [public] - _getPage
+       * @return {*}
+       * @private
+       * @author wyj 14.12.31
+       *
+       */
+      _getPage: function(){
+        var paginationModel = this.model.collection.paginationModel;
+        if (!paginationModel) return 1;
+        return paginationModel.get('page');
       },
       /**
        * 单个字段保存
@@ -510,7 +542,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
           window.detailDialog = dialog({
             id: 'edit-dialog',
             title: options.title || '修改',
-            width: options.width || 850,
+            width: options.width || 1000,
             height: options.height||'auto',
             url: options.url || ctx._options.detail +
               '?id=' + ctx.model.id,

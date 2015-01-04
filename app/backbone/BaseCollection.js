@@ -80,7 +80,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * @author wyj 14.11.16
        */
       _parseUrl: function (model) {
-        debug('7.BaseCollection._parseUrl');
+        debug('5.BaseCollection._parseUrl');
         var page = 1, pageSize = 16;
         if (model && model.get('pageSize')) {
           pageSize = model.get('pageSize');
@@ -100,7 +100,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * @author wyj 14.11.16
        */
       _parsePagination: function (resp) {
-        debug('6.BaseCollection._parsePagination');
+        debug('8.BaseCollection._parsePagination');
         resp.attributes = resp.attributes ||
         { page: 1, per_page: 10, count: 10 };
         if (this.paginationModel) {
@@ -150,7 +150,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
         return new $q(function (resolve) {
           return instance.fetch({success: function () {
             resolve(instance);
-            debug('do collection reset and call BaseList._empty');
+            debug('6.collection reset');
             context.collection._reset();
             context._empty();
           }});

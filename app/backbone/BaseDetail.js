@@ -19,6 +19,17 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
 
     BaseDetail = Backbone.View.extend({
       /**
+       * 传递options进来
+       *
+       * @method [private] - constructor
+       * @param options
+       * @author wyj 14.12.16
+       */
+      constructor: function (options) {
+        this.options = options || {};
+        Backbone.View.apply(this, arguments);
+      },
+      /**
        * 初始化
        *
        * @method [override] - _initialize
@@ -31,6 +42,8 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        *         model: ProductModel, // 模型类
        *         // 可选
        *         enterRender: '#submit' // 执行回车后的按钮点击的元素选择符
+       *         id: ctx.model.get('id'), // 当不是以dialog形式打开的时候， 需要传递ID值
+                 page: ctx._getPage() // 点击返回按钮且需要定位到第几页时， 传入page值，
        *      });
        */
       _initialize: function (options) {
@@ -52,7 +65,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
         this.$el.html(this.template(this.model.toJSON()));
         setTimeout(function () {
           BaseUtils.resetIframe();
-        }, 500);
+        }, 1000);
       },
       /**
        * 回车事件
@@ -81,7 +94,8 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * @author wyj 14.11.15
        */
       _initModel: function (model, ctx) {
-        ctx.passId = Est.getUrlParam('id', window.location.href);
+        ctx.passId = Est.getUrlParam('id', window.location.href) ||
+          this.options.id;
         if (!Est.isEmpty(this.passId)) {
           ctx.model = new model();
           ctx.model.set('id', ctx.passId);
@@ -183,8 +197,11 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
         var passed = true;
         options = options || {};
         $('#submit', this.el).on('click', function () {
+          var $button = $(this);
+          var preText = $(this).html();
           passed = true; // 设置验证通过
           ctx.formElemnet.submit();
+          $button.html('正在提交...');
           $("input, textarea, select", $(ctx.formSelector)).each(function () {
             var name, val, pass;
             name = $(this).attr('name');
@@ -213,9 +230,17 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
           if (typeof options.onBeforeSave !== 'undefined')
             options.onBeforeSave.call(ctx);
           if (passed) {
-            ctx._save(options.onAfterSave ||
-              function () {
-              });
+            ctx._save(function () {
+              if (options.onAfterSave) {
+                options.onAfterSave = Est.inject(options.onAfterSave, function (response) {
+                  return new Est.setArguments(arguments);
+                }, function (response) {
+                  $button.html(preText);
+                });
+                options.onAfterSave.call(ctx);
+              }
+              $button.html(preText);
+            });
           }
         });
       },
@@ -267,21 +292,8 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        *      this._empty();
        */
       _empty: function () {
-        this._remove();
+        this.model.off();
         this.$el.empty().off();
-      },
-      /**
-       * 移除模型类
-       *
-       * @method [private] - _remove
-       * @return {BaseDetail}
-       * @author wyj 14.11.16
-       */
-      _remove: function () {
-        debug('BaseDetail.remove');
-        this.model.destroy();
-        this.model = null;
-        return this;
       },
       /**
        * 移除所有绑定的事件

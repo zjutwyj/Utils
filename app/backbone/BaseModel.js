@@ -43,7 +43,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        */
       _initialize: function () {
         this.validateMsg = null;
-        debug('10.BaseModel._initialize [add to collection] or 3.[add to detail]');
+        debug('11.BaseModel._initialize');
       },
       /**
        * 过滤结果, 并提示信息对话框, 若不想提示信息可以设置hideTip为true
@@ -75,6 +75,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
                 window.topDialog = null;
               }
               this.close();
+              $(".btn-back").click();
             }, autofocus: true });
           } else {
             buttons.push({ value: '确定', callback: function () {

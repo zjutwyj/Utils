@@ -118,6 +118,23 @@ define('BaseUtils', ['jquery', 'HandlebarsHelper'],
        *          };
        *        }
        *      });
+       *      // 选取图片
+       *      BaseUtils.openUpload({
+                id: 'uploadDialog',
+                type: type,
+                albumId: app.getData('curAlbumId'),
+                username: app.getData('user') && app.getData('user').username,
+                auto: true,
+                oniframeload: function(){
+                  this.iframeNode.contentWindow.uploadCallback = function(result){
+                    ctx.addItems(result);
+                  };
+                },
+                success: function(){
+                  var result = this.iframeNode.contentWindow.app.getView('picSource').getItems();
+                  ctx.addItems(result);
+                }
+              });
        */
       openUpload: function (options) {
         if (typeof options === 'undefined') {

@@ -27,13 +27,45 @@ Est.extend(Application.prototype, {
    * @return {Application}
    * @example
    *        app.addPanel('product', new Panel());
+   *        app.addPanel('product', {
+   *          el: '#product-panel',
+   *          template: '<div clas="product-panel-inner"></div>'
+   *        }).addView('aliPay', new AlipayView({
+   *          el: '.product-panel-inner',
+   *          viewId: 'alipayView'
+   *        }));
    */
   addPanel: function (name, panel) {
-    if (name in this['panel']) {
-      console.log('已存在该面板：' + name);
+    var isObject = Est.typeOf(panel.cid) === 'string' ? false : true;
+    if (isObject) {
+      this.removePanel(name, panel);
+      var $template = $(panel.template);
+      $template.addClass('__panel_' + name);
+      $(panel.el).append($template);
     }
     this.panel[name] = panel;
-    return panel;
+    return isObject ? this : panel;
+  },
+  /**
+   * 显示视图
+   *
+   * @method [面板] - show
+   * @param view
+   * @author wyj 14.12.29
+   */
+  show: function (view) {
+    this.addView(this.currentView, view);
+  },
+  /**
+   * 移除面板
+   *
+   * @method [面板] - removePanel
+   * @param name
+   * @author wyj 14.12.29
+   */
+  removePanel: function (name, panel) {
+    $('.__panel_' + name, $(panel['el'])).off().remove();
+    delete this.panel[name];
   },
   /**
    * 获取面板
@@ -45,7 +77,7 @@ Est.extend(Application.prototype, {
    * @example
    *      app.getPanelf('panel');
    */
-  getPanel: function(name){
+  getPanel: function (name) {
     return this.panel[name];
   },
   /**
@@ -64,7 +96,14 @@ Est.extend(Application.prototype, {
       //console.log('已存在该视图对象' + name + '， 请先移除该视图再创建, app.removeView("XxxView")');
     }
     this['instance'][name] = instance;
-    return instance;
+    this.setCurrentView(name);
+    return this;
+  },
+  setCurrentView: function (name) {
+    this.currentView = name;
+  },
+  getCurrentView: function () {
+    return this.currentView;
   },
   /**
    * 获取视图
@@ -91,10 +130,10 @@ Est.extend(Application.prototype, {
    */
   removeView: function (name) {
     var view = this.getView(name);
-    if (view){
+    if (view) {
       view._empty();
       view.stopListening();
-      view.$el.off();
+      view.$el.off().remove();
     }
     delete this['instance'][name];
     return this;
@@ -108,7 +147,7 @@ Est.extend(Application.prototype, {
    * @example
    *      app.addDialog('productDialog', dialog);
    */
-  addDialog: function(dialog){
+  addDialog: function (dialog) {
     this.dialog.push(dialog);
     return dialog;
   },
@@ -120,9 +159,9 @@ Est.extend(Application.prototype, {
    * @example
    *      app.emptyDialog();
    */
-  emptyDialog: function(){
-    Est.each(this.dialog, function(item){
-      if (item.close){
+  emptyDialog: function () {
+    Est.each(this.dialog, function (item) {
+      if (item.close) {
         item.close().remove();
       }
     });
@@ -251,6 +290,7 @@ Est.extend(Application.prototype, {
 if (!window.console) {
   console = (function (debug) {
     var instance = null;
+
     function Constructor() {
       if (debug) {
         this.div = document.createElement("console");
@@ -259,6 +299,7 @@ if (!window.console) {
         document.body.appendChild(this.div);
       }
     }
+
     Constructor.prototype = {
       log: function (str) {
         if (debug) {
@@ -274,6 +315,7 @@ if (!window.console) {
       }
       return instance;
     }
+
     return getInstance();
   })(false)
 }
