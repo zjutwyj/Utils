@@ -550,7 +550,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
             buttons.push({
               value: '保存',
               callback: function () {
-                this.title('正在提交..');
+                this.title('提交中..');
                 this.iframeNode.contentWindow.$("#submit").click();
                 return false;
               },

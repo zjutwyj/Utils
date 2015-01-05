@@ -274,7 +274,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         } else {
           this.$el.removeClass('item-active');
         }
-        BaseUtils.tooltip('支持shift + 鼠标左键进行多选', {
+        BaseUtils.tooltip('shift + 鼠标左键多选', {
           id: 'toggleChecked',
           align: 'left',
           target: $('.toggle', this.$el).get(0),
@@ -532,7 +532,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
           if (!options.hideSaveBtn) buttons.push({
             value: '保存',
             callback: function () {
-              this.title('正在提交..');
+              this.title('提交中..');
               this.iframeNode.contentWindow.$("#submit").click();
               return false;
             },

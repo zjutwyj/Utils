@@ -462,7 +462,7 @@ define('BaseUtils', ['jquery', 'HandlebarsHelper'],
        *         width: 500,
        *         target: '.name',
        *         success: function(){
-       *             this.title('正在提交..');
+       *             this.title('提交中..');
        *             this.iframeNode.contentWindow.$("#submit").click();
        *             return false;
        *         }

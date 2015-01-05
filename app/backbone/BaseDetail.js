@@ -44,10 +44,12 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        *         enterRender: '#submit' // 执行回车后的按钮点击的元素选择符
        *         id: ctx.model.get('id'), // 当不是以dialog形式打开的时候， 需要传递ID值
                  page: ctx._getPage() // 点击返回按钮且需要定位到第几页时， 传入page值，
+                 data: {} // 附加数据  获取方法为  _data.name
        *      });
        */
       _initialize: function (options) {
         this._options = options || {};
+        Est.extend(this._options, this.options);
         this.template = HandlebarsHelper.compile(options.template);
         this._initModel(options.model, this);
         if (this._options.enterRender) this._enterEvent();
@@ -110,6 +112,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
           ctx.model.set('_isAdd', ctx._isAdd = true);
           ctx.render();
         }
+        ctx.model.set('_data', ctx._options.data);
       },
       /**
        * form包装器， 传递表单选择符
@@ -164,7 +167,12 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
           if (options.url && options.fields) {
             Est.each(options.fields, function (field) {
               app.addData(field, ctx.formValidate.getField(field));
-              app.addData(field).set('remote', {
+              debug(function(){
+                if (!ctx.formValidate.getField(field)){
+                  return '字段不匹配，检查input元素name值是否以vali-开头？';
+                }
+              }, {type: 'error'});
+              app.getData(field).set('remote', {
                 url: options.url,
                 dataType: 'json',
                 callback: function (data) {
@@ -198,10 +206,9 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
         options = options || {};
         $('#submit', this.el).on('click', function () {
           var $button = $(this);
-          var preText = $(this).html();
+          var preText = ctx.preText = $(this).html();
           passed = true; // 设置验证通过
           ctx.formElemnet.submit();
-          $button.html('正在提交...');
           $("input, textarea, select", $(ctx.formSelector)).each(function () {
             var name, val, pass;
             name = $(this).attr('name');
@@ -230,14 +237,15 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
           if (typeof options.onBeforeSave !== 'undefined')
             options.onBeforeSave.call(ctx);
           if (passed) {
-            ctx._save(function () {
+            $button.html('提交中...');
+            ctx._save(function (response) {
               if (options.onAfterSave) {
                 options.onAfterSave = Est.inject(options.onAfterSave, function (response) {
                   return new Est.setArguments(arguments);
                 }, function (response) {
                   $button.html(preText);
                 });
-                options.onAfterSave.call(ctx);
+                options.onAfterSave.call(ctx, response);
               }
               $button.html(preText);
             });
