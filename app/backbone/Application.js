@@ -17,6 +17,7 @@ Est.extend(Application.prototype, {
     this.templates = {};
     this.panel = {};
     this.dialog = [];
+    this.status = {};
   },
   /**
    * 添加面板
@@ -283,6 +284,23 @@ Est.extend(Application.prototype, {
    */
   getTemplates: function () {
     return this['templates'];
+  },
+  /**
+   * 添加状态数据
+   *
+   * @method addStatus
+   * @param name
+   * @param value
+   * @author wyj 15.1.7
+   */
+  addStatus: function(name, value){
+    this['status'][name] = value;
+  },
+  getStatus: function(name){
+    return this['status'][name];
+  },
+  getAllStatus: function(){
+    return this.status;
   }
 });
 /**

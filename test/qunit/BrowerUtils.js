@@ -41,3 +41,7 @@ QUnit.test('Est.keyRoute', function(assert){
     var result = Est.keyRoute(piece, "route2", "route");
     assert.equal(result, 'route2route', 'passed');
 });
+QUnit.test('Est.cookie', function(assert){
+  Est.cookie('name', 'value');
+  assert.equal(Est.cookie('name'), 'value', 'passed');
+});

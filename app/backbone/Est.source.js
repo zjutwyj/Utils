@@ -53,12 +53,12 @@
    * @method [对象] - Est
    */
   var Est = function (value) {
-    return (value && typeof value == 'object' && typeOf(value) !== 'array' && hasOwnProperty.call(value, '_wrapped'))
-      ? value
-      : new wrapper(value);
+    return (value && typeof value == 'object' &&
+      typeOf(value) !== 'array' && hasOwnProperty.call(value, '_wrapped')) ? value :
+      new Wrapper(value);
   };
 
-  function wrapper(value, chainAll) {
+  function Wrapper(value, chainAll) {
     this._chain = !!chainAll;
     this._wrapped = value;
   }
@@ -240,7 +240,7 @@
    *      => "moe is 21"
    */
   Est.chain = function (value) {
-    value = new wrapper(value);
+    value = new Wrapper(value);
     value._chain = true;
     return value;
   };
@@ -257,7 +257,7 @@
    */
   var result = function (obj, context) {
     //var ctx = typeOf(context) !== 'undefined' ? context : Est;
-    return this._chain ? new wrapper(obj, true) : obj;
+    return this._chain ? new Wrapper(obj, true) : obj;
   };
 
   /**
@@ -335,7 +335,7 @@
 
     function finale() {
       setTimeout(function () {
-        each(deferreds, function(deferred){
+        each(deferreds, function (deferred) {
           handle(deferred);
         });
       }, 0);
@@ -409,6 +409,7 @@
         return t;
     }
   }
+
   Est.getType = getType;
 
   /**
@@ -421,27 +422,27 @@
    * @example
    *    var result = Est.getValue(object, 'item.name');
    */
-  function getValue(object, path){
+  function getValue(object, path) {
     var array, result;
     if (arguments.length < 2 || typeOf(path) !== 'string') {
       console.error('参数不能少于2个， 且path为字符串');
       return;
     }
     array = path.split('.');
-    function get(object, array){
-      each(array, function(key){
+    function get(object, array) {
+      each(array, function (key) {
         if (key in object) {
-          if (array.length === 1){
+          if (array.length === 1) {
             // 如果为数组最后一个元素， 则返回值
             result = object[key]
-          } else{
+          } else {
             // 否则去除数组第一个， 递归调用get方法
             array.shift();
             get(object[key], array);
             // 同样跳出循环
             return false;
           }
-        } else{
+        } else {
           // 没找到直接跳出循环
           return false;
         }
@@ -451,17 +452,18 @@
 
     return get(object, array);
     /*var array = [];
-    var temp = cloneDeep(object);
-    if (typeOf(path) === 'string'){
-      array = path.split('.');
-      each(array, function(key){
-        temp = temp[key];
-      });
-    } else if (typeOf(path) === 'function'){
-      path.call(this, object);
-    }
-    return temp;*/
+     var temp = cloneDeep(object);
+     if (typeOf(path) === 'string'){
+     array = path.split('.');
+     each(array, function(key){
+     temp = temp[key];
+     });
+     } else if (typeOf(path) === 'function'){
+     path.call(this, object);
+     }
+     return temp;*/
   }
+
   Est.getValue = getValue;
 
   /**
@@ -480,12 +482,12 @@
     if (arguments.length < 3 || typeOf(path) !== 'string') return false;
     var array = path.split('.');
 
-    function set(object, array, value){
-      each(array, function(key){
+    function set(object, array, value) {
+      each(array, function (key) {
         if (key in object) {
-          if (array.length === 1){
+          if (array.length === 1) {
             object[key] = value;
-          } else{
+          } else {
             array.shift();
             set(object[key], array, value);
             return false;
@@ -493,9 +495,11 @@
         }
       });
     }
+
     set(object, array, value);
 
   }
+
   Est.setValue = setValue;
 
   function setToValue(obj, path, value) {
@@ -505,6 +509,7 @@
 
     obj[path[i]] = value;
   }
+
   Est.setToValue = setToValue;
   /**
    * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined) 不包括数字0和1
@@ -960,21 +965,19 @@
    * @author wyj on 14.9.12
    * @example
    *      var doTest = function (a) {
-     *          return a
-     *      };
+               return a
+           };
    function beforeTest(a) {
                 alert('before exec: a='+a);
                 a += 3;
-                return new Arguments(arguments);
+                return new Est.setArguments(arguments);
             };
    //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
    function afterTest(a, result, isDenied) {
                 alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
                 return result+5;
             };
-
    doTest = Est.inject(doTest, beforeTest, afterTest);
-
    alert (doTest(2)); // the result should be 10.
    */
   function inject(aOrgFunc, aBeforeExec, aAtferExec) {
@@ -1156,8 +1159,12 @@
   function repeat(target, n) {
     var s = target, total = '';
     while (n > 0) {
-      if (n % 2 == 1) { total += s; }
-      if (n == 1) { break; }
+      if (n % 2 == 1) {
+        total += s;
+      }
+      if (n == 1) {
+        break;
+      }
       s += s;
       n = n >> 1;
     }
@@ -2887,6 +2894,69 @@
   Est.urlResolve = urlResolve;
 
   /**
+   * @description cookie
+   * @method [浏览器] - cookie
+   * @param key
+   * @param value
+   * @param options
+   * @author wyj 15.1.8
+   */
+  function cookie(key, value, options) {
+    var pluses = /\+/g;
+
+    function parseCookieValue(s) {
+      if (s.indexOf('"') === 0) {
+        s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      }
+      try {
+        s = decodeURIComponent(s.replace(pluses, ' '));
+        return s;
+      } catch (e) {
+      }
+    }
+
+    function read(s, converter) {
+      var value = parseCookieValue(s);
+      return typeOf(converter) === 'function' ? converter(value) : value;
+    }
+
+    // 写入
+    if (arguments.length > 1 && typeOf(value) !== 'function') {
+      options = Est.extend({}, options);
+
+      if (typeof options.expires === 'number') {
+        var days = options.expires, t = options.expires = new Date();
+        t.setTime(+t + days * 864e+5);
+      }
+      return (document.cookie = [
+        encodeURIComponent(key), '=', encodeURIComponent(value),
+        options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+        options.path ? '; path=' + options.path : '',
+        options.domain ? '; domain=' + options.domain : '',
+        options.secure ? '; secure' : ''
+      ].join(''));
+    }
+    // 读取
+    var result = key ? undefined : {};
+    var cookies = document.cookie ? document.cookie.split('; ') : [];
+    each(cookies, function (item) {
+      var parts = item.split('=');
+      var name = decodeURIComponent(parts.shift());
+      var cookie = parts.join('=');
+      if (key && key === name) {
+        result = read(cookie, value);
+        return false;
+      }
+      if (!key && (cookie = read(cookie)) !== undefined) {
+        result[name] = cookie;
+      }
+    });
+    return result;
+  }
+
+  Est.cookie = cookie;
+
+  /**
    * @description url 路由
    * @method [浏览器] - route
    * @param {String} path
@@ -2935,6 +3005,8 @@
     routes[path] = {templateId: templateId, controller: controller};
   }
 
+  Est.route = route;
+
   function router() {
     var url = location.hash.slice(1) || '/';
     var route = routes[url];
@@ -2963,7 +3035,7 @@
     window.addEventListener('hashchange', router);
     window.addEventListener('load', router);
   }
-  Est.route = route;
+
 
   /**
    * @description 给元素添加虚线框
@@ -3028,10 +3100,10 @@
         return result.apply(this, [func.apply(ctx, args), ctx]);
       };
     });
-    wrapper.prototype = ctx.prototype;
+    Wrapper.prototype = ctx.prototype;
     Est.extend(ctx.prototype, {
       chain: function (value, chainAll) {
-        value = new wrapper(value, chainAll);
+        value = new Wrapper(value, chainAll);
         value._chain = true;
         return value;
       },

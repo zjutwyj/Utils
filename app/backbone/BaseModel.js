@@ -10,12 +10,13 @@
  * @class BaseModel - 模型类
  * @author yongjin<zjut_wyj@163.com> 2014/11/10
  */
-define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
+define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
   function (require, exports, module) {
-    var Backbone, dialog, BaseModel;
+    var Backbone, dialog, BaseModel, BaseUtils;
 
     Backbone = require('backbone');
     dialog = require('dialog');
+    BaseUtils = require('BaseUtils');
 
     BaseModel = Backbone.Model.extend({
       defaults: { checked: false, children: [] },
@@ -24,6 +25,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        * 初始化请求连接, 判断是否为新对象， 否自动加上ID
        *
        * @method [private] - url
+       * @private
        * @return {*}
        * @author wyj 14.11.16
        */
@@ -41,14 +43,15 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        * @example
        *      this._initialize();
        */
-      _initialize: function () {
+      _initialize: function (options) {
         this.validateMsg = null;
-        debug('11.BaseModel._initialize');
+        debug('9.BaseModel._initialize');
       },
       /**
        * 过滤结果, 并提示信息对话框, 若不想提示信息可以设置hideTip为true
        *
        * @method [private] - parse
+       * @private
        * @param response
        * @param options
        * @return {*}
@@ -56,14 +59,16 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        */
       parse: function (response, options) {
         var ctx = this;
-        if (Est.isEmpty(response)){
+        if (Est.isEmpty(response)) {
           var url = Est.typeOf(this.url) === 'function' ? this.url() : this.url;
           debug('服务器返回的数据为空， 点击' + url + '是否返回数据？无？ 检查XxxModel中的baseUrl、baseId参数是否配置正确？还无？联系王进');
+          BaseUtils.tooltip('数据异常, 稍后请重试！');
+          return false;
         }
         if (response.msg && !this.hideTip) {
           var buttons = [];
           if (response.success) {
-            if (ctx.isNew()){
+            if (ctx.isNew()) {
               buttons.push({ value: '继续添加', callback: function () {
                 ctx.set('id', null);
                 ctx.set(ctx.baseId, null);
@@ -89,15 +94,12 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
             button: buttons
           }).show();
         }
-        if (response.attributes) {
+        if (response.attributes)
           response = response.attributes.data;
-        }
-        if (response){
-          response.id = response[ctx.baseId];
+        if (response) {
+          response.id = response[ctx.baseId || 'id'];
           response.checked = false;
           response.time = new Date().getTime();
-        } else{
-          //response = { id: null }
         }
         return response;
       },
@@ -127,7 +129,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
         newModel.clear();
         newModel.set(keyValue);
         newModel.set('silent', true);
-        if (options.hideTip){
+        if (options.hideTip) {
           newModel.hideTip = true;
         }
         newModel.set('editField', true);
@@ -143,11 +145,12 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        * 获取子模型
        *
        * @method [private] - _getChildren
+       * @private
        * @return {*}
        * @author wyj 14.12.18
        */
-      _getChildren: function(collection) {
-        return _.map(this.get('children'), function(ref) {
+      _getChildren: function (collection) {
+        return _.map(this.get('children'), function (ref) {
           // Lookup by ID in parent collection if string/num
           if (typeof(ref) == 'string' || typeof(ref) == 'number')
             return collection.get(ref);
@@ -172,7 +175,6 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        * @method [public] - _validate
        * @param attributes
        * @param callback
-       * @private
        * @author wyj 14.11.21
        * @example
        *        validate: function (attrs) {
@@ -183,9 +185,9 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog'],
        *         });
        *}
        */
-      _validation: function(attributes, callback){
+      _validation: function (attributes, callback) {
         if (!attributes.silent && callback) {
-            callback.call(this, attributes);
+          callback.call(this, attributes);
         }
         return this.validateMsg;
       }

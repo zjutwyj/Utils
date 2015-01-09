@@ -25,6 +25,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * 传递options进来
        *
        * @method [private] - constructor
+       * @private
        * @param options
        * @author wyj 14.12.16
        */
@@ -44,13 +45,17 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
         debug('2.BaseCollection._initialize');
         this._baseUrl = this.url;
         if (!this.paginationModel) {
-          this.paginationModel = new PaginationModel();
+          this.paginationModel = new PaginationModel({
+            page: this.options.page,
+            pageSize: this.options.pageSize
+          });
         }
       },
       /**
        * 处理url 与 分页
        *
        * @method [private] - _parse
+       * @private
        * @param resp
        * @param xhr
        * @return {attributes.data|*}
@@ -76,15 +81,20 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * 处理url地址， 加上分页参数
        *
        * @method [private] - _parseUrl
+       * @private
        * @param model
        * @author wyj 14.11.16
        */
       _parseUrl: function (model) {
-        debug('5.BaseCollection._parseUrl');
+        debug('- BaseCollection._parseUrl');
         var page = 1, pageSize = 16;
         if (model && model.get('pageSize')) {
           pageSize = model.get('pageSize');
           page = model.get('page');
+        }
+        if (this.options.subRender) {
+          page = 1;
+          pageSize = 9000;
         }
         if (typeof this.url !== 'function') {
           var end = '';
@@ -96,11 +106,12 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * 设置分页模型类
        *
        * @method [private] - _parsePagination
+       * @private
        * @param resp
        * @author wyj 14.11.16
        */
       _parsePagination: function (resp) {
-        debug('8.BaseCollection._parsePagination');
+        debug('6.BaseCollection._parsePagination');
         resp.attributes = resp.attributes ||
         { page: 1, per_page: 10, count: 10 };
         if (this.paginationModel) {
@@ -113,12 +124,14 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * 渲染分页
        *
        * @method [private] - _paginationRender
+       * @private
        * @author wyj 14.11.16
        */
       _paginationRender: function () {
         var ctx = this;
         if (!this.pagination) {
           this.pagination = new Pagination({
+            el: "#pagination-container",
             model: ctx.paginationModel
           });
         } else {
@@ -129,6 +142,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * 加载列表
        *
        * @method [private] - _load
+       * @private
        * @param instance 实例对象
        * @param context 上下文
        * @param model 模型类
@@ -150,7 +164,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
         return new $q(function (resolve) {
           return instance.fetch({success: function () {
             resolve(instance);
-            debug('6.collection reset');
+            debug('5.collection reset');
             context.collection._reset();
             context._empty();
           }});
@@ -161,7 +175,6 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        *
        * @method [public] - _setItemId
        * @param itemId
-       * @private
        * @author wyj 14.12.16
        * @example
        *        this._setItemId('Category00000000000000000032');
@@ -174,6 +187,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone', 'PaginationModel',
        * 清空列表
        *
        * @method [private] - _empty
+       * @private
        * @author wyj 14.11.15
        */
       _empty: function () {

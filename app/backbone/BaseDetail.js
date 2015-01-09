@@ -22,6 +22,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * 传递options进来
        *
        * @method [private] - constructor
+       * @private
        * @param options
        * @author wyj 14.12.16
        */
@@ -34,7 +35,6 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        *
        * @method [override] - _initialize
        * @param options
-       * @private
        * @author wyj 14.11.20
        * @example
        *      this._initialize({
@@ -58,13 +58,12 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * 渲染
        *
        * @method [override] - _render
-       * @private
        * @author wyj 14.11.20
        * @example
        *        this._render();
        */
       _render: function () {
-        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.append(this.template(this.model.toJSON()));
         setTimeout(function () {
           BaseUtils.resetIframe();
         }, 1000);
@@ -91,21 +90,20 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * 若为添加， 则在ctx 与模型类里设置 _isAdd = true
        *
        * @method [private] - _initModel
+       * @private
        * @param model
        * @param ctx
        * @author wyj 14.11.15
        */
       _initModel: function (model, ctx) {
-        ctx.passId = Est.getUrlParam('id', window.location.href) ||
-          this.options.id;
+        ctx.passId = Est.getUrlParam('id', window.location.href) || this.options.id;
         if (!Est.isEmpty(this.passId)) {
           ctx.model = new model();
           ctx.model.set('id', ctx.passId);
-          ctx.model.fetch()
-            .done(function () {
-              ctx.model.set('_isAdd', ctx._isAdd = false);
-              ctx.render();
-            });
+          ctx.model.fetch().done(function () {
+            ctx.model.set('_isAdd', ctx._isAdd = false);
+            ctx.render();
+          });
         } else {
           ctx.passId = new Date().getTime();
           ctx.model = new model();
@@ -167,8 +165,8 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
           if (options.url && options.fields) {
             Est.each(options.fields, function (field) {
               app.addData(field, ctx.formValidate.getField(field));
-              debug(function(){
-                if (!ctx.formValidate.getField(field)){
+              debug(function () {
+                if (!ctx.formValidate.getField(field)) {
                   return '字段不匹配，检查input元素name值是否以vali-开头？';
                 }
               }, {type: 'error'});
@@ -256,6 +254,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * 保存结果
        *
        * @method [private] - _save
+       * @private
        * @author wyj 14.11.18
        */
       _save: function (callback) {
@@ -265,6 +264,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * 保存表单
        *
        * @method [private] - _saveItem
+       * @private
        * @param callback
        * @param context
        * @author wyj 14.11.15
@@ -286,6 +286,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
       /**
        * 重置表单
        * @method [private] - _reset
+       * @private
        * @author wyj 14.11.18
        */
       _reset: function () {
@@ -307,6 +308,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * 移除所有绑定的事件
        *
        * @method [private] - _close
+       * @private
        * @author wyj 14.11.16
        */
       _close: function () {

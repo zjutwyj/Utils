@@ -24,6 +24,18 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
 
     BaseView = Backbone.View.extend({
       /**
+       * 传递options进来
+       *
+       * @method [private] - constructor
+       * @private
+       * @param options
+       * @author wyj 14.12.16
+       */
+      constructor: function (options) {
+        this.options = options || {};
+        Backbone.View.apply(this, arguments);
+      },
+      /**
        * 初始化
        *
        * @method [override] - _initialize
@@ -41,6 +53,7 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
       _initialize: function(options){
         var model = Backbone.Model.extend({});
         this._options = options || {};
+        Est.extend(this._options, this.options);
         this._options.data = this._options.data || {};
         this.template = HandlebarsHelper.compile(this._options.template);
         this.model = new model(this._options.data);
@@ -57,7 +70,7 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
        */
       _render: function(){
         this.trigger('before', this);
-        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.append(this.template(this.model.toJSON()));
         if (this._options.enterRender) this._enterEvent();
         this.trigger('after', this);
       },
@@ -81,6 +94,7 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
        * 移除事件
        *
        * @method [private] - _empty
+       * @private
        * @return {BaseView}
        * @author wyj 14.11.16
        */

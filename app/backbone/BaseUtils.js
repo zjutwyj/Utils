@@ -51,10 +51,36 @@ define('BaseUtils', ['jquery', 'HandlebarsHelper'],
             container[render].on('change', function (ev) {
               $(target).val(Est.trim(ev.item[itemId]));
               if (typeof options.change !== 'undefined')
-                options.change.call(this, ev.item[itemId]);
+                options.change.call(this, ev.item[itemId], ev);
               resove(ev.item[itemId]);
             });
           });
+        });
+      },
+      /**
+       * 初始化级联地区
+       *
+       * @method [地区] - initDistrict
+       * @author wyj 15.1.6
+       * @example
+               BaseUtils.initDistrict({
+                 id: 'district1' ,// 必填
+                 target: '#district-container', // 目标选择符
+                 path: '...'
+               });
+       */
+      initDistrict: function (options) {
+        seajs.use(['District'], function (District) {
+          app.addPanel(options.id, {
+            el: options.target,
+            template: '<div class="district-inner ' + options.id + '"></div>'
+          });
+          app.addView(options.id, new District({
+            el: '.' + options.id,
+            viewId: options.id,
+            target: options.target,
+            path: options.path
+          }));
         });
       },
       /**

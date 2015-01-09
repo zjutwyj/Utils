@@ -31,6 +31,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 传递options进来
        *
        * @method [private] - constructor
+       * @private
        * @param options
        * @author wyj 14.12.16
        */
@@ -51,6 +52,8 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        *            modelBind: false, // 绑定模型类， 比如文本框内容改变， 模型类相应改变; 当元素为checkbox是， 需设置true-value="01" false-value="00",
        *            若不设置默认为true/false
        *            detail: '', // 修改或添加页面地址
+       *            filter: function(model){ // 过滤模型类
+       *            },
        *            enterRender: '#submit' // 执行回车后的按钮点击的元素选择符
        *        });
        */
@@ -59,6 +62,12 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         this._options = options || {};
         this.model.stopCollapse = false;
 
+       /* debug(function () {
+          if (ctx.model instanceof Backbone.Model) {
+            return 'XxxCollection中缺少model参数， 请检查是否加入model? 当前视图为： '+ ctx.options.viewId;
+          }
+        }, {type: 'error'});*/
+        Est.extend(this._options, this.options);
         this.collapsed = this.model.get('_options') ? this.model.get('_options')._extend : false;
         if (this._options.template) {
           this.template = HandlebarsHelper.compile(this._options.template);
@@ -90,8 +99,10 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * @author wyj 14.11.18
        */
       _render: function () {
-        debug('12.do BaseItem._render [item render]');
+        debug('10.BaseItem._render');
         this._onBeforeRender();
+        if (this._options && this._options.filter)
+          this._options.filter.call(this, this.model);
         this.$el.html(this.template(this.model.toJSON()));
         if (this._options.modelBind) this._modelBind();
         //TODO
@@ -138,6 +149,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 设置viewId
        *
        * @method [private] - _setViewId
+       * @private
        * @param name
        * @private
        * @author wyj 14.12.20
@@ -148,6 +160,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
       /**
        * 设置模型类
        * @method [private] - _setInitModel
+       * @private
        * @param model
        * @author wyj 14.11.20
        */
@@ -158,6 +171,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 回车事件
        *
        * @method [private] - _enterEvent
+       * @private
        * @private
        * @author wyj 14.12.10
        */
@@ -234,6 +248,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 移除监听
        *
        * @method [private] - _close
+       * @private
        * @author wyj 14.11.16
        */
       _close: function () {
@@ -244,6 +259,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 移除此模型
        *
        * @method [private] - _clear
+       * @private
        * @author wyj 14.11.16
        */
       _clear: function () {
@@ -274,12 +290,6 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         } else {
           this.$el.removeClass('item-active');
         }
-        BaseUtils.tooltip('shift + 鼠标左键多选', {
-          id: 'toggleChecked',
-          align: 'left',
-          target: $('.toggle', this.$el).get(0),
-          time: 5000
-        });
         //TODO shift + 多选
         if (e.shiftKey) {
           var beginDx = app.getData('curChecked');
@@ -326,8 +336,8 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 上移
        *
        * @method [private] - _moveUp
-       * @param e
        * @private
+       * @param e
        * @author wyj 14.12.14
        */
       _moveUp: function (e) {
@@ -381,7 +391,6 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        *
        * @method [public] - _getPage
        * @return {*}
-       * @private
        * @author wyj 14.12.31
        *
        */
@@ -447,7 +456,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
       /**
        * 模型类双向绑定
        *
-       * @method [protected] - _modelBind
+       * @method [private] - _modelBind
        * @private
        * @author wyj 14.12.25
        * @example
@@ -483,6 +492,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        *  删除模型类
        *
        *  @method [private] - _del
+       *  @private
        *  @author wyj 14.11.16
        */
       _del: function (e) {
@@ -517,6 +527,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        * 修改模型类
        *
        * @method [private] - _edit
+       * @private
        * @param options [title: 标题][width: 宽度][height: 高度]
        *                [url: 地址][reload: 关闭后是否重新从服务器获取数据][close: 关闭回调方法]
        *                [hideSaveBtn: 隐藏保存按钮][hideResetBtn: 隐藏重置按钮][oniframeload: 页面载入后回调]
