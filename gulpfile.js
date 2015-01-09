@@ -132,27 +132,27 @@ var paths = {
         // app
         'app/modules/jhw_v2/app.js',
         // directives
-        'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
-        'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
-        'app/scripts/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
-        'app/scripts/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
-        'app/scripts/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
-        'app/scripts/directives/ng-enter/ng-enter.js', // 回车事件
-        'app/scripts/directives/ng-focus/ng-focus.js', // 获取焦点
-        'app/scripts/directives/ng-format/ng-format.js', // 格式化输入的内容
-        'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
-        'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
-        'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
-        'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
-        'app/scripts/directives/ng-toastr/angular-toastr.js', // 气泡提示
+        'app/angular/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
+        'app/angular/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+        'app/angular/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
+        'app/angular/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
+        'app/angular/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
+        'app/angular/directives/ng-enter/ng-enter.js', // 回车事件
+        'app/angular/directives/ng-focus/ng-focus.js', // 获取焦点
+        'app/angular/directives/ng-format/ng-format.js', // 格式化输入的内容
+        'app/angular/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
+        'app/angular/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+        'app/angular/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
+        'app/angular/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
+        'app/angular/directives/ng-toastr/angular-toastr.js', // 气泡提示
         // filters
-        'app/scripts/filters/filter-state/filter-state.js', // 状态
-        'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
-        'app/scripts/filters/filter-characters/filter-characters.js', // 字符串截取
+        'app/angular/filters/filter-state/filter-state.js', // 状态
+        'app/angular/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
+        'app/angular/filters/filter-characters/filter-characters.js', // 字符串截取
         // factorys
-        'app/scripts/factorys/*.js'
+        'app/angular/factorys/*.js'
       ],
-      dist: 'app/scripts',
+      dist: 'app/angular',
       name: 'app.min.js'
     }
   },
@@ -169,14 +169,14 @@ var paths = {
         'app/vendor/angular-animate/angular-animate.min.js',
         'app/vendor/angular-cookies/angular-cookies.min.js',
         'app/modules/Account/app.js',
-        'app/scripts/factorys/BaseFactory.js',
-        'app/scripts/factorys/AccountFactory.js'
+        'app/angular/factorys/BaseFactory.js',
+        'app/angular/factorys/AccountFactory.js'
       ],
       dist: 'app/modules/Account',
       name: 'app.min.js'
     },
     doc: {
-      source: ['app/scripts/utils/Est.source.js', 'app/scripts/factorys/AccountFactory.js', 'app/modules/Account/app.js'],
+      source: ['app/scripts/utils/Est.source.js', 'app/angular/factorys/AccountFactory.js', 'app/modules/Account/app.js'],
       dist: 'app/modules/Account/doc'
     }
   },
@@ -195,14 +195,14 @@ var paths = {
         'app/modules/Design/app.js',
         'app/modules/Design/config.js',
         // directives
-        'app/scripts/directives/ui-bootstrap/*.js',
-        'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+        'app/angular/directives/ui-bootstrap/*.js',
+        'app/angular/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
         // factorys
-        'app/scripts/factorys/BaseFactory.js',
-        'app/scripts/factorys/AccountFactory.js',
-        'app/scripts/factorys/ProductCategoryFactory.js',
-        'app/scripts/factorys/NewsCategoryFactory.js',
-        'app/scripts/factorys/DesignFactory.js'
+        'app/angular/factorys/BaseFactory.js',
+        'app/angular/factorys/AccountFactory.js',
+        'app/angular/factorys/ProductCategoryFactory.js',
+        'app/angular/factorys/NewsCategoryFactory.js',
+        'app/angular/factorys/DesignFactory.js'
       ],
       dist: 'app/modules/Design',
       name: 'app.min.js'
@@ -260,7 +260,7 @@ var paths = {
         'app/styles/theme/ace/blueimp-gallery.min.css', // 图片上传
         'app/styles/theme/ace/bootstrap-image-gallery.min.css', // 相册图片弹出框样式
         'app/styles/theme/ace/ng-table.css', // 列表
-        'app/scripts/directives/ng-toastr/angular-toastr.css' // 气泡提示
+        'app/angular/directives/ng-toastr/angular-toastr.css' // 气泡提示
       ],
       dist: 'app/styles/theme/ace',
       name: 'jhw.merge.min.css'
@@ -311,24 +311,24 @@ var paths = {
         'app/base/*.js',
         'app/scripts/app.js',
         // directives
-        'app/scripts/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
-        'app/scripts/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
-        'app/scripts/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
-        'app/scripts/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
-        'app/scripts/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
-        'app/scripts/directives/ng-enter/ng-enter.js', // 回车事件
-        'app/scripts/directives/ng-focus/ng-focus.js', // 获取焦点
-        'app/scripts/directives/ng-format/ng-format.js', // 格式化输入的内容
-        'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
-        'app/scripts/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
-        'app/scripts/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
-        'app/scripts/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
+        'app/angular/directives/ng-loading/ng-loading.js', // angular初始化之前显示loading图标
+        'app/angular/directives/ng-datetimepicker/ng-datetimepicker.js', // 时间选择器 requied: 'app/vendor/datetime/bootstrap-datepicker.min.js','app/vendor/datetime/bootstrap-datepicker.zh-CN.js',
+        'app/angular/directives/ng-imagesCrop/ng-imageCrop.js', // 图片等比例居中显示
+        'app/angular/directives/ng-clickToEdit/ng-clickToEdit.js', // 点击编辑
+        'app/angular/directives/ng-embedSrc/ng-embedSrc.js', // flash src地址
+        'app/angular/directives/ng-enter/ng-enter.js', // 回车事件
+        'app/angular/directives/ng-focus/ng-focus.js', // 获取焦点
+        'app/angular/directives/ng-format/ng-format.js', // 格式化输入的内容
+        'app/angular/directives/ng-ZeroClipboard/ng-ZeroClipboard.js', // required: ZeroClipboard.js
+        'app/angular/directives/ng-ueditor/ng-ueditor.src.js', // required: vendor/ueditor1_4_3/ueditor.merge.min.js
+        'app/angular/directives/ng-treeview/scripts/ui.bootstrap.treeview.js', // 树
+        'app/angular/directives/ui-bootstrap/*.js', // 包含modal   tabs    tooltip
         // filters
-        'app/scripts/filters/filter-state/filter-state.js', // 状态
-        'app/scripts/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
-        'app/scripts/filters/filter-characters/filter-characters.js', // 字符串截取
+        'app/angular/filters/filter-state/filter-state.js', // 状态
+        'app/angular/filters/filter-picsize/filter-picsize.js', // 压缩图片尺寸
+        'app/angular/filters/filter-characters/filter-characters.js', // 字符串截取
         // factorys
-        'app/scripts/factorys/*.js'
+        'app/angular/factorys/*.js'
       ],
       dist: './doc'
     }
@@ -384,10 +384,10 @@ var paths = {
         'app/vendor/angular-cookies/angular-cookies.min.js',
         'app/vendor/jq-upload/jquery-upload.min.js',
         'app/modules/Jihui88/app.js',
-        'app/scripts/directives/ng-ZeroClipboard/ng-ZeroClipboard.js',
-        'app/scripts/directives/ng-ueditor/ng-ueditor.src.js',
-        'app/scripts/factorys/BaseFactory.js',
-        'app/scripts/factorys/AccountFactory.js'
+        'app/angular/directives/ng-ZeroClipboard/ng-ZeroClipboard.js',
+        'app/angular/directives/ng-ueditor/ng-ueditor.src.js',
+        'app/angular/factorys/BaseFactory.js',
+        'app/angular/factorys/AccountFactory.js'
       ],
       name: 'base.js',
       dist: './app/modules/Jihui88'

@@ -280,7 +280,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             restrict: 'EA',
             replace: true,
             scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
-            templateUrl: 'templates/tooltip/tooltip-popup.html'
+            templateUrl: '../../../templates/tooltip/tooltip-popup.html'
         };
     })
 /**
@@ -299,7 +299,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position', 'ui.bootstrap
             restrict: 'EA',
             replace: true,
             scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
-            templateUrl: 'templates/tooltip/tooltip-html-unsafe-popup.html'
+            templateUrl: '../../../templates/tooltip/tooltip-html-unsafe-popup.html'
         };
     })
 

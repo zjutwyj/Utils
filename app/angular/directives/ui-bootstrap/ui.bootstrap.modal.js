@@ -78,7 +78,7 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.transition'])
         return {
             restrict: 'EA',
             replace: true,
-            templateUrl: 'templates/modal/backdrop.html',
+            templateUrl: '../../../templates/modal/backdrop.html',
             link: function (scope, element, attrs) {
                 scope.backdropClass = attrs.backdropClass || '';
 
