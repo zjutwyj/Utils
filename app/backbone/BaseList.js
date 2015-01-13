@@ -48,21 +48,23 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        * @author wyj 14.11.20
        * @example
        *      this._initialize({
-       *        model: 模型类,
-       *        collection: 集合,
-       *        item: this.options.items || [], //单视图
+       *        model: ProductModel, // 模型类,
+       *        collection:  ProductCollection,// 集合,
+       *        item: ProductItem, // 单视图
        *        // 以下为可选
-       *        template: 字符串模板,
-       *        render: 插入列表的元素选择符, 若为空则默认插入到$el中
-       *        items: [](可选， 当无需url请求时), items可为function形式传递;  若需要构建树， 则传入前的items列表必须为手动构建好的树
-       *        data: {}, // 附加的数据 此数据在BaseList BaseItem视图中可以获取  其中BaseList中为{{name}} ; BaseItem中为{{_options.data.name}} BaseCollecton为this.options.data BaseModel为this.model.get('_options').data
+       *        template: listTemp, 字符串模板,
+       *        render: '.product-list', 插入列表的容器选择符, 若为空则默认插入到$el中
+       *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;  若需要构建树， 则传入前的items列表必须为手动构建好的树
+       *        data: {}, // 附加的数据 此数据在BaseList BaseItem视图中可以获取  其中BaseList中为[this._options.data & {{name}}] ; BaseItem中为[this._options.data &{{_options.data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
        *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加
        *        enterRender: (可选) 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
-       *        pagination: true, // 是否显示分页
+       *        pagination: true, // 是否显示分页 view视图中相应加入<div id="pagination-container"></div>
        *        page: parseInt(Est.cookie('orderList_page')) || 1, //设置起始页 所有的分页数据都会保存到cookie中， 以viewId + '_page'格式存储， 注意cookie取的是字符串， 要转化成int
        *        pageSize: parseInt(Est.cookie('orderList_pageSize')) || 16, // 设置每页显示个数
        *        max: 5, // 限制显示个数
-       *        detail: 添加页面url地址
+       *        itemId: 'Category_00000000000123', // 当需要根据某个ID查找列表时， 启用此参数， 方便
+       *        detail: 添加页面url地址 配置route使用
+       *        route: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少
        *        filter: [ {key: 'name', value: this.searchKey }] // 过滤结果
        *        beforeLoad: function(collection){ // collection载入列表前执行
        *            this.setCategoryId(options.categoryId); // collection载入后执行
@@ -79,7 +81,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
                       this.addOne();
                     }
        *        },
-       *        // 以下为树型列表时 需要的参数(注意， 集合类继承BaseComposite)
+       *        // 以下为树型列表时 需要的参数
        *        subRender: '.node-tree', // 下级分类的容器选择符
        *        collapse: '.node-collapse' 展开/收缩元素选择符
        *        parentId: 'belongId', // 分类 的父类ID
@@ -89,42 +91,62 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        *       });
        */
       _initialize: function (options) {
+        debug('1.BaseList._initialize');
+        this.dx = 0;
+        this.views = [];
         app.emptyDialog();
-        return this._initCollection(options.collection, options);
+        setTimeout(function () {
+        }, 50);
+        return this._init(options.collection, options);
       },
       /**
        * 初始化集合类
        *
-       * @method [private] - _initCollection
+       * @method [private] - _init
        * @private
        * @param collection 对应的collection集合类， 如ProductCollection
        * @param options [beforeLoad: 加载数据前执行] [item: 集合单个视图] [model: 模型类]
        * @author wyj 14.11.16
        */
-      _initCollection: function (collection, options) {
-        debug('1.BaseList._initialize');
-        var ctx = this;
-        this._options = options || {};
-        this.dx = 0;
-        this.views = [];
-        setTimeout(function () {
-        }, 1);
-        Est.extend(this._options, this.options);
-        if (this._options.template) {
-          this._options.data = this._options.data || {};
-          this.template = HandlebarsHelper.compile(this._options.template);
-          this.$el.append(this.template(this._options.data));
-        }
-        this._data = this._options.data;
+      _init: function (collection, options) {
+        this._initOptions(options);
+        this._initTemplate(this._options);
+        this._initEnterEvent();
+        this._initList(this._options);
+        this._initCollection(this._options, collection);
+        this._initItemView(this._options.item, this);
+        this._initModel(this._options.model);
+        this._initBind();
+        this._initPagination(this._options);
+        this._load(this._options);
+        this._afterLoad();
+        this._finally();
+
+        return this;
+      },
+      /**
+       * 初始化参数
+       * @method _initOptions
+       * @private
+       * @author wyj 15.1.12
+       */
+      _initOptions: function (options) {
+        this._options = Est.extend(options || {}, this.options);
+        this._options.sortField = 'sort';
         this._options.max = this._options.max || 99999;
-        if (this._options.enterRender) {
-          this._enterEvent();
-        }
-        this.list = this._options.render ? this.$(this._options.render) :
-          this.$el;
-        if (this.list.size() === 0) {
-          this.list = $(this._options.render);
-        }
+      },
+      /**
+       * 初始化列表视图容器
+       * @method _initList
+       * @private
+       * @author wyj 15.1.12
+       */
+      _initList: function (options) {
+        var ctx = this;
+        this.list = options.render ? this.$(options.render) : this.$el;
+        if (this.list.size() === 0)
+          this.list = $(options.render);
+
         debug(function () {
           if (!ctx.list || ctx.list.size() === 0) {
             return ('当前' + ctx.options.viewId + '视图无法找到选择符， 检查XxxList中的_initialize方法中是否定义render或 ' +
@@ -134,35 +156,66 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           }
         }, {type: 'error'});
         this.allCheckbox = this.$('#toggle-all')[0];
-        this._options.sortField = 'sort'; // 排序字段名称
+
+        return this.list;
+      },
+      /**
+       * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
+       * @method _initTemplate
+       * @private
+       * @author wyj 15.1.12
+       */
+      _initTemplate: function (options) {
+        this._data = options.data = options.data || {};
+        if (options.template) {
+          this.template = HandlebarsHelper.compile(options.template);
+          this.$el.append(this.template(options.data));
+        }
+        return this._data;
+      },
+      /**
+       * 初始化collection集合
+       * @method _initCollection
+       * @param collection
+       * @private
+       */
+      _initCollection: function (options, collection) {
         debug(function () {
-          if (!ctx._options.model) {
+          if (!options.model) {
             return 'XxxList中的_initialize({})参数中未添加模型类，XxxList头部是否require请求引入？ ' +
               '或检查config.js/main.js中是否配置app.addModule("XxxModel")';
           }
         }, {type: 'error'});
-        if (this._options.itemId) {
-          this.collection._setItemId(this._options.itemId);
-        }
-        if (!this.collection) {
-          this.collection = new collection(this._options);
-        }
+        if (!this.collection)
+          this.collection = new collection(options);
+        if (options.itemId)
+          this.collection._setItemId(options.itemId);
         //TODO 分类过滤
-        if (this._options.subRender && !(this._options.items)) {
+        if (options.subRender && !(options.items))
           this.composite = true;
-        }
-        this._initItemView(this._options.item, this);
-        this._initModel(this._options.model);
-        this._initBind();
-        this._initPagination(this._options);
-        this._load(this._options);
-        if (this._options.afterLoad) {
-          this._options.afterLoad.call(this, this._options);
-        }
+
+        return this.collection;
+      },
+      /**
+       * 初始化完成后执行
+       * @method _finally
+       * @private
+       */
+      _finally: function () {
         if (this._options.finally) {
           this._options.finally.call(this, this._options);
         }
-        return this;
+      },
+      /**
+       * 列表载入前执行
+       * @method _beforeLoad
+       * @param options
+       * @private
+       */
+      _beforeLoad: function (options) {
+        if (options.beforeLoad) {
+          options.beforeLoad.call(this, this.collection);
+        }
       },
       /**
        * 初始化items
@@ -174,12 +227,28 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         if (Est.typeOf(this._options.items) === 'function') {
           this._options.items = this._options.items.apply(this, arguments);
         }
+        if (this._options.filter) {
+          this.collection.push(this._options.items);
+          this._filterCollection();
+          this._options.items = Est.pluck(Est.cloneDeep(this.collection.models, function () {
+          }, this), 'attributes');
+        }
         if (this._options._page || this._options._pageSize) {
           this._renderListByPagination();
         } else {
           Est.each(this._options.items, function (item) {
             this.collection.push(new this.initModel(item));
           }, this);
+        }
+      },
+      /**
+       * 列表载入后执行
+       * @method _afterLoad
+       * @private
+       */
+      _afterLoad: function () {
+        if (this._options.afterLoad) {
+          this._options.afterLoad.call(this, this._options);
         }
       },
       /**
@@ -276,7 +345,10 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           //app.addData('maxSort', model.get('dx') + 1);
           var itemView = new this.item({
             model: model,
-            data: this._data
+            data: this._data,
+            detail: this._options.detail,
+            route: this._options.route,
+            views: this.views
           });
           itemView._setInitModel(this.initModel);
           //TODO 优先级 new对象里的viewId > _options > getCurrentView()
@@ -325,9 +397,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
       _load: function (options, model) {
         var ctx = this;
         options = options || this._options || {};
-        if (options.beforeLoad) {
-          options.beforeLoad.call(ctx, ctx.collection);
-        }
+        this._beforeLoad(options);
         if (options.page || options.pageSize) {
           options.page && ctx.collection.paginationModel.set('page', options.page);
           // 备份page
@@ -350,7 +420,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           Est.cookie(this._options.viewId + '_pageSize', ctx.collection.paginationModel.get('pageSize'));
         }
         // 判断是否存在url
-        if (ctx.collection.url) {
+        if (ctx.collection.url && !this._options.items) {
 
           if (ctx._options.filter) ctx.filter = true;
           // 处理树结构
@@ -376,11 +446,14 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
                 ctx._filterRoot();
               }
               if (ctx._options.filter) {
-                ctx._filter(ctx._options.filter, ctx._options);
+                ctx._filterCollection();
               }
               options.afterLoad && options.afterLoad.call(ctx, result);
             });
         }
+      },
+      _filterCollection: function () {
+        this._filter(this._options.filter, this._options);
       },
       /**
        * 静态分页
@@ -397,7 +470,8 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         for (var i = this.startIndex; i < this.endIndex; i++) {
           this.collection.push(this._options.items[i]);
         }
-        this.collection.paginationModel.set('count', this._options.items.length);
+        // 渲染分页
+        this.collection.paginationModel.set('count', this.collection.models.length);
         this.collection._paginationRender();
         return this.collection;
       },
@@ -416,18 +490,20 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
       /**
        * 回车事件
        *
-       * @method [private] - _enterEvent
+       * @method [private] - _initEnterEvent
        * @private
        * @author wyj 14.12.10
        */
-      _enterEvent: function () {
+      _initEnterEvent: function () {
         var ctx = this;
-        if (!this._options.enterRender) return;
-        this.$('input').keyup(function (e) {
-          if (e.keyCode === CONST.ENTER_KEY) {
-            ctx.$(ctx._options.enterRender).click();
-          }
-        });
+        if (this._options.enterRender) {
+          if (!this._options.enterRender) return;
+          this.$('input').keyup(function (e) {
+            if (e.keyCode === CONST.ENTER_KEY) {
+              ctx.$(ctx._options.enterRender).click();
+            }
+          });
+        }
       },
       /**
        * 初始化单个枚举视图
@@ -439,17 +515,6 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        */
       _initItemView: function (itemView) {
         this.item = itemView;
-      },
-      /**
-       * 初始化模型类, 设置index索引
-       *
-       * @method [private] - _initModel
-       * @private
-       * @param model
-       * @author wyj 14.11.20
-       */
-      _initModel: function (model) {
-        this.initModel = model;
       },
       /**
        * 清空列表， 并移除所有绑定的事件
@@ -483,6 +548,17 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         this.views = [];
         //this.list.empty();
         return this.collection;
+      },
+      /**
+       * 初始化模型类, 设置index索引
+       *
+       * @method [private] - _initModel
+       * @private
+       * @param model
+       * @author wyj 14.11.20
+       */
+      _initModel: function (model) {
+        this.initModel = model;
       },
       /**
        * 添加所有元素， 相当于刷新视图
@@ -572,9 +648,12 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           }
           len--;
         }
-        Est.each(result, function (item) {
-          ctx._addOne(item);
-        });
+        if (!ctx._options.items) {
+          Est.each(result, function (item) {
+            item.set('_isSearch', true);
+            ctx._addOne(item);
+          });
+        }
       },
       /**
        * 弹出查看详细信息对话框
@@ -611,7 +690,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
             buttons.push({
               value: '保存',
               callback: function () {
-                this.title('提交中..');
+                this.title(CONST.SUBMIT_TIP);
                 this.iframeNode.contentWindow.$("#submit").click();
                 return false;
               },

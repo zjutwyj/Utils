@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="UTF-8">
+    <title>地区级联</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../styles/default/base.css"/>
+    <link href="../../styles/default/dpl.css" rel="stylesheet">
+    <link href="../../styles/default/bui.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <link href="http://g.tbcdn.cn/fi/bui/css/dpl-min.css" rel="stylesheet">
+    <link href="http://g.tbcdn.cn/fi/bui/css/bui-min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE6]>
+    <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
+    <![endif]-->
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
+</head>
+<!--[if IE 7]>
+<body class="ie7"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9"><![endif]-->
+<!--[if IE 10]>
+<body class="ie10"><![endif]-->
+<!--[if IE 11]>
+<body class="ie11"><![endif]-->
+<!--[if !IE]>-->
+<body id="jhw">
+<!--<![endif]-->
+
+<div id="district-container" style="height: 200px;"></div>
+<br>
+<input id="getDistrict" type="button" value="获取当前地区"/>
+<div id="district-container1" style="clear:both;height: 200px;"></div>
+
+<script type="text/javascript" src="../../scripts/base.js"></script>
+<script type="text/javascript" src="../../const.js"></script>
+<script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../common/district/main.js"></script>
+<script type="text/javascript" src="../../common/pagination/config.js"></script>
+<script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript">
+    var items = [
+        { addTime: null, areaId: "402881882ba8753a012ba8bf474d001c", updateTime: null, name: "北京", path: "402881882ba8753a012ba8bf474d001c", level: 0, belongId: null },
+        { addTime: null, areaId: "402881882ba8753a012ba8bfacfd001d", updateTime: null, name: "东城区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8bfacfd001d", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8bfacfd001w", updateTime: null, name: "东城1区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8bfacfd001d,402881882ba8753a012ba8bfacfd001w", level: 2, belongId: '402881882ba8753a012ba8bfacfd001d' },
+        { addTime: null, areaId: "402881882ba8753a012ba8bff6f6001e", updateTime: null, name: "西城区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8bff6f6001e", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c02f9a001f", updateTime: null, name: "崇文区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c02f9a001f", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c061970020", updateTime: null, name: "宣武区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c061970020", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c088690021", updateTime: null, name: "朝阳区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c088690021", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c0ade20022", updateTime: null, name: "丰台区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c0ade20022", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c0d34c0023", updateTime: null, name: "石景山区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c0d34c0023", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c389a2002f", updateTime: null, name: "天津", path: "402881882ba8753a012ba8c389a2002f", level: 0 ,belongId: null},
+        { addTime: null, areaId: "402881882ba8753a012ba8c3bcc80030", updateTime: null, name: "和平区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c3bcc80030", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c3e4460031", updateTime: null, name: "河东区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c3e4460031", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c409df0032", updateTime: null, name: "河西区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c409df0032", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c42e5e0033", updateTime: null, name: "南开区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c42e5e0033", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c454450034", updateTime: null, name: "河北区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c454450034", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c479040035", updateTime: null, name: "红桥区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c479040035", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c689d30042", updateTime: null, name: "河北省", path: "402881882ba8753a012ba8c689d30042", level: 0 ,belongId: null },
+        { addTime: null, areaId: "402881882ba8753a012ba8c6da830043", updateTime: null, name: "石家庄市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c6da830043", level: 1, belongId: '402881882ba8753a012ba8c689d30042' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c7122d0044", updateTime: null, name: "唐山市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c7122d0044", level: 1, belongId: '402881882ba8753a012ba8c689d30042' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c73d920045", updateTime: null, name: "秦皇岛市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c73d920045", level: 1, belongId: '402881882ba8753a012ba8c689d30042' },
+        { addTime: null, areaId: "402881882ba8753a012ba8c7656d0046", updateTime: null, name: "邯郸市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c7656d0046", level: 1, belongId: '402881882ba8753a012ba8c689d30042' }
+    ];
+    //app.addData('arealist', items); // 去掉注释， 则使用的是上面的测试数据
+    seajs.use(['District', 'BaseService'], function (District, BaseService) {
+        function initArea(options) {
+            app.addPanel(options.id, {
+                el: options.target,
+                template: '<div class="district-inner ' + options.id + '"></div>'
+            });
+            app.addView(options.id, new District({
+                el: '.' + options.id,
+                viewId: options.id,
+                target: options.target,
+                path: options.path
+            }));
+        }
+
+        initArea({
+            id: 'district',
+            target: '#district-container',
+            render: ''
+        });
+        $('#getDistrict').click(function(){
+            console.log(app.getView('district').getDistrict());
+            alert(app.getView('district').getDistrict());
+        });
+        initArea({
+            id: 'district1',
+            target: '#district-container1',
+            path: '402881882ba8753a012ba8c8f0b1004e,402881882ba8753a012ba8c963fd0050',
+            render: ''
+        });
+    });
+
+</script>
+</body>
+</html>

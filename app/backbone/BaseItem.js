@@ -62,11 +62,11 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         this._options = options || {};
         this.model.stopCollapse = false;
 
-       /* debug(function () {
-          if (ctx.model instanceof Backbone.Model) {
-            return 'XxxCollection中缺少model参数， 请检查是否加入model? 当前视图为： '+ ctx.options.viewId;
-          }
-        }, {type: 'error'});*/
+        /* debug(function () {
+         if (ctx.model instanceof Backbone.Model) {
+         return 'XxxCollection中缺少model参数， 请检查是否加入model? 当前视图为： '+ ctx.options.viewId;
+         }
+         }, {type: 'error'});*/
         Est.extend(this._options, this.options);
         this.collapsed = this.model.get('_options') ? this.model.get('_options')._extend : false;
         if (this._options.template) {
@@ -132,6 +132,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
             childView._setInitModel(ctx.initModel);
             childView._setViewId(ctx._options.viewId);
             tree.append(childView.$el);
+            ctx._options.views.push(childView);
             childView._render();
           });
           /* Apply some extra styling to views with children */
@@ -537,58 +538,65 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         debug('1.BaseItem._edit');
         var ctx = this;
         this._itemActive();
-        seajs.use(['dialog-plus'], function (dialog) {
-          window.dialog = dialog;
-          var buttons = [];
-          if (!options.hideSaveBtn) buttons.push({
-            value: '保存',
-            callback: function () {
-              this.title('提交中..');
-              this.iframeNode.contentWindow.$("#submit").click();
-              return false;
-            },
-            autofocus: true
+        options = Est.extend({}, options);
+        // 如果是搜索结果列表时， 使用dialog形式
+        options.route = ctx._options.route || options.route;
+        if (!this.model.get('_isSearch') && options.route) {
+          Backbone.history.navigate(options.route + '/' + ctx.model.get('id'), true);
+        } else {
+          seajs.use(['dialog-plus'], function (dialog) {
+            window.dialog = dialog;
+            var buttons = [];
+            if (!options.hideSaveBtn) buttons.push({
+              value: '保存',
+              callback: function () {
+                this.title(CONST.SUBMIT_TIP);
+                this.iframeNode.contentWindow.$("#submit").click();
+                return false;
+              },
+              autofocus: true
+            });
+            if (!options.hideResetBtn) buttons.push({
+              value: '重置',
+              callback: function () {
+                this.iframeNode.contentWindow.$("#reset").click();
+                return false;
+              }
+            });
+            buttons.push({ value: '关闭' });
+            window.detailDialog = dialog({
+              id: 'edit-dialog',
+              title: options.title || '修改',
+              width: options.width || 1000,
+              height: options.height || 'auto',
+              url: options.url || ctx._options.detail +
+                '?id=' + ctx.model.id,
+              button: buttons,
+              oniframeload: function () {
+                var load = options.load || function () {
+                };
+                this.iframeNode.contentWindow.topDialog = window.detailDialog;
+                this.iframeNode.contentWindow.app = app;
+                load.call(this, this.iframeNode.contentWindow);
+                //BaseUtils.resetIframe('');
+              },
+              onclose: function () {
+                ctx.model.set(Est.cloneDeep(window.model));
+                if (options.reload) ctx.model.fetch({
+                  wait: true,
+                  success: function () {
+                    ctx.model.reset && ctx.model.reset();
+                  }
+                });
+                if (options.close) options.close.call(this);
+                this.remove();
+                window.detailDialog = null;
+                window.model = {};
+              }
+            });
+            window.detailDialog.showModal();
           });
-          if (!options.hideResetBtn) buttons.push({
-            value: '重置',
-            callback: function () {
-              this.iframeNode.contentWindow.$("#reset").click();
-              return false;
-            }
-          });
-          buttons.push({ value: '关闭' });
-          window.detailDialog = dialog({
-            id: 'edit-dialog',
-            title: options.title || '修改',
-            width: options.width || 1000,
-            height: options.height || 'auto',
-            url: options.url || ctx._options.detail +
-              '?id=' + ctx.model.id,
-            button: buttons,
-            oniframeload: function () {
-              var load = options.load || function () {
-              };
-              this.iframeNode.contentWindow.topDialog = window.detailDialog;
-              this.iframeNode.contentWindow.app = app;
-              load.call(this, this.iframeNode.contentWindow);
-              //BaseUtils.resetIframe('');
-            },
-            onclose: function () {
-              ctx.model.set(Est.cloneDeep(window.model));
-              if (options.reload) ctx.model.fetch({
-                wait: true,
-                success: function () {
-                  ctx.model.reset && ctx.model.reset();
-                }
-              });
-              if (options.close) options.close.call(this);
-              this.remove();
-              window.detailDialog = null;
-              window.model = {};
-            }
-          });
-          window.detailDialog.showModal();
-        });
+        }
       }
     });
 

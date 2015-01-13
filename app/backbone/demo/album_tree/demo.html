@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="UTF-8">
+    <title>相册树型分类</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../styles/default/base.css"/>
+    <link href="../../styles/default/dpl.css" rel="stylesheet">
+    <link href="../../styles/default/bui.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <link href="http://g.tbcdn.cn/fi/bui/css/dpl-min.css" rel="stylesheet">
+    <link href="http://g.tbcdn.cn/fi/bui/css/bui-min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE6]>
+    <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
+    <![endif]-->
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
+    <style>
+        .up-modal .modal-subTitle { margin-top: 0px; background: #FAFAFA; padding: 10px 15px 10px 15px; line-height: 27px; }
+        .up-modal .location-label { float: left; }
+        .breadcrumb { padding: 0 22px; margin: 0; list-style: none; background-color: #f5f5f5; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+        .up-modal .breadcrumb { float: left; width: 380px; padding: 0 22px 0 10px; background-color: transparent; border: none; }
+        .breadcrumb>li { display: inline-block; text-shadow: 0 1px 0 #fff; }
+        .up-modal .location-change { position: relative; float: left; }
+        .btn { display: inline-block; padding: 3px 12px; margin-bottom: 0; font-size: 12px; font-weight: normal; line-height: 20px; text-align: center; vertical-align: middle; cursor: pointer; border: 1px solid transparent; border-radius: 2px; white-space: nowrap; }
+        .icon-local { background-image: url("http://gtms03.alicdn.com/tps/i3/T10moYFwlcXXbtZ_ga-204-618.png"); background-repeat: no-repeat; }
+        .up-modal .location-change .pos-icon { width: 16px; height: 16px; display: inline-block; line-height: 15px; margin: 3px 6px 0 0; vertical-align: text-top; float: left; background-position: -192px -80px; }
+        .btn-default { border-color: #ccc; background-color: #fff; color: #333; }
+        .up-modal .tree-box { display: none; position: absolute; right: 0; top: 27px; height: 220px; width: 569px; overflow: auto; background-color: #fff; border: 1px solid #c8c8c8; z-index: 1; }
+        .up-modal .setting { padding: 0 15px 10px 15px; }
+        .up-modal .setting>div { float: left; }
+        .up-modal .setting .is-water, .up-modal .setting .is-protect { margin-right: 10px; }
+        label { display: block; margin-bottom: 5px; }
+        .up-modal .up-tips { margin: 0 15px 20px; padding: 10px; background-color: #FAFAFA; }
+        .up-modal .up-tips .little { float: left; }
+        .up-modal .up-tips ul { float: left; }
+        .up-modal .up-tips ul li { text-align: left; }
+        .upload-container{ padding: 10px 15px 10px 15px; }
+        #J_UpTree{padding-left:5px;}
+    </style>
+</head>
+<!--[if IE 6]>
+<body class="ie6" id="jhw"><![endif]-->
+<!--[if IE 7]>
+<body class="ie7" id="jhw"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8" id="jhw"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9" id="jhw"><![endif]-->
+<!--[if IE 10]>
+<body class="ie10" id="jhw"><![endif]-->
+<!--[if IE 11]>
+<body class="ie11" id="jhw"><![endif]-->
+<!--[if !IE]>-->
+<body id="jhw">
+<!--<![endif]-->
+<div id="jhw-detail" class="up-modal">
+    <div class="modal-subTitle clearfix">
+        <div class="location-label">当前位置:</div>
+        <ul class="breadcrumb"><li>我的图片</li></ul>
+        <div class="location-change">
+            <button class="btn btn-default show-tree"><i class="icon-local pos-icon"></i>修改位置</button>
+            <div class="tree-box" style="display: block;">
+                <div id="J_UpTree" class="ztree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../vendor/jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../scripts/base.js"></script>
+<script type="text/javascript" src="../../const.js"></script>
+<script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../modules/album/main.js"></script>
+<script type="text/javascript" src="../../common/pagination/config.js"></script>
+<script type="text/javascript" src="../../config.js"></script>
+
+<script type="text/javascript">
+$(function(){
+    seajs.use(['AlbumList'], function(AlbumList){
+        app.addView('albumList', new AlbumList({
+            el: '#J_UpTree',
+            callback: function(albumId){
+
+            }
+        }));
+    });
+})
+</script>
+</body>
+</html>

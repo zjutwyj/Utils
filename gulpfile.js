@@ -435,7 +435,7 @@ var paths = {
         'app/backbone/Application.js'
       ],
       name: 'base.js',
-      dist: './app/modules/userManagement'
+      dist: 'C:/software/WebstormProjects/userManagement/app/scripts'
     }
   }
 };

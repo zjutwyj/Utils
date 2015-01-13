@@ -1122,7 +1122,7 @@
    * @description id值瘦身 去掉前面的字母与0 比如 Product_0000000000000000000132 瘦身为132
    * @method [字符串] - encodeId
    * @param target
-   * @returns {string}
+   * @return {string}
    * @author wyj 15.1.9
    * @example
    *      Est.encodeId('Product_00000000000000132'); => 132

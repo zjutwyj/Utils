@@ -24,6 +24,7 @@ define('BaseUtils', ['jquery', 'HandlebarsHelper'],
        *         render: '#s1',
        *         target: '#model-parentId',
        *         items: [],
+       *         itemId: 'value', // 默认为value
        *         change: function(changeId){
        *           console.log(changeId);
        *         }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="UTF-8">
+    <title>属性添加及显示</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../styles/default/base.css"/>
+    <link href="../../styles/default/dpl.css" rel="stylesheet">
+    <link href="../../styles/default/bui.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <link href="http://g.tbcdn.cn/fi/bui/css/dpl-min.css" rel="stylesheet">
+    <link href="http://g.tbcdn.cn/fi/bui/css/bui-min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE6]>
+    <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
+    <![endif]-->
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
+</head>
+<!--[if IE 7]>
+<body class="ie7"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9"><![endif]-->
+<!--[if IE 10]>
+<body class="ie10"><![endif]-->
+<!--[if IE 11]>
+<body class="ie11"><![endif]-->
+<!--[if !IE]>-->
+<body>
+<!--<![endif]-->
+
+<!--添加属性-->
+<form>
+    <div id="multi-attribute">
+        <div id="attributes-container">
+        </div>
+    </div>
+</form>
+
+<!--显示属性-->
+<div id="attributes-list"></div>
+<div>
+    <a href="javascript:;" class="getItemsBtn">获取ITEMS</a>
+    <a href="javascript:;" class="changeCategory">更改分类</a>
+</div>
+<script type="text/javascript" src="../../scripts/base.js"></script>
+<script type="text/javascript" src="../../const.js"></script>
+<script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../modules/index/main.js"></script>
+<script type="text/javascript" src="../../modules/product/main.js"></script>
+<script type="text/javascript" src="../../modules/news/main.js"></script>
+<script type="text/javascript" src="../../modules/attributes/main.js"></script>
+<script type="text/javascript" src="../../modules/category/main.js"></script>
+<script type="text/javascript" src="../../modules/certificate/main.js"></script>
+<script type="text/javascript" src="../../modules/wwy/main.js"></script>
+<script type="text/javascript" src="../../modules/recruit/main.js"></script>
+<script type="text/javascript" src="../../modules/login/main.js"></script>
+<script type="text/javascript" src="../../modules/member/main.js"></script>
+<script type="text/javascript" src="../../modules/message/main.js"></script>
+<script type="text/javascript" src="../../modules/register/main.js"></script>
+<script type="text/javascript" src="../../modules/album/main.js"></script>
+<script type="text/javascript" src="../../common/attributes/config.js"></script>
+<script type="text/javascript" src="../../common/category/config.js"></script>
+<script type="text/javascript" src="../../common/pagination/config.js"></script>
+<script type="text/javascript" src="../../common/picture/config.js"></script>
+<script type="text/javascript" src="../../common/select/config.js"></script>
+<script type="text/javascript" src="../../common/tag/config.js"></script>
+<script type="text/javascript" src="../../common/picture_pick/main.js"></script>
+<script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript">
+    // 属性添加
+    seajs.use(['jquery', 'AttributesAdd'], function (jquery, AttributesAdd) {
+        app.addView('attributesAdd', new AttributesAdd({ items: ['111', '222', '333'] }));
+        $(".getItemsBtn").click(function () {
+            console.dir(app.getView('attributesAdd').getItems()); // 获取数据
+        });
+
+        // 属性显示
+        seajs.use(['jquery', 'AttributesShow'], function (jquery, AttributesShow) {
+            app.addView('attributesShow', new AttributesShow({ render: '#attributes-list', categoryId: 'Category_00000000000000000023058'}));
+        });
+        $('.changeCategory').click(function(){
+            app.getView('attributesShow').reload('Category_00000000000000000023059');
+        });
+    });
+
+</script>
+</body>
+</html>

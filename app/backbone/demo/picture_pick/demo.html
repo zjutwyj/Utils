@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="UTF-8">
+    <title>标签添加</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../styles/default/base.css"/>
+    <link href="../../styles/default/dpl.css" rel="stylesheet">
+    <link href="../../styles/default/bui.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <link href="http://g.tbcdn.cn/fi/bui/css/dpl-min.css" rel="stylesheet">
+    <link href="http://g.tbcdn.cn/fi/bui/css/bui-min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE6]>
+    <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
+    <![endif]-->
+
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
+</head>
+<!--[if IE 7]>
+<body class="ie7" id="jhw"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8" id="jhw"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9" id="jhw"><![endif]-->
+<!--[if IE 10]>
+<body class="ie10" id="jhw"><![endif]-->
+<!--[if IE 11]>
+<body class="ie11" id="jhw"><![endif]-->
+<!--[if !IE]>-->
+<body id="jhw">
+<!--<![endif]-->
+
+<div id="picture-pick"></div>
+
+<script type="text/javascript" src="../../scripts/base.js"></script>
+<script type="text/javascript" src="../../const.js"></script>
+<script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../common/picture_pick/main.js"></script>
+<script type="text/javascript" src="../../common/pagination/config.js"></script>
+<script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript">
+    seajs.use(['jquery', 'PicturePick'], function (jquery, PicturePick) {
+        app.addView('picturePick', new PicturePick({
+            el: '#picture-pick',
+            viewId: 'picturePick',
+            _isAdd: true, // 是否为添加模式
+            max: 1, // 限制最大上传个数， 默认为无限
+            items: [{name: 'aaa'}, {name: 'bbb'}, {name: 'ccc'}] // 初始化数据
+        }));
+    });
+</script>
+</body>
+</html>

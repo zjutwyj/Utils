@@ -32,6 +32,9 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
       url: function () {
         var base = this.baseUrl;
         if (!base) return '';
+        if (Est.typeOf(base) === 'function') {
+          base = base.call(this);
+        }
         if (this.isNew() && Est.isEmpty(this.id)) return base;
         return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
       },
@@ -94,8 +97,20 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
             button: buttons
           }).show();
         }
-        if (response.attributes)
+        if (Est.typeOf(response.success) === 'boolean' && !response.success) {
+          ctx.attributes._response = response;
+          return ctx.attributes;
+        }
+        if (response.attributes && response.attributes.data) {
+          var keys = Est.keys(response.attributes);
+          if (keys.length > 1) {
+            Est.each(keys, function (item) {
+              if (item !== 'data')
+                response.attributes['data'][item] = response.attributes[item];
+            });
+          }
           response = response.attributes.data;
+        }
         if (response) {
           response.id = response[ctx.baseId || 'id'];
           response.checked = false;

@@ -64,6 +64,9 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        */
       _render: function () {
         this.$el.append(this.template(this.model.toJSON()));
+        if (window.topDialog) {
+          this.$('.form-actions').hide();
+        }
         setTimeout(function () {
           BaseUtils.resetIframe();
         }, 1000);
@@ -97,9 +100,16 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        */
       _initModel: function (model, ctx) {
         ctx.passId = Est.getUrlParam('id', window.location.href) || this.options.id;
+        debug(function () {
+          if (!model) {
+            return 'XxxDetail未找到模型类， 请检查继承BaseDetail时是否设置model参数，如XxxDetail = BaseDetail.extend({' +
+              'model: XxxModel, initialize: function(){..}})';
+          }
+        }, {type: 'error'});
         if (!Est.isEmpty(this.passId)) {
           ctx.model = new model();
           ctx.model.set('id', ctx.passId);
+          ctx.model.set('_data', ctx._options.data);
           ctx.model.fetch().done(function () {
             ctx.model.set('_isAdd', ctx._isAdd = false);
             ctx.render();
@@ -107,10 +117,10 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
         } else {
           ctx.passId = new Date().getTime();
           ctx.model = new model();
+          ctx.model.set('_data', ctx._options.data);
           ctx.model.set('_isAdd', ctx._isAdd = true);
           ctx.render();
         }
-        ctx.model.set('_data', ctx._options.data);
       },
       /**
        * form包装器， 传递表单选择符

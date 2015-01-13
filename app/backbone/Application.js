@@ -1,6 +1,6 @@
 /**
  * @description 应用程序管理器
- * @class Application
+ * @class Application - 应用程序管理器
  * @author yongjin<zjut_wyj@163.com> 2014/12/28
  */
 var Application = function (options) {
@@ -15,7 +15,7 @@ Est.extend(Application.prototype, {
     this.modules = {};
     this.routes = {};
     this.templates = {};
-    this.panel = {};
+    this.panels = {};
     this.dialog = [];
     this.status = {};
   },
@@ -44,8 +44,11 @@ Est.extend(Application.prototype, {
       $template.addClass('__panel_' + name);
       $(panel.el).append($template);
     }
-    this.panel[name] = panel;
+    this.panels[name] = panel;
     return isObject ? this : panel;
+  },
+  panel: function (name, panel) {
+    return this.addPanel(name, panel);
   },
   /**
    * 显示视图
@@ -66,7 +69,7 @@ Est.extend(Application.prototype, {
    */
   removePanel: function (name, panel) {
     $('.__panel_' + name, $(panel['el'])).off().remove();
-    delete this.panel[name];
+    delete this.panels[name];
   },
   /**
    * 获取面板
@@ -79,7 +82,7 @@ Est.extend(Application.prototype, {
    *      app.getPanelf('panel');
    */
   getPanel: function (name) {
-    return this.panel[name];
+    return this.panels[name];
   },
   /**
    * 视图添加
@@ -100,9 +103,27 @@ Est.extend(Application.prototype, {
     this.setCurrentView(name);
     return this;
   },
+  add: function (name, instance) {
+    return this.addView(name, instance);
+  },
+  /**
+   * 设置当前视图
+   * @method [视图] - setCurrentView
+   * @param name
+   * @example
+   *      app.setCurrentView('list', new List());
+   */
   setCurrentView: function (name) {
     this.currentView = name;
   },
+  /**
+   * 获取当前视图
+   * @method [视图] - getCurrentView
+   * @return {*|Application.currentView}
+   * @author wyj 15.1.9
+   * @example
+   *        app.getCurrentView('list');
+   */
   getCurrentView: function () {
     return this.currentView;
   },
@@ -142,7 +163,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加对话框
    *
-   * @emthod [对话框] - addDailog
+   * @method [对话框] - addDailog
    * @param dialog
    * @return {*}
    * @example
@@ -248,7 +269,7 @@ Est.extend(Application.prototype, {
    * 获取所有路由
    *
    * @method [路由] - getRoutes
-   * @returns {*}
+   * @return {*}
    * @author wyj 14.12.28
    *
    */
@@ -288,23 +309,40 @@ Est.extend(Application.prototype, {
   /**
    * 添加状态数据
    *
-   * @method addStatus
+   * @method [状态] - addStatus
    * @param name
    * @param value
    * @author wyj 15.1.7
    */
-  addStatus: function(name, value){
+  addStatus: function (name, value) {
     this['status'][name] = value;
   },
-  getStatus: function(name){
+  /**
+   * 获取状态数据
+   *
+   * @method [状态] - getStatus
+   * @param name
+   * @param value
+   * @author wyj 15.1.7
+   */
+  getStatus: function (name) {
     return this['status'][name];
   },
-  getAllStatus: function(){
+  /**
+   * 获取所有状态数据
+   * @method [状态] - getAllStatus
+   * @return {{}|*|Application.status}
+   * @author wyj 15.1.9
+   */
+  getAllStatus: function () {
     return this.status;
   }
 });
 /**
- * 解决ie6无console问题*/
+ * 解决ie6无console问题
+ * @method console
+ * @private
+ * */
 if (!window.console) {
   console = (function (debug) {
     var instance = null;
@@ -341,6 +379,8 @@ if (!window.console) {
 
   /**
    * Sea.js mini 2.3.0 | seajs.org/LICENSE.md
+   * @method seajs
+   * @private
    */
   var define;
   var require;
@@ -348,6 +388,8 @@ if (!window.console) {
 
     /**
      * util-lang.js - The minimal language enhancement
+     * @method isType
+     * @private
      */
 
     function isType(type) {
@@ -359,6 +401,8 @@ if (!window.console) {
     var isFunction = isType("Function")
     /**
      * module.js - The core of module loader
+     * @method Module
+     * @private
      */
 
     var cachedMods = {}
