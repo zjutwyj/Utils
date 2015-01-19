@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
     <![endif]-->
 
-    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet" />
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
 </head>
 <!--[if IE 6]>
 <body class="ie6" id="jhw"><![endif]-->
@@ -43,8 +43,10 @@
     <div id="product-add-inner">
         <form id="J_Form" action="" class="form-horizontal">
             <input type="hidden" id="model-id" name="id" value="{{id}}"/>
+
             <div class="control-group">
                 <label class="control-label">Seo标题：</label>
+
                 <div class="controls">
                     <input id="model-title" name="title" value="{{title}}" type="text" class="input-large"
                            data-tip='{"text":"请输入Seo标题","iconCls":"icon icon-pencil"}'>
@@ -52,6 +54,7 @@
             </div>
             <div class="control-group">
                 <label class="control-label">Seo关键字：</label>
+
                 <div class="controls">
                     <input id="model-keywords" name="keywords" value="{{keywords}}" type="text" class="input-large"
                            data-tip='{"text":"请输入Seo关键字","iconCls":"icon icon-pencil"}'>
@@ -59,6 +62,7 @@
             </div>
             <div class="control-group">
                 <label class="control-label">Seo描述：</label>
+
                 <div class="controls control-row-auto">
                     <textarea id="model-description" name="description" type="text">{{description}}</textarea>
                 </div>
@@ -67,7 +71,6 @@
             <div class="row actions-bar" style="display:none;">
                 <div class="form-actions span13 offset3">
                     <button id="submit" type="button" class="button button-primary">保存</button>
-                    <button id="reset" type="reset" class="button">重置</button>
                 </div>
             </div>
         </form>
@@ -77,12 +80,10 @@
 <script type="text/javascript" src="../../scripts/base.js"></script>
 <script type="text/javascript" src="../../const.js"></script>
 <script type="text/javascript" src="../../config.local.js"></script>
-<script type="text/javascript" src="../../modules/index/main.js"></script>
-<script type="text/javascript" src="../../modules/login/main.js"></script>
 <script type="text/javascript" src="../../common/seo/main.js"></script>
 <script type="text/javascript" src="../../config.js"></script>
 <script type="text/javascript">
-    seajs.use(['SeoDetail'], function(SeoDetail){
+    seajs.use(['SeoDetail'], function (SeoDetail) {
         app.addView('seoDetail', new SeoDetail({
             el: '#jhw-detail'
         }));

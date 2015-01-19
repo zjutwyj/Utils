@@ -242,9 +242,9 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
               }
             }
           });
-          if (typeof options.onBeforeSave !== 'undefined')
-            options.onBeforeSave.call(ctx);
           if (passed) {
+            if (typeof options.onBeforeSave !== 'undefined')
+              options.onBeforeSave.call(ctx);
             $button.html('提交中...');
             ctx._save(function (response) {
               if (options.onAfterSave) {
@@ -281,6 +281,10 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        */
       _saveItem: function (callback, context) {
         debug('BaseDetail._saveItem');
+        if (Est.isEmpty(this.model.url())){
+          debug('XxxModel模型类未设置url参数！', {type: 'error'});
+          return;
+        }
         this.model.save(null, {
           wait: true,
           success: function (response) {
@@ -292,6 +296,15 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
               callback.call(context, response);
           }
         });
+      },
+      /**
+       * 导航
+       * @method [public] - _navigate
+       * @param name
+       * @author wyj 15.1.13
+       */
+      _navigate: function(name){
+        Backbone.history.navigate(name, true);
       },
       /**
        * 重置表单

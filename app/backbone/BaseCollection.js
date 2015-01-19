@@ -164,15 +164,16 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
       debug('4.BaseCollection._load');
       //if (!Est.isEmpty(this.itemId)) this.url = this.url + '/' + this.itemId;
       this._parseUrl(model);
-      var $q = Est.promise;
+      return instance.fetch({success: function () {
+        //resolve(instance);
+        debug('5.collection reset');
+        context.collection._reset();
+        context._empty();
+      }});
+     /* var $q = Est.promise;
       return new $q(function (resolve) {
-        return instance.fetch({success: function () {
-          resolve(instance);
-          debug('5.collection reset');
-          context.collection._reset();
-          context._empty();
-        }});
-      });
+
+      });*/
     },
     /**
      * 设置itemId

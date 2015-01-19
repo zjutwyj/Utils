@@ -132,7 +132,9 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
             childView._setInitModel(ctx.initModel);
             childView._setViewId(ctx._options.viewId);
             tree.append(childView.$el);
-            ctx._options.views.push(childView);
+            if (ctx._options.views) {
+              ctx._options.views.push(childView);
+            }
             childView._render();
           });
           /* Apply some extra styling to views with children */
@@ -401,6 +403,43 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         return paginationModel.get('page');
       },
       /**
+       * 导航
+       * @method [public] - _navigate
+       * @param name
+       * @author wyj 15.1.13
+       */
+      _navigate: function (name) {
+        Backbone.history.navigate(name, true);
+      },
+      /**
+       * 显示更多按钮
+       * @method [public] _more
+       * @param e
+       * @author wyj 15.1.16
+       */
+      _more: function (e) {
+        e.stopImmediatePropagation();
+        this.$more = e.target ? $(e.target) : $(e.currentTarget);
+        if (!this.$more.hasClass('btn-more')) this.$more = this.$more.parents('.btn-more:first');
+        this.$moreOption = this.$more.parent().find('.moreOption');
+        this.$more.find('i').removeClass('icon-chevron-down');
+        this.$more.find('i').addClass('icon-chevron-left');
+        this.$moreOption.show().css({
+          top: this.$more.position().top,
+          right: 37,
+          position: 'absolute',
+          background: '#fff',
+          width: '100%',
+          textAlign: 'right',
+          "padding-bottom": 2
+        });
+        $(window).one('click', function () {
+          $('.moreOption').hide();
+          $('.btn-more').find('i').removeClass('icon-chevron-left');
+          $('.btn-more').find('i').addClass('icon-chevron-down');
+        });
+      },
+      /**
        * 单个字段保存
        *
        * @method [public] - _editField
@@ -501,28 +540,24 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         debug('1.BaseItem._del');
         var context = this;
         app.getData('delItemDialog') && app.getData('delItemDialog').close();
-        seajs.use(['dialog-plus'], function (dialog) {
-          var delItemDialog = dialog({
-            title: '温馨提示：',
-            content: '是否删除！',
-            width: 150,
-            button: [
-              {
-                value: '确定',
-                autofocus: true,
-                callback: function () {
-                  context.model.destroy();
-                }},
-              {
-                value: '取消',
-                callback: function () {
-                  this.close();
-                }
-              }
-            ]
-          }).show(context.$el.find('.delete').get(0));
-          app.addData('delItemDialog', delItemDialog);
-        });
+        if (this.model.get('children').length > 0) {
+          BaseUtils.comfirm({
+            title: '提示',
+            width: 300,
+            content: '该分类下还有子分类， 请先删除！ 提示：当存在与之相关联的产品、新闻等等，也无法删除'
+          });
+          return;
+        }
+        app.addData('delItemDialog', BaseUtils.comfirm({
+          title: '温馨提示',
+          content: '是否删除?',
+          target: context.$el.find('.delete').get(0),
+          success: function () {
+            context.model.destroy({
+              wait: true
+            });
+          }
+        }));
       },
       /**
        * 修改模型类
@@ -542,7 +577,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         // 如果是搜索结果列表时， 使用dialog形式
         options.route = ctx._options.route || options.route;
         if (!this.model.get('_isSearch') && options.route) {
-          Backbone.history.navigate(options.route + '/' + ctx.model.get('id'), true);
+          Backbone.history.navigate(options.route + '/' + Est.encodeId(ctx.model.get('id')), true);
         } else {
           seajs.use(['dialog-plus'], function (dialog) {
             window.dialog = dialog;
@@ -556,13 +591,13 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
               },
               autofocus: true
             });
-            if (!options.hideResetBtn) buttons.push({
+            /*if (!options.hideResetBtn) buttons.push({
               value: '重置',
               callback: function () {
                 this.iframeNode.contentWindow.$("#reset").click();
                 return false;
               }
-            });
+            });*/
             buttons.push({ value: '关闭' });
             window.detailDialog = dialog({
               id: 'edit-dialog',

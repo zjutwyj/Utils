@@ -10,7 +10,9 @@ var Application = function (options) {
 };
 Est.extend(Application.prototype, {
   initialize: function () {
-    this.data = { itemActiveList: [] };
+    this.data = {
+      itemActiveList: []
+    };
     this.instance = {};
     this.modules = {};
     this.routes = {};
@@ -18,6 +20,7 @@ Est.extend(Application.prototype, {
     this.panels = {};
     this.dialog = [];
     this.status = {};
+    this.cookies = [];
   },
   /**
    * 添加面板
@@ -336,6 +339,26 @@ Est.extend(Application.prototype, {
    */
   getAllStatus: function () {
     return this.status;
+  },
+  /**
+   * 缓存cookie
+   * @method [cookie] - addCookie
+   * @author wyj 15.1.13
+   */
+  addCookie: function(name){
+    if (Est.findIndex(this.cookies, name) !== -1){
+      return;
+    }
+    this.cookies.push(name);
+  },
+  /**
+   * 获取所有保存的cookie
+   * @method [cookie] - getCookies
+   * @return {Array}
+   * @author wyj 15.1.13
+   */
+  getCookies: function(){
+    return this.cookies;
   }
 });
 /**

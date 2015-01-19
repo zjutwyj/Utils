@@ -148,13 +148,20 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
           newModel.hideTip = true;
         }
         newModel.set('editField', true);
-        newModel.save(null, {
-          success: function (model, result) {
-            if (typeof options.success != 'undefined') {
-              options.success.call(ctx, keyValue, result);
-            }
-          }, wait: wait
-        });
+        debug(function () {
+          if (!newModel.baseUrl) {
+            return '当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl';
+          }
+        }, {type: 'error'});
+        if (newModel.baseUrl) {
+          newModel.save(null, {
+            success: function (model, result) {
+              if (typeof options.success != 'undefined') {
+                options.success.call(ctx, keyValue, result);
+              }
+            }, wait: wait
+          });
+        }
       },
       /**
        * 获取子模型

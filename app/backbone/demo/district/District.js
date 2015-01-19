@@ -61,6 +61,7 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
         app.getView(this._options.viewId).setInputValue(this.model.get('name'), this.model.get('path'));
         app.getView(this._options.viewId).setCurrentSelect(this.$el);
         app.getView(this._options.viewId).setSubSelect(this.model);
+        app.getView(this._options.viewId).setDistrict();
       }
     });
 
@@ -103,7 +104,9 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
             el: '.sub-district-inner' + this._options.viewId,
             items: model.get('children'),
             viewId: 'sub-' + this._options.viewId,
+            originId: this._options.originId,
             target: this._options.target,
+            input: this._options.input,
             path: this._data.path
           });
           app.addView('sub-' + this._options.viewId, this.sub);
@@ -114,6 +117,10 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
           this.sub.empty();
           this.sub = null;
         }
+      },
+      setDistrict: function () {
+        if (this._options.input)
+          this._options.input.val(app.getView(this._options.originId).getDistrict());
       },
       getDistrict: function () {
         if (this.sub) {
@@ -175,7 +182,9 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
           el: '.select-container-' + viewId,
           items: items,
           viewId: 'select-list-' + viewId,
+          originId: this._options.originId || viewId,
           target: this._options.target,
+          input: this._options.input,
           data: {
             path: this._options.path,
             inputNode: this.$('.bui-select-input')
@@ -188,6 +197,10 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
       render: function () {
         var ctx = this;
         this._render();
+        if (this._options.input && Est.typeOf(this._options.input) === 'string') {
+          this._options.input = $(this._options.input);
+          this._options.path = this._options.input.val();
+        }
         if (this._options.items) {
           ctx.initSelect(this._options.items);
         } else {
@@ -207,6 +220,10 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
         if (this.selectNode) {
           return this.selectNode.getDistrict();
         }
+      },
+      setDistrict: function () {
+        if (this._options.input)
+          this._options.input.val(this.getDistrict());
       }
     });
 

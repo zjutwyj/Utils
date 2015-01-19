@@ -431,6 +431,7 @@ var paths = {
         'app/vendor/seajs/sea.js',
         'app/vendor/seajs/seajs-text-debug.js',
         'app/vendor/pace/pace.js',
+        'app/vendor/prefix/prefixfree.min.js',
         'app/scripts/utils/Est.source.js',
         'app/backbone/Application.js'
       ],

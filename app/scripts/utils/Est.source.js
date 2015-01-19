@@ -1063,10 +1063,9 @@
         break;
       case 'number':
         // 可带小数点 如：0.33， 35.325
-        pattern = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+        pattern = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/; // ^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$ .1 matches 0.1 matches 1.12 matches 123.12 matches 92 matches 092 matches 092.13 matches 0 doesn't match 0.0 doesn't match 0.00 doesn't match 00 doesn't match 1.234 doesn't match -1 doesn't match -1.2 doesn't match
         break;
-      case 'digits':
-        // 还可带小数点
+      case 'digits': //还可带小数点
         pattern = /^\d+$/;
         break;
     }
@@ -1128,10 +1127,28 @@
    *      Est.encodeId('Product_00000000000000132'); => 132
    */
   function encodeId(target) {
-    return target == null ? "" : target.replace(/^[^1-9]+/, "")
+    return target == null ? "" : target.replace(/^[^1-9]+/, "");
   }
 
   Est.encodeId = encodeId;
+
+  /**
+   * 还原ID
+   * @method [字符串] - decodeId
+   * @param id
+   * @param prefix
+   * @param length
+   * @return {string}
+   * @author wyj 15.1.13
+   * @example
+   *      Est.decodeId('123' , 'Product_' , 32); => Product_00000000000000000000123
+   */
+  function decodeId(id, prefix, length) {
+    var len = prefix.length + id.length -1;
+    return prefix + new Array(length - len).join('0') + id;
+  }
+
+  Est.decodeId = decodeId;
 
   /**
    * @description 转换成小写字母

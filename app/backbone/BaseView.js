@@ -91,6 +91,15 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
         });
       },
       /**
+       * 导航
+       * @method [public] - _navigate
+       * @param name
+       * @author wyj 15.1.13
+       */
+      _navigate: function(name){
+        Backbone.history.navigate(name, true);
+      },
+      /**
        * 移除事件
        *
        * @method [private] - _empty

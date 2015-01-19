@@ -86,7 +86,8 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        *        collapse: '.node-collapse' 展开/收缩元素选择符
        *        parentId: 'belongId', // 分类 的父类ID
        *        categoryId: 'categoryId', // 分类 的当前ID
-       *        parentValue: '/' // 父分类的parentId值
+       *        rootId: 'isroot', // 一级分类字段名称
+       *        rootValue: '00' // 一级分类字段值
        *        extend: true // false收缩 true为展开
        *       });
        */
@@ -111,12 +112,12 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
       _init: function (collection, options) {
         this._initOptions(options);
         this._initTemplate(this._options);
-        this._initEnterEvent();
+        this._initEnterEvent(this._options, this);
         this._initList(this._options);
         this._initCollection(this._options, collection);
         this._initItemView(this._options.item, this);
         this._initModel(this._options.model);
-        this._initBind();
+        this._initBind(this.collection);
         this._initPagination(this._options);
         this._load(this._options);
         this._afterLoad();
@@ -307,16 +308,12 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           }
           thisModel.set('children', _children);
           // 添加父级元素
-          if (thisModel.get('isroot') === '01' || (!thisModel.get('isroot') && thisModel.get('parentId') === '/') ||
-            (!thisModel.get('isroot') && Est.isEmpty(thisModel.get('parentId')))) {
+          if (thisModel.get(ctx._options.rootId) === ctx._options.rootValue) {
             thisModel.set('level', 1);
             ctx._addOne(thisModel);
           }
         });
-        debug(ctx.collection);
-      },
-      _filterItemRoot: function () {
-
+        //debug(ctx.collection);
       },
       /**
        * 向视图添加元素
@@ -416,7 +413,9 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         }
         // page pageSize保存到cookie中
         if (this._options.viewId) {
+          app.addCookie(this._options.viewId + '_page');
           Est.cookie(this._options.viewId + '_page', ctx.collection.paginationModel.get('page'));
+          app.addCookie(this._options.viewId + '_pageSize');
           Est.cookie(this._options.viewId + '_pageSize', ctx.collection.paginationModel.get('pageSize'));
         }
         // 判断是否存在url
@@ -431,9 +430,9 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           }
           // 数据载入
           ctx.collection._load(ctx.collection, ctx, model).
-            then(function (result) {
-              if (ctx.options.instance)
-                app.addData(ctx.options.instance, result.models);
+            done(function (result) {
+              /*if (ctx.options.instance)
+               app.addData(ctx.options.instance, result.models);*/
               debug(function () {
                 if (result.length === 0) {
                   ctx.collection.url = Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
@@ -452,6 +451,12 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
             });
         }
       },
+      /**
+       * 过滤集合
+       * @method [private] - _filterCollection
+       * @private
+       * @author wyj 15.1.10
+       */
       _filterCollection: function () {
         this._filter(this._options.filter, this._options);
       },
@@ -481,10 +486,10 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        * @private
        * @author wyj 14.11.16
        */
-      _initBind: function () {
-        if (this.collection) {
-          this.collection.bind('add', this._addOne, this);
-          this.collection.bind('reset', this._render, this);
+      _initBind: function (collection) {
+        if (collection) {
+          collection.bind('add', this._addOne, this);
+          collection.bind('reset', this._render, this);
         }
       },
       /**
@@ -494,13 +499,12 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        * @private
        * @author wyj 14.12.10
        */
-      _initEnterEvent: function () {
-        var ctx = this;
-        if (this._options.enterRender) {
-          if (!this._options.enterRender) return;
-          this.$('input').keyup(function (e) {
+      _initEnterEvent: function (options, ctx) {
+        if (options.enterRender) {
+          if (!options.enterRender) return;
+          ctx.$('input').keyup(function (e) {
             if (e.keyCode === CONST.ENTER_KEY) {
-              ctx.$(ctx._options.enterRender).click();
+              ctx.$(options.enterRender).click();
             }
           });
         }
@@ -697,7 +701,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
               autofocus: true
             });
           }
-          if (!options.hideResetBtn) {
+         /* if (!options.hideResetBtn) {
             buttons.push({
               value: '重置',
               callback: function () {
@@ -705,7 +709,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
                 return false;
               }
             });
-          }
+          }*/
           buttons.push({ value: '关闭' });
           debug(function () {
             if (Est.isEmpty(ctx._options.detail) && Est.isEmpty(options.url)) {
@@ -763,6 +767,15 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         this.collection.each(function (product) {
           product.set('checked', checked);
         });
+      },
+      /**
+       * 导航
+       * @method [public] - _navigate
+       * @param name
+       * @author wyj 15.1.13
+       */
+      _navigate: function (name) {
+        Backbone.history.navigate(name, true);
       },
       /**
        * 保存sort值
@@ -929,6 +942,26 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           return;
         }
         return list;
+      },
+      /**
+       * 转换成[{key: '', value: ''}, ... ] 数组格式 并返回
+       * @method [public] - _getItems
+       * @author wyj 15.1.15
+       * @example
+       *      app.getView('productList').getItems();
+       */
+      _getItems: function () {
+        return Est.pluck(this.collection.models, 'attributes');
+      },
+      /**
+       * 向集合末尾添加元素
+       * @method [public] - _add
+       * @author wyj 15.1.15
+       * @example
+       *      app.getView('productList')._add(new model());
+       */
+      _add: function (model) {
+        this.collection.push(model);
       },
       /**
        * 批量删除， 隐藏等基础接口
