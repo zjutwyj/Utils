@@ -10,6 +10,9 @@ QUnit.test("Est.dateFormat", function(assert){
     var format = Est.dateFormat('Thu Jun 19 2014 19:47:52 GMT+0800', 'yyyy-MM-dd');
     var result = '2014-06-19';
     assert.equal(format, result, 'passed!');
+    var format = Est.dateFormat('2015-01-19 19:29:29', 'yyyy-MM-dd');
+    var result = '2015-01-19 19:29:29';
+    assert.equal(format, result, 'passed!');
 });
 QUnit.test("Est.getDays", function(assert){
     var days = Est.getDays('2014', '9');

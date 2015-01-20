@@ -5,6 +5,7 @@
  *    - defaults (可选) 默认值  如 Est.extend({}, BaseModel.prototype.defaults);
  *    - baseId (可选) ID标识符 如 productId
  *    - baseUrl (可选) 服务器交互地址
+ *    - params (可选) 附加参数 如  mobile=true&type=01
  *    - validate (可选) 当需要实现单个字段保存时， 需要调用父类_validation, 参照ProductModel
  *
  * @class BaseModel - 模型类
@@ -35,8 +36,10 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
         if (Est.typeOf(base) === 'function') {
           base = base.call(this);
         }
-        if (this.isNew() && Est.isEmpty(this.id)) return base;
-        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
+        this.params = this.params ? this.params : '';
+        var sep = Est.isEmpty(this.params) ? '' : '?';
+        if (this.isNew() && Est.isEmpty(this.id)) return base + sep + this.params;
+        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id + sep + this.params;
       },
       /**
        * 模型类初始化

@@ -122,6 +122,11 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
             if (modelOptions._items) {
               newmodel = new modelOptions._model(newmodel);
             }
+            debug(function () {
+              if (Est.isEmpty(newmodel)) {
+                return '相关的模型类中是否正确定义baseId？ 如拼写错误、未定义等';
+              }
+            }, {type: 'error'});
             newmodel.set('_options', modelOptions);
             newmodel.set('level', level + 1);
 
@@ -592,12 +597,12 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
               autofocus: true
             });
             /*if (!options.hideResetBtn) buttons.push({
-              value: '重置',
-              callback: function () {
-                this.iframeNode.contentWindow.$("#reset").click();
-                return false;
-              }
-            });*/
+             value: '重置',
+             callback: function () {
+             this.iframeNode.contentWindow.$("#reset").click();
+             return false;
+             }
+             });*/
             buttons.push({ value: '关闭' });
             window.detailDialog = dialog({
               id: 'edit-dialog',

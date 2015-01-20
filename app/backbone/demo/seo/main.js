@@ -5,3 +5,5 @@
  */
 app.addModule('SeoDetail', 'common/seo/SeoDetail.js');
 app.addModule('SeoModel', 'models/SeoModel.js');
+app.addModule('SeoMobileDetail', 'common/seo/SeoMobileDetail.js');
+app.addModule('SeoMobileModel', 'models/SeoMobileModel.js');

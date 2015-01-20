@@ -75,7 +75,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
                       this.addOne();
                     }
        *        },
-       *        finally: function(thisOpts){ // 最终执行方法， 包括items渲染完成
+       *        afterRender: function(thisOpts){ // 最终执行方法， 包括items渲染完成
        *          if (this.collection.models.length === 0 ||
                       !this.options._isAdd){
                       this.addOne();
@@ -203,8 +203,8 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        * @private
        */
       _finally: function () {
-        if (this._options.finally) {
-          this._options.finally.call(this, this._options);
+        if (this._options.afterRender) {
+          this._options.afterRender.call(this, this._options);
         }
       },
       /**
@@ -412,7 +412,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           this._initItems();
         }
         // page pageSize保存到cookie中
-        if (this._options.viewId) {
+        if (this._options.viewId && ctx.collection.paginationModel.get('pageSize') < 999) {
           app.addCookie(this._options.viewId + '_page');
           Est.cookie(this._options.viewId + '_page', ctx.collection.paginationModel.get('page'));
           app.addCookie(this._options.viewId + '_pageSize');
@@ -701,15 +701,15 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
               autofocus: true
             });
           }
-         /* if (!options.hideResetBtn) {
-            buttons.push({
-              value: '重置',
-              callback: function () {
-                this.iframeNode.contentWindow.$("#reset").click();
-                return false;
-              }
-            });
-          }*/
+          /* if (!options.hideResetBtn) {
+           buttons.push({
+           value: '重置',
+           callback: function () {
+           this.iframeNode.contentWindow.$("#reset").click();
+           return false;
+           }
+           });
+           }*/
           buttons.push({ value: '关闭' });
           debug(function () {
             if (Est.isEmpty(ctx._options.detail) && Est.isEmpty(options.url)) {
@@ -754,6 +754,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
           });
           window.detailDialog.showModal();
         });
+        return false;
       },
       /**
        * 全选checkbox选择框
@@ -934,14 +935,9 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        *      this._getCheckboxIds(); => ['id1', 'id2', 'id3', ...]
        */
       _getCheckboxIds: function () {
-        var list = Est.pluck(Est.filter(this.collection.models, function (item) {
+        return Est.pluck(Est.filter(this.collection.models, function (item) {
           return item.attributes.checked;
         }), 'id');
-        if (list.length === 0) {
-          BaseUtils.tip('至少选择一项');
-          return;
-        }
-        return list;
       },
       /**
        * 转换成[{key: '', value: ''}, ... ] 数组格式 并返回
@@ -976,18 +972,19 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
         options = Est.extend({
           tip: '操作成功！'
         }, options);
-        if (this.checkboxIds = this._getCheckboxIds()) {
-          $.ajax({
-            type: 'POST',
-            async: false,
-            url: options.url,
-            data: { ids: ctx.checkboxIds.join(',') },
-            success: function (result) {
-              BaseUtils.tip(options.tip);
-              ctx._load();
-            }
-          });
+        this.checkboxIds = this._getCheckboxIds();
+        if (this.checkboxIds.length === 0) {
+          BaseUtils.tip('请至少选择一项！');
+          return;
         }
+        $.ajax({
+          type: 'POST', async: false, url: options.url,
+          data: { ids: ctx.checkboxIds.join(',') },
+          success: function (result) {
+            BaseUtils.tip(options.tip);
+            ctx._load();
+          }
+        });
       },
       /**
        * 批量删除
@@ -1004,7 +1001,7 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
       _batchDel: function (options) {
         var ctx = this;
         this.checkboxIds = this._getCheckboxIds();
-        if (this.checkboxIds.length === 0) {
+        if (this.checkboxIds && this.checkboxIds.length === 0) {
           BaseUtils.tip('至少选择一项');
           return;
         }

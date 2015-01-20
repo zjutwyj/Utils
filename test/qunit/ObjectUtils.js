@@ -130,19 +130,20 @@ QUnit.test("Est.getType", function(assert){
 
     results.push(fn({a: 4})); // "Object"
     results.push(fn([1, 2, 3])); // "Array"
-    (function() { results.push(fn(arguments));}()); // "Object"
-    results.push(fn(new ReferenceError())); // "ReferenceError"
+    (function() { results.push(fn(arguments));}()); // "Arguments"
+    results.push(fn(new ReferenceError())); // "Error"
     results.push(fn(new Date())); // "Date"
     results.push(fn(/a-z/)); // "RegExp"
-    results.push(fn(Math)); // "Object"
-    results.push(fn(JSON)); // "Object"
+    results.push(fn(Math)); // "Math"
+    results.push(fn(JSON)); // "JSON"
     results.push(fn(new Number(4))); // "Number"
     results.push(fn(new String("abc"))); // "String"
     results.push(fn(new Boolean(true))); // "Boolean"
-    results.push(fn(null)); // "Null"
+    results.push(fn(null)); // "null"
     results.push(fn(function(){})); // "Function"
 
-    assert.deepEqual(results, [ "Object", "Array", "Object", "ReferenceError", "Date", "RegExp", "Object", "Object", "Number", "String", "Boolean", "null" , "Function"], "passed");
+    assert.deepEqual(results,[ "Object", "Array", "Arguments", "Error", "Date", "RegExp", "Math", "JSON", "Number", "String", "Boolean", "null", "Function" ]
+      , "passed");
 });
 
 QUnit.test("Est.hasKey", function(assert){

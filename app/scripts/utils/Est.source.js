@@ -366,7 +366,7 @@
   Est.typeOf = typeOf;
   /**
    * @description 检测数据类型2 此版本 new Number(4) new String("abc") new Boolean(true) new ReferenceError()
-   * 分别生成 Number String Boolean ReferenceError
+   * 分别生成 Number String Boolean Error
    * @method [对象] - getType
    * @param {object} value
    * @return {String}
@@ -376,17 +376,17 @@
    var fn = Est.getType;
    results.push(fn({a: 4})); // "Object"
    results.push(fn([1, 2, 3])); // "Array"
-   (function() { results.push(fn(arguments));}()); // "Object"
-   results.push(fn(new ReferenceError())); // "ReferenceError"
+   (function() { results.push(fn(arguments));}()); // "Argements"
+   results.push(fn(new ReferenceError())); // "Error"
    results.push(fn(new Date())); // "Date"
    results.push(fn(/a-z/)); // "RegExp"
-   results.push(fn(Math)); // "Object"
-   results.push(fn(JSON)); // "Object"
+   results.push(fn(Math)); // "Math"
+   results.push(fn(JSON)); // "JSON"
    results.push(fn(new Number(4))); // "Number"
    results.push(fn(new String("abc"))); // "String"
    results.push(fn(new Boolean(true))); // "Boolean"
-   results.push(fn(null)); // "Null"
-   => [ "Object", "Array", "Object", "ReferenceError", "Date", "RegExp", "Object", "Object", "Number", "String", "Boolean", "null" ]
+   results.push(fn(null)); // "null"
+   => [ "Object", "Array", "Arguments", "Error", "Date", "RegExp", "Math", "JSON", "Number", "String", "Boolean", "null" ]
    */
   function getType(value) {
     if (value === null) return "null";
@@ -1653,6 +1653,7 @@
    *     Est.reverse('abc'); => 'cba'
    */
   function reverse(str) {
+    str = str.split('');
     var result = '',
       length = str.length;
     while (length--) {
@@ -2748,7 +2749,7 @@
   Est.loadCss = loadCSS;
   // DateUtils
   /**
-   * @description 格式化时间
+   * @description 格式化时间 当输入的时间是已经格式好好的且为IE浏览器， 则原样输出
    * @method [时间] - dateFormat
    * @param {String} date 时间
    * @param {String} fmt 格式化规则 如‘yyyy-MM-dd’
@@ -2758,6 +2759,7 @@
    *     Est.dateFormat(new Date(), 'yyyy-MM-dd'); => '2014-05-03'
    */
   function dateFormat(date, fmt) {
+    var origin = date;
     var date = date ? new Date(date) : new Date();
     var o = {
       "M+": date.getMonth() + 1, //月份
@@ -2769,14 +2771,19 @@
       "S": date.getMilliseconds() //毫秒
     };
     fmt = fmt || 'yyyy-MM-dd';
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-    try {
-      for (var k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    if (!isNaN(date.getFullYear())){
+      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+      try {
+        for (var k in o) {
+          if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+      } catch (e) {
+        console.log('【Error】: DateUtils.dataFormat ' + e);
       }
-    } catch (e) {
-      console.log('【Error】: DateUtils.dataFormat ' + e);
+    } else{
+      fmt = origin;
     }
+
     return fmt;
   }
 
