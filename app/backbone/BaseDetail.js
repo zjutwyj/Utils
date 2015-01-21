@@ -303,8 +303,9 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * @param name
        * @author wyj 15.1.13
        */
-      _navigate: function(name){
-        Backbone.history.navigate(name, true);
+      _navigate: function (name, options) {
+        options = options || true;
+        Backbone.history.navigate(name, options);
       },
       /**
        * 重置表单

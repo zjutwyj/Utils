@@ -775,8 +775,9 @@ define('BaseList', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebars
        * @param name
        * @author wyj 15.1.13
        */
-      _navigate: function (name) {
-        Backbone.history.navigate(name, true);
+      _navigate: function (name, options) {
+        options = options || true;
+        Backbone.history.navigate(name, options);
       },
       /**
        * 保存sort值

@@ -65,12 +65,13 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
      */
     parse: function (resp, xhr) {
       var ctx = this;
-      debug(function () {
-        if (Est.isEmpty(resp)) {
+      if (Est.isEmpty(resp)) {
+        debug(function () {
           var url = Est.typeOf(ctx.url) === 'function' ? ctx.url() : ctx.url;
           return ('服务器返回的数据为空， 点击' + url + '是否返回数据？无？ 检查XxxCollection中的url参数是否配置正确？');
-        }
-      }, {type: 'error'});
+        }, {type: 'error'});
+        return [];
+      }
       this._parsePagination(resp);
       this._parseUrl(this.paginationModel);
       //TODO this.options.pagination 防止被其它无分页的列表覆盖
@@ -170,10 +171,10 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
         context.collection._reset();
         context._empty();
       }});
-     /* var $q = Est.promise;
-      return new $q(function (resolve) {
+      /* var $q = Est.promise;
+       return new $q(function (resolve) {
 
-      });*/
+       });*/
     },
     /**
      * 设置itemId

@@ -86,7 +86,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
                 window.topDialog = null;
               }
               this.close();
-              $(".btn-back").click();
+              $ && $(".btn-back").click();
             }, autofocus: true });
           } else {
             buttons.push({ value: '确定', callback: function () {
