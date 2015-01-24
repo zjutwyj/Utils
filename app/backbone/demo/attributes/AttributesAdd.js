@@ -83,7 +83,8 @@ define('AttributesAdd', ['jquery', 'HandlebarsHelper', 'BaseCollection', 'BaseIt
           collection: collection,
           item: item,
           render: '#attributes-container',
-          model: model
+          model: model,
+          clearDialog: false
         });
         if (!this.options.items)
           this.add();

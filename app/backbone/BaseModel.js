@@ -84,9 +84,16 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
               if (typeof window.topDialog != 'undefined') {
                 window.topDialog.close(); // 关键性语句
                 window.topDialog = null;
+                $ && $(".btn-back").click();
+              } else if (app.getDialogs().length > 0) {
+                try {
+                  app.getDialogs().pop().close().remove();
+                } catch (e) {
+                }
+              } else {
+                $ && $(".btn-back").click();
               }
               this.close();
-              $ && $(".btn-back").click();
             }, autofocus: true });
           } else {
             buttons.push({ value: '确定', callback: function () {
@@ -147,14 +154,10 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
         newModel.clear();
         newModel.set(keyValue);
         newModel.set('silent', true);
-        if (options.hideTip) {
-          newModel.hideTip = true;
-        }
+        if (options.hideTip) newModel.hideTip = true;
         newModel.set('editField', true);
         debug(function () {
-          if (!newModel.baseUrl) {
-            return '当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl';
-          }
+          if (!newModel.baseUrl) return '当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl';
         }, {type: 'error'});
         if (newModel.baseUrl) {
           newModel.save(null, {
@@ -208,7 +211,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
        *            this.validateMsg = "sort不能为空";
        *          }
        *         });
-       *}
+       *        }
        */
       _validation: function (attributes, callback) {
         if (!attributes.silent && callback) {

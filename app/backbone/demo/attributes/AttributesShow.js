@@ -73,8 +73,10 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
             item: item,
             model: model,
             collection: collection,
+            clearDialog: false,
             beforeLoad: function () {
               this.collection.url = null;
+              this._clear();
             },
             afterLoad: function () {
               this.itemRender(options, this);
@@ -88,11 +90,13 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
             collection: collection,
             item: item,
             model: model,
+            clearDialog: false,
             data: {
               url: this.options && this.options.url
             },
             beforeLoad: function () {
               this.collection._setItemId(this.options.categoryId);
+              this._clear();
             },
             afterLoad: function () {
               this.after();
@@ -128,6 +132,7 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
       reload: function (categoryId) {
         this._load({
           beforeLoad: function (collection) {
+            this._clear();
             if (categoryId !== '/'){
               this.collection.url = CONST.API + '/attr/list';
               collection._setItemId(categoryId);

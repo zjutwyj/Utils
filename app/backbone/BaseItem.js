@@ -17,28 +17,16 @@
  * @class BaseItem - 集合中的单个视图
  * @author yongjin<zjut_wyj@163.com> 2014.11.11
  */
-define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHelper', 'BaseUtils'],
+define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'BaseUtils'],
   function (require, exports, module) {
-    var Backbone, dialog, BaseItem, HandlebarsHelper, BaseUtils;
+    var SuperView, dialog, BaseItem, HandlebarsHelper, BaseUtils;
 
-    Backbone = require('backbone');
     dialog = require('dialog');
+    SuperView = require('SuperView');
     HandlebarsHelper = require('HandlebarsHelper');
     BaseUtils = require('BaseUtils');
 
-    BaseItem = Backbone.View.extend({
-      /**
-       * 传递options进来
-       *
-       * @method [private] - constructor
-       * @private
-       * @param options
-       * @author wyj 14.12.16
-       */
-      constructor: function (options) {
-        this.options = options || {};
-        Backbone.View.apply(this, arguments);
-      },
+    BaseItem = SuperView.extend({
       /**
        * 初始化, 若该视图的子元素有hover选择符， 则自动为其添加鼠标经过显示隐藏事件
        *
@@ -174,23 +162,6 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
        */
       _setInitModel: function (model) {
         this.initModel = model;
-      },
-      /**
-       * 回车事件
-       *
-       * @method [private] - _enterEvent
-       * @private
-       * @private
-       * @author wyj 14.12.10
-       */
-      _enterEvent: function () {
-        var ctx = this;
-        if (!ctx._options.enterRender) return;
-        this.$('input').keyup(function (e) {
-          if (e.keyCode === CONST.ENTER_KEY) {
-            ctx.$(ctx._options.enterRender).click();
-          }
-        });
       },
       /**
        * 绑定展开收缩事件
@@ -408,15 +379,6 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         return paginationModel.get('page');
       },
       /**
-       * 导航
-       * @method [public] - _navigate
-       * @param name
-       * @author wyj 15.1.13
-       */
-      _navigate: function (name) {
-        Backbone.history.navigate(name, true);
-      },
-      /**
        * 显示更多按钮
        * @method [public] _more
        * @param e
@@ -427,17 +389,24 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         this.$more = e.target ? $(e.target) : $(e.currentTarget);
         if (!this.$more.hasClass('btn-more')) this.$more = this.$more.parents('.btn-more:first');
         this.$moreOption = this.$more.parent().find('.moreOption');
-        this.$more.find('i').removeClass('icon-chevron-down');
-        this.$more.find('i').addClass('icon-chevron-left');
-        this.$moreOption.show().css({
-          top: this.$more.position().top,
-          right: 37,
-          position: 'absolute',
-          background: '#fff',
-          width: '100%',
-          textAlign: 'right',
-          "padding-bottom": 2
-        });
+        this.$icon = this.$more.find('i');
+        if (this.$icon.hasClass('icon-chevron-left')) {
+          this.$icon.removeClass('icon-chevron-left');
+          this.$icon.addClass('icon-chevron-down');
+          this.$moreOption.hide();
+        } else {
+          this.$icon.removeClass('icon-chevron-down');
+          this.$icon.addClass('icon-chevron-left');
+          this.$moreOption.show().css({
+            top: this.$more.position().top,
+            right: 37,
+            position: 'absolute',
+            background: '#fff',
+            width: '100%',
+            textAlign: 'right',
+            "padding-bottom": 2
+          });
+        }
         $(window).one('click', function () {
           $('.moreOption').hide();
           $('.btn-more').find('i').removeClass('icon-chevron-left');
@@ -582,7 +551,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
         // 如果是搜索结果列表时， 使用dialog形式
         options.route = ctx._options.route || options.route;
         if (!this.model.get('_isSearch') && options.route) {
-          Backbone.history.navigate(options.route + '/' + Est.encodeId(ctx.model.get('id')), true);
+          this._navigate(options.route + '/' + Est.encodeId(ctx.model.get('id')), true);
         } else {
           seajs.use(['dialog-plus'], function (dialog) {
             window.dialog = dialog;
@@ -617,6 +586,7 @@ define('BaseItem', ['jquery', 'underscore', 'backbone', 'dialog', 'HandlebarsHel
                 };
                 this.iframeNode.contentWindow.topDialog = window.detailDialog;
                 this.iframeNode.contentWindow.app = app;
+                delete app.getRoutes()['index'];
                 load.call(this, this.iframeNode.contentWindow);
                 //BaseUtils.resetIframe('');
               },

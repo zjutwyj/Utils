@@ -41,7 +41,7 @@
 <div class="controls">
     <input id="model-{{attId}}" type="hidden" name="{{attId}}" value="{{element}}"/>
     {{#each ../attributeOptionList}}
-    <label><input type="checkbox" name="{{this}}" value="{{this}}" {{#contains ../element this}}checked="checked"{{/contains}} >{{this}}</label>
+    <label><input type="checkbox" name="{{this}}" value="{{this}}" {{#contains ../element this}}checked="checked"{{/contains}} >&nbsp;{{this}}</label>&nbsp;&nbsp;
     {{/each}}
 </div>
 {{/compare}}

@@ -8,28 +8,16 @@
  * @author yongjin<zjut_wyj@163.com> 2014.11.12
  */
 
-define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'BaseUtils', 'BaseService'],
+define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService'],
   function (require, exports, module) {
-    var BaseDetail, Backbone, HandlebarsHelper, BaseUtils, BaseService;
+    var BaseDetail, SuperView, HandlebarsHelper, BaseUtils, BaseService;
 
-    Backbone = require('backbone');
+    SuperView = require('SuperView');
     HandlebarsHelper = require('HandlebarsHelper');
     BaseUtils = require('BaseUtils');
     BaseService = require('BaseService');
 
-    BaseDetail = Backbone.View.extend({
-      /**
-       * 传递options进来
-       *
-       * @method [private] - constructor
-       * @private
-       * @param options
-       * @author wyj 14.12.16
-       */
-      constructor: function (options) {
-        this.options = options || {};
-        Backbone.View.apply(this, arguments);
-      },
+    BaseDetail = SuperView.extend({
       /**
        * 初始化
        *
@@ -48,11 +36,32 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        *      });
        */
       _initialize: function (options) {
-        this._options = options || {};
-        Est.extend(this._options, this.options);
+        this._options = Est.extend(options || {}, this.options);
         this.template = HandlebarsHelper.compile(options.template);
+        this._initList(this._options);
         this._initModel(options.model, this);
         if (this._options.enterRender) this._enterEvent();
+      },
+      /**
+       * 初始化列表视图容器
+       * @method _initList
+       * @private
+       * @author wyj 15.1.12
+       */
+      _initList: function (options) {
+        var ctx = this;
+        this.list = options.render ? this.$(options.render) : this.$el;
+        if (this.list.size() === 0)
+          this.list = $(options.render);
+        debug(function () {
+          if (!ctx.list || ctx.list.size() === 0) {
+            return ('当前' + ctx.options.viewId + '视图无法找到选择符， 检查XxxDetail中的_initialize方法中是否定义render或 ' +
+              '实例化对象(new XxxDetail({...}))中是否存入el; ' +
+              '或template模板是否引入， 或是否是iframe对话框中未重新实例化Application对象， 或检查template模板是否存在' +
+              (ctx._options.render ? ctx._options.render : ctx.el));
+          }
+        }, {type: 'error'});
+        return this.list;
       },
       /**
        * 渲染
@@ -63,29 +72,13 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        *        this._render();
        */
       _render: function () {
-        this.$el.append(this.template(this.model.toJSON()));
+        this.list.append(this.template(this.model.toJSON()));
         if (window.topDialog) {
           this.$('.form-actions').hide();
         }
         setTimeout(function () {
           BaseUtils.resetIframe();
         }, 1000);
-      },
-      /**
-       * 回车事件
-       *
-       * @method [private] - _enterEvent
-       * @private
-       * @author wyj 14.12.10
-       */
-      _enterEvent: function () {
-        var ctx = this;
-        if (!this._options.enterRender) return;
-        this.$('input').keyup(function (e) {
-          if (e.keyCode === CONST.ENTER_KEY) {
-            ctx.$(ctx._options.enterRender).click();
-          }
-        });
       },
       /**
        * 初始化模型类 将自动判断是否有ID传递进来，
@@ -99,7 +92,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        * @author wyj 14.11.15
        */
       _initModel: function (model, ctx) {
-        ctx.passId = Est.getUrlParam('id', window.location.href) || this.options.id;
+        ctx.passId = this.options.id || Est.getUrlParam('id', window.location.href);
         debug(function () {
           if (!model) {
             return 'XxxDetail未找到模型类， 请检查继承BaseDetail时是否设置model参数，如XxxDetail = BaseDetail.extend({' +
@@ -281,7 +274,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
        */
       _saveItem: function (callback, context) {
         debug('BaseDetail._saveItem');
-        if (Est.isEmpty(this.model.url())){
+        if (Est.isEmpty(this.model.url())) {
           debug('XxxModel模型类未设置url参数！', {type: 'error'});
           return;
         }
@@ -289,6 +282,7 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
           wait: true,
           success: function (response) {
             console.log('BaseDetail._saveSuccess');
+            app.addModel(Est.cloneDeep(response.attributes));
             if (top) {
               top.model = response.attributes;
             }
@@ -296,16 +290,6 @@ define('BaseDetail', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 'B
               callback.call(context, response);
           }
         });
-      },
-      /**
-       * 导航
-       * @method [public] - _navigate
-       * @param name
-       * @author wyj 15.1.13
-       */
-      _navigate: function (name, options) {
-        options = options || true;
-        Backbone.history.navigate(name, options);
       },
       /**
        * 重置表单

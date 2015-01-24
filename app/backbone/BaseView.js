@@ -15,26 +15,16 @@
  * @class BaseView - 普通视图
  * @author yongjin<zjut_wyj@163.com> 2014/12/8
  */
-define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
+define('BaseView', ['SuperView', 'backbone', 'HandlebarsHelper', 'BaseUtils'],
   function (require, exports, module) {
-    var BaseView, Backbone, HandlebarsHelper;
+    var BaseView, SuperView, Backbone, HandlebarsHelper, BaseUtils;
 
     Backbone = require('backbone');
+    SuperView = require('SuperView');
     HandlebarsHelper = require('HandlebarsHelper');
+    BaseUtils = require('BaseUtils');
 
-    BaseView = Backbone.View.extend({
-      /**
-       * 传递options进来
-       *
-       * @method [private] - constructor
-       * @private
-       * @param options
-       * @author wyj 14.12.16
-       */
-      constructor: function (options) {
-        this.options = options || {};
-        Backbone.View.apply(this, arguments);
-      },
+    BaseView = SuperView.extend({
       /**
        * 初始化
        *
@@ -50,7 +40,7 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
        *         enterRender: 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
        *      });
        */
-      _initialize: function(options){
+      _initialize: function (options) {
         var model = Backbone.Model.extend({});
         this._options = options || {};
         Est.extend(this._options, this.options);
@@ -68,37 +58,11 @@ define('BaseView', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper'],
        * @example
        *        this._render();
        */
-      _render: function(){
+      _render: function () {
         this.trigger('before', this);
         this.$el.append(this.template(this.model.toJSON()));
         if (this._options.enterRender) this._enterEvent();
         this.trigger('after', this);
-      },
-      /**
-       * 回车事件
-       *
-       * @method [private] - _enterEvent
-       * @private
-       * @author wyj 14.12.10
-       */
-      _enterEvent: function () {
-        var ctx = this;
-        if (!this._options.enterRender) return;
-        this.$('input').keyup(function (e) {
-          if (e.keyCode === CONST.ENTER_KEY) {
-            ctx.$(ctx._options.enterRender).click();
-          }
-        });
-      },
-      /**
-       * 导航
-       * @method [public] - _navigate
-       * @param name
-       * @author wyj 15.1.13
-       */
-      _navigate: function (name, options) {
-        options = options || true;
-        Backbone.history.navigate(name, options);
       },
       /**
        * 移除事件

@@ -21,6 +21,7 @@ Est.extend(Application.prototype, {
     this.dialog = [];
     this.status = {};
     this.cookies = [];
+    this.models = [];
   },
   /**
    * 添加面板
@@ -71,8 +72,18 @@ Est.extend(Application.prototype, {
    * @author wyj 14.12.29
    */
   removePanel: function (name, panel) {
-    $('.__panel_' + name, $(panel['el'])).off().remove();
-    delete this.panels[name];
+    try {
+      if ($.fn.off) {
+        $('.__panel_' + name, $(panel['el'])).off().remove();
+      } else {
+        seajs.use(['jquery'], function ($) {
+          window.$ = $;
+          $('.__panel_' + name, $(panel['el'])).off().remove();
+        });
+      }
+      delete this.panels[name];
+    } catch (e) {
+    }
   },
   /**
    * 获取面板
@@ -155,12 +166,15 @@ Est.extend(Application.prototype, {
    */
   removeView: function (name) {
     var view = this.getView(name);
-    if (view) {
-      view._empty();
-      view.stopListening();
-      view.$el.off().remove();
+    try {
+      if (view) {
+        view._empty();
+        view.stopListening();
+        view.$el.off().remove();
+      }
+      delete this['instance'][name];
+    } catch (e) {
     }
-    delete this['instance'][name];
     return this;
   },
   /**
@@ -175,6 +189,32 @@ Est.extend(Application.prototype, {
   addDialog: function (dialog) {
     this.dialog.push(dialog);
     return dialog;
+  },
+  /**
+   * 获取所有对话框
+   * @method [对话框] - getDialogs
+   * @return {*}
+   * @author wyj 15.1.23
+   */
+  getDialogs: function () {
+    return this['dialog'];
+  },
+  /**
+   * 添加模型类
+   * @method [模型] - addModel
+   * @author wyj 15.1.23
+   */
+  addModel: function (model) {
+    this.models.push(model);
+    return model;
+  },
+  /**
+   * 获取所有模型类
+   * @method [模型] - getModels
+   * @author wyj 15.1.23
+   */
+  getModels: function(){
+    return this['models'];
   },
   /**
    * 清空所有对话框, 当切换页面时移除所有对话框
@@ -345,8 +385,8 @@ Est.extend(Application.prototype, {
    * @method [cookie] - addCookie
    * @author wyj 15.1.13
    */
-  addCookie: function(name){
-    if (Est.findIndex(this.cookies, name) !== -1){
+  addCookie: function (name) {
+    if (Est.findIndex(this.cookies, name) !== -1) {
       return;
     }
     this.cookies.push(name);
@@ -357,7 +397,7 @@ Est.extend(Application.prototype, {
    * @return {Array}
    * @author wyj 15.1.13
    */
-  getCookies: function(){
+  getCookies: function () {
     return this.cookies;
   }
 });

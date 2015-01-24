@@ -1302,6 +1302,7 @@
    *     Est.cutByte('aaaaaa', 4, '...'); => 'a...'
    */
   function cutByte(str, length, truncation) {
+    if (isEmpty(str)){return ''}
     //提前判断str和length
     if (!(str + "").length || !length || +length <= 0) {
       return "";
