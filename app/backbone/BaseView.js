@@ -15,14 +15,13 @@
  * @class BaseView - 普通视图
  * @author yongjin<zjut_wyj@163.com> 2014/12/8
  */
-define('BaseView', ['SuperView', 'backbone', 'HandlebarsHelper', 'BaseUtils'],
+define('BaseView', ['SuperView', 'backbone', 'HandlebarsHelper'],
   function (require, exports, module) {
-    var BaseView, SuperView, Backbone, HandlebarsHelper, BaseUtils;
+    var BaseView, SuperView, Backbone, HandlebarsHelper;
 
     Backbone = require('backbone');
     SuperView = require('SuperView');
     HandlebarsHelper = require('HandlebarsHelper');
-    BaseUtils = require('BaseUtils');
 
     BaseView = SuperView.extend({
       /**
@@ -60,7 +59,7 @@ define('BaseView', ['SuperView', 'backbone', 'HandlebarsHelper', 'BaseUtils'],
        */
       _render: function () {
         this.trigger('before', this);
-        this.$el.append(this.template(this.model.toJSON()));
+        this.$el.append(this.template(this._options.data));
         if (this._options.enterRender) this._enterEvent();
         this.trigger('after', this);
       },

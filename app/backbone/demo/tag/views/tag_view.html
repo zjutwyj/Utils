@@ -1,3 +1,6 @@
+<div class="tag-tip">
+    输入标签后， 按“回车”即可提交
+</div>
 <div class="bui-combox bui-select bui-tag-follow" aria-disabled="false" tabindex="0" hidefocus="true"
      style="min-width: 450px;" aria-pressed="false">
     <div class="bui-simple-list" aria-disabled="false" aria-pressed="false">
@@ -5,15 +8,18 @@
 
         </ul>
     </div>
-    <input type="text" class="bui-combox-input tag-combox-input" placeholder="输入标签">
-    <input type="hidden" class="bui-combox-input-hid tag-combox-input-hid" />
+    <input type="text" class="bui-combox-input tag-combox-input" title="按回车提交" placeholder="输入标签">
+    <input type="hidden" class="bui-combox-input-hid tag-combox-input-hid"/>
 </div>
-
-<div id="tag-list-picker" class="bui-list-picker bui-picker bui-overlay bui-ext-position x-align-bl-tl bui-list-picker-hover bui-picker-hover bui-overlay-hover"
+<div class="tag-recommend">
+    <span class="rec-tag-title-span">您可能感兴趣的标签：</span><span class="rec-tag-span"></span>
+</div>
+<div id="tag-list-picker"
+     class="bui-list-picker bui-picker bui-overlay bui-ext-position x-align-bl-tl bui-list-picker-hover bui-picker-hover bui-overlay-hover"
      aria-disabled="false"
      style="visibility: visible; min-width: 450px; display: none;">
     <div class="bui-simple-list bui-select-list bui-simple-list-hover" aria-disabled="false">
-        <ul id="tag-list-picker-ul">
+        <ul id="tag-list-picker-ul" class="hover-tool-warp">
         </ul>
     </div>
 </div>

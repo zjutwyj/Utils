@@ -4,9 +4,9 @@
  * @author yongjin on 2014/11/16
  */
 
-define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseModel', 'template/attributes_show_item'],
+define('AttributesShow', ['jquery', 'HandlebarsHelper', 'Utils', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseModel', 'template/attributes_show_item'],
   function (require, exports, module) {
-    var AttributesShow, model, item, collection, HandlebarsHelper, BaseUtils, BaseCollection, BaseItem, BaseList, BaseModel, itemTemp;
+    var AttributesShow, model, item, collection, HandlebarsHelper, Utils, BaseCollection, BaseItem, BaseList, BaseModel, itemTemp;
 
     HandlebarsHelper = require('HandlebarsHelper');
     BaseCollection = require('BaseCollection');
@@ -14,7 +14,7 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
     BaseList = require('BaseList');
     BaseModel = require('BaseModel');
     itemTemp = require('template/attributes_show_item');
-    BaseUtils = require('BaseUtils');
+    Utils = require('Utils');
 
     model = BaseModel.extend({
       defaults: Est.extend({ key: '选项', value: '' }, BaseModel.prototype.defaults),
@@ -68,6 +68,9 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
       },
       initialize: function (options) {
         if (options.items) {
+          /*options.defaultItems = Est.cloneDeep(options.items, function () {
+           }, this);
+           options.defaultItemId = options.categoryId;*/
           this._initialize({
             render: options.render,
             item: item,
@@ -130,10 +133,14 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
         this.render();
       },
       reload: function (categoryId) {
+        /*if (this._options.defaultItemId === categoryId)
+         this._options.items = Est.cloneDeep(this._options.defaultItems, function () {
+         }, this);*/
+        this._options.items = null;
         this._load({
           beforeLoad: function (collection) {
             this._clear();
-            if (categoryId !== '/'){
+            if (categoryId !== '/' && !this._options.items) {
               this.collection.url = CONST.API + '/attr/list';
               collection._setItemId(categoryId);
             }
@@ -144,11 +151,11 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'BaseUtils', 'BaseCollec
         });
       },
       after: function () {
-        BaseUtils.initDate({
+        Utils.initDate({
           render: '.calendar',
           showTime: false
         });
-        BaseUtils.resetIframe();
+        Utils.resetIframe();
       },
       getItems: function () {
         // 转换成[{key: '', value: ''}, ... ] 数组格式

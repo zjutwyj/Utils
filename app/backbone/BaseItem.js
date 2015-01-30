@@ -17,14 +17,14 @@
  * @class BaseItem - 集合中的单个视图
  * @author yongjin<zjut_wyj@163.com> 2014.11.11
  */
-define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'BaseUtils'],
+define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'Utils'],
   function (require, exports, module) {
-    var SuperView, dialog, BaseItem, HandlebarsHelper, BaseUtils;
+    var SuperView, dialog, BaseItem, HandlebarsHelper, Utils;
 
     dialog = require('dialog');
     SuperView = require('SuperView');
     HandlebarsHelper = require('HandlebarsHelper');
-    BaseUtils = require('BaseUtils');
+    Utils = require('Utils');
 
     BaseItem = SuperView.extend({
       /**
@@ -468,41 +468,6 @@ define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'BaseUtils'],
         });
       },
       /**
-       * 模型类双向绑定
-       *
-       * @method [private] - _modelBind
-       * @private
-       * @author wyj 14.12.25
-       * @example
-       *        this._modelBind();
-       */
-      _modelBind: function () {
-        var ctx = this;
-        this.$("input, textarea, select").each(function () {
-          $(this).change(function () {
-            var val, pass;
-            var modelId = $(this).attr('id');
-            if (modelId && modelId.indexOf('model') !== -1) {
-              switch (this.type) {
-                case 'radio':
-                  val = $(this).is(":checked") ? $(this).val() : pass = true;
-                  break;
-                case 'checkbox':
-                  val = $(this).is(':checked') ? (Est.isEmpty($(this).attr('true-value')) ? true : $(this).attr('true-value')) :
-                    (Est.isEmpty($(this).attr('false-value')) ? false : $(this).attr('false-value'));
-                  break;
-                default :
-                  val = $(this).val();
-                  break;
-              }
-              if (!pass) {
-                ctx.model.set(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
-              }
-            }
-          });
-        });
-      },
-      /**
        *  删除模型类
        *
        *  @method [private] - _del
@@ -515,14 +480,14 @@ define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'BaseUtils'],
         var context = this;
         app.getData('delItemDialog') && app.getData('delItemDialog').close();
         if (this.model.get('children').length > 0) {
-          BaseUtils.comfirm({
+          Utils.comfirm({
             title: '提示',
             width: 300,
             content: '该分类下还有子分类， 请先删除！ 提示：当存在与之相关联的产品、新闻等等，也无法删除'
           });
           return;
         }
-        app.addData('delItemDialog', BaseUtils.comfirm({
+        app.addData('delItemDialog', Utils.comfirm({
           title: '温馨提示',
           content: '是否删除?',
           target: context.$el.find('.delete').get(0),
@@ -588,7 +553,7 @@ define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'BaseUtils'],
                 this.iframeNode.contentWindow.app = app;
                 delete app.getRoutes()['index'];
                 load.call(this, this.iframeNode.contentWindow);
-                //BaseUtils.resetIframe('');
+                //Utils.resetIframe('');
               },
               onclose: function () {
                 ctx.model.set(Est.cloneDeep(window.model));

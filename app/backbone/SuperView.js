@@ -3,12 +3,12 @@
  * @class SuperView
  * @author yongjin<zjut_wyj@163.com> 2015/1/24
  */
-define('SuperView', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'HandlebarsHelper'],
+define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHelper'],
   function (require, exports, module) {
-    var SuperView, Backbone, BaseUtils, HandlebarsHelper;
+    var SuperView, Backbone, Utils, HandlebarsHelper;
 
     Backbone = require('backbone');
-    BaseUtils = require('BaseUtils');
+    Utils = require('Utils');
     HandlebarsHelper = require('HandlebarsHelper');
 
     SuperView = Backbone.View.extend({
@@ -68,13 +68,16 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebar
         var ctx = context || this;
         options.width = options.width || 700;
         options.cover = Est.typeOf(options.cover) === 'boolean' ? options.cover : true;
-        options.button = options.button || [
-          {value: '保存', callback: function () {
-            this.title('正在保存...');
-            $('#' + options.moduleId + ' #submit').click();
-            return false;
-          }, autofocus: true}
-        ];
+        options.button = options.button || [];
+        if (typeof options.hideSaveBtn === 'undefined' ||
+          (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
+          options.button.push(
+            {value: '保存', callback: function () {
+              this.title('正在保存...');
+              $('#' + options.moduleId + ' #submit').click();
+              return false;
+            }, autofocus: true});
+        }
         options = Est.extend(options, {
           el: '#base_item_dialog' + options.moduleId,
           content: '<div id="' + options.moduleId + '"></div>',
@@ -94,7 +97,84 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebar
             app.getDialogs().pop();
           }
         });
-        BaseUtils.dialog(options);
+        Utils.dialog(options);
+      },
+      /**
+       * 模型类双向绑定
+       *
+       * @method [private] - _modelBind
+       * @private
+       * @author wyj 14.12.25
+       * @example
+       *        this._modelBind();
+       */
+      _modelBind: function () {
+        var ctx = this;
+        this.$("input, textarea, select").each(function () {
+          $(this).change(function () {
+            var val, pass;
+            var modelId = $(this).attr('id');
+            if (modelId && modelId.indexOf('model') !== -1) {
+              switch (this.type) {
+                case 'radio':
+                  val = $(this).is(":checked") ? $(this).val() : pass = true;
+                  break;
+                case 'checkbox':
+                  val = $(this).is(':checked') ? (Est.isEmpty($(this).attr('true-value')) ? true : $(this).attr('true-value')) :
+                    (Est.isEmpty($(this).attr('false-value')) ? false : $(this).attr('false-value'));
+                  break;
+                default :
+                  val = $(this).val();
+                  break;
+              }
+              if (!pass) {
+                ctx.model.set(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
+              }
+            }
+          });
+        });
+      },
+      /**
+       * 字段序列化成字符串
+       * @method [public] - _stringifyJSON
+       * @param array
+       * @author wyj 15.1.29
+       * @example
+       *      this._stringify(['invite', 'message']);
+       */
+      _stringifyJSON: function (array) {
+        var keys, result;
+        Est.each(array, function (item) {
+          keys = item.split('.');
+          if (keys.length > 1) {
+            result = Est.getValue(this.model.toJSON(), item);
+            Est.setValue(this.model.toJSON(), item, JSON.stringify(result));
+          } else {
+            this.model.set(item, JSON.stringify(this.model.get(item)));
+          }
+        }, this);
+      },
+      /**
+       * 反序列化字符串
+       * @method [public] - _parseJSON
+       * @param array
+       * @private
+       */
+      _parseJSON: function (array) {
+        var keys, result;
+        Est.each(array, function (item) {
+          keys = item.split('.');
+          if (keys.length > 1) {
+            result = Est.getValue(this.model.toJSON(), item);
+            if (Est.typeOf(result) === 'string') {
+              Est.setValue(this.model.toJSON(), item, JSON.parse(result));
+            }
+          } else {
+            if (Est.typeOf(this.model.get(item)) === 'string') {
+              this.model.set(item, JSON.parse(this.model.get(item)));
+            }
+          }
+        }, this);
       },
       /**
        * 设置参数
@@ -127,6 +207,39 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'BaseUtils', 'Handlebar
             ctx.$(ctx._options.enterRender).click();
           }
         });
+      },
+      /**
+       * 获取配置参数
+       * @method [public] - _getOption
+       * @param name
+       * @return {*}
+       * @author wyj 15.1.29
+       */
+      _getOption: function (name) {
+        return this._options[name];
+      },
+      /**
+       * 获取model值
+       * @method [public] - _getValue
+       * @param path
+       * @author wyj 15.1.30
+       * @example
+       *      this._getValue('tip.name');
+       */
+      _getValue: function (path) {
+        return Est.getValue(this.model.attributes, path);
+      },
+      /**
+       * 设置model值
+       * @method [public] - _setValue
+       * @param path
+       * @param val
+       * @author wyj 15.1.30
+       * @example
+       *      this._setValue('tip.name', 'aaa');
+       */
+      _setValue: function (path, val) {
+        Est.setValue(this.model.attributes, path, val);
       }
     });
 

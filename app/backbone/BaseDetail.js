@@ -8,14 +8,14 @@
  * @author yongjin<zjut_wyj@163.com> 2014.11.12
  */
 
-define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService'],
+define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
   function (require, exports, module) {
-    var BaseDetail, SuperView, HandlebarsHelper, BaseUtils, BaseService;
+    var BaseDetail, SuperView, HandlebarsHelper, Utils, Service;
 
     SuperView = require('SuperView');
     HandlebarsHelper = require('HandlebarsHelper');
-    BaseUtils = require('BaseUtils');
-    BaseService = require('BaseService');
+    Utils = require('Utils');
+    Service = require('Service');
 
     BaseDetail = SuperView.extend({
       /**
@@ -73,11 +73,12 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService
        */
       _render: function () {
         this.list.append(this.template(this.model.toJSON()));
+        if (this._options.modelBind) this._modelBind();
         if (window.topDialog) {
           this.$('.form-actions').hide();
         }
         setTimeout(function () {
-          BaseUtils.resetIframe();
+          Utils.resetIframe();
         }, 1000);
       },
       /**
@@ -135,7 +136,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService
        *                ctx.refreshCode();
        *                return true;
        *             }
-       *            BaseUtils.tip('请验证邮箱后再登录!');
+       *            Utils.tip('请验证邮箱后再登录!');
        *            window.location.href = '/member/modules/login/login.html';
        *          }
        *        });
@@ -204,6 +205,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService
       _init: function (options) {
         var ctx = this;
         var passed = true;
+        var modelObj = {};
         options = options || {};
         $('#submit', this.el).on('click', function () {
           var $button = $(this);
@@ -211,7 +213,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService
           passed = true; // 设置验证通过
           ctx.formElemnet.submit();
           $("input, textarea, select", $(ctx.formSelector)).each(function () {
-            var name, val, pass;
+            var name, val, pass, modelKey, modelList;
             name = $(this).attr('name');
             if ($(this).hasClass('bui-form-field-error')) {
               passed = false;
@@ -231,7 +233,14 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'BaseUtils', 'BaseService
                   break;
               }
               if (!pass) {
-                ctx.model.set(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
+                modelKey = modelId.replace(/^model\d?-(.+)$/g, "$1");
+                modelList = modelKey.split('.');
+                if (modelList.length > 1) {
+                  Est.setValue(modelObj, modelKey, val);
+                  ctx.model.set(modelList[0], modelObj[modelList[0]]);
+                } else {
+                  ctx.model.set(modelList[0], val);
+                }
               }
             }
           });

@@ -8,7 +8,7 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
     'template/tag_view', 'template/tag_view_item', 'template/tag_picker_item'],
   function (require, exports, module) {
     var Tag, TagList, TagItem, BaseModel, BaseCollection, BaseItem, BaseList,
-      model, collection, item, tagView, tagViewItem, tagPickerItem;
+      model, collection, item, tagView, tagViewItem, tagPickerItem, RecTag, recItem;
 
     BaseModel = require('BaseModel');
     BaseCollection = require('BaseCollection');
@@ -68,12 +68,22 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       className: 'bui-list-item bui-list-item-select',
       events: {
         'click .district-div': 'select',
+        'click .delete': '_del',
         'mouseover .bui-list-item': 'mouseover',
-        'mouseout .bui-list-item': 'mouseout'
+        'mouseout .bui-list-item': 'mouseout',
+        'click .edit': 'editName'
       },
       initialize: function () {
         this._initialize({
           template: tagPickerItem
+        });
+      },
+      editName: function (e) {
+        e.stopImmediatePropagation();
+        this._editField({
+          target: '.edit',
+          title: '修改属性名称',
+          field: 'name'
         });
       },
       select: function () {
@@ -99,6 +109,7 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
           model: model,
           clearDialog: false,
           beforeLoad: function () {
+            this._clear();
             this.collection.setTagType(options.tagType || 'product');
           }
         });
@@ -106,6 +117,49 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       },
       render: function () {
         this._render();
+      }
+    });
+
+    recItem = BaseItem.extend({
+      events: {
+        'click .rec-tag-a': 'add'
+      },
+      tagName: 'span',
+      className: 'rec-tag-name',
+      initialize: function () {
+        this._initialize({
+          template: '<a href="javascript:;" class="rec-tag-a">{{name}}&nbsp;&nbsp;&nbsp;</a>'
+        });
+      },
+      // 添加推荐标签
+      add: function () {
+        var ctx = this;
+        this._options.reference.initTagList(this.model.get('name'))
+          .then(function (tagId) {
+            ctx._options.reference.insert(ctx.model.get('name'), tagId);
+          });
+      },
+      render: function () {
+        this._render();
+      }
+    });
+    // 推荐标签
+    RecTag = BaseList.extend({
+      initialize: function () {
+        this._initialize({
+          model: model,
+          collection: collection,
+          item: recItem,
+          items: [
+            {name: '最新'},
+            {name: '热卖'},
+            {name: '推荐'},
+            {name: '置顶'},
+            {name: '促销'},
+            {name: '打折'}
+          ],
+          clearDialog: false
+        });
       }
     });
 
@@ -120,7 +174,6 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
         this.options = options || {};
         model.itemId = options.itemId || null;
         options._isAdd = options._isAdd || false;
-        // 初始化容器
         this._initialize({
           collection: collection,
           template: tagView,
@@ -133,6 +186,12 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
               this.collection.setItemId(options.itemId || null);
               this.collection.setTagType(options.tagType || 'product');
             }
+          },
+          afterRender: function () {
+            this.recTag = new RecTag({
+              el: '.rec-tag-span',
+              reference: this
+            });
           }
         });
         // 输入框
@@ -142,24 +201,59 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
 
         return this;
       },
+      // 文本框获取焦点
       focus: function (e) {
         this.$('.tag-combox-input').focus();
         this.showPicker(e);
       },
-      setOption: function (options) {
-
-      },
+      // 添加标签
       add: function (e) {
+        var ctx = this;
         if (e.keyCode === CONST.ENTER_KEY) {
-          this.insert(this.$input.val());
-
+          var name = this.$input.val();
+          // promise入口 判断是否存在标签列表并初始化列表， 然后返回tagId。 核心用于获取tagId， 并调用insert方法
+          this.initTagList(name).then(function (tagId) {
+            ctx.insert(name, tagId);
+          });
         }
-        return false;
       },
+      // 初始化标签
+      initTagList: function (name) {
+        var ctx = this;
+        return new Est.promise(function (resolve, reject) {
+          // 用于判断是否存在tagList, 分别作相应处理
+          if (!ctx.tagList) {
+            ctx.getTagList(function (collection) { // 用于获取标签列表
+              resolve(ctx.findTagIdByName(collection.models, name));
+            });
+          } else {
+            // 若存在tagList, 直接调用现存的标签列表
+            resolve(ctx.findTagIdByName(ctx.tagList.collection.models, name));
+          }
+        });
+      },
+      // 获取标签列表
+      getTagList: function (callback) {
+        var opts = Est.cloneDeep(this.options);
+        opts.el = null;
+        opts.afterLoad = callback;
+        this.tagList = new TagList(opts);
+      },
+      // 获取标签Id
+      findTagIdByName: function (models, name) {
+        var index = Est.findIndex(models, function (model) {
+          return model.get('name') === name;
+        });
+        if (index !== -1) {
+          return this.tagList.collection.models[index].get('tagId');
+        }
+      },
+      // 回车输入
       addHid: function () {
         this.insert(this.$inputHid.val(), this.$inputHid.attr('tagid'));
         this.$input.attr('tagId', '');
       },
+      // 基础插入方法
       insert: function (inputVal, tagId) {
         var ctx = this;
         var newModel, filter;
@@ -176,10 +270,12 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
           this.$input.val('');
           return;
         }
+        // 新建模型类
         newModel = new model({
           name: inputVal,
           tagId: tagId
         });
+        // 保存模型类
         newModel.save(null, {
           wait: true,
           success: function () {
@@ -190,16 +286,16 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
         this.$input.val('');
         this.hidePicker();
       },
+      // 隐藏下拉框
       hidePicker: function () {
         $("#tag-list-picker").hide();
       },
+      // 显示下拉框
       showPicker: function (e) {
-        var ctx = this;
         e.stopImmediatePropagation();
+        var ctx = this;
         if (!this.tagList) {
-          var opts = Est.cloneDeep(this.options);
-          opts.el = null;
-          this.tagList = new TagList(opts);
+          this.initTagList();
         }
         this.$picker.css({
           left: this.$input.position().left,
@@ -212,4 +308,5 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
     });
 
     module.exports = Tag;
-  });
+  })
+;

@@ -3,9 +3,9 @@
  * @namespace PicturePick
  * @author yongjin<zjut_wyj@163.com> 2014/12/19
  */
-define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'template/picture_pick_list', 'template/picture_pick_item', 'BaseUtils'],
-  function(require, exports, module){
-    var PicturePick, BaseModel, BaseCollection, BaseItem, BaseList, model, collection, item, itemTemp, listTemp, BaseUtils;
+define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'template/picture_pick_list', 'template/picture_pick_item', 'Utils'],
+  function (require, exports, module) {
+    var PicturePick, BaseModel, BaseCollection, BaseItem, BaseList, model, collection, item, itemTemp, listTemp, Utils;
 
     BaseModel = require('BaseModel');
     BaseList = require('BaseList');
@@ -13,20 +13,20 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
     BaseCollection = require('BaseCollection');
     itemTemp = require('template/picture_pick_item');
     listTemp = require('template/picture_pick_list');
-    BaseUtils = require('BaseUtils');
+    Utils = require('Utils');
 
     model = BaseModel.extend({
       defaults: Est.extend({
 
       }, BaseModel.prototype.defaults),
-      initialize: function(){
+      initialize: function () {
         this._initialize();
       }
     });
 
     collection = BaseCollection.extend({
       model: model,
-      initialize: function(){
+      initialize: function () {
         this._initialize();
       }
     });
@@ -42,55 +42,55 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
         'click .upload-local': 'picUpload',
         'click .upload-source': 'picUploadSource'
       },
-      initialize: function(){
+      initialize: function () {
         this._initialize({
           viewId: 'picturePick',
           template: itemTemp
         });
       },
-      picUpload: function(type){
+      picUpload: function (type) {
         var ctx = this;
         type = type || 'local';
-        BaseUtils.openUpload({
+        Utils.openUpload({
           id: 'uploadDialog',
           type: type,
           albumId: app.getData('curAlbumId'),
           username: app.getData('user') && app.getData('user').username,
           auto: true,
-          oniframeload: function(){
-            this.iframeNode.contentWindow.uploadCallback = function(result){
+          oniframeload: function () {
+            this.iframeNode.contentWindow.uploadCallback = function (result) {
               ctx.addItems(result);
             };
           },
-          success: function(){
+          success: function () {
             var result = this.iframeNode.contentWindow.app.getView('picSource').getItems();
             ctx.addItems(result);
           }
         });
       },
-      addItems: function(result){
-        if (result.length > 0){
+      addItems: function (result) {
+        if (result.length > 0) {
           this.model.set('attId', result[0]['attId']);
           this.model.set('serverPath', result[0]['serverPath']);
           this.model.set('title', '重新上传');
           this.model.set('isAddBtn', false);
-          if (!this.model.get('hasPic')){
+          if (!this.model.get('hasPic')) {
             this.model.set('hasPic', true);
             app.getView(this._options.viewId).addOne();
           }
         }
         window['uploadDialog'].close().remove();
       },
-      picUploadSource: function(){
+      picUploadSource: function () {
         this.picUpload('sourceUpload');
       },
-      render: function(){
+      render: function () {
         this._render();
       }
     });
 
     PicturePick = BaseList.extend({
-      initialize: function(){
+      initialize: function () {
         this._initialize({
           collection: collection,
           model: model,
@@ -98,34 +98,40 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
           template: listTemp,
           checkAppend: false,
           render: this.options.render || '.photo-list',
-          afterRender: function(options){
-            if (this.collection.models.length === 0 ||
-              !this.options._isAdd){
+          afterRender: function (options) {
+            if (this.collection.models.length === 0 || !this.options._isAdd) {
               this.addOne();
             }
+            this.collection.bind('add', this.change, this);
+            this.collection.bind('reset', this.reset, this);
           }
         });
       },
-      addOne: function(){
+      reset: function () {
+        this._render();
+        this._options.change && this._options.change.call(this, this._getItems());
+      },
+      change: function (model) {
+        this._addOne(model);
+        this._options.change && this._options.change.call(this, this._getItems());
+      },
+      addOne: function () {
         this.collection.push(new model({
           serverPath: CONST.PIC_NONE,
           attId: '',
           title: '上传图片',
           isAddBtn: true
         }));
-        BaseUtils.resetIframe();
+        Utils.resetIframe();
       },
-      render: function(){
-        this._render();
-      },
-      append: function(node){
+      append: function (node) {
         this.collection.add(node);
-        BaseUtils.resetIframe();
+        Utils.resetIframe();
       },
-      getItems: function(){
+      getItems: function () {
         var result = [];
-        Est.each(this.collection.models, function(item){
-          if (!item.get('isAddBtn') && !Est.isEmpty(item.get('attId'))){
+        Est.each(this.collection.models, function (item) {
+          if (!item.get('isAddBtn') && !Est.isEmpty(item.get('attId'))) {
             result.push({
               attId: item.get('attId'),
               serverPath: item.get('serverPath')
@@ -133,8 +139,18 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
           }
         });
         return result;
+      },
+      // 根据索引获取单个图片
+      getItem: function (index) {
+        var list = this.getItems();
+        index = index || 0;
+        if (list.length > index) return list[index];
+        return { attId: null, serverPath: ''};
+      },
+      render: function () {
+        this._render();
       }
     });
 
     module.exports = PicturePick;
-});
+  });

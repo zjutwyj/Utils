@@ -4,7 +4,7 @@
  * @author yongjin<zjut_wyj@163.com> 2015/1/5
  */
 define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseView', 'template/district_item',
-    'template/district_list', 'template/district_view', 'BaseService'],
+    'template/district_list', 'template/district_view', 'Service'],
   function (require, exports, module) {
 
     var District, model, item, collection, list;
@@ -16,7 +16,7 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
     var listTemp = require('template/district_list');
     var viewTemp = require('template/district_view');
     var BaseView = require('BaseView');
-    var BaseService = require('BaseService');
+    var Service = require('Service');
 
     model = BaseModel.extend({
       defaults: Est.extend({}, BaseModel.prototype.defaults),
@@ -204,7 +204,7 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
         if (this._options.items) {
           ctx.initSelect(this._options.items);
         } else {
-          BaseService.getAreaList(this._options.addressUrl).then(function (result) {
+          Service.getAreaList(this._options.addressUrl).then(function (result) {
             var items = Est.bulidTreeNode(result, 'level', 0, {
               categoryId: 'areaId',// 分类ＩＤ
               belongId: 'belongId',// 父类ＩＤ

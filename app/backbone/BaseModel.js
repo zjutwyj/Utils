@@ -11,13 +11,13 @@
  * @class BaseModel - 模型类
  * @author yongjin<zjut_wyj@163.com> 2014/11/10
  */
-define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
+define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
   function (require, exports, module) {
-    var Backbone, dialog, BaseModel, BaseUtils;
+    var Backbone, dialog, BaseModel, Utils;
 
     Backbone = require('backbone');
     dialog = require('dialog');
-    BaseUtils = require('BaseUtils');
+    Utils = require('Utils');
 
     BaseModel = Backbone.Model.extend({
       defaults: { checked: false, children: [] },
@@ -68,7 +68,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
         if (Est.isEmpty(response)) {
           var url = Est.typeOf(this.url) === 'function' ? this.url() : this.url;
           debug('服务器返回的数据为空， 点击' + url + '是否返回数据？无？ 检查XxxModel中的baseUrl、baseId参数是否配置正确？还无？联系王进');
-          BaseUtils.tooltip('数据异常, 稍后请重试！');
+          Utils.tooltip('数据异常, 稍后请重试！');
           return false;
         }
         if (response.msg && !this.hideTip) {
@@ -128,6 +128,8 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
         }
         return response;
       },
+
+
       /**
        * 保存模型类
        *
@@ -187,6 +189,16 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
         });
       },
       /**
+       * 隐藏保存后的提示对话框
+       * @method [public] - _hideTip
+       * @author wyj 15.1.29
+       * @example
+       *      this.model._hideTip();
+       */
+      _hideTip: function () {
+        this.hideTip = true;
+      },
+      /**
        * 设置checkbox选择框状态
        *
        * @method [public] - _toggle
@@ -218,6 +230,29 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'BaseUtils'],
           callback.call(this, attributes);
         }
         return this.validateMsg;
+      },
+      /**
+       * 获取model值
+       * @method [public] - _getValue
+       * @param path
+       * @author wyj 15.1.30
+       * @example
+       *      this._getValue('tip.name');
+       */
+      _getValue: function (path) {
+        return Est.getValue(this.attributes, path);
+      },
+      /**
+       * 设置model值
+       * @method [public] - _setValue
+       * @param path
+       * @param val
+       * @author wyj 15.1.30
+       * @example
+       *      this._setValue('tip.name', 'aaa');
+       */
+      _setValue: function (path, val) {
+        Est.setValue(this.attributes, path, val);
       }
     });
 

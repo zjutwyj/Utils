@@ -19,10 +19,10 @@
  * @author yongjin<zjut_wyj@163.com> 2014/11/12
  */
 
-define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (require, exports, module) {
-  var BaseList, SuperView, BaseUtils, HandlebarsHelper;
+define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require, exports, module) {
+  var BaseList, SuperView, Utils, HandlebarsHelper;
 
-  BaseUtils = require('BaseUtils');
+  Utils = require('Utils');
   SuperView = require('SuperView');
   HandlebarsHelper = require('HandlebarsHelper');
 
@@ -42,7 +42,7 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
        *        template: listTemp, 字符串模板,
        *        render: '.product-list', 插入列表的容器选择符, 若为空则默认插入到$el中
        *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;  若需要构建树， 则传入前的items列表必须为手动构建好的树
-       *        data: {}, // 附加的数据 此数据在BaseList BaseItem视图中可以获取  其中BaseList中为[this._options.data & {{name}}] ; BaseItem中为[this._options.data &{{_options.data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
+       *        data: {}, // 附加的数据 BaseList、BaseView[js: this._options.data & template: {{name}}] ; BaseItem中为[this._options.data &{{_options.data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
        *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加
        *        enterRender: (可选) 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
        *        pagination: true, // 是否显示分页 view视图中相应加入<div id="pagination-container"></div>
@@ -54,6 +54,7 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
        *        route: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少
        *        filter: [ {key: 'name', value: this.searchKey }] // 过滤结果
        *        clearDialog: true, // 清除所有的对话框， 默认为true
+       *        reference: this, // 对当前实例的引用
        *        beforeLoad: function(collection){ // collection载入列表前执行
        *            this.setCategoryId(options.categoryId); // collection载入后执行
        *          },
@@ -110,7 +111,6 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       this._initBind(this.collection);
       this._initPagination(this._options);
       this._load(this._options);
-      this._afterLoad();
       this._finally();
 
       return this;
@@ -209,15 +209,24 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       }
     },
     /**
+     * 列表载入后执行
+     * @method _afterLoad
+     * @private
+     */
+    _afterLoad: function (options) {
+      if (options.afterLoad) {
+        options.afterLoad.call(this, this.collection);
+      }
+    },
+    /**
      * 初始化items
      * @method [private] - _initItems
      * @private
      * @author wyj 15.1.8
      */
     _initItems: function () {
-      if (Est.typeOf(this._options.items) === 'function') {
+      if (Est.typeOf(this._options.items) === 'function')
         this._options.items = this._options.items.apply(this, arguments);
-      }
       if (this._options.filter) {
         this.collection.push(this._options.items);
         this._filterCollection();
@@ -226,21 +235,34 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       }
       if (this._options._page || this._options._pageSize) {
         this._renderListByPagination();
-      } else {
+      } else if (!this.filter) {
         Est.each(this._options.items, function (item) {
+          if (this._check()) return false;
           this.collection.push(new this.initModel(item));
         }, this);
       }
     },
     /**
-     * 列表载入后执行
-     * @method _afterLoad
-     * @private
+     * 停止遍历
+     * @method [public] - _stop
+     * @author wyj 15.1.27
+     *
      */
-    _afterLoad: function () {
-      if (this._options.afterLoad) {
-        this._options.afterLoad.call(this, this._options);
+    _stop: function () {
+      this.stopIterator = true;
+    },
+    /**
+     * 检查是否停止遍历
+     * @method _check
+     * @return {boolean}
+     * @author wyj 15.1.27
+     */
+    _check: function () {
+      if (this.stopIterator) {
+        this.stopIterator = false;
+        return true;
       }
+      return false;
     },
     /**
      * 渲染视图
@@ -335,7 +357,8 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
           data: this._data,
           detail: this._options.detail,
           route: this._options.route,
-          views: this.views
+          views: this.views,
+          reference: this._options.reference
         });
         itemView._setInitModel(this.initModel);
         //TODO 优先级 new对象里的viewId > _options > getCurrentView()
@@ -356,7 +379,7 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       if (ctx.collection && ctx.collection.paginationModel) {
         ctx.collection.paginationModel.on('reloadList',
           function (model) {
-            ctx._clear();
+            ctx._clear.call(ctx);
             ctx._load.call(ctx, options, model);
           });
       }
@@ -439,8 +462,10 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
             if (ctx._options.filter) {
               ctx._filterCollection();
             }
-            options.afterLoad && options.afterLoad.call(ctx, result);
+            ctx._afterLoad(options);
           });
+      } else {
+        ctx._afterLoad(options);
       }
     },
     /**
@@ -451,7 +476,7 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
      *        this._reload();
      */
     _reload: function () {
-      this._clear();
+      this._clear.apply(this, arguments);
       this._load();
     },
     /**
@@ -564,7 +589,9 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
      *        this._clear();
      */
     _clear: function () {
+      this._empty.call(this);
       this.list.empty();
+      this.collection.models.length = 0;
     },
     /**
      * 初始化模型类, 设置index索引
@@ -616,18 +643,23 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
      */
     _search: function (options) {
       var ctx = this;
+      this._clear();
       this.filter = true;
       options = Est.extend({ onBeforeAdd: function () {
       }}, options);
       this._load({ page: 1, pageSize: 5000,
         afterLoad: function () {
           ctx.filter = false;
-          ctx._filter(options.filter || ctx._options.filter, options);
+          if (!ctx._options.items) {
+            ctx._filter(options.filter || ctx._options.filter, options);
+          } else {
+            ctx._filterItems(options.filter || ctx._options.filter, options);
+          }
         }
       });
     },
     /**
-     * 过滤
+     * 过滤collection
      *
      * @method [private] - _filter
      * @param array
@@ -641,6 +673,7 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       var len = ctx.collection.models.length;
       ctx.filter = false;
       while (len > 0) {
+        if (this._check()) len = -1;
         var item = ctx.collection.models[len - 1];
         var pass = true;
         Est.each(array, function (obj) {
@@ -665,12 +698,58 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
         }
         len--;
       }
-      if (!ctx._options.items) {
-        Est.each(result, function (item) {
-          item.set('_isSearch', true);
-          ctx._addOne(item);
+      Est.each(result, function (item) {
+        item.set('_isSearch', true);
+        ctx._addOne(item);
+      });
+    },
+    /**
+     * 过滤items
+     *
+     * @method [private] - _filterItems
+     * @param array
+     * @param options
+     * @private
+     * @author wyj 14.12.8
+     */
+    _filterItems: function (array, options) {
+      var ctx = this;
+      var result = [];
+      var items = Est.cloneDeep(ctx._options.items);
+      var len = items.length;
+      ctx.filter = false;
+      while (len > 0) {
+        if (this._check()) break;
+        var item = items[len - 1];
+        var pass = true;
+        Est.each(array, function (obj) {
+          var match = false;
+          var keyval = Est.getValue(item, obj.key);
+          if (Est.typeOf(obj.match) === 'regexp') {
+            match = !obj.match.test(keyval);
+          } else {
+            match = Est.isEmpty(keyval) || (keyval.indexOf(obj.value) === -1);
+          }
+          if (pass && !Est.isEmpty(obj.value) && match) {
+            items.splice(len, 1);
+            pass = false;
+            return false;
+          }
         });
+        if (pass && options.onBeforeAdd) {
+          options.onBeforeAdd.call(this, item);
+        }
+        if (pass) {
+          result.unshift(item);
+        }
+        len--;
       }
+      Est.each(result, function (item) {
+        item = new ctx.initModel(item);
+        item.set('_isSearch', true);
+        ctx.collection.push(item);
+        ctx._addOne(item);
+      });
     },
     /**
      * 弹出查看详细信息对话框
@@ -829,9 +908,9 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       this.collection.models[new_index] = this.collection.models.splice(original_index, 1, this.collection.models[new_index])[0];
       // 交换位置
       if (original_index < new_index) {
-        temp.view.$el.before(next.view.$el);
+        temp.view.$el.before(next.view.$el).removeClass('hover');
       } else {
-        temp.view.$el.after(next.view.$el);
+        temp.view.$el.after(next.view.$el).removeClass('hover');
       }
       if (options.success) {
         options.success.call(this, temp, next);
@@ -979,14 +1058,14 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       }, options);
       this.checkboxIds = this._getCheckboxIds();
       if (this.checkboxIds.length === 0) {
-        BaseUtils.tip('请至少选择一项！');
+        Utils.tip('请至少选择一项！');
         return;
       }
       $.ajax({
         type: 'POST', async: false, url: options.url,
         data: { ids: ctx.checkboxIds.join(',') },
         success: function (result) {
-          BaseUtils.tip(options.tip);
+          Utils.tip(options.tip);
           ctx._load();
         }
       });
@@ -1007,10 +1086,10 @@ define('BaseList', ['SuperView', 'BaseUtils', 'HandlebarsHelper'], function (req
       var ctx = this;
       this.checkboxIds = this._getCheckboxIds();
       if (this.checkboxIds && this.checkboxIds.length === 0) {
-        BaseUtils.tip('至少选择一项');
+        Utils.tip('至少选择一项');
         return;
       }
-      BaseUtils.comfirm({
+      Utils.comfirm({
         success: function () {
           ctx._batch({
             url: ctx.collection.batchDel,

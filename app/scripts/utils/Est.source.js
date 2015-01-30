@@ -484,14 +484,15 @@
 
     function set(object, array, value) {
       each(array, function (key) {
-        if (key in object) {
-          if (array.length === 1) {
-            object[key] = value;
-          } else {
-            array.shift();
-            set(object[key], array, value);
-            return false;
-          }
+        if (!(key in object)) {
+          object[key] = {};
+        }
+        if (array.length === 1) {
+          object[key] = value;
+        } else {
+          array.shift();
+          set(object[key], array, value);
+          return false;
         }
       });
     }
@@ -502,15 +503,33 @@
 
   Est.setValue = setValue;
 
-  function setToValue(obj, path, value) {
-    path = path.split('.');
-    for (i = 0; i < path.length - 1; i++)
-      obj = obj[path[i]];
-
-    obj[path[i]] = value;
+  /**
+   * javascript 对象转换成path路径
+   * @method [对象] - objToPath
+   * @return {Object}
+   * @author wyj 15.1.28
+   * @example
+   *        Est.objToPath({a: {b: 'c'}}); ===> {'a.b': 'c'}
+   */
+  function objToPath(obj) {
+    var ret = {}, separator = '.';
+    for (var key in obj) {
+      var val = obj[key];
+      if (val && (val.constructor === Object || val.constructor === Array) && !isEmpty(val)) {
+        var obj2 = objToPath(val);
+        for (var key2 in obj2) {
+          var val2 = obj2[key2];
+          ret[key + separator + key2] = val2;
+        }
+      } else {
+        ret[key] = val;
+      }
+    }
+    return ret;
   }
 
-  Est.setToValue = setToValue;
+  Est.objToPath = objToPath;
+
   /**
    * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined) 不包括数字0和1
    * @method [对象] - isEmpty
@@ -1144,7 +1163,7 @@
    *      Est.decodeId('123' , 'Product_' , 32); => Product_00000000000000000000123
    */
   function decodeId(id, prefix, length) {
-    var len = prefix.length + id.length -1;
+    var len = prefix.length + id.length - 1;
     return prefix + new Array(length - len).join('0') + id;
   }
 
@@ -1302,7 +1321,9 @@
    *     Est.cutByte('aaaaaa', 4, '...'); => 'a...'
    */
   function cutByte(str, length, truncation) {
-    if (isEmpty(str)){return ''}
+    if (isEmpty(str)) {
+      return ''
+    }
     //提前判断str和length
     if (!(str + "").length || !length || +length <= 0) {
       return "";
@@ -2772,7 +2793,7 @@
       "S": date.getMilliseconds() //毫秒
     };
     fmt = fmt || 'yyyy-MM-dd';
-    if (!isNaN(date.getFullYear())){
+    if (!isNaN(date.getFullYear())) {
       if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
       try {
         for (var k in o) {
@@ -2781,7 +2802,7 @@
       } catch (e) {
         console.log('【Error】: DateUtils.dataFormat ' + e);
       }
-    } else{
+    } else {
       fmt = origin;
     }
 
