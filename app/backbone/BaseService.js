@@ -6,10 +6,12 @@
 define('BaseService', ['jquery'], function (require, exports, module) {
   var BaseService;
 
-  BaseService = function (obj) {
-    if (!(this instanceof BaseService))
-      return new BaseService(obj);
-    this._wrapped = obj;
+  BaseService = function () {
+    if (typeof BaseService.instance === 'object') {
+      return BaseService.instance;
+    }
+    debug('- 创建BaseService实例');
+    BaseService.instance = this;
   }
 
   BaseService.prototype = {
@@ -21,13 +23,13 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * @author wyj 15.1.26
      */
     ajax: function (options) {
+      var data = Est.extend({ _method: 'GET' }, options);
       return $.ajax({
         type: 'post',
         url: options.url,
         async: false,
-        data: { _method: 'GET' },
+        data: data,
         success: function (result) {
-
         }
       });
     },
@@ -62,15 +64,16 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * @author wyj 15.1.26
      */
     initSelect: function (options, result) {
-      if (options.select && options.tree) {
-        result.attributes.data = Est.bulidSelectNode(result.attributes.data, 1, {
-          name: 'text'
-        });
-      } else {
+      if (options.select) {
         Est.each(result.attributes.data, function (item) {
           item.text = item[options.text];
           item.value = item[options.value];
         });
+        if (options.tree) {
+          result.attributes.data = Est.bulidSelectNode(result.attributes.data, 1, {
+            name: 'text'
+          });
+        }
       }
     },
     /**
@@ -105,28 +108,29 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * @author wyj 15.1.26
      * @example
      *      new BaseService().factory({
-     *        url: '', // 请求地址
-     *        select: true, // 是否构建下拉框
-     *        tree: true, // 是否构建树
-     *        extend: true, // 是否全部展开
-     *        default： false, // 是否添加默认选项
-     *
-     *        rootKey: 'isRoot', // 构建树时的父级字段名称
-     *        rootValue: '01', // 父级字段值
-     *        categoryId： 'categoryId', //分类 Id
-     *        belongId: 'belongId', // 父类ID
-     *        childTag: 'children', // 子集字段名称
-     *        sortBy: 'sort', // 根据某个字段排序
-     *
-     *        text: 'name', // 下拉框名称
-     *        value: 'categoryId', // 下拉框值
-     *      });
-     *
+              url: '', // 请求地址
+              select: true, // 是否构建下拉框
+              tree: true, // 是否构建树
+              extend: true, // 是否全部展开
+              default： false, // 是否添加默认选项
+
+              rootKey: 'isroot', // 构建树时的父级字段名称
+              rootValue: '01', // 父级字段值
+              categoryId: 'categoryId', //分类 Id
+              belongId: 'belongId', // 父类ID
+              childTag: 'cates', // 子集字段名称
+              sortBy: 'sort', // 根据某个字段排序
+
+              text: 'name', // 下拉框名称
+              value: 'categoryId', // 下拉框值
+            });
+
      */
     factory: function (options) {
       var ctx = this;
       var $q = Est.promise;
-      options = Est.extend({ select: false, extend: false }, options);
+      options = Est.extend({ select: false, extend: false,
+        default: true, tree: false }, options);
       return new $q(function (topResolve, topReject) {
         ctx.ajax(options).done(function (result) {
           if (result.attributes) {

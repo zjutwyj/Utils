@@ -187,7 +187,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
      */
     _setItemId: function (itemId) {
       this._itemId = itemId;
-      debug('根据ID查列表' + this._itemId);
+      debug('- 根据ID查列表' + this._itemId);
     },
     /**
      * 清空列表

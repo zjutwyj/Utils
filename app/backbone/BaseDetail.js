@@ -282,7 +282,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        * @author wyj 14.11.15
        */
       _saveItem: function (callback, context) {
-        debug('BaseDetail._saveItem');
+        debug('- BaseDetail._saveItem');
         if (Est.isEmpty(this.model.url())) {
           debug('XxxModel模型类未设置url参数！', {type: 'error'});
           return;
@@ -290,7 +290,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
         this.model.save(null, {
           wait: true,
           success: function (response) {
-            console.log('BaseDetail._saveSuccess');
+            debug('- BaseDetail._saveSuccess');
             app.addModel(Est.cloneDeep(response.attributes));
             if (top) {
               top.model = response.attributes;
@@ -329,7 +329,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        * @author wyj 14.11.16
        */
       _close: function () {
-        debug('BaseDetail.close');
+        debug('- BaseDetail.close');
         this.undelegateEvents();
         this.stopListening();
         this.off();

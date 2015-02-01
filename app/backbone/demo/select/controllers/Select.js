@@ -76,6 +76,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
           collection: collection,
           item: item,
           template: listTemp,
+          clearDialog: false,
           enterRender: '.select-search-btn'
         });
       },
@@ -179,6 +180,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
           target: this._options.target,
           input: this._options.input,
           change: this._options.change,
+          clearDialog: false,
           data: { value: this._options.value,
             inputNode: this.$('.bui-select-input'),
             search: this._options.search,

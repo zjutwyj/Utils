@@ -76,7 +76,11 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
           this.model.set('isAddBtn', false);
           if (!this.model.get('hasPic')) {
             this.model.set('hasPic', true);
-            app.getView(this._options.viewId).addOne();
+            if (!app.getView(this._options.viewId)) {
+              debug('未定义viewId');
+            } else {
+              app.getView(this._options.viewId).addOne();
+            }
           }
         }
         window['uploadDialog'].close().remove();

@@ -79,6 +79,7 @@ window.address = Est.getUrlParam('address');
 window.info = Est.getUrlParam('info');
 window.target = '.' + Est.getUrlParam('target');
 window.iframe = '.' + Est.getUrlParam('iframe');
+window.zoom = parseInt(Est.getUrlParam('zoom'));
 
 function getProvinceAddr() {
     var provinceAddr = {};
@@ -140,14 +141,22 @@ function save() {
     html_result += '&info=' + encodeURIComponent(encodeURIComponent($('#mapInfo').val().split("\n").join("<br />")));
     html_result += '&mapType=' + mapType + "&x=" + mapPos.x + "&y=" + mapPos.y + "&ox=" + mapPos.ox + "&oy=" + mapPos.oy + "&z=" + mapPos.z;
     html_result += '"></iframe>';
-    parent.callback && parent.callback(html_result);
-    parent.$(target).val(_mapPos.x + ',' + _mapPos.y);
-    parent.$(iframe).val(html_result);
+    handleResult(_mapPos, html_result);
 }
 function save_without() {
     parent.callback && parent.callback();
 }
 
+function handleResult(_mapPos, html_result) {
+    parent.callback && parent.callback(html_result);
+    parent.$(target).val(_mapPos.x + ',' + _mapPos.y);
+    parent.$(iframe).val(html_result);
+    parent.$(info).val($('#mapInfo').val());
+}
+
+function handleMap(){
+    $('#mapInfo').val(parent.$(info).val());
+}
 
 function baiduMapInitial() {
     map = new BMap.Map("mapContainer"); // map实例
@@ -158,13 +167,14 @@ function baiduMapInitial() {
     var point = new BMap.Point(addressList[0], addressList[1]); // 坐标点»
     var oPoint = new BMap.Point(addressList[0], addressList[1]);
     var marker = new BMap.Marker(oPoint); // 覆盖物对象
-    map.centerAndZoom(point, 10);
+    map.centerAndZoom(point, window.zoom || 10);
     map.enableScrollWheelZoom(); // 启用滚轮放大缩小
     map.disableDoubleClickZoom(); // 禁止双击放大
     map.addOverlay(marker); // 添加一个小圆点
     marker.enableDragging(true); // 设置标注可拖拽
-    var initMapInfo = window.info;
+    var initMapInfo = window.info ? parent.$('.' + info).val() : '';
     if (initMapInfo) {
+        $("#mapInfo").val(initMapInfo);
         var infoWindow = new BMap.InfoWindow(initMapInfo, { width: 'auto', height: 'auto', title: '', enableAutoPan: false }); // 创建信息窗口对象
         marker.openInfoWindow(infoWindow);
     }
@@ -174,6 +184,10 @@ function baiduMapInitial() {
         //this.clearOverlays();
         var newPoint = new BMap.Point(e.point.lng, e.point.lat);
         refreshMarker(newPoint);
+        handleResult({
+            x: e.point.lng,
+            y: e.point.lat
+        }, '');
     });
 }
 
@@ -242,6 +256,9 @@ $('#mapVersions').live('change', function () {
 //查询
 $('#searchMap').live('click', function () {
     searchMap();
+});
+$("#mapInfo").change(function(){
+    parent.$('.' + info).val($(this).val());
 });
 function initWhChange() {
     $('#height').change(function () {

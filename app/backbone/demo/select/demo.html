@@ -52,11 +52,7 @@
 <script type="text/javascript">
     // 选择框
     seajs.use(['jquery', 'BaseUtils', 'Service'], function (jquery, BaseUtils, Service) {
-        Service.getProductCategory({
-            tree: true,
-            select: true,
-            extend: true
-        }).then(function (list) {
+        Service.getProductCategory({ tree: true, select: true, extend: true }).then(function (list) {
             BaseUtils.initSelect({
                 render: '#select',
                 target: '#model-categoryId',
