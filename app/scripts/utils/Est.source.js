@@ -64,7 +64,8 @@
     this._wrapped = value;
   }
 
-  Est.version = '0605041705';
+  Est.version = '0605041705'; // 机汇网
+  //Est.version = '00111114'; // 上门网
   /**
    * @description 用于node.js 导出
    * @method [模块] - exports
