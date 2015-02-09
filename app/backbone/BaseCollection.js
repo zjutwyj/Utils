@@ -1,14 +1,3 @@
-/**
- * @description 集合类
- *
- *    - url 获取列表地址， 值可为方法，返回地址
- *    - batchDel: 批量删除url
- *    - model 模型类
- *    - initialize 初始化， 实现父类 _initialize方法
- *
- * @class BaseCollection - 集合类
- * @author yongjin<zjut_wyj@163.com> 2014/11/6
- */
 
 define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require, exports, module) {
   var Backbone, BaseCollection, PaginationModel;

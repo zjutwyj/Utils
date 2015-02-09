@@ -1,12 +1,3 @@
-/**
- * @description 详细页
- *
- * - initialize 实现父类_initialize
- * - render 实现父类 _render
- *
- * @class BaseDetail - 详细页
- * @author yongjin<zjut_wyj@163.com> 2014.11.12
- */
 
 define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
   function (require, exports, module) {

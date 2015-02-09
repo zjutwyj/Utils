@@ -96,7 +96,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * @author wyj 15.1.27
      */
     initDefault: function (options, result) {
-      if (options.default) {
+      if (options.defaults && Est.typeOf(result.attributes.data) === 'array') {
         result.attributes.data.unshift({text: '请选择', value: '/'});
       }
     },
@@ -112,7 +112,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
               select: true, // 是否构建下拉框
               tree: true, // 是否构建树
               extend: true, // 是否全部展开
-              default： false, // 是否添加默认选项
+              defaults： false, // 是否添加默认选项
 
               rootKey: 'isroot', // 构建树时的父级字段名称
               rootValue: '01', // 父级字段值
@@ -130,7 +130,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
       var ctx = this;
       var $q = Est.promise;
       options = Est.extend({ select: false, extend: false,
-        default: true, tree: false }, options);
+        defaults: true, tree: false }, options);
       return new $q(function (topResolve, topReject) {
         ctx.ajax(options).done(function (result) {
           if (result.attributes) {

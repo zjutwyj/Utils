@@ -1,23 +1,3 @@
-/**
- * @description 基础列表视图
- *
- *  - el 目标元素Id， 如 "#jhw-main"
- *  - events: {
- *        'click #toggle-all': '_toggleAllChecked', // 选择框
- *        'click .btn-batch-del': '_batchDel', // 批量删除
- *        'click .product-add': '_detail' // 添加页面
- *      }
- *  - initialize 实现父类_initialize
- *  - 实例化
- *        app.setView('productList', new ProductList({
- *          viewId: 'productList',
- *          items: [],
- *          args: {} // 传递给item中的附加对象  handlebars: {{_options._args.msgId}}
- *        }));
- *
- * @class BaseList - 列表视图
- * @author yongjin<zjut_wyj@163.com> 2014/11/12
- */
 
 define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require, exports, module) {
   var BaseList, SuperView, Utils, HandlebarsHelper;

@@ -22,6 +22,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
        */
       constructor: function (options) {
         this.options = options || {};
+        this._modelBinder = Backbone.ModelBinder;
         Backbone.View.apply(this, arguments);
       },
       /**
@@ -240,6 +241,23 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
        */
       _setValue: function (path, val) {
         Est.setValue(this.model.attributes, path, val);
+      },
+      /**
+       * 绑定单个字段进行重渲染
+       * @method [public] - _bind
+       * @param array
+       * @author wyj 15.2.2
+       * @example
+       *
+       */
+      _bind: function (modelId, array) {
+        this.model.on('change:' + modelId, function () {
+          Est.each(array, function (item) {
+            var $parent = this.$(item).parent();
+            var compile = HandlebarsHelper.compile($parent.html());
+            $parent.html(compile(this));
+          }, this);
+        })
       }
     });
 

@@ -56,7 +56,7 @@
 
     </div>
 </div>
-<table class="formBtns" style="display: table;margin:10px 10px 10px 10px;position: absolute;top:0;right: 0;">
+<table class="formBtns" style="display: none;margin:10px 10px 10px 10px;position: absolute;top:0;right: 0;">
     <tbody>
     <tr>
         <td align="center">
@@ -154,7 +154,7 @@ function handleResult(_mapPos, html_result) {
     parent.$(info).val($('#mapInfo').val());
 }
 
-function handleMap(){
+function handleMap() {
     $('#mapInfo').val(parent.$(info).val());
 }
 
@@ -189,6 +189,19 @@ function baiduMapInitial() {
             y: e.point.lat
         }, '');
     });
+    marker.addEventListener("dragging", function(e){
+        handleResult({
+            x: e.point.lng,
+            y: e.point.lat
+        }, '');
+    });
+   map.addEventListener('moving', function (e) {
+        var center = map.getCenter();
+        handleResult({
+            x: center.lng,
+            y: center.lat
+        }, '');
+    });
 }
 
 function refreshMarker(point) {
@@ -197,13 +210,23 @@ function refreshMarker(point) {
     map.addOverlay(marker);
     map.panTo(point);
     var mapInfo = $('#mapInfo').val().split("\n").join("<br />");
+    marker.addEventListener("dragging", function(e){
+        handleResult({
+            x: e.point.lng,
+            y: e.point.lat
+        }, '');
+    });
     if (mapInfo) {
         var infoWindow = new BMap.InfoWindow(mapInfo, { width: 'auto', height: 'auto', title: '', enableAutoPan: false });
         marker.openInfoWindow(infoWindow);
     }
 }
 function searchMap() {
-    var myGeo = new BMap.Geocoder();
+
+    var local = new BMap.LocalSearch(map, {
+        renderOptions:{map: map}
+    });
+    //var myGeo = new BMap.Geocoder();
     // 将地址解析结果显示在地图上，并调整地图视野
     var province = $.trim($('#province').val());
     var address = $.trim($('#address').val());
@@ -213,7 +236,10 @@ function searchMap() {
     if (address == '') {
         return;
     }
-    myGeo.getPoint(address, function (point) {
+
+    local.search(province + ' ' + address);
+
+   /* myGeo.getPoint(address, function (point) {
         if (point) {
             map.centerAndZoom(point, 17);
             refreshMarker(point);
@@ -235,7 +261,7 @@ function searchMap() {
             ls = new BMap.LocalSearch(province, lsOptions);
             ls.search(address);
         }
-    }, province);
+    }, province);*/
     getMapPos();
 }
 
@@ -257,7 +283,7 @@ $('#mapVersions').live('change', function () {
 $('#searchMap').live('click', function () {
     searchMap();
 });
-$("#mapInfo").change(function(){
+$("#mapInfo").change(function () {
     parent.$('.' + info).val($(this).val());
 });
 function initWhChange() {

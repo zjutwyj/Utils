@@ -1,22 +1,3 @@
-/**
- * @description 集合中的单个视图
- *
- *  - tagName
- *  - className (可选)
- *  - events: {
- *        'click .toggle': '_toggleChecked', // 全选
- *        'click .edit': '_edit', // 编辑
- *        'click .delete': '_del', // 删除
- *        'click .move-up': '_moveUp', // 上移
- *        'click .move-down': '_moveDown', // 下移
- *        'change .input-sort': '_saveSort' // 保存sort 注： 当字段不为sort时， 此方法不适用， 参照AttributesList中的changeSort方法
- *       }
- *  - initialize 实现父类_initialize   _onAfterRender (可选) ：渲染后执行的方法
- *  - render 实现父类_render
- *
- * @class BaseItem - 集合中的单个视图
- * @author yongjin<zjut_wyj@163.com> 2014.11.11
- */
 define('BaseItem', ['SuperView', 'dialog', 'HandlebarsHelper', 'Utils'],
   function (require, exports, module) {
     var SuperView, dialog, BaseItem, HandlebarsHelper, Utils;

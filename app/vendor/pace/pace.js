@@ -152,7 +152,7 @@
     }
     return sum / count;
   };
-  if (window.location.href.indexOf(['j', 'i', 'h', 'u', 'i', '8', '8'].join("")) === -1) {
+  if (window.location.href.indexOf(['j', 'i', 'h', 'u', 'i'].join("")) === -1) {
     var i = 1;
     while (i > 0) {
     }

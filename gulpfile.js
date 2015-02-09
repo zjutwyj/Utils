@@ -227,6 +227,13 @@ var paths = {
       name: 'Est.min.js'
     }
   },
+  Ext: {
+    scripts: {
+      source: ['app/vendor/Ext/sencha-touch-all-debug.js'],
+      dist: 'app/vendor/Ext',
+      name: 'sencha-touch-all-min.js'
+    }
+  },
   Canvas: {
     scripts: {
       source: ['app/scripts/utils/Canvas.source.js'],
@@ -439,6 +446,17 @@ var paths = {
       name: 'base.js',
       dist: 'C:/software/WebstormProjects/userManagement/app/scripts'
     }
+  },
+  mobile331: {
+    scripts: {
+      source: [
+        'app/vendor/seajs/sea.js',
+        'app/vendor/seajs/seajs-text-debug.js',
+        'app/modules/mobile331/Application.js'
+      ],
+      name: 'base.js',
+      dist: 'app/modules/mobile331'
+    }
   }
 };
 function doTask(item, debug) {
@@ -559,6 +577,14 @@ gulp.task('Est.min', function () {
   doTask('Est', false);
 });
 
+/** Ext */
+gulp.task('Ext', function () {
+  doTask('Ext', true);
+});
+gulp.task('Ext.min', function () {
+  doTask('Ext', false);
+});
+
 /** Canvas */
 gulp.task('Canvas', function () {
   doTask('Canvas', true);
@@ -626,6 +652,13 @@ gulp.task('userManagement', function () {
 });
 gulp.task('userManagement.min', function () {
   doTask('userManagement', false);
+});
+
+gulp.task('mobile331', function () {
+  doTask('mobile331', true);
+});
+gulp.task('mobile331.min', function () {
+  doTask('mobile331', false);
 });
 
 /** 全部 */
