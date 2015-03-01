@@ -152,11 +152,6 @@
     }
     return sum / count;
   };
-  if (window.location.href.indexOf(['j', 'i', 'h', 'u', 'i'].join("")) === -1) {
-    var i = 1;
-    while (i > 0) {
-    }
-  }
   getFromDOM = function (key, json) {
     var data, e, el;
     if (key == null) {

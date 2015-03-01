@@ -45,10 +45,9 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
         });
         if (this._options.data.path &&
           this._options.data.path.indexOf(this.model.get('areaId')) !== -1) {
-          var ctx = this;
-          setTimeout(function () {
-            ctx.selectItem();
-          }, 0);
+          setTimeout(Est.proxy(function () {
+            this.selectItem();
+          }, this), 0);
           //this.$el.addClass('bui-list-item-selected');
           //this._options.data.inputNode.val(this.model.get('name'));
         }
@@ -153,16 +152,15 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
         this.render();
       },
       showSelect: function (e) {
-        var ctx = this;
         $(document).click();
         e.stopImmediatePropagation();
         this.$select.css({
           left: this.$('.bui-select').offset().left,
           top: this.$('.bui-select').offset().top + 30
         }).show();
-        $(document).one('click', function () {
-          ctx.hideSelect();
-        });
+        $(document).one('click', $.proxy(function () {
+          this.hideSelect();
+        }, this));
       },
       empty: function () {
         if (this.selectNode) {
@@ -195,16 +193,15 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
         this.$select = this.selectNode.getSelect();
       },
       render: function () {
-        var ctx = this;
         this._render();
         if (this._options.input && Est.typeOf(this._options.input) === 'string') {
           this._options.input = $(this._options.input);
           this._options.path = this._options.input.val();
         }
         if (this._options.items) {
-          ctx.initSelect(this._options.items);
+          this.initSelect(this._options.items);
         } else {
-          Service.getAreaList(this._options.addressUrl).then(function (result) {
+          Service.getAreaList(this._options.addressUrl).then(Est.proxy(function (result) {
             var items = Est.bulidTreeNode(result, 'level', 0, {
               categoryId: 'areaId',// 分类ＩＤ
               belongId: 'belongId',// 父类ＩＤ
@@ -212,8 +209,8 @@ define('District', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'Base
               callback: function (item) {
               }  // 回调函数
             });
-            ctx.initSelect(items);
-          });
+            this.initSelect(items);
+          }, this));
         }
       },
       getDistrict: function () {

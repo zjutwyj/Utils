@@ -6,23 +6,26 @@
             <label class="control-label">Seo标题：</label>
 
             <div class="controls">
-                <input id="model-title" name="title" value="{{title}}" type="text" class="input-large"
-                       data-tip='{"text":"请输入Seo标题","iconCls":"icon icon-pencil"}'>
+                <input id="model-title" name="title" value="{{title}}" type="text" class="input-large" title="如：防盗门_防火门_安全门等"
+                       style="width: 500px;"
+                       data-tip='{"text":"请输入Seo标题,如：防盗门_防火门_安全门等","iconCls":"icon icon-pencil"}'>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">Seo关键字：</label>
 
             <div class="controls">
-                <input id="model-keywords" name="keywords" value="{{keywords}}" type="text" class="input-large"
-                       data-tip='{"text":"请输入Seo关键字","iconCls":"icon icon-pencil"}'>
+                <input id="model-keywords" name="keywords" value="{{keywords}}" type="text" class="input-large" title="如：防盗门_防火门_安全门等"
+                       style="width: 500px;"
+                       data-tip='{"text":"请输入Seo关键字,如：防盗门_防火门_安全门等","iconCls":"icon icon-pencil"}'>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">Seo描述：</label>
 
             <div class="controls control-row-auto">
-                <textarea id="model-description" name="description" type="text">{{description}}</textarea>
+                <textarea id="model-description" name="description" type="text" style="width: 500px;height: 80px;" title="限79字内，加联系电话或邮件"
+                          data-tip='{"text":"限79字内，加联系电话或邮件"}'>{{description}}</textarea>
             </div>
         </div>
 

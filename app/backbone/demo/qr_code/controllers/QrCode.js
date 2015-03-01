@@ -10,10 +10,10 @@ define('QrCode', ['BaseView'], function (require, exports, module) {
 
   QrCode = BaseView.extend({
     initialize: function () {
-      this._options.width = this._options.width || 250;
-      this._options.url = this._options.url || CONST.DOMAIN;
+      this.options.width = this.options.width || 250;
+      this.options.url = this.options.url || CONST.DOMAIN;
       this._initialize({
-        template: '<img src="http://qr.liantu.com/api.php?w=' + this._options.width + '&text="' + this._options.url + '">'
+        template: '<img src="http://qr.liantu.com/api.php?w=' + this.options.width + '&text="' + this.options.url + '">'
       });
       this.render();
     },

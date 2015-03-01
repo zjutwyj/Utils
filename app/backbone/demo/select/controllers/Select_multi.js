@@ -37,11 +37,12 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
       tagName: 'li',
       className: 'bui-list-item bui-list-item-select',
       events: {
+        'click .toggle': '_toggleChecked',
         'click .select-div': 'selectItem'
       },
       initialize: function () {
         this._initialize({
-          template: itemTemp
+          template: this.options.data.tpl || itemTemp
         });
         this.model.set('text', this.model.get(this._options.data.text));
         this.model.set('value', this.model.get(this._options.data.value));
@@ -72,6 +73,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         'click .select-search-btn': 'search'
       },
       initialize: function () {
+        //this.clearInputValue();
         this._initialize({
           model: model,
           collection: collection,
@@ -107,6 +109,11 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
       searchClick: function (e) {
         e.stopImmediatePropagation();
       },
+      // 清空input文本框
+      clearInputValue: function () {
+        this.$input.val('');
+      },
+      // 设置input文本框
       setInputValue: function (val, model) {
         this.$input.val(val);
         this._select = model['value'];
@@ -195,12 +202,18 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         this.selectNode.setInputNode(this.$('.bui-select-input'));
         this.$select = this.selectNode.getSelect();
       },
+      // 清空input文本框
+      clearInputValue: function () {
+        this.$buiSelectInput.val('');
+      },
+      // 初始化input文本框
       initInputValue: function (items) {
         var id = $(this._options.target).val();
+        this.$buiSelectInput = this.$('.bui-select-input');
         Est.each(items, function (item) {
-          if (item[this._options.value] === id) {
-            this.$('.bui-select-input').val(item[this._options.text]);
-            this._options.change && this._options.change.call(this, item);
+          if (id.indexOf(item[this._options.value]) !== -1) {
+            var initValue = this.$buiSelectInput.val();
+            this.$buiSelectInput.val((initValue.length > 0 ? initValue + ',' : '') + item[this._options.text]);
           }
         }, this)
       },

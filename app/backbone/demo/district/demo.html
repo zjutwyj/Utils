@@ -39,40 +39,26 @@
 <div id="district-container" style="height: 200px;"></div>
 <br>
 <input id="getDistrict" type="button" value="获取当前地区"/>
+
 <div id="district-container1" style="clear:both;height: 200px;"></div>
 
 <script type="text/javascript" src="../../scripts/base.js"></script>
 <script type="text/javascript" src="../../const.js"></script>
 <script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../app.js"></script>
 <script type="text/javascript" src="../../common/district/main.js"></script>
 <script type="text/javascript" src="../../common/pagination/config.js"></script>
 <script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript" src="../../test/qunit/DataInit.js"></script>
 <script type="text/javascript">
-    var items = [
-        { addTime: null, areaId: "402881882ba8753a012ba8bf474d001c", updateTime: null, name: "北京", path: "402881882ba8753a012ba8bf474d001c", level: 0, belongId: null },
-        { addTime: null, areaId: "402881882ba8753a012ba8bfacfd001d", updateTime: null, name: "东城区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8bfacfd001d", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8bfacfd001w", updateTime: null, name: "东城1区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8bfacfd001d,402881882ba8753a012ba8bfacfd001w", level: 2, belongId: '402881882ba8753a012ba8bfacfd001d' },
-        { addTime: null, areaId: "402881882ba8753a012ba8bff6f6001e", updateTime: null, name: "西城区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8bff6f6001e", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c02f9a001f", updateTime: null, name: "崇文区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c02f9a001f", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c061970020", updateTime: null, name: "宣武区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c061970020", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c088690021", updateTime: null, name: "朝阳区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c088690021", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c0ade20022", updateTime: null, name: "丰台区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c0ade20022", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c0d34c0023", updateTime: null, name: "石景山区", path: "402881882ba8753a012ba8bf474d001c,402881882ba8753a012ba8c0d34c0023", level: 1, belongId: '402881882ba8753a012ba8bf474d001c' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c389a2002f", updateTime: null, name: "天津", path: "402881882ba8753a012ba8c389a2002f", level: 0 ,belongId: null},
-        { addTime: null, areaId: "402881882ba8753a012ba8c3bcc80030", updateTime: null, name: "和平区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c3bcc80030", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c3e4460031", updateTime: null, name: "河东区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c3e4460031", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c409df0032", updateTime: null, name: "河西区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c409df0032", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c42e5e0033", updateTime: null, name: "南开区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c42e5e0033", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c454450034", updateTime: null, name: "河北区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c454450034", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c479040035", updateTime: null, name: "红桥区", path: "402881882ba8753a012ba8c389a2002f,402881882ba8753a012ba8c479040035", level: 1, belongId: '402881882ba8753a012ba8c389a2002f' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c689d30042", updateTime: null, name: "河北省", path: "402881882ba8753a012ba8c689d30042", level: 0 ,belongId: null },
-        { addTime: null, areaId: "402881882ba8753a012ba8c6da830043", updateTime: null, name: "石家庄市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c6da830043", level: 1, belongId: '402881882ba8753a012ba8c689d30042' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c7122d0044", updateTime: null, name: "唐山市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c7122d0044", level: 1, belongId: '402881882ba8753a012ba8c689d30042' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c73d920045", updateTime: null, name: "秦皇岛市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c73d920045", level: 1, belongId: '402881882ba8753a012ba8c689d30042' },
-        { addTime: null, areaId: "402881882ba8753a012ba8c7656d0046", updateTime: null, name: "邯郸市", path: "402881882ba8753a012ba8c689d30042,402881882ba8753a012ba8c7656d0046", level: 1, belongId: '402881882ba8753a012ba8c689d30042' }
-    ];
-    //app.addData('arealist', items); // 去掉注释， 则使用的是上面的测试数据
-    seajs.use(['District', 'Service'], function (District, Service) {
+    var items = Est.bulidTreeNode(app.getData('district_list'), 'level', 0, {
+        categoryId: 'areaId',// 分类ＩＤ
+        belongId: 'belongId',// 父类ＩＤ
+        childTag: 'children', // 子分类集的字段名称
+        callback: function (item) {
+        }  // 回调函数
+    });
+    seajs.use(['District'], function (District) {
         function initArea(options) {
             app.addPanel(options.id, {
                 el: options.target,
@@ -82,7 +68,8 @@
                 el: '.' + options.id,
                 viewId: options.id,
                 target: options.target,
-                path: options.path
+                path: options.path,
+                items: items
             }));
         }
 
@@ -91,7 +78,7 @@
             target: '#district-container',
             render: ''
         });
-        $('#getDistrict').click(function(){
+        $('#getDistrict').click(function () {
             console.log(app.getView('district').getDistrict());
             alert(app.getView('district').getDistrict());
         });

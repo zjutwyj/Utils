@@ -48,10 +48,10 @@ define('AttributesAdd', ['jquery', 'HandlebarsHelper', 'BaseCollection', 'BaseIt
         this._render();
       },
       moveUp: function () {
-        app.getView('attributesAdd')._moveUp(this.model);
+        app.getView(this._options.viewId || 'attributesAdd')._moveUp(this.model);
       },
       moveDown: function () {
-        app.getView('attributesAdd')._moveDown(this.model);
+        app.getView(this._options.viewId || 'attributesAdd')._moveDown(this.model);
       },
       update: function () {
         this.model.set(this.$('input').attr("name"), this.$('input').val());

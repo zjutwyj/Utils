@@ -1,4 +1,8 @@
-
+/**
+ * @description 基础集合类
+ * @class BaseCollection
+ * @author yongjin<zjut_wyj@163.com> 2014/11/6
+ */
 define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require, exports, module) {
   var Backbone, BaseCollection, PaginationModel;
 

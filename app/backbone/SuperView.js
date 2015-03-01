@@ -1,6 +1,6 @@
 /**
  * @description 顶级父类
- * @class SuperView
+ * @class SuperView - 顶级父类
  * @author yongjin<zjut_wyj@163.com> 2015/1/24
  */
 define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHelper'],
@@ -23,6 +23,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       constructor: function (options) {
         this.options = options || {};
         this._modelBinder = Backbone.ModelBinder;
+        if (this.init && Est.typeOf(this.init) !== 'function')
+          this._initialize(this.init);
         Backbone.View.apply(this, arguments);
       },
       /**
@@ -73,8 +75,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
         if (typeof options.hideSaveBtn === 'undefined' ||
           (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
           options.button.push(
-            {value: '保存', callback: function () {
-              this.title('正在保存...');
+            {value: '提交', callback: function () {
+              this.title('正在提交...');
               $('#' + options.moduleId + ' #submit').click();
               return false;
             }, autofocus: true});
@@ -196,18 +198,18 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 回车事件
        *
-       * @method [private] - _enterEvent
+       * @method [private] - _initEnterEvent
        * @private
        * @author wyj 14.12.10
        */
-      _enterEvent: function () {
-        var ctx = this;
-        if (!this._options.enterRender) return;
-        this.$('input').keyup(function (e) {
-          if (e.keyCode === CONST.ENTER_KEY) {
-            ctx.$(ctx._options.enterRender).click();
-          }
-        });
+      _initEnterEvent: function (options) {
+        if (options.speed > 1 && options.enterRender) {
+          this.$('input').keyup($.proxy(function (e) {
+            if (e.keyCode === CONST.ENTER_KEY) {
+              this.$(options.enterRender).click();
+            }
+          }, this));
+        }
       },
       /**
        * 获取配置参数

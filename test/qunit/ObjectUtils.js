@@ -1,10 +1,9 @@
 /**
- * @description ArrayUtils
- * @namespace ArrayUtils
+ * @description ObjectUtils
+ * @namespace ObjectUtils
  * @author yongjin on 2014/6/18
  */
 QUnit.module("【ObjectUtils】");
-
 
 QUnit.test('Est.objToPath', function (assert) {
   var obj = {
@@ -18,7 +17,6 @@ QUnit.test('Est.objToPath', function (assert) {
     "level3.level5.level6": "value6"
   }, 'passed!');
 });
-
 QUnit.test('Est.getValue', function (assert) {
   var object = {
     item: {
@@ -34,7 +32,6 @@ QUnit.test('Est.getValue', function (assert) {
   assert.equal(result, 'aaa', 'passed');
   assert.deepEqual(object, object2, 'passed');
 });
-
 QUnit.test('Est.setValue', function (assert) {
   var object = {
     item: {
@@ -91,54 +88,12 @@ QUnit.test("Est.chain", function (assert) {
   var youngesttwo = Est(characters).sortBy('age').take().pluck('age').value();
   assert.equal(youngesttwo, 1, 'passed!');
 });
-QUnit.test("Est.inject", function (assert) {
-  var doTest = function (a) {
-    return a
-  };
-
-  function beforeTest(a) {
-    a += 3;
-    return new Est.setArguments(arguments);
-  };
-  function afterTest(a, result, isDenied) {
-    return result + 5;
-  };
-
-  doTest = Est.inject(doTest, beforeTest, afterTest);
-  var result = doTest(2);
-  assert.equal(result, 10, "passed!");
-});
-
 QUnit.test("Est.pick", function (assert) {
   var object1 = {name: 'a', sort: '1', sId: '000002'};
   var object2 = Est.pick(object1, ['name', 'sort']);
   var object3 = {name: 'a', sort: '1'};
   assert.deepEqual(object2, object3, "{name:'a', sort: '1', sId: '000002'} => {name:'a', sort:'1'}");
 })
-
-QUnit.test("Est.inherit", function (assert) {
-  var target = {x: 'dont change me'};
-  var newObject = Est.inherit(target);
-
-  assert.equal(newObject.x, target.x, "newObject inherit from target!");
-});
-
-QUnit.asyncTest('Est.promise', function (assert) {
-  var str = '';
-  var result = function () {
-    return new Est.promise(function (resolve, reject) {
-      setTimeout(function () {
-        resolve('ok');
-      }, 1);
-    });
-  }
-  result().then(function (data) {
-    str = data;
-    assert.equal(str, 'ok', 'passed!');
-    QUnit.start();
-  });
-});
-
 QUnit.test("Est.typeOf", function (assert) {
   var results = [];
   var fn = Est.typeOf;
@@ -161,7 +116,6 @@ QUnit.test("Est.typeOf", function (assert) {
 
   assert.deepEqual(results, [ "object", "array", "object", "error", "date", "regexp", "object", "object", "object", "object", "object", 'null', 'function' ], 'passed!');
 });
-
 QUnit.test("Est.getType", function (assert) {
   var results = [];
   var fn = Est.getType;
@@ -183,10 +137,8 @@ QUnit.test("Est.getType", function (assert) {
   results.push(fn(function () {
   })); // "Function"
 
-  assert.deepEqual(results, [ "Object", "Array", "Arguments", "Error", "Date", "RegExp", "Math", "JSON", "Number", "String", "Boolean", "null", "Function" ]
-    , "passed");
+  assert.deepEqual(results, [ "Object", "Array", "Object", "ReferenceError", "Date", "RegExp", "Object", "Object", "Number", "String", "Boolean", "null", "Function" ], "passed");
 });
-
 QUnit.test("Est.hasKey", function (assert) {
   var obj = {
     name: 1
@@ -194,13 +146,11 @@ QUnit.test("Est.hasKey", function (assert) {
   var has = Est.hasKey(obj, 'name');
   assert.equal(has, true, 'passed!');
 });
-
 QUnit.test("Est.hashKey", function (assert) {
   var obj = {};
   var value = Est.hashKey(obj);
-  assert.equal(value, 'object:001', "passed!");
+  assert.equal(value, 'object:003', "passed!");
 });
-
 QUnit.test("Est.isEmpty", function (assert) {
   var obj = {};
   var result = Est.isEmpty(obj);
@@ -219,32 +169,6 @@ QUnit.test("Est.isEmpty", function (assert) {
   var result5 = Est.isEmpty(obj1);
   assert.ok(!result5, "passed!");
 });
-
-QUnit.test("Est.define", function (assert) {
-  var result = 2;
-  Est.define('moduleA', [], function () {
-    return {
-      getData: function () {
-        return 1;
-      }
-    }
-  });
-  Est.define('moduleB', ['moduleA'], function (moduleA) {
-    result = moduleA.getData();
-    return {
-      getResult: function () {
-        return result;
-      }
-    }
-  });
-  Est.define('moduleC', ['moduleB', 'Est'], function (mod, utils) {
-    var result = utils.pad(mod.getResult(), 5, '0', false);
-    console.log(result);
-  });
-  Est.use('moduleC');
-  assert.equal(result, 1, 'passed!');
-});
-
 QUnit.test('Est.pluck', function (assert) {
   var characters = [
     { 'name': 'barney', 'age': 36 },
@@ -253,7 +177,6 @@ QUnit.test('Est.pluck', function (assert) {
   var result = Est.pluck(characters, 'name');
   assert.deepEqual(result, [ "barney", "fred" ], 'passed!');
 });
-
 QUnit.test('Est.clone', function (assert) {
   var object = { 'name': 'barney', 'age': 36, 'info': { 'array': ['1', '2'] } };
   var object_r = Est.cloneDeep(object);

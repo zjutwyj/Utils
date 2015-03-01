@@ -58,8 +58,8 @@ define('Pagination', ['jquery', 'underscore', 'backbone', 'HandlebarsHelper', 't
         this.model.trigger('reloadList', this.model);
       },
       pageTo: function(){
-        var page = Est.trim(this.$('.input-pageTo').val());
-        if (parseInt(page, 10) > this.model.get('totalPage') || parseInt(page, 10) < 1) return;
+        var page = parseInt(Est.trim(this.$('.input-pageTo').val()), 10);
+        if (page > this.model.get('totalPage') || page < 1) return;
         if (Est.isEmpty(page)) return;
         this.model.set('page', page);
         this.model.trigger('reloadList', this.model);

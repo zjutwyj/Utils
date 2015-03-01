@@ -5,7 +5,7 @@
         document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
     </script>
     <meta charset="UTF-8">
-    <title>选择框</title>
+    <title>下拉框</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="fragment" content="!">
     <meta name="description" content="Description"/>
@@ -38,23 +38,112 @@
 <!--<![endif]-->
 
 <div class="bui-grid-cell-inner">
-    <div id="drop-down">
+    <input id="drop-down-content" class="button button-gray" value="加载html内容" type="button"/>
+    <br> <br> <br> <br> <br> <br> <br> <br>
+
+    <div id="">
+        <input value="加载模块内容" class="button button-gray" id="drop-down-module-id" type="button"/>
     </div>
 </div>
 
+<script type="text/x-handlebars-template" id="template-drop-down">
+    <ul class="select-ul">
+        <li class="bui-list-item bui-list-item-select bui-list-item-selected">
+            <div class="bui-list-item-select-inner select-div ">高档烤漆圆形花盆1</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">高档圆形塑料花盆</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">高档方形塑料花盆</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">高档迷你花盆</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">壁挂花盆</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">吊兰花盆</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">种菜盆</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">测试1</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">长包</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">短包</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">中包</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">手提包</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">休闲包</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">男式</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">女式</div>
+        </li>
+        <li class="bui-list-item bui-list-item-select">
+            <div class="bui-list-item-select-inner select-div ">儿童</div>
+        </li>
+    </ul>
+</script>
 <script type="text/javascript" src="../../scripts/base.js"></script>
 <script type="text/javascript" src="../../const.js"></script>
 <script type="text/javascript" src="../../config.local.js"></script>
-<script type="text/javascript" src="controllers/DropDown.js"></script>
+<script type="text/javascript" src="../../app.js"></script>
+<script type="text/javascript" src="../../common/drop_down/main.js"></script>
+<script type="text/javascript" src="../../common/attributes/config.js"></script>
 <script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript" src="../../test/qunit/DataInit.js"></script>
 
 <script type="text/javascript">
-    // 选择框
-    seajs.use(['jquery', 'Utils', 'DropDown'], function (jquery, Utils, DropDown) {
-        new DropDown({
-            el: '#drop-down'
+    var items = Est.bulidTreeNode(app.getData('district_list'), 'level', 0, {
+        categoryId: 'areaId',// 分类ＩＤ
+        belongId: 'belongId',// 父类ＩＤ
+        childTag: 'children', // 子分类集的字段名称
+        callback: function (item) {
+        }  // 回调函数
+    });
+    seajs.use(['BaseUtils'], function (BaseUtils) {
+        BaseUtils.initDropDown({
+            target: '#drop-down-content',
+            height: 250,
+            width: 150,
+            //overflowX: 'auto', // 默认为hidden
+            content: $('#template-drop-down').html(),
+            callback: function (options) {
+                setTimeout(function () {
+                    app.getView(options.dropDownId).hide();
+                }, 1000);
+
+            }
+        });
+        BaseUtils.initDropDown({
+            target: '#drop-down-module-id',
+            moduleId: 'AttributesAdd',
+            items: ['111', '222', '333'],
+            callback: function (options) {
+                setTimeout(function () {
+                    /*app.getView(options.dropDownId).reflesh(function () { // 刷新
+                        this._options.items.push('111'); // 重新设置options参数里的items
+                    });*/
+                    //app.getView(options.dropDownId).hide();
+                }, 5000);
+            }
         });
     });
+
 </script>
 </body>
 </html>

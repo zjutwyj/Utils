@@ -1,4 +1,14 @@
-
+/**
+ * @description 列表视图
+ *
+ *  - el: 目标元素Id 如 "#jhw-main"
+ *  - viewId 标识符， 推荐添加， 将提升性能及更多功能
+ *  - page: parseInt(Est.cookie('productList_page')) || 1,
+ - pageSize: parseInt(Est.cookie('productList_pageSize')) || 16
+ *
+ * @class BaseList - 列表视图
+ * @author yongjin<zjut_wyj@163.com> 2014/12/8
+ */
 define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require, exports, module) {
   var BaseList, SuperView, Utils, HandlebarsHelper;
 
@@ -7,6 +17,18 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
   HandlebarsHelper = require('HandlebarsHelper');
 
   BaseList = SuperView.extend({
+    /**
+     * 传递options进来
+     *
+     * @method [private] - constructor
+     * @private
+     * @param options
+     * @author wyj 14.12.16
+     */
+    /*constructor: function (options) {
+     Est.interface.implements(this, new Est.interface('BaseList', ['initialize', 'render']));
+     this.constructor.__super__.constructor.apply(this, arguments);
+     },*/
     /**
      * 初始化
      *
@@ -21,7 +43,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
        *        // 以下为可选
        *        template: listTemp, 字符串模板,
        *        render: '.product-list', 插入列表的容器选择符, 若为空则默认插入到$el中
-       *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;  若需要构建树， 则传入前的items列表必须为手动构建好的树
+       *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;
        *        data: {}, // 附加的数据 BaseList、BaseView[js: this._options.data & template: {{name}}] ; BaseItem中为[this._options.data &{{_options.data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
        *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加
        *        enterRender: (可选) 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
@@ -30,7 +52,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
        *        pageSize: parseInt(Est.cookie('orderList_pageSize')) || 16, // 设置每页显示个数
        *        max: 5, // 限制显示个数
        *        itemId: 'Category_00000000000123', // 当需要根据某个ID查找列表时， 启用此参数， 方便
-       *        detail: 添加页面url地址 配置route使用
+       *        detail: 添加页面url地址 配合route使用
        *        route: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少
        *        filter: [ {key: 'name', value: this.searchKey }] // 过滤结果
        *        clearDialog: true, // 清除所有的对话框， 默认为true
@@ -44,7 +66,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
                       this.addOne();
                     }
        *        },
-       *        afterRender: function(thisOpts){ // 最终执行方法， 包括items渲染完成
+       *        beforeRender: function(thisOpts){}, // 渲染前回调
+       *        afterRender: function(thisOpts){ // 渲染后回调， 包括items渲染完成
        *          if (this.collection.models.length === 0 ||
                       !this.options._isAdd){
                       this.addOne();
@@ -81,6 +104,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      * @author wyj 14.11.16
      */
     _init: function (collection, options) {
+
       this._initOptions(options);
       this._initTemplate(this._options);
       this._initEnterEvent(this._options, this);
@@ -105,6 +129,37 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       this._options = Est.extend(options || {}, this.options);
       this._options.sortField = 'sort';
       this._options.max = this._options.max || 99999;
+      this._options.speed = this._options.speed || 9;
+    },
+    /**
+     * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
+     * @method _initTemplate
+     * @private
+     * @author wyj 15.1.12
+     */
+    _initTemplate: function (options) {
+      this._data = options.data = options.data || {};
+      if (options.template) {
+        this.template = HandlebarsHelper.compile(options.template);
+        this.$el.append(this.template(options.data));
+      }
+      return this._data;
+    },
+    /**
+     * 回车事件
+     *
+     * @method [private] - _initEnterEvent
+     * @private
+     * @author wyj 14.12.10
+     */
+    _initEnterEvent: function (options, ctx) {
+      if (options.enterRender) {
+        ctx.$('input').keyup(function (e) {
+          if (e.keyCode === CONST.ENTER_KEY) {
+            ctx.$(options.enterRender).click();
+          }
+        });
+      }
     },
     /**
      * 初始化列表视图容器
@@ -131,20 +186,6 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       return this.list;
     },
     /**
-     * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
-     * @method _initTemplate
-     * @private
-     * @author wyj 15.1.12
-     */
-    _initTemplate: function (options) {
-      this._data = options.data = options.data || {};
-      if (options.template) {
-        this.template = HandlebarsHelper.compile(options.template);
-        this.$el.append(this.template(options.data));
-      }
-      return this._data;
-    },
-    /**
      * 初始化collection集合
      * @method _initCollection
      * @param collection
@@ -166,6 +207,143 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
         this.composite = true;
 
       return this.collection;
+    },
+    /**
+     * 初始化单个枚举视图
+     *
+     * @method [private] - _initItemView
+     * @private
+     * @param itemView
+     * @author wyj 14.11.16
+     */
+    _initItemView: function (itemView) {
+      this.item = itemView;
+    },
+    /**
+     * 初始化模型类, 设置index索引
+     *
+     * @method [private] - _initModel
+     * @private
+     * @param model
+     * @author wyj 14.11.20
+     */
+    _initModel: function (model) {
+      this.initModel = model;
+    },
+    /**
+     * 绑定事件， 如添加事件， 重置事件
+     * @method [private] - _initBind
+     * @private
+     * @author wyj 14.11.16
+     */
+    _initBind: function (collection) {
+      if (collection) {
+        collection.bind('add', this._addOne, this);
+        collection.bind('reset', this._render, this);
+      }
+    },
+    /**
+     * 初始化分页
+     *
+     * @method [public] - _initPagination
+     * @param options
+     * @author wyj 14.11.17
+     */
+    _initPagination: function (options) {
+      var ctx = this;
+      if (ctx.collection && ctx.collection.paginationModel) {
+        // 单一观察者模式， 监听reloadList事件
+        ctx.collection.paginationModel.on('reloadList',
+          function (model) {
+            ctx._clear.call(ctx);
+            ctx._load.call(ctx, options, model);
+          });
+      }
+    },
+    /**
+     * 获取集合数据
+     *
+     * @method [public] - _load
+     * @param options [beforeLoad: 载入前方法][page: 当前页][pageSize: 每页显示条数]
+     * @param model 分页模型类 或为全查必填
+     * @author wyj 14.11.16
+     * @example
+     *        baseListCtx._load({
+       *          page: 1,
+       *          pageSize: 16,
+       *          beforeLoad: function () {
+       *            this.collection.setCategoryId(options.categoryId);
+       *          },
+       *          afterLoad: function(){
+       *
+       *          }
+       *        }).then(function () {
+       *          ctx.after();
+       *        });
+     */
+    _load: function (options, model) {
+      var ctx = this;
+      options = options || this._options || {};
+      this._beforeLoad(options);
+      if (options.page || options.pageSize) {
+        options.page && ctx.collection.paginationModel.set('page', options.page || 1);
+        // 备份page
+        options._page = options.page;
+        options.pageSize && ctx.collection.paginationModel.set('pageSize', options.pageSize || 16);
+        // 备份pageSize
+        options._pageSize = options.pageSize;
+        model = ctx.collection.paginationModel;
+        //TODO 移除BaseList默认的page 与pageSize使每页显示条数生效
+        options.page = options.pageSize = null;
+      }
+      //TODO 若存在items且有page与pageSize  处理静态分页
+      if (this._options.items) {
+        this._empty();
+        this._initItems();
+      }
+      // page pageSize保存到cookie中
+      if (this._options.viewId && ctx.collection.paginationModel &&
+        ctx.collection.paginationModel.get('pageSize') < 999) {
+        app.addCookie(this._options.viewId + '_page');
+        Est.cookie(this._options.viewId + '_page', ctx.collection.paginationModel.get('page'));
+        app.addCookie(this._options.viewId + '_pageSize');
+        Est.cookie(this._options.viewId + '_pageSize', ctx.collection.paginationModel.get('pageSize'));
+      }
+      // 判断是否存在url
+      if (ctx.collection.url && !this._options.items) {
+
+        if (ctx._options.filter) ctx.filter = true;
+        // 处理树结构
+        if (ctx._options.subRender) {
+          ctx.composite = true;
+          ctx.collection.paginationModel.set('page', 1);
+          ctx.collection.paginationModel.set('pageSize', 9000);
+        }
+        // 数据载入
+        ctx.collection._load(ctx.collection, ctx, model).
+          done(function (result) {
+            /*if (ctx.options.instance)
+             app.addData(ctx.options.instance, result.models);*/
+            if (result.attributes.data.length === 0) {
+              ctx.list.append('<div class="no-result">暂无数据</div>');
+              debug(function () {
+                ctx.collection.url = Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
+                  ctx.collection.url
+                return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
+                  ctx.collection.url + '查看数据');
+              });
+            }
+            if (ctx._options.subRender) {
+              ctx._filterRoot();
+            }
+            if (ctx._options.filter) {
+              ctx._filterCollection();
+            }
+            ctx._afterLoad(options);
+          });
+      } else {
+        ctx._afterLoad(options);
+      }
     },
     /**
      * 初始化完成后执行
@@ -221,6 +399,22 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           this.collection.push(new this.initModel(item));
         }, this);
       }
+    },
+    /**
+     * 缓存编译模板
+     * @method [private] - _setTemplate
+     * @author wyj 15.2.14
+     */
+    _setTemplate: function (compile) {
+      this.compileTemp = compile;
+    },
+    /**
+     * 获取编译模板
+     * @method [private] - _getTemplate
+     * @author wyj 15.2.14
+     */
+    _getTemplate: function () {
+      return this.compileTemp;
     },
     /**
      * 停止遍历
@@ -317,23 +511,31 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      */
     _addOne: function (model) {
       var ctx = this;
-      if (!this.filter && !this.composite &&
-        this.dx < this._options.max) {
+      if (!this.filter && !this.composite && this.dx < this._options.max) {
         model.set('dx', this.dx++);
-        model.set('_options', {
-          _item: ctx._options.item,
-          _items: ctx._options.items ? true : false,
-          _model: ctx._options.model,
-          _collection: Est.isEmpty(ctx._options.subRender) ? null : ctx.collection,
-          _subRender: ctx._options.subRender,
-          _collapse: ctx._options.collapse,
-          _extend: ctx._options.extend,
-          _checkAppend: ctx._options.checkAppend,
-          _data: ctx.options.data || ctx._options.data
-        });
+        switch (this._options.speed) {
+          case 1:
+            model.set('_options', {});
+            break;
+          case 9:
+            model.set('_options', {
+              _speed: this._options.speed,
+              _item: ctx._options.item,
+              _items: ctx._options.items ? true : false,
+              _model: ctx._options.model,
+              _collection: Est.isEmpty(ctx._options.subRender) ? null : ctx.collection,
+              _subRender: ctx._options.subRender,
+              _collapse: ctx._options.collapse,
+              _extend: ctx._options.extend,
+              _checkAppend: ctx._options.checkAppend,
+              _data: ctx.options.data || ctx._options.data
+            });
+        }
         //app.addData('maxSort', model.get('dx') + 1);
         var itemView = new this.item({
           model: model,
+          viewId: this._options.viewId,
+          speed: this._options.speed,
           data: this._data,
           detail: this._options.detail,
           route: this._options.route,
@@ -343,109 +545,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
         itemView._setInitModel(this.initModel);
         //TODO 优先级 new对象里的viewId > _options > getCurrentView()
         itemView._setViewId(this._options.viewId || app.getCurrentView());
+
         this.list.append(itemView._render().el);
         this.views.push(itemView);
-      }
-    },
-    /**
-     * 初始化分页
-     *
-     * @method [public] - _initPagination
-     * @param options
-     * @author wyj 14.11.17
-     */
-    _initPagination: function (options) {
-      var ctx = this;
-      if (ctx.collection && ctx.collection.paginationModel) {
-        ctx.collection.paginationModel.on('reloadList',
-          function (model) {
-            ctx._clear.call(ctx);
-            ctx._load.call(ctx, options, model);
-          });
-      }
-    },
-    /**
-     * 获取集合数据
-     *
-     * @method [public] - _load
-     * @param options [beforeLoad: 载入前方法][page: 当前页][pageSize: 每页显示条数]
-     * @param model 分页模型类 或为全查必填
-     * @author wyj 14.11.16
-     * @example
-     *        baseListCtx._load({
-       *          page: 1,
-       *          pageSize: 16,
-       *          beforeLoad: function () {
-       *            this.collection.setCategoryId(options.categoryId);
-       *          },
-       *          afterLoad: function(){
-       *
-       *          }
-       *        }).then(function () {
-       *          ctx.after();
-       *        });
-     */
-    _load: function (options, model) {
-      var ctx = this;
-      options = options || this._options || {};
-      this._beforeLoad(options);
-      if (options.page || options.pageSize) {
-        options.page && ctx.collection.paginationModel.set('page', options.page);
-        // 备份page
-        options._page = options.page;
-        options.pageSize && ctx.collection.paginationModel.set('pageSize', options.pageSize);
-        // 备份pageSize
-        options._pageSize = options.pageSize;
-        model = ctx.collection.paginationModel;
-        //TODO 移除BaseList默认的page 与pageSize使每页显示条数生效
-        options.page = options.pageSize = null;
-      }
-      //TODO 若存在items且有page与pageSize  处理静态分页
-      if (this._options.items) {
-        this._empty();
-        this._initItems();
-      }
-      // page pageSize保存到cookie中
-      if (this._options.viewId && ctx.collection.paginationModel.get('pageSize') < 999) {
-        app.addCookie(this._options.viewId + '_page');
-        Est.cookie(this._options.viewId + '_page', ctx.collection.paginationModel.get('page'));
-        app.addCookie(this._options.viewId + '_pageSize');
-        Est.cookie(this._options.viewId + '_pageSize', ctx.collection.paginationModel.get('pageSize'));
-      }
-      // 判断是否存在url
-      if (ctx.collection.url && !this._options.items) {
-
-        if (ctx._options.filter) ctx.filter = true;
-        // 处理树结构
-        if (ctx._options.subRender) {
-          ctx.composite = true;
-          ctx.collection.paginationModel.set('page', 1);
-          ctx.collection.paginationModel.set('pageSize', 9000);
-        }
-        // 数据载入
-        ctx.collection._load(ctx.collection, ctx, model).
-          done(function (result) {
-            /*if (ctx.options.instance)
-             app.addData(ctx.options.instance, result.models);*/
-            if (result.attributes.data.length === 0) {
-              ctx.list.append('<div class="no-result">暂无数据</div>');
-              debug(function () {
-                ctx.collection.url = Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
-                  ctx.collection.url
-                return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
-                  ctx.collection.url + '查看数据');
-              });
-            }
-            if (ctx._options.subRender) {
-              ctx._filterRoot();
-            }
-            if (ctx._options.filter) {
-              ctx._filterCollection();
-            }
-            ctx._afterLoad(options);
-          });
-      } else {
-        ctx._afterLoad(options);
       }
     },
     /**
@@ -488,46 +590,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       this.collection._paginationRender();
       return this.collection;
     },
-    /**
-     * 绑定事件， 如添加事件， 重置事件
-     * @method [private] - _initBind
-     * @private
-     * @author wyj 14.11.16
-     */
-    _initBind: function (collection) {
-      if (collection) {
-        collection.bind('add', this._addOne, this);
-        collection.bind('reset', this._render, this);
-      }
-    },
-    /**
-     * 回车事件
-     *
-     * @method [private] - _initEnterEvent
-     * @private
-     * @author wyj 14.12.10
-     */
-    _initEnterEvent: function (options, ctx) {
-      if (options.enterRender) {
-        if (!options.enterRender) return;
-        ctx.$('input').keyup(function (e) {
-          if (e.keyCode === CONST.ENTER_KEY) {
-            ctx.$(options.enterRender).click();
-          }
-        });
-      }
-    },
-    /**
-     * 初始化单个枚举视图
-     *
-     * @method [private] - _initItemView
-     * @private
-     * @param itemView
-     * @author wyj 14.11.16
-     */
-    _initItemView: function (itemView) {
-      this.item = itemView;
-    },
+
     /**
      * 清空列表， 并移除所有绑定的事件
      *
@@ -572,17 +635,6 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       this._empty.call(this);
       this.list.empty();
       this.collection.models.length = 0;
-    },
-    /**
-     * 初始化模型类, 设置index索引
-     *
-     * @method [private] - _initModel
-     * @private
-     * @param model
-     * @author wyj 14.11.20
-     */
-    _initModel: function (model) {
-      this.initModel = model;
     },
     /**
      * 添加所有元素， 相当于刷新视图
@@ -728,7 +780,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
         item = new ctx.initModel(item);
         item.set('_isSearch', true);
         ctx.collection.push(item);
-        ctx._addOne(item);
+        //ctx._addOne(item);
       });
     },
     /**

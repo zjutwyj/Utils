@@ -18,14 +18,14 @@ QUnit.test("Est.getUrlParam", function(assert){
 QUnit.test("Est.urlResolve", function(assert){
     var obj = Est.urlResolve(window.location.href);
     assert.deepEqual(obj, {
-        "hash": "",
-        "host": "localhost:63342",
-        "hostname": "localhost",
-        "href": "http://localhost:63342/Utils/test/Est_qunit.html",
-        "pathname": "/Utils/test/Est_qunit.html",
-        "port": "63342",
-        "protocol": "http",
-        "search": ""
+      "hash": "",
+      "host": "jihui88.com",
+      "hostname": "jihui88.com",
+      "href": "http://jihui88.com/utils/test/Est_qunit.html",
+      "pathname": "/utils/test/Est_qunit.html",
+      "port": "",
+      "protocol": "http",
+      "search": ""
     }, "passed!");
 });
 

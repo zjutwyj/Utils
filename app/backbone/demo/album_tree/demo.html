@@ -78,17 +78,20 @@
 <script type="text/javascript" src="../../scripts/base.js"></script>
 <script type="text/javascript" src="../../const.js"></script>
 <script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../app.js"></script>
 <script type="text/javascript" src="../../modules/album/main.js"></script>
 <script type="text/javascript" src="../../common/pagination/config.js"></script>
 <script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript" src="../../test/qunit/DataInit.js"></script>
 
 <script type="text/javascript">
 $(function(){
     seajs.use(['AlbumList'], function(AlbumList){
         app.addView('albumList', new AlbumList({
             el: '#J_UpTree',
+            items: app.getData('album_list'),
             callback: function(albumId){
-
+                alert(albumId);
             }
         }));
     });

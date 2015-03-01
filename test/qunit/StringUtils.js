@@ -4,6 +4,24 @@
  * @author yongjin on 2014/6/18
  */
 QUnit.module("【StringUtils】");
+
+QUnit.test('Est.md5', function(assert){
+  var result = Est.md5('aaaa');
+  assert.equal(result, '74b87337454200d4d33f80c4663dc5e5', 'passed');
+});
+QUnit.test('Est.hash', function(assert){
+  var result = Est.hash('/cmp/proDetail/20');
+  assert.equal(result, '707603050', 'passed');
+  var result2 = Est.hash('/cmp/proDetail/55');
+  assert.equal(result2, '1640990792', 'passed');
+});
+
+QUnit.test("Est.nextUid()", function (assert) {
+  var result = Est.nextUid();
+  assert.equal(result, '001', result);
+  var result2 = Est.nextUid();
+  assert.equal(result2, '002', result2);
+});
 QUnit.test("Est.lowercase('LE'); => 'le' ", function (assert) {
   var result = Est.lowercase('LE');
   var result2 = Est.lowercase('');
@@ -191,12 +209,6 @@ QUnit.test("Est.deepTrim('a b c'); => ", function (assert) {
   assert.equal(result, 'abc', "Est.deepTrim('a b c'); => " + Est.deepTrim('a b c'));
 });
 
-QUnit.test("Est.nextUid()", function (assert) {
-  var result = Est.nextUid();
-  assert.equal(result, '002', result);
-  var result2 = Est.nextUid();
-  assert.equal(result2, '003', result2);
-});
 QUnit.test("Est.reverse", function (assert) {
   var result = Est.reverse("abc");
   assert.equal(result, 'cba', 'passed!');

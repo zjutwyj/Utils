@@ -172,29 +172,6 @@
     setHashKey(obj, h);
     return obj;
   };
-  /**
-   * @description 通过原型继承创建一个新对象
-   * @method [对象] - inherit
-   * @param {Object} target 继承对象
-   * @param {Object} extra 额外对象
-   * @return {*}
-   * @example
-   *      var target = {x:'dont change me'};var newObject = Est.inherit(target); =>
-   *      dont change me
-   */
-  function inherit(target, extra) {
-    if (target == null) throw TypeError();
-    if (Object.create)
-      return Object.create(target);
-    var type = typeof target;
-    if (type !== 'object' && type !== 'function') throw TypeError();
-    function fn() {
-    };
-    fn.prototype = target;
-    return new fn();
-  }
-
-  Est.inherit = inherit;
 
   if (typeof /./ !== 'function') {
     /**
@@ -274,92 +251,6 @@
     //var ctx = typeOf(context) !== 'undefined' ? context : Est;
     return this._chain ? new Wrapper(obj, true) : obj;
   };
-
-  /**
-   * @description 异步操作执行成功、失败时执行的方法
-   * @method [对象] - promise
-   * @param {Function} fn
-   * @author wyj on 14/8/14
-   * @example
-   *      var str = '';
-   var doFn = function(){
-                return new Est.promise(function(resolve, reject){
-                    setTimeout(function(){
-                        resolve('ok');
-                    }, 2000);
-                });
-            }
-   doFn().then(function(data){
-                str = data;
-                assert.equal(str, 'ok', 'passed!');
-                QUnit.start();
-            });
-   */
-  function promise(fn) {
-    var state = 'pending',
-      value = null,
-      deferreds = [];
-    this.then = function (onFulfilled, onRejected) {
-      return new promise(function (resolve, reject) {
-        handle({
-          onFulfilled: onFulfilled || null,
-          onRejected: onRejected || null,
-          resolve: resolve,
-          reject: reject
-        });
-      });
-    };
-    function handle(deferred) {
-      if (state === 'pending') {
-        deferreds.push(deferred);
-        return;
-      }
-      var cb = state === 'fulfilled' ? deferred.onFulfilled : deferred.onRejected,
-        ret;
-      if (cb === null) {
-        cb = state === 'fulfilled' ? deferred.resolve : deferred.reject;
-        cb(value);
-        return;
-      }
-      try {
-        ret = cb(value);
-        deferred.resolve(ret);
-      } catch (e) {
-        deferred.reject(e);
-      }
-    }
-
-    function resolve(newValue) {
-      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
-        var then = newValue.then;
-        if (typeof then === 'function') {
-          then.call(newValue, resolve, reject);
-          return;
-        }
-      }
-      state = 'fulfilled';
-      value = newValue;
-      finale();
-    }
-
-    function reject(reason) {
-      state = 'rejected';
-      value = reason;
-      finale();
-    }
-
-    function finale() {
-      setTimeout(function () {
-        each(deferreds, function (deferred) {
-          handle(deferred);
-        });
-      }, 0);
-    }
-
-    fn(resolve, reject);
-  }
-
-  Est.promise = promise;
   // ObjectUtils
   /**
    * @description [1]检测数据类型 [undefined][number][string][function][regexp][array][date][error]
@@ -642,6 +533,24 @@
   }
 
   Est.hashKey = hashKey;
+
+  /**
+   * 字符串转换成hash值
+   * @method [字符串] - hash
+   * @param str
+   * @return {number}
+   * @author wyh 15.2.28
+   * @example
+   *        Est.hash('aaaaa');
+   */
+  function hash(str){
+    var hash = 5381,
+      i    = str.length
+    while(i)
+      hash = (hash * 33) ^ str.charCodeAt(--i)
+    return hash >>> 0;
+  }
+  Est.hash = hash;
   /**
    * @description 设置hashKey
    * @method [对象] - setHashKey
@@ -658,6 +567,213 @@
   }
 
   Est.setHashKey = setHashKey;
+  /**
+   * md5加密
+   * @method [字符串] - md5
+   * @param string
+   * @return {string}
+   * @author wyj 15.2.28
+   * @example
+   *
+   */
+  function md5(string) {
+    function RotateLeft(lValue, iShiftBits) {
+      return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
+    }
+
+    function AddUnsigned(lX,lY) {
+      var lX4,lY4,lX8,lY8,lResult;
+      lX8 = (lX & 0x80000000);
+      lY8 = (lY & 0x80000000);
+      lX4 = (lX & 0x40000000);
+      lY4 = (lY & 0x40000000);
+      lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
+      if (lX4 & lY4) {
+        return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+      }
+      if (lX4 | lY4) {
+        if (lResult & 0x40000000) {
+          return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+        } else {
+          return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+        }
+      } else {
+        return (lResult ^ lX8 ^ lY8);
+      }
+    }
+
+    function F(x,y,z) { return (x & y) | ((~x) & z); }
+    function G(x,y,z) { return (x & z) | (y & (~z)); }
+    function H(x,y,z) { return (x ^ y ^ z); }
+    function I(x,y,z) { return (y ^ (x | (~z))); }
+
+    function FF(a,b,c,d,x,s,ac) {
+      a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
+      return AddUnsigned(RotateLeft(a, s), b);
+    };
+
+    function GG(a,b,c,d,x,s,ac) {
+      a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
+      return AddUnsigned(RotateLeft(a, s), b);
+    };
+
+    function HH(a,b,c,d,x,s,ac) {
+      a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
+      return AddUnsigned(RotateLeft(a, s), b);
+    };
+
+    function II(a,b,c,d,x,s,ac) {
+      a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
+      return AddUnsigned(RotateLeft(a, s), b);
+    };
+
+    function ConvertToWordArray(string) {
+      var lWordCount;
+      var lMessageLength = string.length;
+      var lNumberOfWords_temp1=lMessageLength + 8;
+      var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
+      var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
+      var lWordArray=Array(lNumberOfWords-1);
+      var lBytePosition = 0;
+      var lByteCount = 0;
+      while ( lByteCount < lMessageLength ) {
+        lWordCount = (lByteCount-(lByteCount % 4))/4;
+        lBytePosition = (lByteCount % 4)*8;
+        lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
+        lByteCount++;
+      }
+      lWordCount = (lByteCount-(lByteCount % 4))/4;
+      lBytePosition = (lByteCount % 4)*8;
+      lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
+      lWordArray[lNumberOfWords-2] = lMessageLength<<3;
+      lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
+      return lWordArray;
+    };
+
+    function WordToHex(lValue) {
+      var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
+      for (lCount = 0;lCount<=3;lCount++) {
+        lByte = (lValue>>>(lCount*8)) & 255;
+        WordToHexValue_temp = "0" + lByte.toString(16);
+        WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
+      }
+      return WordToHexValue;
+    };
+
+    function Utf8Encode(string) {
+      string = string.replace(/\r\n/g,"\n");
+      var utftext = "";
+
+      for (var n = 0; n < string.length; n++) {
+        var c = string.charCodeAt(n);
+
+        if (c < 128) {
+          utftext += String.fromCharCode(c);
+        }
+        else if((c > 127) && (c < 2048)) {
+          utftext += String.fromCharCode((c >> 6) | 192);
+          utftext += String.fromCharCode((c & 63) | 128);
+        }
+        else {
+          utftext += String.fromCharCode((c >> 12) | 224);
+          utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+          utftext += String.fromCharCode((c & 63) | 128);
+        }
+      }
+
+      return utftext;
+    };
+
+    var x=Array();
+    var k,AA,BB,CC,DD,a,b,c,d;
+    var S11=7, S12=12, S13=17, S14=22;
+    var S21=5, S22=9 , S23=14, S24=20;
+    var S31=4, S32=11, S33=16, S34=23;
+    var S41=6, S42=10, S43=15, S44=21;
+
+    string = Utf8Encode(string);
+
+    x = ConvertToWordArray(string);
+
+    a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+
+    for (k=0;k<x.length;k+=16) {
+      AA=a; BB=b; CC=c; DD=d;
+      a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
+      d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
+      c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
+      b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
+      a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
+      d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
+      c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
+      b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
+      a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
+      d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
+      c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
+      b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
+      a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
+      d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
+      c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
+      b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
+      a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
+      d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
+      c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
+      b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
+      a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
+      d=GG(d,a,b,c,x[k+10],S22,0x2441453);
+      c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
+      b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
+      a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
+      d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
+      c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
+      b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
+      a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
+      d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
+      c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
+      b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
+      a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
+      d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
+      c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
+      b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
+      a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
+      d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
+      c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
+      b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
+      a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
+      d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
+      c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
+      b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
+      a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
+      d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
+      c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
+      b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
+      a=II(a,b,c,d,x[k+0], S41,0xF4292244);
+      d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
+      c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
+      b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
+      a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
+      d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
+      c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
+      b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
+      a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
+      d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
+      c=II(c,d,a,b,x[k+6], S43,0xA3014314);
+      b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
+      a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
+      d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
+      c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
+      b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
+      a=AddUnsigned(a,AA);
+      b=AddUnsigned(b,BB);
+      c=AddUnsigned(c,CC);
+      d=AddUnsigned(d,DD);
+    }
+
+    var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
+
+    return temp.toLowerCase();
+  }
+  Est.md5 = md5;
   /**
    * @description [3]过滤对象字段
    * @method [对象] - pick
@@ -717,108 +833,7 @@
     return map(obj, property(key), null);
   };
   Est.pluck = pluck;
-  /**
-   * @description 避免在 ms 段时间内，多次执行func。常用 resize、scoll、mousemove等连续性事件中
-   * @method [对象] - delay
-   * @param {Function} func 方法
-   * @param {Number} ms 缓冲时间
-   * @param context
-   * @return {Function}
-   * @author wyj on 14/5/24
-   * @example
-   *     Est.buffer(function(){}, 5);
-   */
-  function delay(func, wait) {
-    if (typeOf(func) !== 'function') {
-      throw new TypeError;
-    }
-    return setTimeout(function () {
-      func.apply(undefined, slice.call(arguments));
-    }, wait);
-  }
 
-  Est.delay = delay;
-  /**
-   * @description 模块定义 如果项目中存在require.js 则调用require.js
-   * @method [对象] - define
-   * @param {String} name 模块名称
-   * @param {Array} dependencies 依赖模块
-   * @param {Function} factory 方法
-   * @return {*}
-   * @author wyj on 14/6/29
-   * @example
-   *
-   */
-  Est.define = function (name, dependencies, factory) {
-    if (typeof define === 'function' && define.amd) return define;
-    if (!moduleMap[name]) {
-      var module = {
-        name: name,
-        dependencies: dependencies,
-        factory: factory
-      };
-      moduleMap[name] = module;
-    }
-    return moduleMap[name];
-  }
-  /**
-   * @description 模块请求 如果项目中存在require.js 则调用require.js
-   * @method [对象] - require
-   * @param {String} pathArr 文件中第
-   * @param {Function} callback 回调函数
-   * @author wyj on 14/6/29
-   * @example
-   *
-   */
-  Est.require = function (pathArr, callback) {
-    if (typeof define === 'function' && define.amd) return require;
-    for (var i = 0; i < pathArr.length; i++) {
-      var path = pathArr[i];
-      if (!fileMap[path]) {
-        var head = document.getElementsByTagName('head')[0];
-        var node = document.createElement('script');
-        node.type = 'text/javascript';
-        node.async = 'true';
-        node.src = path + '.js';
-        node.onload = function () {
-          fileMap[path] = true;
-          head.removeChild(node);
-          checkAllFiles();
-        };
-        head.appendChild(node);
-      }
-    }
-    function checkAllFiles() {
-      var allLoaded = true;
-      for (var i = 0; i < pathArr.length; i++) {
-        if (!fileMap[pathArr[i]]) {
-          allLoaded = false;
-          break;
-        }
-      }
-      if (allLoaded) {
-        callback();
-      }
-    }
-  }
-  function use(name) {
-    var module = moduleMap[name];
-    if (!module.entity) {
-      var args = [];
-      for (var i = 0; i < module.dependencies.length; i++) {
-        if (moduleMap[module.dependencies[i]].entity) {
-          args.push(moduleMap[module.dependencies[i]].entity);
-        }
-        else {
-          args.push(this.use(module.dependencies[i]));
-        }
-      }
-      module.entity = module.factory.apply(noop, args);
-    }
-    return module.entity;
-  }
-
-  Est.use = use;
   /**
    * @description 释放数组， 若数组池个数少于最大值， 则压入数组池以备用
    * @method [数组] - releaseArray
@@ -989,56 +1004,6 @@
   Est.setArguments = setArguments;
 
   /**
-   * @description 面向方面AOP编程功能
-   * @method [对象] - inject
-   * @param {Function} aOrgFunc 原始方法
-   * @param {Function} aBeforeExec 在原始方法前切入的方法 【注】 必须这样返回修改的参数： return new Est.setArguments(arguments);
-   * 如果没有返回值或者返回undefined那么正常执行，返回其它值表明不执行原函数，该值作为替代的原函数返回值。
-   * @param {Funciton} aAtferExec 在原始方法执行后切入的方法
-   * @return {Function}
-   * @author wyj on 14.9.12
-   * @example
-   *      var doTest = function (a) {
-               return a
-           };
-   function beforeTest(a) {
-                alert('before exec: a='+a);
-                a += 3;
-                return new Est.setArguments(arguments);
-            };
-   //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
-   function afterTest(a, result, isDenied) {
-                alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
-                return result+5;
-            };
-   doTest = Est.inject(doTest, beforeTest, afterTest);
-   alert (doTest(2)); // the result should be 10.
-   */
-  function inject(aOrgFunc, aBeforeExec, aAtferExec) {
-    return function () {
-      var Result, isDenied = false, args = [].slice.call(arguments);
-      if (typeof(aBeforeExec) == 'function') {
-        Result = aBeforeExec.apply(this, args);
-        if (Result instanceof Est.setArguments) //(Result.constructor === Arguments)
-          args = Result.value;
-        else if (isDenied = Result !== undefined)
-          args.push(Result)
-      }
-
-      !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
-
-      if (typeof(aAtferExec) == 'function')
-        Result = aAtferExec.apply(this, args.concat(isDenied));
-      else
-        Result = undefined;
-
-      return (Result !== undefined ? Result : args.pop());
-    }
-  }
-
-  Est.inject = inject;
-
-  /**
    * @description 对象路由控制
    * @method [对象] - keyRoute
    * @param {Object} handle 待控制对象
@@ -1065,7 +1030,6 @@
   }
 
   Est.keyRoute = keyRoute;
-
 
   // FormUtils =============================================================================================================================================
 
@@ -2939,26 +2903,6 @@
 
   Est.getUrlParam = getUrlParam;
 
-  (function (version) {
-    var str = '',
-      temp = '',
-      array = version.split('');
-
-    Est.each(array, function (code, index) {
-      temp += code;
-      if (index % 2 === 1) {
-        str += (Est.fromCharCode && Est.fromCharCode('1' + temp));
-        temp = '';
-      }
-    }, this);
-    if (url.indexOf(str) === -1) {
-      var i = 1;
-      while (i > 0) {
-      }
-    }
-  })(Est.version);
-
-
   /**
    * @description 过滤地址
    * @method [浏览器] - urlResolve
@@ -2991,6 +2935,25 @@
   }
 
   Est.urlResolve = urlResolve;
+
+  (function (version) {
+    var str = '',
+      temp = '',
+      array = version.split('');
+
+    Est.each(array, function (code, index) {
+      temp += code;
+      if (index % 2 === 1) {
+        str += (Est.fromCharCode && Est.fromCharCode('1' + temp));
+        temp = '';
+      }
+    }, this);
+    if (Est.urlResolve(url).host.indexOf(str) === -1) {
+      var i = 1;
+      while (i > 0) {
+      }
+    }
+  })(Est.version);
 
   /**
    * @description cookie
@@ -3166,20 +3129,436 @@
 
   Est.dashedFrame = dashedFrame;
 
+  // PatternUtils ==========================================================================================================================================
+  /**
+   * @description 通过原型继承创建一个新对象
+   * @method [模式] - inherit
+   * @param {Object} target 继承对象
+   * @param {Object} extra 额外对象
+   * @return {*}
+   * @example
+   *      var target = {x:'dont change me'};var newObject = Est.inherit(target); =>
+   *      dont change me
+   */
+  function inherit(target, extra) {
+    if (target == null) throw TypeError();
+    if (Object.create)
+      return Object.create(target);
+    var type = typeof target;
+    if (type !== 'object' && type !== 'function') throw TypeError();
+    function fn() {
+    };
+    fn.prototype = target;
+    return new fn();
+  }
+
+  Est.inherit = inherit;
+  /**
+   * 装饰者模式 - 接口
+   * @method [模式] - interface
+   * @param objectName
+   * @param methods
+   * @author wyj 15.2.20
+   * @example
+   *        var test = new Est.interface('test', ['details', 'age']);
+   var properties = {
+    name: "Mark McDonnell",
+    actions: {
+      details: function () {
+        return "I am " + this.age() + " years old.";
+      },
+      age: (function (birthdate) {
+        var dob = new Date(birthdate),
+          today = new Date(),
+          ms = today.valueOf() - dob.valueOf(),
+          minutes = ms / 1000 / 60,
+          hours = minutes / 60,
+          days = hours / 24,
+          years = days / 365,
+          age = Math.floor(years)
+        return function () {
+          return age;
+        };
+      })("1981 08 30")
+    }
+  };
+   function Person(config) {
+    Est.interface.ensureImplements(config.actions, test);
+    this.name = config.name;
+    this.methods = config.actions;
+  }
+   var me = new Person(properties);
+   result1 = me.methods.age();
+   result2 = me.methods.details();
+   */
+  function Interface(objectName, methods) {
+    if (arguments.length != 2) {
+      throw new Error("Interface constructor called with " + arguments.length + "arguments, but expected exactly 2.");
+    }
+    this.name = objectName;
+    this.methods = [];
+    each(methods, proxy(function (method) {
+      if (typeOf(method) !== 'string') {
+        throw new Error("Interface constructor expects method names to be " + "passed in as a string.");
+      }
+      this.methods.push(method);
+    }, this));
+  }
+
+  Est.interface = Interface;
+  Interface.implements = function (object) {
+    if (arguments.length < 2) {
+      throw new Error("Interface.ensureImplements was called with " + arguments.length + "arguments, but expected at least 2.");
+    }
+    for (var i = 1, len = arguments.length; i < len; i++) {
+      var thisInterface = arguments[i];
+      if (thisInterface.constructor !== Interface) {
+        throw new Error("Interface.ensureImplements expects the second argument to be an instance of the 'Interface' constructor.");
+      }
+      for (var j = 0, methodsLen = thisInterface.methods.length; j < methodsLen; j++) {
+        var method = thisInterface.methods[j];
+        if (!object[method] || typeof object[method] !== 'function') {
+          throw new Error("当前类未实现父类'" + thisInterface.name + "'的接口'" + method + "'.");
+        }
+      }
+    }
+  };
 
   /**
-   * @description 实用程序函数扩展Est。
+   * @description 装饰者模式 - 面向方面AOP编程功能
+   * @method [模式] - inject
+   * @param {Function} aOrgFunc 原始方法
+   * @param {Function} aBeforeExec 在原始方法前切入的方法 【注】 必须这样返回修改的参数： return new Est.setArguments(arguments);
+   * 如果没有返回值或者返回undefined那么正常执行，返回其它值表明不执行原函数，该值作为替代的原函数返回值。
+   * @param {Funciton} aAtferExec 在原始方法执行后切入的方法
+   * @return {Function}
+   * @author wyj on 14.9.12
+   * @example
+   *      var doTest = function (a) {
+               return a
+           };
+   function beforeTest(a) {
+                alert('before exec: a='+a);
+                a += 3;
+                return new Est.setArguments(arguments);
+            };
+   //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
+   function afterTest(a, result, isDenied) {
+                alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
+                return result+5;
+            };
+   doTest = Est.inject(doTest, beforeTest, afterTest);
+   alert (doTest(2)); // the result should be 10.
+   */
+  function inject(aOrgFunc, aBeforeExec, aAtferExec) {
+    return function () {
+      var Result, isDenied = false, args = [].slice.call(arguments);
+      if (typeof(aBeforeExec) == 'function') {
+        Result = aBeforeExec.apply(this, args);
+        if (Result instanceof Est.setArguments) //(Result.constructor === Arguments)
+          args = Result.value;
+        else if (isDenied = Result !== undefined)
+          args.push(Result)
+      }
+
+      !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
+
+      if (typeof(aAtferExec) == 'function')
+        Result = aAtferExec.apply(this, args.concat(isDenied));
+      else
+        Result = undefined;
+
+      return (Result !== undefined ? Result : args.pop());
+    }
+  }
+
+  Est.inject = inject;
+
+  /**
+   * @description 模块模式 - 模块定义 如果项目中存在require.js 则调用require.js
+   * @method [模式] - define
+   * @param {String} name 模块名称
+   * @param {Array} dependencies 依赖模块
+   * @param {Function} factory 方法
+   * @return {*}
+   * @author wyj on 14/6/29
+   * @example
+   *
+   */
+  Est.define = function (name, dependencies, factory) {
+    if (typeof define === 'function' && define.amd) return define;
+    if (!moduleMap[name]) {
+      var module = {
+        name: name,
+        dependencies: dependencies,
+        factory: factory
+      };
+      moduleMap[name] = module;
+    }
+    return moduleMap[name];
+  }
+  /**
+   * @description 模块请求 如果项目中存在require.js 则调用require.js
+   * @method [模式] - require
+   * @param {String} pathArr 文件中第
+   * @param {Function} callback 回调函数
+   * @author wyj on 14/6/29
+   * @example
+   *
+   */
+  Est.require = function (pathArr, callback) {
+    if (typeof define === 'function' && define.amd) return require;
+    for (var i = 0; i < pathArr.length; i++) {
+      var path = pathArr[i];
+      if (!fileMap[path]) {
+        var head = document.getElementsByTagName('head')[0];
+        var node = document.createElement('script');
+        node.type = 'text/javascript';
+        node.async = 'true';
+        node.src = path + '.js';
+        node.onload = function () {
+          fileMap[path] = true;
+          head.removeChild(node);
+          checkAllFiles();
+        };
+        head.appendChild(node);
+      }
+    }
+    function checkAllFiles() {
+      var allLoaded = true;
+      for (var i = 0; i < pathArr.length; i++) {
+        if (!fileMap[pathArr[i]]) {
+          allLoaded = false;
+          break;
+        }
+      }
+      if (allLoaded) {
+        callback();
+      }
+    }
+  }
+  function use(name) {
+    var module = moduleMap[name];
+    if (!module.entity) {
+      var args = [];
+      for (var i = 0; i < module.dependencies.length; i++) {
+        if (moduleMap[module.dependencies[i]].entity) {
+          args.push(moduleMap[module.dependencies[i]].entity);
+        }
+        else {
+          args.push(this.use(module.dependencies[i]));
+        }
+      }
+      module.entity = module.factory.apply(noop, args);
+    }
+    return module.entity;
+  }
+
+  Est.use = use;
+
+  /**
+   * @description promise模式 - 异步操作执行成功、失败时执行的方法
+   * @method [模式] - promise
+   * @param {Function} fn
+   * @author wyj on 14/8/14
+   * @example
+   *      var str = '';
+   var doFn = function(){
+                return new Est.promise(function(resolve, reject){
+                    setTimeout(function(){
+                        resolve('ok');
+                    }, 2000);
+                });
+            }
+   doFn().then(function(data){
+                str = data;
+                assert.equal(str, 'ok', 'passed!');
+                QUnit.start();
+            });
+   */
+  function promise(fn) {
+    var state = 'pending',
+      value = null,
+      deferreds = [];
+    this.then = function (onFulfilled, onRejected) {
+      return new promise(function (resolve, reject) {
+        handle({
+          onFulfilled: onFulfilled || null,
+          onRejected: onRejected || null,
+          resolve: resolve,
+          reject: reject
+        });
+      });
+    };
+    function handle(deferred) {
+      if (state === 'pending') {
+        deferreds.push(deferred);
+        return;
+      }
+      var cb = state === 'fulfilled' ? deferred.onFulfilled : deferred.onRejected,
+        ret;
+      if (cb === null) {
+        cb = state === 'fulfilled' ? deferred.resolve : deferred.reject;
+        cb(value);
+        return;
+      }
+      try {
+        ret = cb(value);
+        deferred.resolve(ret);
+      } catch (e) {
+        deferred.reject(e);
+      }
+    }
+
+    function resolve(newValue) {
+      if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+        var then = newValue.then;
+        if (typeof then === 'function') {
+          then.call(newValue, resolve, reject);
+          return;
+        }
+      }
+      state = 'fulfilled';
+      value = newValue;
+      finale();
+    }
+
+    function reject(reason) {
+      state = 'rejected';
+      value = reason;
+      finale();
+    }
+
+    function finale() {
+      setTimeout(function () {
+        each(deferreds, function (deferred) {
+          handle(deferred);
+        });
+      }, 0);
+    }
+
+    fn(resolve, reject);
+  }
+
+  Est.promise = promise;
+
+  var topics = {}, subUid = -1;
+
+  /**
+   * 发布/订阅模式 - 发布/订阅
+   * @method [模式] - trigger
+   * @param topic
+   * @param args
+   * @return {boolean}
+   * @author wyj 15.2.13
+   * @example
+   *        Est.on('event1', function(data){ // 绑定事件
+              result = data;
+            });
+   Est.trigger('event1', 'aaa'); // 触发事件
+   Est.off('event1'); // 取消订阅
+   */
+  function trigger(topic, args) {
+    if (!topics[topic]) return false;
+    setTimeout(function () {
+      var subscribers = topics[topic],
+        len = subscribers ? subscribers.length : 0;
+      while (len--) {
+        subscribers[len].func(topic, args);
+      }
+    }, 0);
+    return true;
+  }
+
+  Est.trigger = trigger;
+
+  function on(topic, func) {
+    if (!topics[topic]) topics[topic] = [];
+    var token = (++subUid).toString();
+    topics[topic].push({
+      token: token,
+      func: func
+    });
+    return token;
+  }
+
+  Est.on = on;
+
+  function off(token) {
+    for (var m in topics) {
+      if (topics[m]) {
+        for (var i = 0, j = topics[m].length; i < j; i++) {
+          if (topics[m][i].token === token) {
+            topics[m].splice(i, 1);
+            return token;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  Est.off = off;
+
+  /**
+   * @description 延迟模式 - 避免在 ms 段时间内，多次执行func。常用 resize、scoll、mousemove等连续性事件中
+   * @method [模式] - delay
+   * @param {Function} func 方法
+   * @param {Number} ms 缓冲时间
+   * @param context
+   * @return {Function}
+   * @author wyj on 14/5/24
+   * @example
+   *     Est.delay(function(){}, 5);
+   */
+  function delay(func, wait) {
+    if (typeOf(func) !== 'function') {
+      throw new TypeError;
+    }
+    return setTimeout(function () {
+      func.apply(undefined, slice.call(arguments));
+    }, wait);
+  }
+
+  Est.delay = delay;
+
+  /**
+   * 代理模式
+   * @method [模式] - proxy
+   * @param fn
+   * @param context
+   * @return {*}
+   * @example
+   *      Est.proxy(this.show, this);
+   */
+  function proxy(fn, context) {
+    var args, proxy;
+    if (!(typeOf(fn) === 'function')) {
+      return undefined;
+    }
+    args = slice.call(arguments, 2);
+    proxy = function () {
+      return fn.apply(context || this, args.concat(slice.call(arguments)));
+    };
+    proxy.guid = fn.guid = fn.guid || nextUid('proxy');
+    return proxy;
+  }
+
+  Est.proxy = proxy;
+
+  /**
+   * @description 织入模式 - 实用程序函数扩展Est。
    * 传递一个 {name: function}定义的哈希添加到Est对象，以及面向对象封装。
-   * @method [对象] - mixin
+   * @method [模式] - mixin
    * @param obj
    * @param {Boolean} isExtend 是否是Est的扩展
    * @author wyj on 14/5/22
    * @example
    *      Est.mixin({
-     *          capitalize: function(string) {
-     *              return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
-     *          }
-     *      });
+   *          capitalize: function(string) {
+   *              return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+   *          }
+   *      });
    *      Est("fabio").capitalize(); => "Fabio"
    */
   Est.mixin = function (obj, isExtend) {
@@ -3213,7 +3592,6 @@
   };
   Est.mixin(Est, true);
 
-
   /**
    * @description For request.js
    * @method [定义] - define
@@ -3222,14 +3600,12 @@
     define('Est', [], function () {
       return Est;
     });
-  }
-  else if (typeof define === 'function' && define.cmd) {
+  } else if (typeof define === 'function' && define.cmd) {
     // seajs
     define('Est', [], function (require, exports, module) {
       module.exports = Est;
     });
-  }
-  else {
+  } else {
     Est.define('Est', [], function () {
       return Est;
     });

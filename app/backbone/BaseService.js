@@ -1,6 +1,6 @@
 /**
- * @description BaseService
- * @class BaseService
+ * @description BaseService - 单例模式， 只创建一个实例化对象
+ * @class BaseService - 数据请求
  * @author yongjin<zjut_wyj@163.com> 2015/1/26
  */
 define('BaseService', ['jquery'], function (require, exports, module) {
@@ -101,7 +101,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
       }
     },
     /**
-     * 基础工厂类
+     * 基础工厂类 - 工厂模式，通过不同的url请求不同的数据
      * @method factory
      * @param options
      * @return {Est.promise}

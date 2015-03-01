@@ -1,4 +1,8 @@
-
+/**
+ * @description BaseDetail
+ * @class BaseDetail - 详细页面
+ * @author yongjin<zjut_wyj@163.com> 2014.11.12
+ */
 define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
   function (require, exports, module) {
     var BaseDetail, SuperView, HandlebarsHelper, Utils, Service;
@@ -27,11 +31,35 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        *      });
        */
       _initialize: function (options) {
-        this._options = Est.extend(options || {}, this.options);
-        this.template = HandlebarsHelper.compile(options.template);
+        this._initOptions(options);
+        this._initTemplate(this._options);
         this._initList(this._options);
         this._initModel(options.model, this);
-        if (this._options.enterRender) this._enterEvent();
+        this._initEnterEvent(this._options);
+      },
+      /**
+       * 初始化参数
+       * @method _initOptions
+       * @private
+       * @author wyj 15.1.12
+       */
+      _initOptions: function (options) {
+        this._options = Est.extend(options || {}, this.options);
+        this._options.speed = this._options.speed || 9;
+      },
+      /**
+       * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
+       * @method _initTemplate
+       * @private
+       * @author wyj 15.1.12
+       */
+      _initTemplate: function (options) {
+        this._data = options.data = options.data || {};
+        if (options.template) {
+          this.template = HandlebarsHelper.compile(options.template);
+          //this.$el.append(this.template(options.data));
+        }
+        return this._data;
       },
       /**
        * 初始化列表视图容器
@@ -67,6 +95,9 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
         if (this._options.modelBind) this._modelBind();
         if (window.topDialog) {
           this.$('.form-actions').hide();
+        }
+        if (this._options.afterRender) {
+          this._options.afterRender.call(this, this._options);
         }
         setTimeout(function () {
           Utils.resetIframe();

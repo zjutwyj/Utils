@@ -137,6 +137,9 @@ define('AttributesShow', ['jquery', 'HandlebarsHelper', 'Utils', 'BaseCollection
          this._options.items = Est.cloneDeep(this._options.defaultItems, function () {
          }, this);*/
         this._options.items = null;
+        if (Est.typeOf(categoryId) === 'array'){
+          this._options.items = categoryId;
+        }
         this._load({
           beforeLoad: function (collection) {
             this._clear();

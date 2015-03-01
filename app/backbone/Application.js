@@ -1,5 +1,6 @@
 /**
- * @description 应用程序管理器
+ * @description 应用程序管理器 - 中介者模式， 用于注册视图、模块、路由、模板等
+ * 注册视图、注册模块等以抽象工厂模式实现
  * @class Application - 应用程序管理器
  * @author yongjin<zjut_wyj@163.com> 2014/12/28
  */
@@ -10,9 +11,7 @@ var Application = function (options) {
 };
 Est.extend(Application.prototype, {
   initialize: function () {
-    this.data = {
-      itemActiveList: []
-    };
+    this.data = { itemActiveList: [] };
     this.instance = {};
     this.modules = {};
     this.routes = {};
@@ -22,6 +21,7 @@ Est.extend(Application.prototype, {
     this.status = {};
     this.cookies = [];
     this.models = [];
+    this.compileTemps = {};
   },
   /**
    * 添加面板
@@ -213,7 +213,7 @@ Est.extend(Application.prototype, {
    * @method [模型] - getModels
    * @author wyj 15.1.23
    */
-  getModels: function(){
+  getModels: function () {
     return this['models'];
   },
   /**
@@ -348,6 +348,24 @@ Est.extend(Application.prototype, {
    */
   getTemplates: function () {
     return this['templates'];
+  },
+  /**
+   * 添加编译模板
+   * @method [模板] - addCompileTemp
+   * @param name
+   * @param compile
+   */
+  addCompileTemp: function (name, compile) {
+    this['compileTemps'][name] = compile;
+  },
+  /**
+   * 获取编译模板
+   * @method [模板] - getCompileTemp
+   * @param name
+   * @return {*}
+   */
+  getCompileTemp: function (name) {
+    return this['compileTemps'][name];
   },
   /**
    * 添加状态数据
