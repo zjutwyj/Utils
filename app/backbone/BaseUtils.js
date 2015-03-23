@@ -25,7 +25,7 @@ define('BaseUtils', [], function (require, exports, module) {
         });
      */
     initSelect: function (options) {
-      var tagId = Est.nextUid('select');
+      var tagId = options.viewId || Est.nextUid('select');
       options = Est.extend({
         el: '.' + tagId,
         viewId: tagId,
@@ -33,6 +33,7 @@ define('BaseUtils', [], function (require, exports, module) {
           width: options.width || 150
         } }, options);
       seajs.use(['Select'], function (Select) {
+        options.el = '.' + tagId;
         app.addPanel(tagId, {
           el: options.render,
           template: '<div class="select-inner ' + tagId + '"></div>'

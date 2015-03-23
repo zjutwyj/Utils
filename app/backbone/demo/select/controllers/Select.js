@@ -45,12 +45,19 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         });
         this.model.set('text', this.model.get(this._options.data.text));
         this.model.set('value', this.model.get(this._options.data.value));
+        this.model.on('autoSelectNode', this.autoSelectNode, this);
         if (this._options.data.inputValue &&
           this._options.data.inputValue.indexOf(this.model.get('value')) !== -1) {
           setTimeout(Est.proxy(function () {
             this.selectItem();
           }, this), 0);
         }
+      },
+      autoSelectNode: function () {
+        setTimeout(Est.proxy(function(){
+          var $selectNode = this.$el.find('.select-div');
+          $selectNode.click();
+        }, this), 100);
       },
       render: function () {
         this._render();
@@ -104,13 +111,24 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
           }, this), 500);
         }
       },
+      selectClick: function (id) {
+        Est.each(this.collection.models, Est.proxy(function (item) {
+          if (item.get('value') === id) {
+            item.trigger('autoSelectNode');
+            return false;
+          }
+        }, this));
+      },
       searchClick: function (e) {
         e.stopImmediatePropagation();
       },
       setInputValue: function (val, model) {
         this.$input.val(val);
         this._select = model['value'];
-        this._options.change && this._options.change.call(this, model);
+        if (!this._options._init) {
+          this._options.change && this._options.change.call(this, model);
+        }
+        this._options._init = false;
       },
       setInputNode: function (node) {
         this.$input = node;
@@ -162,6 +180,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         });
         this._options.text = this._options.text || 'text';
         this._options.value = this._options.value || 'value';
+        this._options.disabled = Est.typeOf(this._options.disabled) === 'boolean' ? this._options.disabled : false;
         this.render();
       },
       // 初始化下拉框
@@ -179,6 +198,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
           input: this._options.input,
           change: this._options.change,
           clearDialog: false,
+          _init: true,
           speed: 1,
           data: {
             tpl: this._options.tpl,
@@ -195,6 +215,12 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         this.selectNode.setInputNode(this.$('.bui-select-input'));
         this.$select = this.selectNode.getSelect();
       },
+      changeSelect: function (id) {
+        if (!this.selectNode) {
+          this.initSelect(this._options.items);
+        }
+        this.selectNode.selectClick(id);
+      },
       initInputValue: function (items) {
         var id = $(this._options.target).val();
         Est.each(items, function (item) {
@@ -206,18 +232,28 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
       },
       // 显示下拉框
       showSelect: function (e) {
+        if (this._options.disabled) {
+          return;
+        }
         $(document).click();
         e.stopImmediatePropagation();
         if (!this.selectNode) {
           this.initSelect(this._options.items);
         }
         this.$select.css({
+          zIndex: 1200,
           left: this.$('.bui-select').offset().left,
           top: this.$('.bui-select').offset().top + 31
         }).show();
         $(document).one('click', $.proxy(function () {
           this.hideSelect();
         }, this));
+      },
+      disable: function () {
+        this._options.disabled = true;
+      },
+      enable: function () {
+        this._options.disabled = false;
       },
       // 隐藏下拉框
       hideSelect: function () {

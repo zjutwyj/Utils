@@ -211,7 +211,10 @@
      */
     function drawSector(canvas, x, y, radius, sDeg, eDeg, options) {
         this.canvas = canvas || document.getElementById("canvas");
-        if (Est.isEmpty(this.canvas))throw new Error("canvas is required");
+        /*if (Est.isEmpty(this.canvas)){
+          alert(Est.typeOf(this.canvas));
+          throw new Error("canvas is required");
+        }*/
         this.opts = {
             before: function () {
             },
@@ -223,7 +226,6 @@
         var deg = Math.PI / 180;
         sDeg = sDeg * deg;
         eDeg = eDeg * deg;
-
         var ctx = this.canvas.getContext("2d");
         // 初始保存
         ctx.save();

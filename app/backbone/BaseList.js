@@ -45,7 +45,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
        *        render: '.product-list', 插入列表的容器选择符, 若为空则默认插入到$el中
        *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;
        *        data: {}, // 附加的数据 BaseList、BaseView[js: this._options.data & template: {{name}}] ; BaseItem中为[this._options.data &{{_options.data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
-       *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加
+       *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加  需在BaseItem事件中添加 'click .toggle': '_toggleChecked',
        *        enterRender: (可选) 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
        *        pagination: true, // 是否显示分页 view视图中相应加入<div id="pagination-container"></div>
        *        page: parseInt(Est.cookie('orderList_page')) || 1, //设置起始页 所有的分页数据都会保存到cookie中， 以viewId + '_page'格式存储， 注意cookie取的是字符串， 要转化成int
@@ -319,6 +319,10 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           ctx.collection.paginationModel.set('page', 1);
           ctx.collection.paginationModel.set('pageSize', 9000);
         }
+        debug(function(){
+          return ('【Query】' + (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
+            ctx.collection.url));
+        });
         // 数据载入
         ctx.collection._load(ctx.collection, ctx, model).
           done(function (result) {
@@ -327,9 +331,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
             if (result.attributes.data.length === 0) {
               ctx.list.append('<div class="no-result">暂无数据</div>');
               debug(function () {
-                ctx.collection.url = Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
-                  ctx.collection.url
                 return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
+                  Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
                   ctx.collection.url + '查看数据');
               });
             }
@@ -461,6 +464,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     _filterRoot: function () {
       var ctx = this;
       var temp = [];
+      var roots = [];
       ctx.composite = false;
       /* ctx.collection.comparator = function (model) {
        return model.get('sort');
@@ -488,7 +492,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           var item = temp[i - 1];
           if (item.belongId === thisModel.get(ctx._options.categoryId)) {
             _children.unshift(item.categoryId);
-            temp.splice(i, 1);
+            temp.splice(i - 1, 1);
           }
           i--;
         }
@@ -496,8 +500,11 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
         // 添加父级元素
         if (thisModel.get(ctx._options.rootId) === ctx._options.rootValue) {
           thisModel.set('level', 1);
-          ctx._addOne(thisModel);
+          roots.push(thisModel);
         }
+      });
+      Est.each(roots, function(model){
+        ctx._addOne(model);
       });
       //debug(ctx.collection);
     },

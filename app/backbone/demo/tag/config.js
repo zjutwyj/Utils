@@ -12,4 +12,4 @@ app.addTemplate('template/tag_view_item', function (require, exports, module) {
 app.addTemplate('template/tag_picker_item', function (require, exports, module) {
   module.exports = require('common/tag/views/tag_picker_item.html');
 });
-app.addModule('Tag', 'common/tag/Tag.js');
+app.addModule('Tag', 'common/tag/controllers/Tag.js');

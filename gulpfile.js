@@ -457,6 +457,17 @@ var paths = {
       name: 'base.js',
       dist: 'app/modules/mobile331'
     }
+  },
+  leaflet: {
+    scripts: {
+      source: [
+        'app/vendor/seajs/sea.js',
+        'app/vendor/seajs/seajs-text-debug.js',
+        'app/modules/leaflet/Application.js'
+      ],
+      name: 'base.js',
+      dist: 'app/modules/leaflet'
+    }
   }
 };
 function doTask(item, debug) {
@@ -660,6 +671,14 @@ gulp.task('mobile331', function () {
 gulp.task('mobile331.min', function () {
   doTask('mobile331', false);
 });
+
+gulp.task('leaflet', function () {
+  doTask('leaflet', true);
+});
+gulp.task('leaflet.min', function () {
+  doTask('leaflet', false);
+});
+
 
 /** 全部 */
 gulp.task('all', ['doc-clean', 'doc', 'acecss', 'patch', 'Est', 'fileupload', 'gallery', 'ueditor', 'seditor']);

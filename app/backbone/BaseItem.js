@@ -52,8 +52,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * @author wyj 15.1.12
      */
     _initOptions: function (options) {
-      this._options = options || {};
-      Est.extend(this._options, this.options);
+      this._options = Est.extend(options || {}, this.options);
     },
     /**
      * 初始化展开收缩
@@ -63,7 +62,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * @author wyj 15.2.14
      */
     _initCollapse: function (options) {
-      if (options.speed > 1) {
+      if (options._speed > 1) {
         this.model.stopCollapse = false;
         this.collapsed = options ? options._extend : false;
       }
@@ -351,10 +350,12 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
       var list = app.getData('itemActiveList');
       if (!options.add) {
         Est.each(list, function (selecter) {
+          debugger
           var node = $('.' + selecter);
           //TODO 当为单选时
           //node.find('.toggle:first').click();
           node.removeClass('item-active');
+          //node.find('.toggle').click();
         });
         list.length = 0;
       }
@@ -544,9 +545,23 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
           title: '温馨提示',
           content: '是否删除?',
           target: context.$el.find('.delete').get(0),
-          success: function () {
+          success: function (resp) {
             context.model.destroy({
-              wait: true
+              wait: true,
+              error: function (model, resp) {
+                var buttons = [];
+                buttons.push({ value: '确定', callback: function () {
+                  this.close();
+                }, autofocus: true });
+                seajs.use(['dialog'], function (dialog) {
+                  dialog({
+                    title: '提示：',
+                    content: resp.msg,
+                    width: 250,
+                    button: buttons
+                  }).show();
+                });
+              }
             });
           }
         }));
@@ -604,7 +619,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
               var load = options.load || function () {
               };
               this.iframeNode.contentWindow.topDialog = window.detailDialog;
-              this.iframeNode.contentWindow.app = app;
+              //this.iframeNode.contentWindow.app = app;
               delete app.getRoutes()['index'];
               load.call(this, this.iframeNode.contentWindow);
             },

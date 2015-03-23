@@ -50,6 +50,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
                     width: 600, // 对话框宽度
                     height: 250, // 对话框高度
                     skin: 'form-horizontal', // className
+                    hideSaveBtn: false, // 是否隐藏保存按钮， 默认为false
                     button: [ // 自定义按钮
                       {
                         value: '保存',
@@ -83,16 +84,18 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
         }
         options = Est.extend(options, {
           el: '#base_item_dialog' + options.moduleId,
-          content: '<div id="' + options.moduleId + '"></div>',
+          content: options.content || '<div id="' + options.moduleId + '"></div>',
           viewId: options.moduleId,
           onshow: function () {
             options.onShow && options.onShow.call(this, options);
-            seajs.use([options.moduleId], function (instance) {
-              app.addPanel(options.moduleId, {
-                el: '#' + options.moduleId,
-                template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
-              }).addView(options.moduleId, new instance(options));
-            });
+            if (options.moduleId){
+              seajs.use([options.moduleId], function (instance) {
+                app.addPanel(options.moduleId, {
+                  el: '#' + options.moduleId,
+                  template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
+                }).addView(options.moduleId, new instance(options));
+              });
+            }
           },
           onclose: function () {
             options.onClose &&

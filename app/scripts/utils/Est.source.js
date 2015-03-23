@@ -437,7 +437,7 @@
   Est.objToPath = objToPath;
 
   /**
-   * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined) 不包括数字0和1
+   * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined) 不包括数字0和1 【注】苹果手机有问题
    * @method [对象] - isEmpty
    * @param {Object} value
    * @return {boolean}

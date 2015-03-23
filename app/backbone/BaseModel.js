@@ -32,14 +32,18 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
        */
       url: function () {
         var base = this.baseUrl;
+        var _url = '';
         if (!base) return '';
-        if (Est.typeOf(base) === 'function') {
+        if (Est.typeOf(base) === 'function')
           base = base.call(this);
-        }
         this.params = this.params ? this.params : '';
         var sep = Est.isEmpty(this.params) ? '' : '?';
         if (this.isNew() && Est.isEmpty(this.id)) return base + sep + this.params;
-        return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id + sep + this.params;
+        _url = base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id + sep + this.params;
+        debug(function () {
+          return ('【Query】' + _url);
+        });
+        return _url;
       },
       /**
        * 模型类初始化

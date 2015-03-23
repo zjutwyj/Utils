@@ -3,7 +3,7 @@
  * @namespace main
  * @author yongjin<zjut_wyj@163.com> 2015/1/5
  */
-app.addModule('District', 'common/district/District.js');
+app.addModule('District', 'common/district/controllers/District.js');
 app.addTemplate('template/district_list', function(require, exports, module){
   module.exports = require('common/district/views/district_list.html');
 });

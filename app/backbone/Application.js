@@ -18,10 +18,12 @@ Est.extend(Application.prototype, {
     this.templates = {};
     this.panels = {};
     this.dialog = [];
+    this.dialogs = {}; // 带身份标识的dialog
     this.status = {};
     this.cookies = [];
     this.models = [];
     this.compileTemps = {};
+
   },
   /**
    * 添加面板
@@ -186,8 +188,11 @@ Est.extend(Application.prototype, {
    * @example
    *      app.addDialog('productDialog', dialog);
    */
-  addDialog: function (dialog) {
+  addDialog: function (dialog, id) {
     this.dialog.push(dialog);
+    if (id){
+      this.dialogs[id] = dialog;
+    }
     return dialog;
   },
   /**
@@ -198,6 +203,16 @@ Est.extend(Application.prototype, {
    */
   getDialogs: function () {
     return this['dialog'];
+  },
+  /**
+   * 获取指定对话框
+   * @method [对话框] - getDialog
+   * @author wyj 15.03.20
+   *
+   */
+  getDialog: function(id){
+    if (Est.isEmpty(id)) return this.dialogs;
+    return this.dialogs[id];
   },
   /**
    * 添加模型类
