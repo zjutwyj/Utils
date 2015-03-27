@@ -321,7 +321,7 @@ define('BaseUtils', [], function (require, exports, module) {
       };
       seajs.use(['xheditor'], function (xheditor) {
         function startEditor(obj) {
-          $(obj).xheditor(
+          var editor = $(obj).xheditor(
             {
               plugins: allPlugin,
               tools: 'Preview,Fullscreen,Source,|,contact,abbccQQ,abbccMap,abbccLayout,abbccQrcode,|,Table,abbccImages,abbccFlash,Media,|,FontColor,BackColor,|,Align,Underline,Italic,Bold,|,FontSize,Fontface,|,Link,Unlink',
@@ -340,6 +340,9 @@ define('BaseUtils', [], function (require, exports, module) {
               internalScript: true,
               inlineScript: true
             });
+          if (options.viewId) {
+            app.addView(options.viewId, editor);
+          }
         }
 
         $(function () {
@@ -385,6 +388,115 @@ define('BaseUtils', [], function (require, exports, module) {
           // console.log( 'ZeroClipboard error of type "' + event.name + '": ' + event.message );
           ZeroClipboard.destroy();
           options.failed && options.failed.call(this, event.message);
+        });
+      });
+    },
+    /**
+     * 初始化拖动
+     * @method [拖放] - initDrag
+     * @param optoins
+     * @author wyj 15.03.24
+     * @example
+     *     Utils.initDrag({
+        render: '.drag',
+        resize: true, // 是否启用缩放
+        dragend: function (ev, dd) { // 拖放结束后执行
+          $(this).css({
+            left: ((dd.offsetX * 100) / 320) + '%',
+            top: ((dd.offsetY * 100) / 480) + '%',
+            width: ($(this).width() * 100) / 320 + '%',
+            height: ($(this).height() * 100) / 480 + '%'
+          });
+        },
+        resizeend: function(ev, dd){ // 缩放结束后执行
+          $(this).css({
+            width: ($(this).width() * 100) / 320 + '%',
+            height: ($(this).height() * 100) / 480 + '%'
+          });
+        },
+        callback: function (ev, dd) {
+        }
+      });
+     */
+    initDrag: function (options) {
+      seajs.use(['drag'], function (drag) {
+        var _resize = false;
+        $(options.render).click(function () {
+          $(this).toggleClass("selected");
+        })
+          .drag("init", function () {
+            if ($(this).is('.selected'))
+              return $('.selected');
+          }).drag('start', function (ev, dd) {
+            dd.attr = $(ev.target).prop("className");
+            dd.width = $(this).width();
+            dd.height = $(this).height();
+            options.dragstart && options.dragstart.apply(this, [ev, dd]);
+          }).drag(function (ev, dd) {
+            var props = {};
+            _resize = false;
+            if (options.resize) {
+              if (dd.attr.indexOf("E") > -1) {
+                _resize = true;
+                props.width = Math.max(32, dd.width + dd.deltaX);
+              }
+              if (dd.attr.indexOf("S") > -1) {
+                _resize = true;
+                props.height = Math.max(32, dd.height + dd.deltaY);
+              }
+              if (dd.attr.indexOf("W") > -1) {
+                _resize = true;
+                props.width = Math.max(32, dd.width - dd.deltaX);
+                props.left = dd.originalX + dd.width - props.width;
+              }
+              if (dd.attr.indexOf("N") > -1) {
+                _resize = true;
+                props.height = Math.max(32, dd.height - dd.deltaY);
+                props.top = dd.originalY + dd.height - props.height;
+              }
+            }
+            if (!_resize) {
+              props.top = dd.offsetY;
+              props.left = dd.offsetX;
+            }
+            $(this).css(props);
+            if (!_resize) {
+              options.callback && options.callback.apply(this, [ev, dd]);
+            }
+          }, { relative: true}).drag('dragend', function (ev, dd) {
+            if (!_resize) {
+              options.dragend && options.dragend.apply(this, [ev, dd]);
+            } else{
+              options.resizeend && options.resizeend.apply(this, [ev, dd]);
+            }
+          });
+      });
+    },
+    /**
+     * 初始化缩放
+     * @method [缩放] - initResize
+     * @param optoins
+     * @author wyj 15.03.24
+     * @example
+     *      Utils.initResize({
+     *        render: 'img',
+     *        callback: function(ev, dd){}
+     *      });
+     */
+    initResize: function (options) {
+      seajs.use(['drag'], function (drag) {
+        $(options.render).drag("start", function (ev, dd) {
+          dd.width = $(this).width();
+          dd.height = $(this).height();
+          options.dragstart && options.dragstart.apply(this, [ev, dd]);
+        }).drag(function (ev, dd) {
+          $(this).css({
+            width: Math.max(20, dd.width + dd.deltaX),
+            height: Math.max(20, dd.height + dd.deltaY)
+          });
+          options.callback && options.callback.apply(this, [ev, dd]);
+        }, { relative: true, handle: '.handle'}).drag('dragend', function (ev, dd) {
+          options.dragend && options.dragend.apply(this, [ev, dd]);
         });
       });
     },

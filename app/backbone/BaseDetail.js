@@ -305,6 +305,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        */
       _saveItem: function (callback, context) {
         debug('- BaseDetail._saveItem');
+        if (Est.typeOf(this.model.url) === 'string') debug('XxxModel模型类中的baseUrl未设置', {type: 'error'});
         if (Est.isEmpty(this.model.url())) {
           debug('XxxModel模型类未设置url参数！', {type: 'error'});
           return;

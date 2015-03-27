@@ -350,7 +350,6 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
       var list = app.getData('itemActiveList');
       if (!options.add) {
         Est.each(list, function (selecter) {
-          debugger
           var node = $('.' + selecter);
           //TODO 当为单选时
           //node.find('.toggle:first').click();

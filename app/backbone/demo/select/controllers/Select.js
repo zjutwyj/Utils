@@ -65,7 +65,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
       selectItem: function () {
         debug(this.model.get('text'));
         this._options.data.inputValue = this.model.get('value');
-        app.getView(this._options.viewId).setInputValue(this.model.get('text'), this.model.toJSON());
+        app.getView(this._options.viewId).setInputValue(this.model.get('text'), this.model.toJSON(), false);
         app.getView(this._options.viewId).setCurrentSelect(this.$el);
         app.getView(this._options.viewId).setSubSelect(this.model);
         app.getView(this._options.viewId).setValue();
@@ -122,10 +122,10 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
       searchClick: function (e) {
         e.stopImmediatePropagation();
       },
-      setInputValue: function (val, model) {
+      setInputValue: function (val, model, _init) {
         this.$input.val(val);
         this._select = model['value'];
-        if (!this._options._init) {
+        if (_init || !this._options._init) {
           this._options.change && this._options.change.call(this, model);
         }
         this._options._init = false;
@@ -178,6 +178,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         this._initialize({
           template: viewTemp
         });
+        this.initRender = true;
         this._options.text = this._options.text || 'text';
         this._options.value = this._options.value || 'value';
         this._options.disabled = Est.typeOf(this._options.disabled) === 'boolean' ? this._options.disabled : false;
@@ -226,9 +227,11 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         Est.each(items, function (item) {
           if (item[this._options.value] === id) {
             this.$('.bui-select-input').val(item[this._options.text]);
-            this._options.change && this._options.change.call(this, item);
+            if (!this.initRender)
+              this._options.change && this._options.change.call(this, item);
           }
-        }, this)
+        }, this);
+        this.initRender = false;
       },
       // 显示下拉框
       showSelect: function (e) {
