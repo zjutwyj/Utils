@@ -18,22 +18,39 @@
             -webkit-animation: hue 60s infinite linear;
         }
     </style>
-    <div class="bui-grid bui-simple-list bui-grid-width bui-grid-hover bui-simple-list-hover">
-        <div class="control-group">
-            <label class="control-label">动画选项：</label>
-
+    <div class="bui-grid bui-simple-list bui-grid-width bui-grid-hover bui-simple-list-hover" style="background: none;">
+        <div class="control-group" >
+            <label class="control-label"  style="background: none; text-align: left;padding: 15px 0 0 12px;">动画效果选项：</label>
             <div class="controls">
                 <div id="s1">
                     <input id="model-animate" type="hidden" name="model-animate" value="{{animate}}"/>
                 </div>
             </div>
         </div>
+        <div class="control-group" style="display:none;">
+            <label class="control-label">延时时间：</label>
 
+            <div class="controls">
+                <input id="model-delay" type="text" name="model-delay" value="{{delay}}"/> 秒  [注]：演示动画取消延迟效果
+            </div>
+        </div>
+        <div class="control-group" style="display:none;">
+            <label class="control-label">动画周期：</label>
+            <div class="controls">
+                <input id="model-duration" type="text" name="model-duration" value="{{duration}}"/> 秒 [说明]：完成一次动画所需的时间
+            </div>
+        </div>
+        <!--<div class="control-group">
+            <label class="control-label">执行次数：</label>
+            <div class="controls">
+                <input id="model-count" type="text" name="model-count" value="{{count}}"/> 次
+            </div>
+        </div>
         <header class="site__header island">
             <div class="wrap">
                 <span id="animationSandbox" style="display: block;" class=""><h1 class="site__title mega">动画浏览</h1></span>
             </div>
-        </header>
+        </header>-->
 
     </div>
 </form>

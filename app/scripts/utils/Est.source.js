@@ -329,6 +329,7 @@
    *    var result = Est.getValue(object, 'item.name');
    */
   function getValue(object, path) {
+    if (Est.isEmpty(object)) return null;
     var array, result;
     if (arguments.length < 2 || typeOf(path) !== 'string') {
       console.error('参数不能少于2个， 且path为字符串');
@@ -336,6 +337,7 @@
     }
     array = path.split('.');
     function get(object, array) {
+      if (isEmpty(object)) return null;
       each(array, function (key) {
         if (key in object) {
           if (array.length === 1) {
@@ -812,7 +814,8 @@
    */
   function property(key) {
     return function (object) {
-      return object[key];
+      if (Est.typeOf(object) === 'string') return null;
+      return Est.getValue(object, key);
     };
   }
 
@@ -2894,7 +2897,6 @@
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     if (typeOf(url) !== 'undefined')
       url = url.substring(url.indexOf('?'), url.length);
-    /**/
     var path = url || window.location.search;
     var r = path.substr(1).match(reg);
     if (r != null) return unescape(r[2]);

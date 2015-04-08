@@ -40,7 +40,8 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
         'click .move-down': '_moveDown', // 下移
         'click .img-name': 'picUpload',
         'click .upload-local': 'picUpload',
-        'click .upload-source': 'picUploadSource'
+        'click .upload-source': 'picUploadSource',
+        'click .image': 'picUpload'
       },
       initialize: function () {
         this._initialize({
@@ -60,11 +61,17 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
           oniframeload: function () {
             this.iframeNode.contentWindow.uploadCallback = function (result) {
               ctx.addItems(result);
+              if (ctx.options.data.target) {
+                $(ctx.options.data.target).val(result[0].serverPath);
+              }
             };
           },
           success: function () {
             var result = this.iframeNode.contentWindow.app.getView('picSource').getItems();
             ctx.addItems(result);
+            if (ctx.options.data.target) {
+              $(ctx.options.data.target).val(result[0].serverPath);
+            }
           }
         });
       },
@@ -95,6 +102,10 @@ define('PicturePick', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
 
     PicturePick = BaseList.extend({
       initialize: function () {
+        this.options.data = this.options.data || {};
+        if (this.options.target) {
+          this.options.data.target = this.options.target;
+        }
         this._initialize({
           collection: collection,
           model: model,

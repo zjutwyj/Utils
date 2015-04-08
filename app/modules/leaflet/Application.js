@@ -1,272 +1,478 @@
 /**
- * @description 应用程序管理器
+ * @description 应用程序管理器 - 中介者模式， 用于注册视图、模块、路由、模板等
+ * 注册视图、注册模块等以抽象工厂模式实现
  * @class Application - 应用程序管理器
  * @author yongjin<zjut_wyj@163.com> 2014/12/28
  */
-/**
- * 调试
- *
- * @method debug
- * @param str
- * @param options
- * @author wyj 14.12.24
- * @example
- *   debug('test');
- *   debug('test', {
- *    type: 'error' // 打印红色字体
- *   });
- *   debug(function(){
- *     return 'test';
- *   });
- * */
-window.debug = function (str, options) {
-  var opts, msg;
-  if (CONST.DEBUG_CONSOLE) {
-    try {
-      opts = Application.extend({ type: 'console' }, options);
-      msg = typeof str == 'function' ? str() : str;
-      if (msg && msg.length > 0) {
-        if (opts.type === 'error') {
-          console.error(msg);
-        } else if (opts.type === 'alert') {
-          alert(msg);
-        } else {
-          console.log(msg);
-        }
-      }
-    } catch (e) {
-    }
-  }
-};
 var Application = function (options) {
   this.options = options;
+  Est.extend(this, options);
   this.initialize.apply(this, arguments);
 };
-Application.prototype = {
+Est.extend(Application.prototype, {
   initialize: function () {
+    this.data = { itemActiveList: [] };
+    this.instance = {};
     this.modules = {};
-    this.status = {};
+    this.routes = {};
     this.templates = {};
-    this.cache = {};
-    this.topics = {};
-    this.subUid = -1;
-    this.isLazyLoad = false;
+    this.panels = {};
+    this.dialog = [];
+    this.dialogs = {}; // 带身份标识的dialog
+    this.status = {};
+    this.cookies = [];
+    this.models = [];
+    this.compileTemps = {};
+
   },
+  /**
+   * 添加面板
+   *
+   * @method [面板] - addPanel
+   * @param name
+   * @param options
+   * @return {Application}
+   * @example
+   *        app.addPanel('product', new Panel());
+   *        app.addPanel('product', {
+   *          el: '#product-panel',
+   *          template: '<div clas="product-panel-inner"></div>'
+   *        }).addView('aliPay', new AlipayView({
+   *          el: '.product-panel-inner',
+   *          viewId: 'alipayView'
+   *        }));
+   */
+  addPanel: function (name, panel) {
+    var isObject = Est.typeOf(panel.cid) === 'string' ? false : true;
+    if (isObject) {
+      this.removePanel(name, panel);
+      var $template = $(panel.template);
+      $template.addClass('__panel_' + name);
+      $(panel.el).append($template);
+    }
+    this.panels[name] = panel;
+    return isObject ? this : panel;
+  },
+  panel: function (name, panel) {
+    return this.addPanel(name, panel);
+  },
+  /**
+   * 显示视图
+   *
+   * @method [面板] - show
+   * @param view
+   * @author wyj 14.12.29
+   */
+  show: function (view) {
+    this.addView(this.currentView, view);
+  },
+  /**
+   * 移除面板
+   *
+   * @method [面板] - removePanel
+   * @param name
+   * @author wyj 14.12.29
+   */
+  removePanel: function (name, panel) {
+    try {
+      if ($.fn.off) {
+        $('.__panel_' + name, $(panel['el'])).off().remove();
+      } else {
+        seajs.use(['jquery'], function ($) {
+          window.$ = $;
+          $('.__panel_' + name, $(panel['el'])).off().remove();
+        });
+      }
+      delete this.panels[name];
+    } catch (e) {
+    }
+  },
+  /**
+   * 获取面板
+   *
+   * @method [面板] - getPanel
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *      app.getPanelf('panel');
+   */
+  getPanel: function (name) {
+    return this.panels[name];
+  },
+  /**
+   * 视图添加
+   *
+   * @method [视图] - addView
+   * @param name
+   * @param instance
+   * @return {*}
+   * @example
+   *      app.addView('productList', new ProductList());
+   */
+  addView: function (name, instance) {
+    if (name in this['instance']) {
+      this.removeView(name);
+      //console.log('已存在该视图对象' + name + '， 请先移除该视图再创建, app.removeView("XxxView")');
+    }
+    this['instance'][name] = instance;
+    this.setCurrentView(name);
+    return this;
+  },
+  add: function (name, instance) {
+    return this.addView(name, instance);
+  },
+  /**
+   * 设置当前视图
+   * @method [视图] - setCurrentView
+   * @param name
+   * @example
+   *      app.setCurrentView('list', new List());
+   */
+  setCurrentView: function (name) {
+    this.currentView = name;
+  },
+  /**
+   * 获取当前视图
+   * @method [视图] - getCurrentView
+   * @return {*|Application.currentView}
+   * @author wyj 15.1.9
+   * @example
+   *        app.getCurrentView('list');
+   */
+  getCurrentView: function () {
+    return this.currentView;
+  },
+  /**
+   * 获取视图
+   *
+   * @method [视图] - getView
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *        app.getView('productList');
+   */
+  getView: function (name) {
+    return this['instance'][name];
+  },
+  /**
+   * 视图移除， 移除视图绑定的事件及所有itemView的绑定事件,
+   * 并移除所有在此视图创建的对话框
+   *
+   * @method [视图] - removeView
+   * @param name
+   * @return {Application}
+   * @example
+   *        app.removeView('productList');
+   */
+  removeView: function (name) {
+    var view = this.getView(name);
+    try {
+      if (view) {
+        view._empty();
+        view.stopListening();
+        view.$el.off().remove();
+      }
+      delete this['instance'][name];
+    } catch (e) {
+    }
+    return this;
+  },
+  /**
+   * 添加对话框
+   *
+   * @method [对话框] - addDailog
+   * @param dialog
+   * @return {*}
+   * @example
+   *      app.addDialog('productDialog', dialog);
+   */
+  addDialog: function (dialog, id) {
+    this.dialog.push(dialog);
+    if (id){
+      this.dialogs[id] = dialog;
+    }
+    return dialog;
+  },
+  /**
+   * 获取所有对话框
+   * @method [对话框] - getDialogs
+   * @return {*}
+   * @author wyj 15.1.23
+   */
+  getDialogs: function () {
+    return this['dialog'];
+  },
+  /**
+   * 获取指定对话框
+   * @method [对话框] - getDialog
+   * @author wyj 15.03.20
+   *
+   */
+  getDialog: function(id){
+    if (Est.isEmpty(id)) return this.dialogs;
+    return this.dialogs[id];
+  },
+  /**
+   * 添加模型类
+   * @method [模型] - addModel
+   * @author wyj 15.1.23
+   */
+  addModel: function (model) {
+    this.models.push(model);
+    return model;
+  },
+  /**
+   * 获取所有模型类
+   * @method [模型] - getModels
+   * @author wyj 15.1.23
+   */
+  getModels: function () {
+    return this['models'];
+  },
+  /**
+   * 清空所有对话框, 当切换页面时移除所有对话框
+   *
+   * @method [对话框] - emptyDialog
+   * @author wyj 14.12.28
+   * @example
+   *      app.emptyDialog();
+   */
+  emptyDialog: function () {
+    Est.each(this.dialog, function (item) {
+      if (item.close) {
+        item.close().remove();
+      }
+    });
+  },
+  /**
+   * 添加数据
+   *
+   * @method [数据] - addData
+   * @param name
+   * @param data
+   * @author wyj 14.12.28
+   * @example
+   *      app.addData('productList', productList);
+   */
+  addData: function (name, data) {
+    if (name in this['data']) {
+      console.log('数据对象重复' + name);
+    }
+    this['data'][name] = data;
+  },
+  /**
+   * 获取数据
+   *
+   * @method [数据] - getData
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *        app.getData('productList');
+   */
+  getData: function (name) {
+    return this['data'][name];
+  },
+  /**
+   * 添加模板 分拆seajs配置文件，
+   * 实现每个模板都有自己的模块配置文件
+   *
+   * @method [模块] - addModule
+   * @param name
+   * @param val
+   * @author wyj 14.12.28
+   * @example
+   *        app.addModule('ProductList', '/modules/product/controllers/ProductList.js');
+   */
   addModule: function (name, val) {
     if (name in this['modules']) {
-      debug('【Module】已存在的模块：' + name);
+      console.log('已存在的模块：' + name);
     }
     this['modules'][name] = val;
   },
+  /**
+   * 获取所有模块
+   *
+   * @method [模块] - getModules
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *
+   */
   getModules: function () {
     return this['modules'];
   },
-  addStatus: function (name, value) {
-    this['status'][name] = value;
+  /**
+   * 添加路由
+   *
+   * @method [路由] - addRoute
+   * @param name
+   * @param fn
+   * @author wyj 14.12.28
+   * @example
+   *      app.addRoute('product', function(){
+   *          seajs.use(['ProductList'], function(ProductList){
+   *          });
+   *      });
+   */
+  addRoute: function (name, fn) {
+    if (name in this['routes']) {
+      console.log('已存在的路由:' + name);
+    }
+    this['routes'][name] = fn;
   },
-  getStatus: function (name) {
-    return this['status'][name];
+  /**
+   * 获取所有路由
+   *
+   * @method [路由] - getRoutes
+   * @return {*}
+   * @author wyj 14.12.28
+   *
+   */
+  getRoutes: function () {
+    return this['routes'];
   },
-  getAllStatus: function () {
-    return this.status;
-  },
+  /**
+   * 添加模板, 目前无法解决seajs的实时获取问题
+   *
+   * @method [模板] - addTemplate
+   * @param name
+   * @param fn
+   * @author wyj 14.12.28
+   * @example
+   *        app.addTemplate('template/photo_item', function (require, exports, module) {
+              module.exports = require('modules/album/views/photo_item.html');
+            });
+   */
   addTemplate: function (name, fn) {
     if (name in this['templates']) {
-      debug('【Template】已存在的模板：' + name);
+      console.log('已存在的模板：' + name);
     }
     this['templates'][name] = fn;
   },
+  /**
+   * 获取所有模板
+   *
+   * @method [模板] - getTemplates
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *        app.getTemplates();
+   */
   getTemplates: function () {
     return this['templates'];
   },
-  trigger: function (topic, args) {
-    var ctx = this;
-    if (!this.topics[topic]) return false;
-    setTimeout(function () {
-      var subscribers = ctx.topics[topic],
-        len = subscribers ? subscribers.length : 0;
-      while (len--) {
-        subscribers[len].func(topic, args);
-      }
-    }, 0);
-    return true;
+  /**
+   * 添加编译模板
+   * @method [模板] - addCompileTemp
+   * @param name
+   * @param compile
+   */
+  addCompileTemp: function (name, compile) {
+    this['compileTemps'][name] = compile;
   },
-  on: function (topic, func) {
-    if (!this.topics[topic]) this.topics[topic] = [];
-    var token = (++this.subUid).toString();
-    this.topics[topic].push({
-      token: token,
-      func: func
-    });
-    return token;
+  /**
+   * 获取编译模板
+   * @method [模板] - getCompileTemp
+   * @param name
+   * @return {*}
+   */
+  getCompileTemp: function (name) {
+    return this['compileTemps'][name];
   },
-  off: function (token) {
-    for (var m in this.topics) {
-      if (this.topics[m]) {
-        for (var i = 0, j = this.topics[m].length; i < j; i++) {
-          if (this.topics[m][i].token === token) {
-            this.topics[m].splice(i, 1);
-            return token;
-          }
-        }
-      }
+  /**
+   * 添加状态数据
+   *
+   * @method [状态] - addStatus
+   * @param name
+   * @param value
+   * @author wyj 15.1.7
+   */
+  addStatus: function (name, value) {
+    this['status'][name] = value;
+  },
+  /**
+   * 获取状态数据
+   *
+   * @method [状态] - getStatus
+   * @param name
+   * @param value
+   * @author wyj 15.1.7
+   */
+  getStatus: function (name) {
+    return this['status'][name];
+  },
+  /**
+   * 获取所有状态数据
+   * @method [状态] - getAllStatus
+   * @return {{}|*|Application.status}
+   * @author wyj 15.1.9
+   */
+  getAllStatus: function () {
+    return this.status;
+  },
+  /**
+   * 缓存cookie
+   * @method [cookie] - addCookie
+   * @author wyj 15.1.13
+   */
+  addCookie: function (name) {
+    if (Est.findIndex(this.cookies, name) !== -1) {
+      return;
     }
-    return false;
+    this.cookies.push(name);
   },
-  autoHide: function (page, options) {
-    debug('【Util】App.autoHide:');
-    var $appContent = $('.app-content', $(page));
-    var isHide = false;
-    $('.app-content', $(page)).get(0) &&
-    $('.app-content', $(page)).get(0).addEventListener("scroll", function (event) {
-      var scrollTop = $appContent.scrollTop();
-      if (scrollTop > 0 && !isHide) {
-        isHide = true;
-        options.hide && options.hide.call(this, scrollTop);
-      } else if (scrollTop === 0 && isHide) {
-        isHide = false
-        options.show && options.show.call(this, scrollTop);
-      }
-    });
-  },
-  scroll: function (scrollTo, time, page) {
-    debug('【Util】App.scroll:' + scrollTo);
-    var $appContent = $('.app-content', $(page));
-    var scrollFrom = parseInt($appContent.scrollTop()),
-      i = 0,
-      runEvery = 5; // run every 5ms
-    scrollTo = parseInt(scrollTo);
-    time /= runEvery;
-    var interval = setInterval(function () {
-      i++;
-      $appContent.scrollTop((scrollTo - scrollFrom) / time * i + scrollFrom);
-      if (i >= time) {
-        clearInterval(interval);
-      }
-    }, runEvery);
-  },
-  addLoading: function () {
-    if (window.$loading) window.$loading.remove();
-    window.$loading = $('<div class="loading"></div>');
-    $('body').append(window.$loading);
-    return window.$loading;
-  },
-  getLoading: function () {
-    return $('');
-  },
-  removeLoading: function () {
-    if (window.$loading) window.$loading.remove();
-    else $('.loading').remove();
-  },
-  initLazyLoad: function (page) {
-    if (!this.isLazyLoad) {
-      this.isLazyLoad = true;
-      setTimeout(function () {
-        var appContent = $('.app-content', $(page));
-        var $lazyList = $('.lazy', $(appContent));
-        if ($lazyList.size() > 0 && !$lazyList.lazyload) {
-          seajs.use(['LazyLoad'], function (lazyload) {
-            try {
-              seajs.require('LazyLoad');
-              $lazyList.lazyload({
-                container: appContent
-              });
-              debug('【LazyLoad】initLazyLoad');
-            } catch (e) {
-              debug('【Error】: lazyload is not find !');
-            }
-          });
-        } else {
-          debug('【LazyLoad】initLazyLoad');
-          $lazyList.lazyload({
-            container: appContent
-          });
-        }
-      }, 100);
-    }
-  },
-  resetLazyLoad: function (render, page) {
-    if ($(render, $(page)).find('.lazy').size() > 0) {
-      debug('【LazyLoad】resetLazyLoad');
-      App.disableLazyLoad();
-      App.initLazyLoad(page);
-    }
-  },
-  disableLazyLoad: function () {
-    this.isLazyLoad = false;
-  },
-  isLazyLoad: function () {
-    return this.isLazyLoad;
+  /**
+   * 获取所有保存的cookie
+   * @method [cookie] - getCookies
+   * @return {Array}
+   * @author wyj 15.1.13
+   */
+  getCookies: function () {
+    return this.cookies;
   }
-};
-Application.version = '0605041705';
-Application.each = function (obj, callback, context) {
-  var i, length;
-  if (obj == null) return obj;
-  if (obj.length === +obj.length) {
-    for (i = 0, length = obj.length; i < length; i++) {
-      if (callback(obj[i], i, obj) === false) break;
-    }
-  } else {
-    var ks = Object.keys(obj);
-    for (i = 0, length = ks.length; i < length; i++) {
-      if (callback(obj[ks[i]], ks[i], obj, i) === false) break;
-    }
-  }
-  return obj;
-};
-Application.extend = function (obj) {
-  if (typeof obj === 'undefined') return obj;
-  Array.prototype.slice.call(arguments, 1).forEach(function (source) {
-    for (var prop in source) {
-      obj[prop] = source[prop];
-    }
-  });
-  return obj;
-};
-Application.getValue = function (object, path) {
-  var array, result;
-  if (arguments.length < 2 || typeof path !== 'string') {
-    console.error('参数不能少于2个， 且path为字符串');
-    return;
-  }
-  array = path.split('.');
-  function get(object, array) {
-    Application.each(array, function (key) {
-      if (key in object) {
-        if (array.length === 1) {
-          // 如果为数组最后一个元素， 则返回值
-          result = object[key]
-        } else {
-          // 否则去除数组第一个， 递归调用get方法
-          array.shift();
-          get(object[key], array);
-          // 同样跳出循环
-          return false;
-        }
-      } else {
-        // 没找到直接跳出循环
-        return false;
-      }
-    });
-    return result;
-  }
+});
+/**
+ * 解决ie6无console问题
+ * @method console
+ * @private
+ * */
+if (!window.console) {
+  console = (function (debug) {
+    var instance = null;
 
-  return get(object, array);
-}
-Application.url = window.location.href;
+    function Constructor() {
+      if (debug) {
+        this.div = document.createElement("console");
+        this.div.id = "console";
+        this.div.style.cssText = "filter:alpha(opacity=80);padding:10px;line-height:14px;position:absolute;right:0px;top:0px;width:30%;border:1px solid #ccc;background:#eee;";
+        document.body.appendChild(this.div);
+      }
+    }
 
-Application.fromCharCode = function (code) {
-  try {
-    return String.fromCharCode(code);
-  } catch (e) {
-  }
+    Constructor.prototype = {
+      log: function (str) {
+        if (debug) {
+          var p = document.createElement("p");
+          p.innerHTML = str;
+          this.div.appendChild(p);
+        }
+      }
+    }
+    function getInstance() {
+      if (instance == null) {
+        instance = new Constructor();
+      }
+      return instance;
+    }
+
+    return getInstance();
+  })(false)
 }
-  /*window.addEventListener( "load", function() {
-   FastClick.attach( document.body );
-   }, false );*/
-;
 (function () {
+
   /**
    * Sea.js mini 2.3.0 | seajs.org/LICENSE.md
    * @method seajs
@@ -275,11 +481,13 @@ Application.fromCharCode = function (code) {
   var define;
   var require;
   (function (global, undefined) {
+
     /**
      * util-lang.js - The minimal language enhancement
      * @method isType
      * @private
      */
+
     function isType(type) {
       return function (obj) {
         return {}.toString.call(obj) == "[object " + type + "]"
@@ -292,6 +500,7 @@ Application.fromCharCode = function (code) {
      * @method Module
      * @private
      */
+
     var cachedMods = {}
 
     function Module() {
@@ -352,4 +561,11 @@ Application.fromCharCode = function (code) {
       return mod.exports
     }
   })(this);
+  define("bui/config", [], function (require, exports, module) {
+    //from seajs
+    var BUI = window.BUI = window.BUI || {};
+    BUI.use = seajs.use;
+    BUI.config = seajs.config;
+  });
+  require("bui/config");
 })();

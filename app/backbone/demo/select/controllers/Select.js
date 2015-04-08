@@ -223,6 +223,7 @@ define('Select', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 'BaseVi
         this.selectNode.selectClick(id);
       },
       initInputValue: function (items) {
+        if (!items) return;
         var id = $(this._options.target).val();
         Est.each(items, function (item) {
           if (item[this._options.value] === id) {

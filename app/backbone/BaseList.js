@@ -4,7 +4,7 @@
  *  - el: 目标元素Id 如 "#jhw-main"
  *  - viewId 标识符， 推荐添加， 将提升性能及更多功能
  *  - page: parseInt(Est.cookie('productList_page')) || 1,
- - pageSize: parseInt(Est.cookie('productList_pageSize')) || 16
+ *  - pageSize: parseInt(Est.cookie('productList_pageSize')) || 16
  *
  * @class BaseList - 列表视图
  * @author yongjin<zjut_wyj@163.com> 2014/12/8
@@ -44,16 +44,20 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
        *        template: listTemp, 字符串模板,
        *        render: '.product-list', 插入列表的容器选择符, 若为空则默认插入到$el中
        *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;
-       *        data: {}, // 附加的数据 BaseList、BaseView[js: this._options.data & template: {{name}}] ; BaseItem中为[this._options.data &{{_options.data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
+       *        data: {}, // 附加的数据 BaseList、BaseView[js: this._options.data & template: {{name}}] ;
+       *                     BaseItem中为[this._options.data &{{_options._data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
        *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加  需在BaseItem事件中添加 'click .toggle': '_toggleChecked',
        *        enterRender: (可选) 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
        *        pagination: true, // 是否显示分页 view视图中相应加入<div id="pagination-container"></div>
        *        page: parseInt(Est.cookie('orderList_page')) || 1, //设置起始页 所有的分页数据都会保存到cookie中， 以viewId + '_page'格式存储， 注意cookie取的是字符串， 要转化成int
        *        pageSize: parseInt(Est.cookie('orderList_pageSize')) || 16, // 设置每页显示个数
        *        max: 5, // 限制显示个数
+       *        sortField: 'sort', // 上移下移字段名称， 默认为sort
        *        itemId: 'Category_00000000000123', // 当需要根据某个ID查找列表时， 启用此参数， 方便
-       *        detail: 添加页面url地址 配合route使用
-       *        route: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少
+       *        detail: 添加页面url地址 配合route使用 主要用于搜索后打开弹出对话框 如 CONST.HOST + '/modules/product/product_detail.html'
+       *        route: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少   需配置路由如： app.addRoute('product/:id', function (id) {
+                            productDetail(Est.decodeId(id, 'Product_', 32));
+                            });
        *        filter: [ {key: 'name', value: this.searchKey }] // 过滤结果
        *        clearDialog: true, // 清除所有的对话框， 默认为true
        *        reference: this, // 对当前实例的引用
@@ -87,11 +91,11 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       debug('1.BaseList._initialize');
       this.dx = 0;
       this.views = [];
-      if (typeof options.clearDialog === 'undefined' || options.clearDialog) {
+      /*if (typeof options.clearDialog === 'undefined' || options.clearDialog) {
         app.emptyDialog();
-      }
-      setTimeout(function () {
-      }, 50);
+      }*/
+      /*setTimeout(function () {
+      }, 50);*/
       return this._init(options.collection, options);
     },
     /**
@@ -357,6 +361,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       if (this._options.afterRender) {
         this._options.afterRender.call(this, this._options);
       }
+      Utils.removeLoading();
     },
     /**
      * 列表载入前执行
@@ -1057,10 +1062,22 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      * @example
      *      this._getCheckboxIds(); => ['id1', 'id2', 'id3', ...]
      */
-    _getCheckboxIds: function () {
-      return Est.pluck(Est.filter(this.collection.models, function (item) {
+    _getCheckboxIds: function (field) {
+      return Est.pluck(this._getCheckedItems(), Est.isEmpty(field) ? 'id' : ('attributes.' + field));
+    },
+    /**
+     *  获取checkbox选中项
+     *
+     * @method [public] - _getCheckedItems
+     * @return {*}
+     * @author wyj 14.12.8
+     * @example
+     *      this._getCheckedItems(); => [{}, {}, {}, ...]
+     */
+    _getCheckedItems: function(){
+      return Est.filter(this.collection.models, function(item){
         return item.attributes.checked;
-      }), 'id');
+      });
     },
     /**
      * 转换成[{key: '', value: ''}, ... ] 数组格式 并返回
@@ -1135,6 +1152,11 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
             tip: '删除成功'
           });
         }
+      });
+    },
+    _clearChecked: function(){
+      Est.each(this.collection.models, function(model){
+        model.attributes['checked']=false;
       });
     }
   });

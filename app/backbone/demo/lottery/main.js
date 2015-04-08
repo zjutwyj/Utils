@@ -12,3 +12,8 @@ app.addModule('LotteryList', 'common/lottery/controllers/LotteryList.js');
 app.addTemplate('template/lottery_item', function (require, exports, module) {
   module.exports = require('common/lottery/views/lottery_item.html');
 });
+app.addModule('LotteryDraw', 'common/lottery/controllers/LotteryDraw.js');
+app.addTemplate('template/common_lottery_draw', function (require, exports, module) {
+  module.exports = require('common/lottery/views/common_lottery_draw.html');
+});
+app.addModule('rotate', 'vendor/rotate/rotate.js');

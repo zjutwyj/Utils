@@ -1,7 +1,7 @@
 <form id="J_Form" action="" class="form-horizontal">
     <div class="bui-grid bui-simple-list bui-grid-width bui-grid-hover bui-simple-list-hover">
         <div class="control-group" style="margin-bottom: 3px;">
-            <label class="control-label">显示抽奖：</label>
+            <label class="control-label">抽奖类型：</label>
 
             <div class="controls">
                 <label><input id="model-ltyType" type="radio" name="ltyType" value="1" {{#compare
@@ -12,7 +12,13 @@
                     ltyType '===' '3'}}checked{{/compare}}>摇一摇</label>
             </div>
         </div>
+        <div class="control-group" style="margin-bottom: 3px;">
+            <label class="control-label">封面图片：</label>
 
+            <div class="controls control-row-auto">
+                <div id="common-lottery-picture-pick" style="width:580px;"></div>
+            </div>
+        </div>
         <div class="control-group">
             <label class="control-label">奖品设置：</label>
 
@@ -21,13 +27,13 @@
                     <table cellspacing="0" class="bui-grid-table" cellpadding="0">
                         <thead>
                         <tr>
-                            <th class="bui-grid-hd" width="42">
+                            <th class="bui-grid-hd" width="44">
                                 <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">序号</span></div>
                             </th>
                             <th class="bui-grid-hd ">
                                 <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">奖品名称</span></div>
                             </th>
-                            <th class="bui-grid-hd " width="70">
+                            <th class="bui-grid-hd " width="68">
                                 <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">概率</span></div>
                             </th>
                             <th class="bui-grid-hd " width="80">

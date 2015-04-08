@@ -110,6 +110,8 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
             width: 250,
             button: buttons
           }).show();
+        } else if(!this.hideTip){
+          debug('服务器返回的msg为空! 因此无弹出框信息。 url：' + this.baseUrl, {type: 'error'});
         }
         if (Est.typeOf(response.success) === 'boolean' && !response.success) {
           ctx.attributes._response = response;

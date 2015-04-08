@@ -75,7 +75,7 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       },
       initialize: function () {
         this._initialize({
-          template: tagViewItem
+          template: tagPickerItem
         });
       },
       editName: function (e) {

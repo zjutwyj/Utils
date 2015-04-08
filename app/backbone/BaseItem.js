@@ -33,6 +33,8 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
        *            detail: '', // 修改或添加页面地址
        *            filter: function(model){ // 过滤模型类
        *            },
+       *            beforeRender: function(model){},
+       *            afterRender: function(model){},
        *            enterRender: '#submit' // 执行回车后的按钮点击的元素选择符
        *        });
      */
@@ -118,9 +120,9 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     _initStyle: function (options) {
       var ctx = this;
       if (options.speed > 1) {
-        var item_id = this.model.get('id') || '';
+        var item_id = this.model.get('id') || (this.model.get('dx') + 1) + '';
         if (this.model.get('dx') % 2 === 0) this.$el.addClass('bui-grid-row-even');
-        this.$el.addClass('_item_el_' + item_id.replace(/^[^1-9]+/, ""));
+        this.$el.addClass('_item_el_' + (this.options.viewId || '') + '_' + item_id.replace(/^[^1-9]+/, ""));
         this.$el.hover(function () {
           ctx.$el.addClass('hover');
         }, function () {
@@ -257,9 +259,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * @author wyj 14.12.3
      */
     _onBeforeRender: function () {
-      return new Est.promise(function (resolve) {
-
-      });
+      this._options.beforeRender && this._options.beforeRender.call(this, this.model);
     },
     /**
      * 渲染后事件
@@ -269,9 +269,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * @author wyj 14.12.3
      */
     _onAfterRender: function () {
-      return new Est.promise(function (resolve) {
-
-      });
+      this._options.afterRender && this._options.afterRender.call(this, this.model);
     },
     /**
      * 移除监听
@@ -308,10 +306,17 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
        *      }
      */
     _toggleChecked: function (e) {
+      var checked = this.model.get('checked');
       this._checkAppend = typeof this.model.get('_options')._checkAppend === 'undefined' ? true :
-        this.model.get('_options')._checkAppend
-      this.model.set('checked', this._checkAppend ? !this.model.get('checked') : true);
-
+        this.model.get('_options')._checkAppend;
+      if (!this._checkAppend){
+        if (this.options.viewId){
+          app.getView(this.options.viewId) && app.getView(this.options.viewId)._clearChecked();
+        } else{
+          debug('您当前选择的是不追加选择， 请检查XxxList的options中添加viewId?', {type: 'error'});
+        }
+      }
+      this.model.attributes['checked']=!checked;
       if (this.model.get('checked')) {
         this._itemActive({
           add: this._checkAppend
@@ -320,7 +325,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
         this.$el.removeClass('item-active');
       }
       //TODO shift + 多选
-      if (e.shiftKey) {
+      if (e && e.shiftKey) {
         var beginDx = app.getData('curChecked');
         var endDx = this.model.collection.indexOf(this.model);
         Est.each(this.model.collection.models, function (model) {

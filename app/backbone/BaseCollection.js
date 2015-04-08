@@ -1,5 +1,11 @@
 /**
  * @description 基础集合类
+ *
+ * - url: CONST.API + '/product/list',
+ * - batchDel: CONST.API + '/product/batch/del',
+ * - model: ProductModel,
+ * - initialize: function(){}
+ *
  * @class BaseCollection
  * @author yongjin<zjut_wyj@163.com> 2014/11/6
  */
@@ -34,7 +40,9 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
      * @method [override] - _initialize
      * @author wyj 14.11.16
      * @example
-     *      this._initialize();
+              initialize: function () {
+                this._initialize();
+              }
      */
     _initialize: function () {
       debug('2.BaseCollection._initialize');

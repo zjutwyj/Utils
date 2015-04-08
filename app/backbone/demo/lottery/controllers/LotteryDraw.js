@@ -3,96 +3,120 @@
  * @class LotteryDraw
  * @author yongjin<zjut_wyj@163.com> 2015/3/25
  */
-define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, exports, module) {
-  var LotteryDraw, BaseView, DrawCanvas, Canvas;
+define('LotteryDraw', ['BaseView', 'Canvas', 'DrawCanvas', 'template/common_lottery_draw', 'rotate'], function (require, exports, module) {
+  var LotteryDraw, BaseView, DrawCanvas, Canvas, template, rotate;
 
-  DrawCanvas = require('DrawCanvas');
   Canvas = require('Canvas');
+  DrawCanvas = require('DrawCanvas');
   BaseView = require('BaseView');
+  template = require('template/common_lottery_draw');
+  rotate = require('rotate');
 
   LotteryDraw = BaseView.extend({
     initialize: function () {
+      this.options.data = this.options.data || {};
+      this.drawId = this.options.data.drawId = Est.nextUid('lottery-draw');
       this._initialize({
-
+        template: template
       });
-      this.isShare = false;
       this._mobile = this.options.mobile;
-      this.lotyId = null;
       this._wwyId = this.options._wwyId;
       this.ltyRule = this.options.ltyRule;
+      this.ltyType = this.options.ltyType;
       this._args = this.options.wwyId_;
+
+      this.sharepic = CONST.PIC_URL + '/' + this.options.sharepic; // 微信分享图片
+      this.sharetitle = this.options.sharetitle; // 分享标题
+      this.desc = this.sharedesc = this.options.sharedesc; // 分享描述
+
+      this.isShare = false;
+      this.lotyId = null;
       this.lotterySort = 0;
       this.lotteryInfo = "";
       this.$shareModal = null;
-      this.openid = "";
-      this.ga_width = 200;
-      this.ga_height = 60;
-      this.ga_left = 90;
-      this.ga_top = 80;
-      this.swing_left = 50;
-      this.swing_top = 90;
-      this.sharepic = "http://img.easthardware.com/${info.sharepic}";
-      this.desc = this.sharedesc = "${empty info.sharedesc?'这网站还不错都来看看吧':info.sharedesc}";
-      this.sharetitle = "${empty info.sharetitle?info.title:info.sharetitle}";
+      this.openid = this.options.openid;
       this.clickType = (('ontouchend' in window)) ? 'touchend' : 'click';
-      this._render();
+
+      this.ga_width = 0;
+      this.ga_height = 0;
+
+      this.render();
     },
     /**刮刮卡*/
     card: function () {
       var ctx = this;
       var image = this.ltyRule.lotteryImage;
-      var ga_left = 90;
-      var ga_top = 80;
-      var ga_width = 200;
-      var ga_height = 60;
+      this.a_width = '100%';
+      this.ga_height = '100%';
 
-      $(".zf_button").hide();
-      $('#lottery_gg').drawcanvas({
-        coverType: 'image',
-        cover: image,
-        lineWidth: 15,
-        fillImage: false,
-        shaveable: true,
-        cbdelay: 0,
-        position: 'absolute',
-        left: ga_left,
-        top: ga_top,
-        zIndex: 99,
-        beforeCallback: Est.proxy(function () {
-          if (!this.beforeLottery($('#lottery_gg').get(0))) return false;
-          return true;
-        }, this),
-        callback: function (percent) {
-          if (percent > 50 && ctx.isShare) {
-            if (ctx.lotyId) {
+      var imageInstance = new Image();
+      imageInstance.onload = function () {
+        ctx.ga_width = this.naturalWidth;
+        ctx.ga_height = this.naturalHeight;
+        $('.lottery-container').css({
+          width: '100%',
+          height: '100%'
+        });
+
+        ctx.$('#' + ctx.drawId).drawcanvas({
+          coverType: 'image',
+          cover: CONST.PIC_URL + '/' + image,
+          lineWidth: 15,
+          fillImage: false,
+          shaveable: true,
+          cbdelay: 0,
+          width: ctx.ga_width,
+          height: ctx.ga_height,
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          zIndex: 99,
+          beforeCallback: Est.proxy(function () {
+            if (ctx.options.showMobileDialog) return false;
+            if (!ctx.beforeLottery(ctx.$('#' + ctx.drawId).get(0))) return false;
+            return true;
+          }, ctx),
+          callback: function (percent) {
+            if (percent > 50 && ctx.isShare) {
+              if (ctx.lotyId) {
+                ctx.drawLotteryList();
+              }
               ctx.drawLotteryList();
             }
-            ctx.drawLotteryList();
+          },
+          success: function () {
+            //ga_width = parseInt(this.mask.getAttribute("width"), 10);
+            //ga_height = parseInt(this.mask.getAttribute("height"), 10);
+            //$(this.conNode).addClass('show').on('webkitTransitionEnd', function () {
+            //});
           }
-        },
-        success: function () {
-          ga_width = parseInt(this.mask.getAttribute("width"), 10);
-          ga_height = parseInt(this.mask.getAttribute("height"), 10);
-          $(this.conNode).addClass('show').on('webkitTransitionEnd', function () {
-          });
-        }
-      });
-      this.drawLotteryList();
-      this.drawLotteryRule();
+        });
+        ctx.drawLotteryList();
+        ctx.drawLotteryRule();
+      }
+      imageInstance.src = CONST.PIC_URL + '/' + image;
     },
     /**转盘*/
     wheel: function () {
       var ctx = this;
       try {
-        $(".zf_button").hide();
-        $(".rotate-bg img:first").attr("src", this.ltyRule.lotteryImage);
+        var origin_width = this.$el.width();
+        var origin_height = this.$el.height();
+        var $parent = this.$el.parents('.module-content:first');
+        $parent.css({
+          width: '100%',
+          height: 'auto'
+        });
+        this.$el.find('#' + this.drawId).append('<div class="rotate" data-spm="1" style="height: 100%;"> <div class="rotate-bg" style="height: 100%;"> <img width="100%" height="100%" src="' + CONST.HOST + '/images/rotate.gif"> </div> <div class="rotate-start" data-ga="抽奖.页面主题.开始抽奖" data-spm-click="gostr=/aliyun;locaid=d20149" data-spm-anchor-id="5176.100003.1.d20149"> <img width="63%" src="' + CONST.HOST + '/images/rotate_p.png" id="J_startBtn"> </div> </div>');
+        this.$(".rotate-bg img:first").attr("src", CONST.PIC_URL + '/' + this.ltyRule.lotteryImage);
+
         var rules = this.ltyRule.lotteryRule;
         var len = rules.length;
         var deg = Math.round(360 / len);
 
         if (this.ltyRule.customImage !== '01') {
           var colors = ['#FECB03', '#2FB753', '#6B3983', '#DE47CD', '#A33EE5', '#2E9CD9', '#E73EAA', '#2FB753', '#FECB03', '#6B3983', '#A33EE5', '#DE47CD', '#2E9CD9', '#E73EAA'];
-          var $rotateBg = $(".rotate .rotate-bg");
+          var $rotateBg = this.$(".rotate .rotate-bg");
           var width = $rotateBg.width();
           var radius = width / 2;
           var inner_width = 9;
@@ -105,9 +129,7 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
           $rotateBg.append($sector);
           // 画扇形
           var sector = $sector.get(0);
-          // alert('51');
           this.drawSector(sector, radius, radius, radius - inner_width, 0, 360, '#fff', 1);
-          // alert('52');
           for (var i = 0; i < len; i++) {
             color = i % 2 === 0 ? '#e6e4db' : colors[Math.ceil(i / 2)];
             this.drawSector(sector, radius, radius, radius - inner_width, i * deg + 90 - deg / 2, (i + 1) * deg + 90 - deg / 2, color, 0.6);
@@ -123,18 +145,21 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
             ctx.drawCircleText(sector, radius, inner_width, len, deg, i + 1, item.name);
           });
         }
-        $(".rotate-start").bind(this.clickType, function (event) {
+        this.$(".rotate-start").bind(this.clickType, function (event) {
           event.stopPropagation();
           event.preventDefault();
-          //shared('13588506961');
-          if (!ctx.beforeLottery($('.rotate-start').get(0))) return false;
+          //alert('rotate-click');
+          if (!ctx.beforeLottery(ctx.$('.rotate-start').get(0))) return false;
+          //alert('rotate_001');
           if (!Est.isEmpty(ctx._mobile) && ctx.isShare) {
+            //alert('rotate_002');
             var _deg = deg * ctx.lotterySort;
-            $("#J_startBtn").stopRotate(), $("#J_startBtn").rotate({
+            ctx.$("#J_startBtn").stopRotate(), ctx.$("#J_startBtn").rotate({
               angle: 0,
               duration: 4e3,
               animateTo: _deg + 5400,
               callback: function () {
+                //alert('rotate_003');
                 var dialogTpl = "<div id='okDialog' class='dialog'><div class=\"content\">#{info}<br><input name='ok' class=\"ok btn\" type='button' value='确定' /></div></div>";
                 if (ctx.lotyId) ctx.drawLotteryList();
                 ctx.disableLottery();
@@ -155,6 +180,19 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
             return false;
           }
         });
+        ctx.$el.find("#sector").css({
+          width: '100%'
+        });
+        try{
+          var win_h = $(window).width();
+          var percent = origin_width * 100 / win_h;
+          $parent.css({
+            width: percent + '%',
+            height: $parent.width()
+          });
+        }catch(e){
+
+        }
         ctx.drawLotteryList();
       } catch (e) {
         //alert('error');
@@ -163,51 +201,68 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
     /**摇一摇*/
     shake: function () {
       var ctx = this;
-      $(".zf_button").hide();
-      var image = this.ltyRule.lotteryImage;
-      $('#lottery_swing').drawcanvas({
-        coverType: 'image',
-        cover: image,
-        shaveable: false,
-        fillImage: true,
-        width: this.ga_width,
-        height: this.ga_height,
-        position: 'absolute',
-        left: this.swing_left,
-        top: this.swing_top,
-        zIndex: 99,
-        success: function () {
-          $(this.conNode).addClass('show');
-          if (window.DeviceMotionEvent) {
-            var speed = 25;
-            var x = y = z = lastX = lastY = lastZ = 0;
-            window.addEventListener('devicemotion', function () {
+      var ga_width = '100%';
+      var ga_height = '100%';
+      var image = CONST.PIC_URL + '/' + this.ltyRule.lotteryImage;
 
-              var acceleration = event.accelerationIncludingGravity;
-              x = acceleration.x;
-              y = acceleration.y;
-              if (Math.abs(x - lastX) > speed || Math.abs(y - lastY) > speed) {
-                if (!ctx.beforeLottery($("#lottery_swing").get(0))) return false;
-                if (!ctx.isShare) {
-                  alert("请先转发并发享， 再摇奖");
-                } else {
-                  // 显示抽奖结果
-                  //drawText($('#lottery_swing'), lotteryInfo, ga_width, ga_height, 0, 0);
-                  alert(ctx.lotteryInfo);
-                  if (ctx.lotyId) {
-                    ctx.drawLotteryList();
+      var imageInstance = new Image();
+      imageInstance.onload = function () {
+        var $parent = ctx.$el.parents('.module-content:first');
+        ga_width = this.naturalWidth;
+        ga_height = this.naturalHeight;
+        $parent.css({
+          width: ga_width,
+          height: ga_height
+        });
+        ctx.$('.lottery-container').css({
+          width: '100%',
+          height: '100%'
+        });
+        ctx.$('#' + ctx.drawId).drawcanvas({
+          coverType: 'image',
+          cover: image,
+          shaveable: false,
+          fillImage: true,
+          width: 100,
+          height: 100,
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          zIndex: 99,
+          success: function () {
+            $(this.conNode).addClass('show');
+            if (window.DeviceMotionEvent) {
+              var speed = 25;
+              var x = y = z = lastX = lastY = lastZ = 0;
+              window.addEventListener('devicemotion', function () {
+
+                var acceleration = event.accelerationIncludingGravity;
+                x = acceleration.x;
+                y = acceleration.y;
+                if (Math.abs(x - lastX) > speed || Math.abs(y - lastY) > speed) {
+                  if (!ctx.beforeLottery($("#lottery_swing").get(0))) return false;
+                  if (!ctx.isShare) {
+                    alert("请先转发并发享， 再摇奖");
+                  } else {
+                    // 显示抽奖结果
+                    //drawText($('#lottery_swing'), lotteryInfo, ga_width, ga_height, 0, 0);
+                    //alert(ctx.lotteryInfo);
+                    if (ctx.lotyId) {
+                      ctx.drawLotteryList();
+                    }
+                    ctx.disableLottery();
                   }
-                  ctx.disableLottery();
                 }
-              }
-              lastX = x;
-              lastY = y;
-            }, false);
+                lastX = x;
+                lastY = y;
+              }, false);
+            }
           }
-        }
-      });
-      ctx.drawLotteryList();
-      ctx.drawLotteryRule();
+        });
+        ctx.drawLotteryList();
+        ctx.drawLotteryRule();
+      }
+      imageInstance.src = image;
     },
     // 画扇形
     drawSector: function (canvas, left, top, radius, sdeg, edeg, color, opacity) {
@@ -299,18 +354,18 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
         } else {
           $tip.remove();
         }
-        this._mobile = mobile;
+        ctx._mobile = mobile;
         // 在服务器中生成页面
         $.ajax({
           url: "/wwy/join",
           async: true,
-          data: { mobile: this._mobile, arg: ctx._arg },
+          data: { mobile: ctx._mobile, arg: ctx._arg },
           success: function (result) {
             joinResult = result;
           }
         });
         setTimeout(function () {
-          joinResult = Est.isEmpty(joinResult) ? cgx._arg : joinResult;
+          joinResult = Est.isEmpty(joinResult) ? ctx._arg : joinResult;
           ctx.bindWeixinJSBridge(joinResult);
         }, 2000);
         $mobileDia.remove();
@@ -334,12 +389,59 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
       setTimeout(function () {
       }, 1000);
     },
+    /**
+     * @description 处理奖品获取结果
+     * @method resolveResult
+     * @param {String} result
+     * @param result
+     * @author wyj on 14.9.27
+     */
+    resolveResult: function (result) {
+      if (Est.isEmpty(result)) {
+        return false;
+      }
+      var data = $.parseJSON(Est.unescapeHTML(result));
+      this.lotterySort = data.sort;
+      //alert(this.lotterySort);
+      this.lotteryInfo = data.info;
+      this.lotyId = data.lotyId;
+      if ($('#lottery_gg canvas').size() > 1) {
+        this.rebulidLottery(this.$('#lottery_gg'));
+      }
+      this.drawText($('#lottery_gg'), this.lotteryInfo, this.ga_width, this.ga_height, 0, 0);
+      this.isShare = true;
+    },
+    /**
+     * @description 重绘刮刮卡
+     * @method rebulidLottery
+     * @param canvas
+     * @author wyj on 14.10.10
+     */
+    rebulidLottery: function (node) {
+      var image = this.ltyRule.lotteryImage;
+      $(node).empty();
+      this.$('#lottery_gg').drawcanvas({
+        coverType: 'image',
+        cover: image,
+        lineWidth: 15,
+        fillImage: false,
+        shaveable: true,
+        cbdelay: 0,
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        zIndex: 99
+      });
+    },
     /*获取抽奖信息 [当存在_mobile 且isShare为true时才生效]*/
     getLottery: function (mobile, result) {
       var ctx = this;
+      //alert('getLottery:' + result);
       if (!Est.isEmpty(result)) {
+        //alert('getLottery' + result);
         result !== '00' ? this.resolveResult(result) : this.isShare = false;
       } else {
+        //alert('getLottery empty' + result);
         $.ajax({
           type: 'post',
           url: '/wwy/getLottery',
@@ -349,6 +451,7 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
             mobile: mobile || this._mobile
           },
           success: function (result) {
+            //alert('getLottery_result:' + result);
             result !== '00' ? ctx.resolveResult(result) : ctx.isShare = false;
           }
         });
@@ -367,6 +470,35 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
     disableLottery: function () {
       this.isShare = false;
       this.lotyId = null;
+    },
+    /**
+     * @description 显示信息对话框
+     * @method info
+     * @param info
+     * @author wyj on 14.10.10
+     */
+    info: function (info, options) {
+      var opts = {
+        time: null
+      }
+      Est.extend(opts, options);
+      var dialogTpl = "<div id='okDialog' class='dialog'><div class=\"content\">#{info}<br><input name='ok' class=\"ok btn\" type='button' value='确定' /></div></div>";
+      var $node = $(Est.format(dialogTpl, {
+        info: info
+      }));
+      var $ok = $node.find(".ok");
+      $ok.click(function () {
+        $(this).parents(".dialog:first").remove();
+      });
+      $("body").append($node);
+      $node.css(Est.center($(window).width(), $(window).height(), $node.width(), $node.height()));
+
+      if (opts.time) {
+        setTimeout(function () {
+          $ok.click();
+        }, time);
+      }
+
     },
     /*提示分享对话框*/
     toShareWwyDialog: function (target) {
@@ -395,7 +527,8 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
     /*抽奖微信绑定*/
     bindWeixinJSBridge: function (result) {
       var ctx = this;
-      var f_url = 'http://www.jihui88.com/wwy/info?arg=' + result.split(";")[0];
+      //var f_url = 'http://www.jihui88.com/wwy/info?arg=' + result.split(";")[0];
+      var f_url = location.href;
       var u = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + f_url + '&response_type=code&scope=snsapi_base&state=0#wechat_redirect';
       try {
         if (typeof WeixinJSBridge !== 'undefined') {
@@ -406,6 +539,8 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
             title: ctx.sharetitle,
             success: function () {
               // 用户确认分享后执行的回调函数
+              ctx.isShare = true;
+              //alert('timeline');
               if (ctx.ltyType) {
                 ctx.$shareModal.remove();
                 ctx.insertLottery(ctx._wwyId, ctx._mobile);
@@ -426,6 +561,8 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
             title: ctx.sharetitle,
             success: function () {
               // 用户确认分享后执行的回调函数
+              //alert('message: _wwyId' + ctx._wwyId + ', _mobile:' + ctx._mobile);
+              ctx.isShare = true;
               if (ctx.ltyType) {
                 ctx.$shareModal.remove();
                 ctx.insertLottery(ctx._wwyId, ctx._mobile);
@@ -437,6 +574,7 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
             },
             cancel: function () {
               // 用户取消分享后执行的回调函数
+              //alert('11');
             }
           });
         }
@@ -446,6 +584,9 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
     },
     /*生成奖品*/
     insertLottery: function (_wwyId, mobile) {
+      var ctx = this;
+     // alert('insertLlottery: _wwyId:' + _wwyId);
+     // alert('insertLottery' + mobile + '_wwyId' + _wwyId);
       $.ajax({
         type: 'post',
         url: '/wwy/insertLottery',
@@ -455,17 +596,33 @@ define('LotteryDraw', ['BaseView', 'DrawCanvas', 'Canvas'], function (require, e
           openid: this.openid
         },
         success: function (result) {
+          //alert('insertLotterySuccess' + result);
           if (result == '0') {
             alert('您已经抽过一次奖了');
             return false;
           }
-          //alert(result);
-          top && top.getLottery && top.getLottery(mobile, result);
+          //alert('top' + result);
+          ctx.getLottery && ctx.getLottery(mobile, result);
         }
       });
     },
     render: function () {
       this._render();
+      //$('.lottery-container').html('');
+      switch (this.ltyType) {
+        case '1':
+          this.card();
+          break;
+        case '2':
+          this.wheel();
+          break;
+        case '3':
+          this.shake();
+          break;
+        default:
+          this.card();
+          break;
+      }
     }
   });
 

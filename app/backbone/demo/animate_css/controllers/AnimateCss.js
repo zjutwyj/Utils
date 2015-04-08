@@ -12,6 +12,10 @@ define('AnimateCss', ['BaseView', 'template/animate_css_view', 'Utils'], functio
 
   AnimateCss = BaseView.extend({
     initialize: function () {
+      this.options.data = this.options.data || {};
+      this.curAnimate = this.options.data.animate;
+      this.curDuration = this.options.data.duration;
+      this.curDelay = this.options.data.delay;
       this._initialize({
         template: template
       });
@@ -109,22 +113,67 @@ define('AnimateCss', ['BaseView', 'template/animate_css_view', 'Utils'], functio
     getCss: function (name) {
       return this.source[name];
     },
-    doAnimate: function (x) {
-      $('#animationSandbox').removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-        $(this).removeClass();
+    /*doAnimate: function (x, duration, delay) {
+      var animate = x + ' animated';
+      var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+      var $animationSandbox = $('#animationSandbox');
+
+     *//* $animationSandbox.css({
+        'animation-duration': (duration || 1) + 's',
+        'animation-delay': (delay || 0) + 's'
+        //'-webkit-animation-iteration-count': (count || 1)
+      });*//*
+      $animationSandbox.addClass(animate).one(animationEnd, function () {
+        $(this).removeClass(animate);
       });
+    },*/
+    doAnimate: function (x) {
+      if (this.options.target){
+        var $container = this.options.container ? $(this.options.container) : $('body');
+        var $target = $(this.options.target, $container);
+        $target.removeClass($target.attr('data-animate'));
+        $target.removeClass('animated');
+        $target.addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+          //$(this).removeClass();
+        });;
+        $target.attr('data-animate', x);
+        this.options.animate && this.options.animate.call(this, x);
+        //$target.attr('data-du', x);
+        //$target.attr('data-animate', x);
+      } else{
+        $('#animationSandbox').removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+          $(this).removeClass();
+        });
+      }
     },
     getCurAnimate: function () {
-      return this.curAnimate;
+      //return this.curAnimate;
+      return {
+        curDuration: this.curDuration,
+        curAnimate: this.curAnimate,
+        curDelay: this.curDelay
+      };
     },
     render: function () {
       this._render();
+
+      this.$duration = this.$('#model-duration');
+      this.$delay = this.$('#model-delay');
+
+      this.$duration.change(Est.proxy(function () {
+        this.curDuration = this.$duration.val();
+      }, this));
+
+      this.$delay.change(Est.proxy(function () {
+        this.curDelay = this.$delay.val();
+      }, this));
+
       Utils.initSelect({
         render: '#s1',
         target: '#model-animate',
         items: this.items,
         change: Est.proxy(function (item) {
-          this.doAnimate(item.value);
+          this.doAnimate(item.value, parseFloat(this.$duration.val()), parseFloat(this.$delay.val()));
           this.curAnimate = item.value;
         }, this)
       });

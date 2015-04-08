@@ -463,7 +463,8 @@ var paths = {
       source: [
         'app/vendor/seajs/sea.js',
         'app/vendor/seajs/seajs-text-debug.js',
-        'app/modules/leaflet/Application.js'
+        'app/scripts/utils/Est.source.js',
+        'app/backbone/Application.js'
       ],
       name: 'base.js',
       dist: 'app/modules/leaflet'

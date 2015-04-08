@@ -99,6 +99,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
         if (this._options.afterRender) {
           this._options.afterRender.call(this, this._options);
         }
+        Utils.removeLoading();
         setTimeout(function () {
           Utils.resetIframe();
         }, 1000);
@@ -223,6 +224,10 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        *            onBeforeSave: function(){},
        *            onAfterSave: function(){}
        *        });
+       *
+       *
+       *        <input id="model-music.custom" name="music.custom" value="{{music.custom}}" type="text" class="input-large">
+       *
        */
       _init: function (options) {
         var ctx = this;

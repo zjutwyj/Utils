@@ -1,6 +1,6 @@
 /**
  * @description BaseUtils
- * @class BaseUtils - 工具类
+ * @class BaseUtils - 底层工具类
  * @author yongjin<zjut_wyj@163.com> 2015/1/27
  */
 define('BaseUtils', [], function (require, exports, module) {
@@ -169,7 +169,7 @@ define('BaseUtils', [], function (require, exports, module) {
        *         this.iframeNode.contentWindow.uploadCallback = doResult;
        *       }
        *      });
-     *      // 图片替换
+     *      // 图片替换 主要用于图片空间里的图片替换操作
      *      Utils.openUpload({
        *        id: 'replaceDialog' + id,
        *        title: '图片替换',
@@ -187,7 +187,7 @@ define('BaseUtils', [], function (require, exports, module) {
      *      // 选取图片
      *      Utils.openUpload({
                 id: 'uploadDialog',
-                type: type,
+                type: type, // [local / source]打开的窗口类型， 如上传、资源库
                 albumId: app.getData('curAlbumId'),
                 username: app.getData('user') && app.getData('user').username,
                 auto: true,
@@ -281,12 +281,32 @@ define('BaseUtils', [], function (require, exports, module) {
           s: 'ctrl+8',
           e: function () {
             var _this = this;
-            _this.showIframeModal('选择图片',
+            seajs.use(['Utils'], function(Utils){
+              Utils.openUpload({
+                id: 'uploadDialog',
+                type: '',
+                albumId: app.getData('curAlbumId'),
+                username: app.getData('user') && app.getData('user').username,
+                auto: true,
+                oniframeload: function(){
+                  this.iframeNode.contentWindow.uploadCallback = function(result){
+                    _this.loadBookmark();
+                    _this.pasteHTML("<img src='"+CONST.PIC_URL + '/' + result[0]['serverPath']+"'/>");
+                  };
+                },
+                success: function(){
+                  var result = this.iframeNode.contentWindow.app.getView('picSource').getItems();
+                  _this.loadBookmark();
+                  _this.pasteHTML("<img src='"+CONST.PIC_URL + '/' + result[0]['serverPath']+"'/>");
+                }
+              });
+            });
+          /*  _this.showIframeModal('选择图片',
                 CONST.DOMAIN + '/common/picUpload/upload.jsp?pageType=xheditor',
               function (v) {
                 _this.loadBookmark();
                 _this.pasteHTML(v);
-              }, 800, 550);
+              }, 800, 550);*/
           }
         },
         abbccFlash: {
@@ -321,25 +341,29 @@ define('BaseUtils', [], function (require, exports, module) {
       };
       seajs.use(['xheditor'], function (xheditor) {
         function startEditor(obj) {
-          var editor = $(obj).xheditor(
-            {
-              plugins: allPlugin,
-              tools: 'Preview,Fullscreen,Source,|,contact,abbccQQ,abbccMap,abbccLayout,abbccQrcode,|,Table,abbccImages,abbccFlash,Media,|,FontColor,BackColor,|,Align,Underline,Italic,Bold,|,FontSize,Fontface,|,Link,Unlink',
-              skin: 'vista',
-              layerShadow: 2,
-              html5Upload: false,
-              upBtnText: '浏览',
-              upLinkExt: 'jpg,png,bmp',
-              upImgUrl: '/fileUpload/uploadByJson',
-              upFlashUrl: '/fileUpload/uploadByJson',
-              upMediaUrl: '/fileUpload/uploadByJson',
-              upFlashExt: "swf",
-              upMediaExt: 'wmv,avi,wma,mp3,mid',
-              linkTag: true,
-              height: 400,
-              internalScript: true,
-              inlineScript: true
-            });
+          try{
+            var editor = $(obj).xheditor(
+              {
+                plugins: allPlugin,
+                tools: 'Preview,Fullscreen,Source,|,contact,abbccQQ,abbccMap,abbccLayout,abbccQrcode,|,Table,abbccImages,abbccFlash,Media,|,FontColor,BackColor,|,Align,Underline,Italic,Bold,|,FontSize,Fontface,|,Link,Unlink',
+                skin: 'vista',
+                layerShadow: 2,
+                html5Upload: false,
+                upBtnText: '浏览',
+                upLinkExt: 'jpg,png,bmp',
+                upImgUrl: '/fileUpload/uploadByJson',
+                upFlashUrl: '/fileUpload/uploadByJson',
+                upMediaUrl: '/fileUpload/uploadByJson',
+                upFlashExt: "swf",
+                upMediaExt: 'wmv,avi,wma,mp3,mid',
+                linkTag: true,
+                height: 400,
+                internalScript: true,
+                inlineScript: true
+              });
+          }catch(e){
+            debug(e);
+          }
           if (options.viewId) {
             app.addView(options.viewId, editor);
           }
@@ -419,7 +443,7 @@ define('BaseUtils', [], function (require, exports, module) {
       });
      */
     initDrag: function (options) {
-      seajs.use(['drag'], function (drag) {
+      seajs.use(['jquery', 'drag'], function ($, drag) {
         var _resize = false;
         $(options.render).click(function () {
           $(this).toggleClass("selected");
@@ -438,20 +462,20 @@ define('BaseUtils', [], function (require, exports, module) {
             if (options.resize) {
               if (dd.attr.indexOf("E") > -1) {
                 _resize = true;
-                props.width = Math.max(32, dd.width + dd.deltaX);
+                props.width = Math.max(1, dd.width + dd.deltaX);
               }
               if (dd.attr.indexOf("S") > -1) {
                 _resize = true;
-                props.height = Math.max(32, dd.height + dd.deltaY);
+                props.height = Math.max(1, dd.height + dd.deltaY);
               }
               if (dd.attr.indexOf("W") > -1) {
                 _resize = true;
-                props.width = Math.max(32, dd.width - dd.deltaX);
+                props.width = Math.max(1, dd.width - dd.deltaX);
                 props.left = dd.originalX + dd.width - props.width;
               }
               if (dd.attr.indexOf("N") > -1) {
                 _resize = true;
-                props.height = Math.max(32, dd.height - dd.deltaY);
+                props.height = Math.max(1, dd.height - dd.deltaY);
                 props.top = dd.originalY + dd.height - props.height;
               }
             }
