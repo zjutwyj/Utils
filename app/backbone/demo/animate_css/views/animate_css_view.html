@@ -3,27 +3,41 @@
         .island {
             padding: 1.5rem;
         }
+
         .wrap {
             max-width: 38rem;
             margin: 0 auto;
         }
+
         .subhead, .meta {
             color: #7b8993;
         }
+
         .site__title {
             color: #f35626;
-            background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
+            background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             -webkit-animation: hue 60s infinite linear;
         }
     </style>
     <div class="bui-grid bui-simple-list bui-grid-width bui-grid-hover bui-simple-list-hover" style="background: none;">
-        <div class="control-group" >
-            <label class="control-label"  style="background: none; text-align: left;padding: 15px 0 0 12px;">动画效果选项：</label>
+        <div class="control-group">
+            <label class="control-label"
+                   style="background: none; text-align: left;padding: 15px 0 0 12px;">动画选项：</label>
+
             <div class="controls">
                 <div id="s1">
                     <input id="model-animate" type="hidden" name="model-animate" value="{{animate}}"/>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" style="background: none; text-align: left;padding: 0px 0 0 12px;width: auto;">层叠顺序：</label>
+
+            <div class="controls">
+                <div id="zIndex">
+                    <input id="model-zIndex" value="{{zIndex}}" type="hidden"/>
                 </div>
             </div>
         </div>
@@ -31,11 +45,12 @@
             <label class="control-label">延时时间：</label>
 
             <div class="controls">
-                <input id="model-delay" type="text" name="model-delay" value="{{delay}}"/> 秒  [注]：演示动画取消延迟效果
+                <input id="model-delay" type="text" name="model-delay" value="{{delay}}"/> 秒 [注]：演示动画取消延迟效果
             </div>
         </div>
         <div class="control-group" style="display:none;">
             <label class="control-label">动画周期：</label>
+
             <div class="controls">
                 <input id="model-duration" type="text" name="model-duration" value="{{duration}}"/> 秒 [说明]：完成一次动画所需的时间
             </div>

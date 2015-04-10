@@ -446,11 +446,14 @@ define('BaseUtils', [], function (require, exports, module) {
       seajs.use(['jquery', 'drag'], function ($, drag) {
         var _resize = false;
         $(options.render).click(function () {
-          $(this).toggleClass("selected");
+          var $dragSelected = $(options.render + '.drag-selected');
+          $dragSelected.removeClass('drag-selected');
+          $('.drag-handle', $dragSelected).off().remove();
+          $(this).toggleClass("drag-selected");
         })
           .drag("init", function () {
-            if ($(this).is('.selected'))
-              return $('.selected');
+            if ($(this).is('.drag-selected'))
+              return $('.drag-selected');
           }).drag('start', function (ev, dd) {
             dd.attr = $(ev.target).prop("className");
             dd.width = $(this).width();
@@ -519,7 +522,7 @@ define('BaseUtils', [], function (require, exports, module) {
             height: Math.max(20, dd.height + dd.deltaY)
           });
           options.callback && options.callback.apply(this, [ev, dd]);
-        }, { relative: true, handle: '.handle'}).drag('dragend', function (ev, dd) {
+        }, { relative: true, handle: '.drag-handle'}).drag('dragend', function (ev, dd) {
           options.dragend && options.dragend.apply(this, [ev, dd]);
         });
       });

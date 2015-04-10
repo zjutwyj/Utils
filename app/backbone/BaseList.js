@@ -46,6 +46,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
        *        items: [], // 数据不是以url的形式获取时 (可选), items可为function形式传递;
        *        data: {}, // 附加的数据 BaseList、BaseView[js: this._options.data & template: {{name}}] ;
        *                     BaseItem中为[this._options.data &{{_options._data.name}}] BaseCollecton为this._options.data BaseModel为this.get('_data')
+       *        append: false, // 是否是追加内容， 默认为替换
        *        checkAppend: false, // 鼠标点击checkbox， checkbox是否追加  需在BaseItem事件中添加 'click .toggle': '_toggleChecked',
        *        enterRender: (可选) 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
        *        pagination: true, // 是否显示分页 view视图中相应加入<div id="pagination-container"></div>
@@ -145,7 +146,10 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       this._data = options.data = options.data || {};
       if (options.template) {
         this.template = HandlebarsHelper.compile(options.template);
+        if (this._options.append)
         this.$el.append(this.template(options.data));
+        else
+        this.$el.html(this.template(options.data));
       }
       return this._data;
     },

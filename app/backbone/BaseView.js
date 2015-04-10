@@ -38,12 +38,14 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
        *         data: 对象数据
        *         // 可选
        *         enterRender: 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
+       *         append: false // 视图是否是追加
        *      });
        */
       _initialize: function (options) {
         this._initOptions(options);
         this._initTemplate(this._options);
         this._initModel(Backbone.Model.extend({}));
+        this._initBind(this._options);
         return this;
       },
       /**
@@ -79,6 +81,17 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
         this.model = new model(this._options.data);
       },
       /**
+       * 绑定事件， 如添加事件， 重置事件
+       * @method [private] - _initBind
+       * @private
+       * @author wyj 14.11.16
+       */
+      _initBind: function (options) {
+        this.model.bind('reset', this.render, this);
+        this.model.bind('change', this.render, this);
+        this.model.bind('destroy', this.remove, this);
+      },
+      /**
        * 渲染
        *
        * @method [override] - _render
@@ -89,7 +102,10 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
        */
       _render: function () {
         this.trigger('before', this);
-        this.$el.append(this.template(this._options.data));
+        if (this._options.append)
+        this.$el.append(this.template(this.model.toJSON()));
+        else
+        this.$el.html(this.template(this.model.toJSON()));
         this._initEnterEvent(this._options);
         this.trigger('after', this);
         if (this._options.afterRender) {

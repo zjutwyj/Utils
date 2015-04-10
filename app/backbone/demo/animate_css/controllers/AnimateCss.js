@@ -16,6 +16,7 @@ define('AnimateCss', ['BaseView', 'template/animate_css_view', 'Utils'], functio
       this.curAnimate = this.options.data.animate;
       this.curDuration = this.options.data.duration;
       this.curDelay = this.options.data.delay;
+      this.zIndex = this.options.data.zIndex ? parseInt(this.options.data.zIndex, 10) : 0;
       this._initialize({
         template: template
       });
@@ -110,37 +111,41 @@ define('AnimateCss', ['BaseView', 'template/animate_css_view', 'Utils'], functio
       }, this));
       this.render();
     },
+    getZoom: function () {
+      return 0;
+    },
     getCss: function (name) {
       return this.source[name];
     },
     /*doAnimate: function (x, duration, delay) {
-      var animate = x + ' animated';
-      var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-      var $animationSandbox = $('#animationSandbox');
+     var animate = x + ' animated';
+     var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+     var $animationSandbox = $('#animationSandbox');
 
      *//* $animationSandbox.css({
-        'animation-duration': (duration || 1) + 's',
-        'animation-delay': (delay || 0) + 's'
-        //'-webkit-animation-iteration-count': (count || 1)
-      });*//*
-      $animationSandbox.addClass(animate).one(animationEnd, function () {
-        $(this).removeClass(animate);
-      });
-    },*/
+     'animation-duration': (duration || 1) + 's',
+     'animation-delay': (delay || 0) + 's'
+     //'-webkit-animation-iteration-count': (count || 1)
+     });*//*
+     $animationSandbox.addClass(animate).one(animationEnd, function () {
+     $(this).removeClass(animate);
+     });
+     },*/
     doAnimate: function (x) {
-      if (this.options.target){
+      if (this.options.target) {
         var $container = this.options.container ? $(this.options.container) : $('body');
         var $target = $(this.options.target, $container);
         $target.removeClass($target.attr('data-animate'));
         $target.removeClass('animated');
         $target.addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
           //$(this).removeClass();
-        });;
+        });
+        ;
         $target.attr('data-animate', x);
         this.options.animate && this.options.animate.call(this, x);
         //$target.attr('data-du', x);
         //$target.attr('data-animate', x);
-      } else{
+      } else {
         $('#animationSandbox').removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
           $(this).removeClass();
         });
@@ -175,6 +180,19 @@ define('AnimateCss', ['BaseView', 'template/animate_css_view', 'Utils'], functio
         change: Est.proxy(function (item) {
           this.doAnimate(item.value, parseFloat(this.$duration.val()), parseFloat(this.$delay.val()));
           this.curAnimate = item.value;
+        }, this)
+      });
+
+      Utils.initNumberRange({
+        render: '#zIndex',
+        target: '#model-zIndex',
+        viewId: 'NumberRange',
+        change: Est.proxy(function (number) {
+          var $container = this.options.container ? $(this.options.container) : $('body');
+          var $target = $(this.options.target, $container);
+          $target.attr('data-zIndex', number);
+          $target.css('z-index', number);
+          this.options.animate && this.options.animate.call(this, number);
         }, this)
       });
     }
