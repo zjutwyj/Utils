@@ -1149,7 +1149,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
         Utils.tip('至少选择一项');
         return;
       }
-      Utils.comfirm({
+      Utils.confirm({
         success: function () {
           ctx._batch({
             url: ctx.collection.batchDel,

@@ -38,7 +38,9 @@ define('LotteryList', ['BaseModel', 'BaseCollection', 'BaseItem', 'BaseList', 't
     className: 'bui-grid-row bui-grid-row-odd bui-grid-row-hover',
     events: {
       'click .delete': '_del',
-      'click .btn-img-edit': 'editImg'
+      'click .btn-img-edit': 'editImg',
+      'click .moveUp': '_moveUp',
+      'click .moveDown': '_moveDown'
     },
     initialize: function () {
       this._initialize({

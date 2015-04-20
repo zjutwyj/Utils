@@ -107,6 +107,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
         else
         this.$el.html(this.template(this.model.toJSON()));
         this._initEnterEvent(this._options);
+        if (this._options.modelBind) this._modelBind();
         this.trigger('after', this);
         if (this._options.afterRender) {
           this._options.afterRender.call(this, this._options);

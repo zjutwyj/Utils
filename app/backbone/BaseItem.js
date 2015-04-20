@@ -545,7 +545,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
           });
           return;
         }
-        app.addData('delItemDialog', Utils.comfirm({
+        app.addData('delItemDialog', Utils.confirm({
           title: '温馨提示',
           content: '是否删除?',
           target: context.$el.find('.delete').get(0),

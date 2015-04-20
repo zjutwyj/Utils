@@ -5,7 +5,7 @@
     <div class="lty-inner-div"><span class=""><input id="model-name" class="" value="{{name}}" type="text"/></span></div>
 </td>
 <td class="bui-grid-cell ">
-    <div class="lty-inner-div"><span class=""><input id="model-prob" type="text" value="{{prob}}"/></span></div>
+    <div class="lty-inner-div"><span class=""><input id="model-prob" type="text" value="{{prob}}" title="数据越大， 概率越小， 0表示必中。基本抽不中推荐10000"/></span></div>
 </td>
 <td class="bui-grid-cell ">
     <div class="lty-inner-div"><span class=""><input id="model-level" type="text" value="{{level}}"/></span></div>
@@ -25,5 +25,10 @@
             alt=""><!--{{pic}}--><a class="btn-img-edit" href="javascript:;">[修改]</a></span></div>
 </td>
 <td class="bui-grid-cell ">
-    <div class="lty-inner-div"><i class="icon icon-remove pointer delete"></i></div>
+    <div class="lty-inner-div">
+        <i class="icon icon-remove pointer delete"></i>
+        <i class="icon icon-arrow-up pointer moveUp"></i>
+        <i class="icon icon-arrow-down pointer moveDown"></i>
+
+    </div>
 </td>

@@ -281,32 +281,32 @@ define('BaseUtils', [], function (require, exports, module) {
           s: 'ctrl+8',
           e: function () {
             var _this = this;
-            seajs.use(['Utils'], function(Utils){
+            seajs.use(['Utils'], function (Utils) {
               Utils.openUpload({
                 id: 'uploadDialog',
                 type: '',
                 albumId: app.getData('curAlbumId'),
                 username: app.getData('user') && app.getData('user').username,
                 auto: true,
-                oniframeload: function(){
-                  this.iframeNode.contentWindow.uploadCallback = function(result){
+                oniframeload: function () {
+                  this.iframeNode.contentWindow.uploadCallback = function (result) {
                     _this.loadBookmark();
-                    _this.pasteHTML("<img src='"+CONST.PIC_URL + '/' + result[0]['serverPath']+"'/>");
+                    _this.pasteHTML("<img src='" + CONST.PIC_URL + '/' + result[0]['serverPath'] + "'/>");
                   };
                 },
-                success: function(){
+                success: function () {
                   var result = this.iframeNode.contentWindow.app.getView('picSource').getItems();
                   _this.loadBookmark();
-                  _this.pasteHTML("<img src='"+CONST.PIC_URL + '/' + result[0]['serverPath']+"'/>");
+                  _this.pasteHTML("<img src='" + CONST.PIC_URL + '/' + result[0]['serverPath'] + "'/>");
                 }
               });
             });
-          /*  _this.showIframeModal('选择图片',
-                CONST.DOMAIN + '/common/picUpload/upload.jsp?pageType=xheditor',
-              function (v) {
-                _this.loadBookmark();
-                _this.pasteHTML(v);
-              }, 800, 550);*/
+            /*  _this.showIframeModal('选择图片',
+             CONST.DOMAIN + '/common/picUpload/upload.jsp?pageType=xheditor',
+             function (v) {
+             _this.loadBookmark();
+             _this.pasteHTML(v);
+             }, 800, 550);*/
           }
         },
         abbccFlash: {
@@ -341,7 +341,7 @@ define('BaseUtils', [], function (require, exports, module) {
       };
       seajs.use(['xheditor'], function (xheditor) {
         function startEditor(obj) {
-          try{
+          try {
             var editor = $(obj).xheditor(
               {
                 plugins: allPlugin,
@@ -361,7 +361,7 @@ define('BaseUtils', [], function (require, exports, module) {
                 internalScript: true,
                 inlineScript: true
               });
-          }catch(e){
+          } catch (e) {
             debug(e);
           }
           if (options.viewId) {
@@ -449,12 +449,24 @@ define('BaseUtils', [], function (require, exports, module) {
           var $dragSelected = $(options.render + '.drag-selected');
           $dragSelected.removeClass('drag-selected');
           $('.drag-handle', $dragSelected).off().remove();
-          $(this).toggleClass("drag-selected");
+          $(this).addClass("drag-selected");
+          options.click && options.click.call(this);
         })
           .drag("init", function () {
+            if (!$(this).hasClass('lock')){
+              for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].destroy()
+              }
+            }
+            if ($(this).hasClass('lock')) return false;
             if ($(this).is('.drag-selected'))
               return $('.drag-selected');
           }).drag('start', function (ev, dd) {
+            if (!$(this).hasClass('drag-selected')) {
+              $(this).append('<div class="drag-handle NE"></div> <div class="drag-handle NN"></div> <div class="drag-handle NW"></div> <div class="drag-handle WW">' +
+                '</div> <div class="drag-handle EE"></div> <div class="drag-handle SW"></div> <div class="drag-handle SS"></div> <div class="drag-handle SE"></div>');
+              $(this).addClass("drag-selected");
+            }
             dd.attr = $(ev.target).prop("className");
             dd.width = $(this).width();
             dd.height = $(this).height();
@@ -462,7 +474,9 @@ define('BaseUtils', [], function (require, exports, module) {
           }).drag(function (ev, dd) {
             var props = {};
             _resize = false;
+            if ($(this).hasClass('lock')) return false;
             if (options.resize) {
+              debug('resize');
               if (dd.attr.indexOf("E") > -1) {
                 _resize = true;
                 props.width = Math.max(1, dd.width + dd.deltaX);
@@ -491,9 +505,11 @@ define('BaseUtils', [], function (require, exports, module) {
               options.callback && options.callback.apply(this, [ev, dd]);
             }
           }, { relative: true}).drag('dragend', function (ev, dd) {
+            if ($(this).hasClass('lock')) return false;
             if (!_resize) {
+              debug('resize end');
               options.dragend && options.dragend.apply(this, [ev, dd]);
-            } else{
+            } else {
               options.resizeend && options.resizeend.apply(this, [ev, dd]);
             }
           });

@@ -3,13 +3,14 @@
  * @class Lottery
  * @author yongjin<zjut_wyj@163.com> 2015/3/25
  */
-define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lottery_view'], function (require, exports, module) {
-  var Lottery, template, BaseView, LotteryList, PicturePick;
+define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lottery_view', 'Utils'], function (require, exports, module) {
+  var Lottery, template, BaseView, LotteryList, PicturePick, Utils;
 
   BaseView = require('BaseView');
   template = require('template/common_lottery_view');
   LotteryList = require('LotteryList');
   PicturePick = require('PicturePick');
+  Utils = require('Utils');
 
   Lottery = BaseView.extend({
     events: {
@@ -83,6 +84,14 @@ define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lo
         items: this.ltyObj['lotteryRule'],
         max: 10
       }));
+      if (this.ltyObj['lotteryRule'].length === 0 ){
+        this.ltyShow();
+      }
+      Utils.confirm({
+        id: 'lottery-info',
+        title: '说明',
+        content: '概率值越大， 被抽中的概率越小，0表示必中，10000表示基本抽不中。具体参考推荐设置'
+      });
     }
 
   });

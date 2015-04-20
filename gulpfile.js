@@ -469,6 +469,17 @@ var paths = {
       name: 'base.js',
       dist: 'app/modules/leaflet'
     }
+  },
+  mobileManagement: {
+    scripts: {
+      source: [
+        'app/vendor/seajs/sea.js',
+        'app/vendor/seajs/seajs-text-debug.js',
+        'app/modules/mobileManagement/Application.js'
+      ],
+      name: 'base.js',
+      dist: 'app/modules/mobileManagement'
+    }
   }
 };
 function doTask(item, debug) {

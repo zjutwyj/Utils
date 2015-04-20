@@ -5,17 +5,16 @@
  */
 
 define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
-    'template/tag_view', 'template/tag_view_item', 'template/tag_picker_item'],
+    'template/tag_view', 'template/tag_picker_item'],
   function (require, exports, module) {
     var Tag, TagList, TagItem, BaseModel, BaseCollection, BaseItem, BaseList,
-      model, collection, item, tagView, tagViewItem, tagPickerItem, RecTag, recItem;
+      model, collection, item, tagView, tagPickerItem, RecTag, recItem;
 
     BaseModel = require('BaseModel');
     BaseCollection = require('BaseCollection');
     BaseItem = require('BaseItem');
     BaseList = require('BaseList');
     tagView = require('template/tag_view');
-    tagViewItem = require('template/tag_view_item');
     tagPickerItem = require('template/tag_picker_item');
 
     model = BaseModel.extend({
@@ -50,19 +49,8 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       }
     });
 
-    item = BaseItem.extend({
-      tagName: 'li',
-      className: 'bui-list-item',
-      events: {
-        'click span': '_del'
-      },
-      initialize: function () {
-        this._initialize({
-          template: tagViewItem
-        });
-      }
-    });
 
+    /*下拉单视图*/
     TagItem = BaseItem.extend({
       tagName: 'li',
       className: 'bui-list-item bui-list-item-select',
@@ -75,6 +63,7 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       },
       initialize: function () {
         this._initialize({
+          viewId : 'tagList',
           template: tagPickerItem
         });
       },
@@ -105,6 +94,7 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
         this._initialize({
           render: '#tag-list-picker-ul',
           collection: collection,
+          viewId : 'tagList',
           item: TagItem,
           model: model,
           clearDialog: false,
@@ -162,6 +152,20 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       }
     });
 
+
+    /*组件单视图*/
+    item = BaseItem.extend({
+      tagName: 'li',
+      className: 'bui-list-item',
+      events: {
+        'click span': '_del'
+      },
+      initialize: function () {
+        this._initialize({
+          template: '{{name}} <span class="{{id}}" style="cursor:pointer;">×</span>'
+        });
+      }
+    });
     Tag = BaseList.extend({
       events: {
         'keyup .tag-combox-input': 'add',
@@ -231,8 +235,10 @@ define('Tag', ['jquery', 'BaseModel', 'BaseCollection', 'BaseItem', 'BaseList',
       // 获取标签列表
       getTagList: function (callback) {
         var opts = Est.cloneDeep(this.options);
-        opts.el = null;
+        delete opts.el;
         opts.afterLoad = callback;
+        delete opts.item;
+        opts.viewId = 'tagList';
         this.tagList = new TagList(opts);
       },
       // 获取标签Id
