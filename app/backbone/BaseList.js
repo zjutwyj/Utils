@@ -255,6 +255,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      *
      * @method [public] - _initPagination
      * @param options
+     * @private
      * @author wyj 14.11.17
      */
     _initPagination: function (options) {

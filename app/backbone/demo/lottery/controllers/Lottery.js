@@ -18,7 +18,7 @@ define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lo
       'click .lty-show': 'ltyShow',
       'click input[name=ltyType]': 'setLotteryBg'
     },
-    initialize: function(){
+    initialize: function () {
       this.options.data = this.options.data || {};
       this.ltyObj = {
         lotteryImage: '',
@@ -28,8 +28,8 @@ define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lo
         this.ltyObj = $.parseJSON(Est.unescapeHTML(this.options.model.get('ltyRule')));
       }
       Est.extend(this.options.data, {
-        lotteryImage: this.ltyObj.lotteryImage,
-        ltyType: this.model.get('ltyType')
+        lotteryImage: Est.isEmpty(this.options.data.lotteryImage) ? CONST.PIC_NONE : this.ltyObj.lotteryImage,
+        ltyType: this.model.get('ltyType') === '0' ? '2' : this.model.get('ltyType')
       });
       this._initialize({
         template: template
@@ -42,23 +42,23 @@ define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lo
     ltyShow: function () {
       app.getView('lotteryList').ltyShow();
     },
-    getContent: function(){
+    getContent: function () {
       return '<div class="lottery-container" style="width: 100%; height: 100%;"></div>';
     },
-    getLotteryRule: function(){
+    getLotteryRule: function () {
       return app.getView('lotteryList').getItems();
     },
-    getLotteryType: function(){
+    getLotteryType: function () {
       return this.$('input[name=ltyType]:checked').val();
     },
-    getLotteryImage: function(){
+    getLotteryImage: function () {
       var list = app.getView('lotteryPicturePick').getItems();
       return list.length > 0 ? list[0]['serverPath'] : '';
     },
-    setLotteryBg: function(){
+    setLotteryBg: function () {
 
     },
-    render: function(){
+    render: function () {
       this._render();
       // 抽奖图片
       var pic_list = [];
@@ -84,7 +84,7 @@ define('Lottery', ['BaseView', 'LotteryList', 'PicturePick', 'template/common_lo
         items: this.ltyObj['lotteryRule'],
         max: 10
       }));
-      if (this.ltyObj['lotteryRule'].length === 0 ){
+      if (this.ltyObj['lotteryRule'].length === 0) {
         this.ltyShow();
       }
       Utils.confirm({

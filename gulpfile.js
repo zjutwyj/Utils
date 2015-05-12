@@ -475,6 +475,7 @@ var paths = {
       source: [
         'app/vendor/seajs/sea.js',
         'app/vendor/seajs/seajs-text-debug.js',
+        'app/scripts/utils/Est.source.js',
         'app/modules/mobileManagement/Application.js'
       ],
       name: 'base.js',
@@ -690,7 +691,12 @@ gulp.task('leaflet', function () {
 gulp.task('leaflet.min', function () {
   doTask('leaflet', false);
 });
-
+gulp.task('mobileManagement', function () {
+  doTask('mobileManagement', true);
+});
+gulp.task('mobileManagement.min', function () {
+  doTask('mobileManagement', false);
+});
 
 /** 全部 */
 gulp.task('all', ['doc-clean', 'doc', 'acecss', 'patch', 'Est', 'fileupload', 'gallery', 'ueditor', 'seditor']);

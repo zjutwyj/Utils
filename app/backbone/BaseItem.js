@@ -583,14 +583,30 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      */
     _edit: function (options) {
       debug('1.BaseItem._edit');
-      var ctx = this;
       this._itemActive();
       options = Est.extend({}, options);
       // 如果是搜索结果列表时， 使用dialog形式
-      options.route = ctx._options.route || options.route;
-      if (!this.model.get('_isSearch') && options.route) {
+      options.route = this._options.route || options.route;
+      if (options.route){
+        this._navigate(options.route + '/' + Est.encodeId(this.model.get('id')), true);
+      } else{
+        debug('【Error】XXXList中是否设置route', {type: 'error'});
+      }
+      /*if (!this.model.get('_isSearch') && options.route) {
         this._navigate(options.route + '/' + Est.encodeId(ctx.model.get('id')), true);
       } else {
+        this._dialog({
+          moduleId: 'SeoDetail', // 模块ID
+          title: '修改', // 对话框标题
+          id: this.model.get('id'), // 初始化模块时传入的ID
+          width: 1000, // 对话框宽度
+          height: 'auto', // 对话框高度
+          skin: 'form-horizontal', // className
+          hideSaveBtn: true, // 是否隐藏保存按钮， 默认为false
+          onShow: function(){}, // 对话框弹出后调用
+          onClose: function(){
+          }
+        }, this);
         seajs.use(['dialog-plus'], function (dialog) {
           window.dialog = dialog;
           var buttons = [];
@@ -603,13 +619,13 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
             },
             autofocus: true
           });
-          /*if (!options.hideResetBtn) buttons.push({
+          *//*if (!options.hideResetBtn) buttons.push({
            value: '重置',
            callback: function () {
            this.iframeNode.contentWindow.$("#reset").click();
            return false;
            }
-           });*/
+           });*//*
           buttons.push({ value: '关闭' });
           window.detailDialog = dialog({
             id: 'edit-dialog',
@@ -643,7 +659,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
           });
           window.detailDialog.showModal();
         });
-      }
+      }*/
     }
   });
 

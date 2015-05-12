@@ -1,76 +1,97 @@
 <style>
-    #mainMessageForm input {
-
+    .mainMessageForm-outer input , .mainMessageForm-outer textarea{
+        padding: 0;
+        margin: 0;
+        background: #fff;
+        margin-bottom: 5px;
+        border: none;
+        width: 100%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-indent: 8px;
+        opacity: 0.9;
     }
 </style>
 <div id="message-container">
     <div class="message-option">
         <label class="checkboxLabel" for="msgctrl-1">
-            <input type="checkbox" data-target="join_name" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_name"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-1" value="1" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             姓名
         </label>
         <label class="checkboxLabel" for="msgctrl-2">
-            <input type="checkbox" data-target="join_mobile" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_mobile"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-2" value="2" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             手机
         </label>
         <label class="checkboxLabel" for="msgctrl-3">
-            <input type="checkbox" data-target="join_mail" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_mail"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-3" value="3" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             邮箱
         </label>
         <label class="checkboxLabel" for="msgctrl-5">
-            <input type="checkbox" data-target="join_phone" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_phone"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-5" value="5" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             电话
         </label>
         <label class="checkboxLabel" for="msgctrl-6">
-            <input type="checkbox" data-target="join_entName" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_entName"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-6" value="6" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             公司名称
         </label>
         <label class="checkboxLabel" for="msgctrl-7">
-            <input type="checkbox" data-target="join_job" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_job"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-7" value="7" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             职务
         </label>
         <label class="checkboxLabel" for="msgctrl-4">
-            <input type="checkbox" data-target="join_cont" class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
+            <input type="checkbox" data-target="join_cont"
+                   class="msgShow bui-form-field-checkbox bui-form-check-field bui-form-field"
                    id="msgctrl-4" value="4" checked="checked" name="msgctrl" aria-disabled="false" aria-pressed="false">
             内容
         </label>
     </div>
     <div class="message-content">
-        <form id="mainMessageForm" action="/wwy/msg/send">
-            <input type="hidden" name="openid" class="openid" value="">
-            <input type="hidden" name="title" class="t_before" value="{{title}}">
-            <div class="item" id="item-join_name">
-                <input type="text" id="join_name" class="title" name="name" placeholder="输入姓名">
-            </div>
-            <div class="item" id="item-join_mobile">
-                <input type="text" id="join_mobile" name="mobile" placeholder="输入手机号码">
-            </div>
-            <div class="item" id="item-join_mail">
-                <input type="text" id="join_mail" class="email" name="email" placeholder="输入Email">
-            </div>
-            <div class="item" id="item-join_phone">
-                <input type="text" id="join_phone" class="phone" name="phone" placeholder="输入电话号码">
-            </div>
-            <div class="item" id="item-join_entName">
-                <input type="text" id="join_entName" class="entName" name="entName" placeholder="输入公司名称">
-            </div>
-            <div class="item" id="item-join_job">
-                <input type="text" id="join_job" class="job" name="job" placeholder="输入职务">
-            </div>
-            <div class="item" id="item-join_cont">
-                <textarea id="join_cont" name="content" placeholder="留言内容"></textarea>
-            </div>
-            <input type="hidden" name="wwyId" value="{{wyId}}">
-            <input type="hidden" name="enterpriseId" class="entId" value="{{enterpriseId}}">
-            <div class="item cj_button">
-                <button type="submit">立即参加</button>
-            </div>
-        </form>
+        <div class="mainMessageForm-outer">
+
+            <form action="/wwy/msg/send">
+                <input type="hidden" name="openid" class="openid" value="">
+                <input type="hidden" name="title" class="t_before" value="{{title}}">
+
+                <div class="item" id="item-join_name">
+                    <input type="text" id="join_name" class="title" name="name" placeholder="输入姓名">
+                </div>
+                <div class="item" id="item-join_mobile">
+                    <input type="text" id="join_mobile" name="mobile" placeholder="输入手机号码">
+                </div>
+                <div class="item" id="item-join_mail">
+                    <input type="text" id="join_mail" class="email" name="email" placeholder="输入Email">
+                </div>
+                <div class="item" id="item-join_phone">
+                    <input type="text" id="join_phone" class="phone" name="phone" placeholder="输入电话号码">
+                </div>
+                <div class="item" id="item-join_entName">
+                    <input type="text" id="join_entName" class="entName" name="entName" placeholder="输入公司名称">
+                </div>
+                <div class="item" id="item-join_job">
+                    <input type="text" id="join_job" class="job" name="job" placeholder="输入职务">
+                </div>
+                <div class="item" id="item-join_cont">
+                    <textarea id="join_cont" name="content" placeholder="留言内容"></textarea>
+                </div>
+                <input type="hidden" name="wwyId" value="{{wyId}}">
+                <input type="hidden" name="enterpriseId" class="entId" value="{{enterpriseId}}">
+
+                <div class="item cj_button mainMessageForm">
+                    <a href="javascript:;" id="mainMessageForm">立即提交</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

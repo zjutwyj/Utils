@@ -108,13 +108,14 @@ define('LotteryDraw', ['BaseView', 'Canvas', 'DrawCanvas', 'template/common_lott
           height: 'auto'
         });
         this.$el.find('#' + this.drawId).append('<div class="rotate" data-spm="1" style="height: 100%;"> <div class="rotate-bg" style="height: 100%;"> <img width="100%" height="100%" src="' + CONST.HOST + '/images/rotate.gif"> </div> <div class="rotate-start" data-ga="抽奖.页面主题.开始抽奖" data-spm-click="gostr=/aliyun;locaid=d20149" data-spm-anchor-id="5176.100003.1.d20149"> <img width="63%" src="' + CONST.HOST + '/images/rotate_p.png" id="J_startBtn"> </div> </div>');
-        this.$(".rotate-bg img:first").attr("src", CONST.PIC_URL + '/' + this.ltyRule.lotteryImage);
-
+        if (this.ltyRule.lotteryImage !== CONST.PIC_NONE){
+          this.$(".rotate-bg img:first").attr("src", CONST.PIC_URL + '/' + this.ltyRule.lotteryImage);
+        }
         var rules = this.ltyRule.lotteryRule;
         var len = rules.length;
         var deg = Math.round(360 / len);
 
-        if (this.ltyRule.customImage !== '01') {
+        if (this.ltyRule.customImage !== '01' && this.ltyRule.lotteryImage === CONST.PIC_NONE) {
           var colors = ['#FECB03', '#2FB753', '#6B3983', '#DE47CD', '#A33EE5', '#2E9CD9', '#E73EAA', '#2FB753', '#FECB03', '#6B3983', '#A33EE5', '#DE47CD', '#2E9CD9', '#E73EAA'];
           var $rotateBg = this.$(".rotate .rotate-bg");
           var width = $rotateBg.width();
