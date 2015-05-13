@@ -142,10 +142,12 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
       this._onBeforeRender();
       if (this._options && this._options.filter)
         this._options.filter.call(this, this.model);
+      //TODO 添加判断是否存在this.$el debug
+      //debug('BaseItem里的this.$el为空， 检查document中是否存在， 或设置传入的options.el为jquery对象(有时是DOM片段)', {type: 'error'});
       this.$el.html(this.template ? this.template(this.model.toJSON()) :
         this._options.viewId && app.getCompileTemp(this._options.viewId) && app.getCompileTemp(this._options.viewId)(this.model.toJSON()));
       if (this._options.modelBind) this._modelBind();
-      //TODO
+      //TODO 判断是否存在子元素
       var modelOptions = this.model.get('_options');
       if (modelOptions._subRender && this.model.get('children') &&
 
