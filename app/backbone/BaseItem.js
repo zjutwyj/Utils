@@ -8,6 +8,9 @@
  *     'click .btn-del': '_del', // 删除
        'click .btn-move-up': '_moveUp', // 上移
        'click .btn-move-down': '_moveDown', // 下移
+       'click .toggle': '_toggleChecked',// 全选按钮
+       'change .input-sort': '_saveSort', // 保存sort字段
+       'click .btn-more': '_more', // 更多
  *  }，
  *  - initialize: function(){this._render()}
  *  - render: function(){this._render()}
@@ -25,7 +28,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 初始化, 若该视图的子元素有hover选择符， 则自动为其添加鼠标经过显示隐藏事件
      *
-     * @method [初始化] - _initialize
+     * @method [初始化] - _initialize ( 初始化 )
      * @param {Object} options [template: 模板字符串]
      * @author wyj 14.11.16
      * @example
@@ -143,7 +146,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 渲染
      *
-     * @method [渲染] - _render
+     * @method [渲染] - _render ( 渲染 )
      * @return {BaseCollection}
      * @author wyj 14.11.18
      */
@@ -208,7 +211,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 设置viewId
      *
-     * @method [参数] - _setViewId
+     * @method [参数] - _setViewId ( 设置viewId )
      * @param name
      * @author wyj 14.12.20
      */
@@ -307,7 +310,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * checkbox选择框转换
      *
-     * @method [选取] - _toggleChecked
+     * @method [选取] - _toggleChecked ( checkbox选择框转换 )
      * @author wyj 14.11.16
      * @example
      *      itemClick: function(e){
@@ -353,7 +356,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 添加当前ITEM的CLASS为item-active
      *
-     * @method [选取] - _itemActive
+     * @method [选取] - _itemActive ( 设置为选中状态 )
      * @param options [add: true 是否为添加模式]
      * @private
      * @author wyj 14.12.13
@@ -381,7 +384,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 上移
      *
-     * @method [移动] - _moveUp
+     * @method [移动] - _moveUp ( 上移 )
      * @param e
      * @author wyj 14.12.14
      */
@@ -398,7 +401,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 下移
      *
-     * @method [移动] - _moveDown
+     * @method [移动] - _moveDown ( 下移 )
      * @param e
      * @author wyj 14.12.14
      */
@@ -417,7 +420,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 保存sort排序
      *
-     * @method [保存] - _saveSort
+     * @method [保存] - _saveSort ( 保存sort排序 )
      * @author wyj 14.12.14
      */
     _saveSort: function () {
@@ -432,7 +435,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 获取当前列表第几页
      *
-     * @method [分页] - _getPage
+     * @method [分页] - _getPage ( 获取当前列表第几页 )
      * @return {*}
      * @author wyj 14.12.31
      *
@@ -445,7 +448,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 显示更多按钮
      *
-     * @method [渲染] _more
+     * @method [渲染] _more ( 显示更多按钮 )
      * @param e
      * @author wyj 15.1.16
      */
@@ -481,7 +484,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 单个字段保存
      *
-     * @method [保存] - _editField
+     * @method [修改] - _editField ( 单个字段保存 )
      * @param options [title: 标题][field: 字段名][target: 选择符(对话框指向于哪个元素)]
      * @return {ln.promise}
      * @author wyj 14.11.16
@@ -536,7 +539,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      *  删除模型类
      *
-     *  @method [删除] - _del
+     *  @method [删除] - _del ( 删除模型类 )
      *  @author wyj 14.11.16
      */
     _del: function (e) {
@@ -582,7 +585,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 修改模型类
      *
-     * @method [修改] - _edit
+     * @method [修改] - _edit ( 修改模型类 )
      * @param options [title: 标题][width: 宽度][height: 高度]
      *                [url: 地址][reload: 关闭后是否重新从服务器获取数据][close: 关闭回调方法]
      *                [hideSaveBtn: 隐藏保存按钮][hideResetBtn: 隐藏重置按钮][oniframeload: 页面载入后回调]

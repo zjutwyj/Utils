@@ -9,7 +9,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化选择框
      *
-     * @method [表单] - initSelect
+     * @method [表单] - initSelect ( 初始化选择框 )
      * @param options
      * @author wyj 15.1.27
      * @example
@@ -70,7 +70,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化下拉框
      *
-     * @method [表单] - initDropDown
+     * @method [表单] - initDropDown ( 初始化下拉框 )
      * @param options
      * @author wyj 15.2.17
      * @example
@@ -128,7 +128,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化级联地区
      *
-     * @method [地区] - initDistrict
+     * @method [地区] - initDistrict ( 初始化级联地区 )
      * @author wyj 15.1.6
      * @example
      *        BaseUtils.initDistrict({
@@ -158,7 +158,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 图片上传
      *
-     * @method [上传] - initUpload
+     * @method [上传] - initUpload ( 图片上传 )
      * @param options [render:　选择符][context: 上下文]
      * @author wyj 14.12.17
      * @example
@@ -215,7 +215,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化编辑器
      *
-     * @method [表单] - initEditor
+     * @method [表单] - initEditor ( 初始化编辑器 )
      * @param options
      * @author wyj 14.12.18
      * @example
@@ -381,7 +381,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化复制按钮
      *
-     * @method [复制] - initCopy
+     * @method [复制] - initCopy ( 初始化复制按钮 )
      * @param selecter
      * @param options
      * @author wyj 14.12.18
@@ -420,7 +420,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化拖动
      *
-     * @method [拖放] - initDrag
+     * @method [拖放] - initDrag ( 初始化拖动 )
      * @param options
      * @author wyj 15.03.24
      * @example
@@ -521,7 +521,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 初始化缩放
      *
-     * @method [缩放] - initResize
+     * @method [缩放] - initResize ( 初始化缩放 )
      * @param optoins
      * @author wyj 15.03.24
      * @example
@@ -550,7 +550,7 @@ define('BaseUtils', [], function (require, exports, module) {
     /**
      * 调用方法 - 命令模式[说明， 只有在需要记录日志，撤销、恢复操作等功能时调用该方法]
      *
-     * @method [调用] - execute
+     * @method [调用] - execute ( 调用方法 )
      * @param name
      * @return {*}
      * @author wyj 15.2.15

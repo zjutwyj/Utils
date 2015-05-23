@@ -22,6 +22,12 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * @param options
      * @return {*}
      * @author wyj 15.1.26
+     * @example
+     *        new BaseService().ajax(options).done(function (result) {
+                if (result.attributes) {
+                  ...
+                }
+              });
      */
     ajax: function (options) {
       var data = Est.extend({ _method: 'GET' }, options);
@@ -124,6 +130,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
               extend: true, // 是否全部展开
               defaults： false, // 是否添加默认选项
 
+              // 如果tree为true时， 表示需要构建树， 则需补充以下字段
               rootKey: 'isroot', // 构建树时的父级字段名称
               rootValue: '01', // 父级字段值
               categoryId: 'categoryId', //分类 Id
@@ -131,6 +138,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
               childTag: 'cates', // 子集字段名称
               sortBy: 'sort', // 根据某个字段排序
 
+              // 如果select为true时 ，表示需要构建下拉框， 则下面的text与value必填
               text: 'name', // 下拉框名称
               value: 'categoryId', // 下拉框值
             });

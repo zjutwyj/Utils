@@ -32,7 +32,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 初始化
      *
-     * @method [初始化] - _initialize
+     * @method [初始化] - _initialize ( 初始化 )
      * @param options
      * @author wyj 14.11.20
      * @example
@@ -93,10 +93,10 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       this.dx = 0;
       this.views = [];
       /*if (typeof options.clearDialog === 'undefined' || options.clearDialog) {
-        app.emptyDialog();
-      }*/
+       app.emptyDialog();
+       }*/
       /*setTimeout(function () {
-      }, 50);*/
+       }, 50);*/
       return this._init(options.collection, options);
     },
     /**
@@ -149,9 +149,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       if (options.template) {
         this.template = HandlebarsHelper.compile(options.template);
         if (this._options.append)
-        this.$el.append(this.template(options.data));
+          this.$el.append(this.template(options.data));
         else
-        this.$el.html(this.template(options.data));
+          this.$el.html(this.template(options.data));
       }
       return this._data;
     },
@@ -210,13 +210,10 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
             '或检查config.js/main.js中是否配置app.addModule("XxxModel")';
         }
       }, {type: 'error'});
-      if (!this.collection)
-        this.collection = new collection(options);
-      if (options.itemId)
-        this.collection._setItemId(options.itemId);
+      if (!this.collection) this.collection = new collection(options);
+      if (options.itemId) this.collection._setItemId(options.itemId);
       //TODO 分类过滤
-      if (options.subRender && !(options.items))
-        this.composite = true;
+      if (options.subRender && !(options.items)) this.composite = true;
 
       return this.collection;
     },
@@ -276,7 +273,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 获取集合数据
      *
-     * @method [渲染] - _load
+     * @method [渲染] - _load ( 获取集合数据 )
      * @param options [beforeLoad: 载入前方法][page: 当前页][pageSize: 每页显示条数]
      * @param model 分页模型类 或为全查必填
      * @author wyj 14.11.16
@@ -332,7 +329,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           ctx.collection.paginationModel.set('page', 1);
           ctx.collection.paginationModel.set('pageSize', 9000);
         }
-        debug(function(){
+        debug(function () {
           return ('【Query】' + (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
             ctx.collection.url));
         });
@@ -349,12 +346,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
                   ctx.collection.url + '查看数据');
               });
             }
-            if (ctx._options.subRender) {
-              ctx._filterRoot();
-            }
-            if (ctx._options.filter) {
-              ctx._filterCollection();
-            }
+            if (ctx._options.subRender)  ctx._filterRoot();
+            if (ctx._options.filter) ctx._filterCollection();
+
             ctx._afterLoad(options);
           });
       } else {
@@ -368,9 +362,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      * @private
      */
     _finally: function () {
-      if (this._options.afterRender) {
+      if (this._options.afterRender)
         this._options.afterRender.call(this, this._options);
-      }
       Utils.removeLoading();
     },
     /**
@@ -381,9 +374,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      * @private
      */
     _beforeLoad: function (options) {
-      if (options.beforeLoad) {
+      if (options.beforeLoad)
         options.beforeLoad.call(this, this.collection);
-      }
     },
     /**
      * 列表载入后执行
@@ -392,9 +384,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
      * @private
      */
     _afterLoad: function (options) {
-      if (options.afterLoad) {
+      if (options.afterLoad)
         options.afterLoad.call(this, this.collection);
-      }
     },
     /**
      * 初始化items
@@ -444,7 +435,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 停止遍历
      *
-     * @method [渲染] - _stop
+     * @method [渲染] - _stop ( 停止遍历 )
      * @author wyj 15.1.27
      * @example
      *        this._stop();
@@ -470,7 +461,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 渲染视图
      *
-     * @method [渲染] - _render
+     * @method [渲染] - _render ( 渲染视图 )
      * @author wyj 14.11.16
      * @example
      *
@@ -529,7 +520,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           roots.push(thisModel);
         }
       });
-      Est.each(roots, function(model){
+      Est.each(roots, function (model) {
         ctx._addOne(model);
       });
       //debug(ctx.collection);
@@ -586,7 +577,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 刷新列表
      *
-     * @method [集合] - _reload
+     * @method [集合] - _reload ( 刷新列表 )
      * @author wyj 15.1.24
      * @example
      *        this._reload();
@@ -630,7 +621,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 清空列表， 并移除所有绑定的事件
      *
-     * @method [集合] - _empty
+     * @method [集合] - _empty ( 清空列表 )
      * @author wyj 14.11.16
      * @example
      *      this._empty();
@@ -663,7 +654,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 清空DOM列表
      *
-     * @method [集合] - _clear
+     * @method [集合] - _clear ( 清空DOM列表 )
      * @author wyj 15.1.24
      * @example
      *        this._clear();
@@ -688,7 +679,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 搜索
      *
-     * @method [搜索] - _search
+     * @method [搜索] - _search ( 搜索 )
      * @param options [onBeforeAdd: 自定义过滤]
      * @author wyj 14.12.8
      * @example
@@ -701,12 +692,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
        *         {key: 'ads', value: this.searchAds}
        *         ],
        *        onBeforeAdd: function(item){
-       *          if (pass && !Est.isEmpty(obj.value) &&
-       *           item.attributes[obj.key].indexOf(obj.value) === -1) {
-       *           ctx.collection.remove(item);
-       *           pass = false;
-       *           return false;
-       *         }
+       *          // 自定义过滤， 即通过上面的filter后还需要经过这一层过滤
+       *          // 若通过返回true
+       *          return item.attributes[obj.key].indexOf(obj.value) !== -1;
        *       }});
      */
     _search: function (options) {
@@ -759,7 +747,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           }
         });
         if (pass && options.onBeforeAdd) {
-          options.onBeforeAdd.call(this, item);
+          pass = options.onBeforeAdd.call(this, item);
         }
         if (pass) {
           result.unshift(item);
@@ -805,7 +793,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           }
         });
         if (pass && options.onBeforeAdd) {
-          options.onBeforeAdd.call(this, item);
+          pass = options.onBeforeAdd.call(this, item);
         }
         if (pass) {
           result.unshift(item);
@@ -822,7 +810,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 弹出查看详细信息对话框
      *
-     * @method [详细] - _detail
+     * @method [详细] - _detail ( 查看详细 )
      * @param options [title: 标题][width: 宽度][height: 高度][padding: 内补丁]
      *                [url: 地址][hideSaveBtn: 隐藏保存按钮][hideResetBtn: 隐藏重置按钮]
      *                [oniframeload: 页面载入后回调， 参数为window对象]
@@ -918,10 +906,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       return false;
     },
     /**
-     * 全选checkbox选择框
+     * 全选checkbox选择框, 只能全选中， 不能全不选中
      *
-     * @method [private] - _toggleAllChecked
-     * @private
+     * @method [选取] - _toggleAllChecked ( 全选checkbox选择框 )
      * @author wyj 14.11.16
      */
     _toggleAllChecked: function () {
@@ -933,7 +920,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 保存sort值
      *
-     * @method [保存] - _saveSort
+     * @method [保存] - _saveSort ( 保存sort值 )
      * @param model
      * @author wyj 14.12.4
      */
@@ -987,7 +974,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 上移, 默认以sort为字段进行上移操作， 如果字段不为sort， 则需重载并设置options
      *
-     * @method [移动] - _moveUp
+     * @method [移动] - _moveUp ( 上移 )
      * @param model
      * @author wyj 14.12.4
      * @example
@@ -1035,7 +1022,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 下移
      *
-     * @method [移动] - _moveDown
+     * @method [移动] - _moveDown ( 下移 )
      * @param model
      * @author wyj 14.12.4
      */
@@ -1079,7 +1066,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      *  获取checkbox选中项所有ID值列表
      *
-     * @method [选取] - _getCheckboxIds
+     * @method [选取] - _getCheckboxIds ( 获取checkbox选中项所有ID值列表 )
      * @return {*}
      * @author wyj 14.12.8
      * @example
@@ -1091,21 +1078,21 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      *  获取checkbox选中项
      *
-     * @method [选取] - _getCheckedItems
+     * @method [选取] - _getCheckedItems ( 获取checkbox选中项 )
      * @return {*}
      * @author wyj 14.12.8
      * @example
      *      this._getCheckedItems(); => [{}, {}, {}, ...]
      */
-    _getCheckedItems: function(){
-      return Est.filter(this.collection.models, function(item){
+    _getCheckedItems: function () {
+      return Est.filter(this.collection.models, function (item) {
         return item.attributes.checked;
       });
     },
     /**
      * 转换成[{key: '', value: ''}, ... ] 数组格式 并返回
      *
-     * @method [集合] - _getItems
+     * @method [集合] - _getItems ( 获取所有列表项 )
      * @author wyj 15.1.15
      * @example
      *      app.getView('productList').getItems();
@@ -1116,7 +1103,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 获取集合中某个元素
      *
-     * @method [集合] - getItem
+     * @method [集合] - getItem ( 获取集合中某个元素 )
      * @param index
      * @return {*}
      * @author wyj 15.5.22
@@ -1130,7 +1117,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 向集合末尾添加元素
      *
-     * @method [集合] - _add
+     * @method [集合] - _add ( 向集合末尾添加元素 )
      * @author wyj 15.1.15
      * @example
      *      app.getView('productList')._add(new model());
@@ -1141,7 +1128,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 批量删除， 隐藏等基础接口
      *
-     * @method [批量] - _batch
+     * @method [批量] - _batch ( 批量删除 )
      * @param options [url: 批量请求地址] [tip: 操作成功后的消息提示]
      * @author wyj 14.12.14
      * @example
@@ -1173,7 +1160,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 批量删除
      *
-     * @method [批量] - _batchDel
+     * @method [批量] - _batchDel ( 批量删除 )
      * @param options
      * @author wyj 14.12.14
      * @example
@@ -1200,14 +1187,14 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 使所有的checkbox初始化为未选择状态
      *
-     * @method [选取] - _batchDel
+     * @method [选取] - _clearChecked ( 所有选取设置为未选择状态 )
      * @author wyj 14.12.14
      * @example
      *      this._clearChecked();
      */
-    _clearChecked: function(){
-      Est.each(this.collection.models, function(model){
-        model.attributes['checked']=false;
+    _clearChecked: function () {
+      Est.each(this.collection.models, function (model) {
+        model.attributes['checked'] = false;
       });
     }
   });

@@ -6,7 +6,7 @@
  * - model: ProductModel,
  * - initialize: function(){}
  *
- * @class BaseCollection
+ * @class BaseCollection 集合类
  * @author yongjin<zjut_wyj@163.com> 2014/11/6
  */
 define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require, exports, module) {
@@ -37,7 +37,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 初始化
      *
-     * @method [初始化] - _initialize
+     * @method [初始化] - _initialize ( 初始化 )
      * @author wyj 14.11.16
      * @example
               initialize: function () {
@@ -57,7 +57,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 处理url 与 分页
      *
-     * @method [private] - _parse
+     * @method [private] - _parse (  )
      * @private
      * @param resp
      * @param xhr
@@ -84,7 +84,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 处理url地址， 加上分页参数
      *
-     * @method [private] - _parseUrl
+     * @method [private] - _parseUrl (  )
      * @private
      * @param model
      * @author wyj 14.11.16
@@ -147,7 +147,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 加载列表
      *
-     * @method [集合] - _load
+     * @method [集合] - _load ( 加载列表 )
      * @param instance 实例对象
      * @param context 上下文
      * @param model 模型类
@@ -179,7 +179,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 设置itemId
      *
-     * @method [分类] - _setItemId
+     * @method [分类] - _setItemId ( 设置itemId )
      * @param itemId
      * @author wyj 14.12.16
      * @example
@@ -192,7 +192,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 清空列表
      *
-     * @method [集合] - _empty
+     * @method [集合] - _empty ( 清空列表 )
      * @author wyj 14.11.15
      */
     _empty: function () {

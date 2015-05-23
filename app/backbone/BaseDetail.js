@@ -16,7 +16,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 初始化
        *
-       * @method [初始化] - _initialize
+       * @method [初始化] - _initialize ( 初始化 )
        * @param options
        * @author wyj 14.11.20
        * @example
@@ -88,7 +88,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 渲染
        *
-       * @method [渲染] - _render
+       * @method [渲染] - _render ( 渲染 )
        * @author wyj 14.11.20
        * @example
        *        this._render();
@@ -145,7 +145,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * form包装器， 传递表单选择符
        *
-       * @method [表单] - _form
+       * @method [表单] - _form ( form包装器 )
        * @param {String} formSelector 选择器
        * @return {BaseDetail}
        * @author wyj on 14.11.15
@@ -175,7 +175,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 启用表单验证
        *
-       * @method [表单] - _validate
+       * @method [表单] - _validate ( 表单验证 )
        * @return {BaseDetail}
        * @param options [url: 远程验证地址][fields{Array}: 字段名称]
        * @author wyj 14.11.15
@@ -219,7 +219,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 绑定提交按钮
        *
-       * @method [表单] - _init
+       * @method [表单] - _init ( 绑定提交按钮 )
        * @param options [onBeforeSave: 保存前方法] [onAfterSave: 保存后方法]
        * @author wyj 14.11.15
        * @example
@@ -334,7 +334,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 重置表单
        *
-       * @method [表单] - _reset
+       * @method [表单] - _reset ( 重置表单 )
        * @author wyj 14.11.18
        */
       _reset: function () {
@@ -343,7 +343,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 清空视图， 并移除所有绑定的事件
        *
-       * @method [渲染] - _empty
+       * @method [渲染] - _empty ( 清空视图 )
        * @author wyj 14.11.16
        * @example
        *      this._empty();
@@ -355,7 +355,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 移除所有绑定的事件
        *
-       * @method [事件] - _close
+       * @method [事件] - _close ( 移除所有绑定事件 )
        * @author wyj 14.11.16
        */
       _close: function () {

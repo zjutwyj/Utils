@@ -48,7 +48,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 模型类初始化
        *
-       * @method [初始化] - _initialize
+       * @method [初始化] - _initialize ( 初始化 )
        * @author wyj 14.11.16
        * @example
        *      this._initialize();
@@ -139,7 +139,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 保存模型类
        *
-       * @method [保存] - _saveField
+       * @method [保存] - _saveField ( 保存模型类 )
        * @param keyValue
        * @param ctx
        * @param options [success: 成功回调][async: 是否异步]
@@ -197,7 +197,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 隐藏保存后的提示对话框
        *
-       * @method [对话框] - _hideTip
+       * @method [对话框] - _hideTip ( 隐藏提示对话框 )
        * @author wyj 15.1.29
        * @example
        *      this.model._hideTip();
@@ -208,7 +208,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 设置checkbox选择框状态
        *
-       * @method [选取] - _toggle
+       * @method [选取] - _toggle ( 设置checkbox选择框状态 )
        * @author wyj 14.11.16
        * @example
        *      this.model._toggle();
@@ -219,7 +219,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 预处理验证， 若模型类里有silent=true字段，则取消验证
        *
-       * @method [验证] - _validate
+       * @method [验证] - _validate ( 预处理验证 )
        * @param attributes
        * @param callback
        * @author wyj 14.11.21
@@ -241,7 +241,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 获取model值
        *
-       * @method [获取] - _getValue
+       * @method [获取] - _getValue ( 获取model值 )
        * @param path
        * @author wyj 15.1.30
        * @example
@@ -253,7 +253,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 设置model值
        *
-       * @method [设置] - _setValue
+       * @method [设置] - _setValue ( 设置model值 )
        * @param path
        * @param val
        * @author wyj 15.1.30

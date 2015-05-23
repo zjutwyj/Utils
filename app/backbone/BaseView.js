@@ -28,7 +28,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       /**
        * 初始化
        *
-       * @method [初始化] - _initialize
+       * @method [初始化] - _initialize ( 初始化 )
        * @param options [template: 字符串模板][model: 实例模型]
        * @author wyj 14.11.20
        * @example
@@ -97,7 +97,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       /**
        * 渲染
        *
-       * @method [渲染] - _render
+       * @method [渲染] - _render ( 渲染 )
        * @author wyj 14.11.20
        * @example
        *        this._render();

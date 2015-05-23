@@ -1,7 +1,7 @@
 /**
  * @description 应用程序管理器 - 中介者模式， 用于注册视图、模块、路由、模板等。
  * 注册视图、注册模块等以抽象工厂模式实现
- * @class Application - 应用程序管理器
+ * @class Application - 用户后台
  * @author yongjin<zjut_wyj@163.com> 2014/12/28
  */
 var Application = function (options) {
@@ -27,7 +27,7 @@ Est.extend(Application.prototype, {
   /**
    * 返回当前应用底层使用的是backbone版本
    *
-   * @method [版本] - getAppType
+   * @method [版本] - getAppType ( 获取App版本 )
    * @return {string}
    * @author wyj 15.5.20
    */
@@ -37,7 +37,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加面板
    *
-   * @method [面板] - addPanel
+   * @method [面板] - addPanel ( 添加面板 )
    * @param name
    * @param options
    * @return {Application}
@@ -68,7 +68,7 @@ Est.extend(Application.prototype, {
   /**
    * 显示视图
    *
-   * @method [面板] - show
+   * @method [面板] - show ( 显示视图 )
    * @param view
    * @author wyj 14.12.29
    */
@@ -78,7 +78,7 @@ Est.extend(Application.prototype, {
   /**
    * 移除面板
    *
-   * @method [面板] - removePanel
+   * @method [面板] - removePanel ( 移除面板 )
    * @param name
    * @author wyj 14.12.29
    */
@@ -99,7 +99,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取面板
    *
-   * @method [面板] - getPanel
+   * @method [面板] - getPanel ( 获取面板 )
    * @param name
    * @return {*}
    * @author wyj 14.12.28
@@ -112,7 +112,7 @@ Est.extend(Application.prototype, {
   /**
    * 视图添加
    *
-   * @method [视图] - addView
+   * @method [视图] - addView ( 添加视图 )
    * @param name
    * @param instance
    * @return {*}
@@ -133,7 +133,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 设置当前视图
-   * @method [视图] - setCurrentView
+   * @method [视图] - setCurrentView ( 设置当前视图 )
    * @param name
    * @example
    *      app.setCurrentView('list', new List());
@@ -143,7 +143,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取当前视图
-   * @method [视图] - getCurrentView
+   * @method [视图] - getCurrentView ( 获取当前视图 )
    * @return {*|Application.currentView}
    * @author wyj 15.1.9
    * @example
@@ -155,7 +155,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取视图
    *
-   * @method [视图] - getView
+   * @method [视图] - getView ( 获取视图 )
    * @param name
    * @return {*}
    * @author wyj 14.12.28
@@ -169,7 +169,7 @@ Est.extend(Application.prototype, {
    * 视图移除， 移除视图绑定的事件及所有itemView的绑定事件,
    * 并移除所有在此视图创建的对话框
    *
-   * @method [视图] - removeView
+   * @method [视图] - removeView ( 移除视图 )
    * @param name
    * @return {Application}
    * @example
@@ -191,7 +191,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加对话框
    *
-   * @method [对话框] - addDailog
+   * @method [对话框] - addDailog ( 添加对话框 )
    * @param dialog
    * @return {*}
    * @example
@@ -206,7 +206,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取所有对话框
-   * @method [对话框] - getDialogs
+   * @method [对话框] - getDialogs ( 获取所有对话框 )
    * @return {*}
    * @author wyj 15.1.23
    */
@@ -215,7 +215,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取指定对话框
-   * @method [对话框] - getDialog
+   * @method [对话框] - getDialog ( 获取指定对话框 )
    * @author wyj 15.03.20
    *
    */
@@ -225,7 +225,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 添加模型类
-   * @method [模型] - addModel
+   * @method [模型] - addModel ( 添加模型类 )
    * @author wyj 15.1.23
    */
   addModel: function (model) {
@@ -234,7 +234,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取所有模型类
-   * @method [模型] - getModels
+   * @method [模型] - getModels ( 获取所有模型类 )
    * @author wyj 15.1.23
    */
   getModels: function () {
@@ -243,7 +243,7 @@ Est.extend(Application.prototype, {
   /**
    * 清空所有对话框, 当切换页面时移除所有对话框
    *
-   * @method [对话框] - emptyDialog
+   * @method [对话框] - emptyDialog ( 清空所有对话框 )
    * @author wyj 14.12.28
    * @example
    *      app.emptyDialog();
@@ -258,7 +258,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加数据
    *
-   * @method [数据] - addData
+   * @method [数据] - addData ( 添加数据 )
    * @param name
    * @param data
    * @author wyj 14.12.28
@@ -274,7 +274,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取数据
    *
-   * @method [数据] - getData
+   * @method [数据] - getData ( 获取数据 )
    * @param name
    * @return {*}
    * @author wyj 14.12.28
@@ -285,10 +285,10 @@ Est.extend(Application.prototype, {
     return this['data'][name];
   },
   /**
-   * 添加模板 分拆seajs配置文件，
+   * 添加模块 分拆seajs配置文件，
    * 实现每个模板都有自己的模块配置文件
    *
-   * @method [模块] - addModule
+   * @method [模块] - addModule ( 添加模块 )
    * @param name
    * @param val
    * @author wyj 14.12.28
@@ -304,7 +304,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取所有模块
    *
-   * @method [模块] - getModules
+   * @method [模块] - getModules ( 获取所有模块 )
    * @return {*}
    * @author wyj 14.12.28
    * @example
@@ -316,7 +316,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加路由
    *
-   * @method [路由] - addRoute
+   * @method [路由] - addRoute ( 添加路由 )
    * @param name
    * @param fn
    * @author wyj 14.12.28
@@ -335,7 +335,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取所有路由
    *
-   * @method [路由] - getRoutes
+   * @method [路由] - getRoutes ( 获取所有路由 )
    * @return {*}
    * @author wyj 14.12.28
    *
@@ -346,7 +346,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加模板, 目前无法解决seajs的实时获取问题
    *
-   * @method [模板] - addTemplate
+   * @method [模板] - addTemplate ( 添加模板 )
    * @param name
    * @param fn
    * @author wyj 14.12.28
@@ -364,7 +364,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取所有模板
    *
-   * @method [模板] - getTemplates
+   * @method [模板] - getTemplates ( 获取所有模板 )
    * @return {*}
    * @author wyj 14.12.28
    * @example
@@ -375,7 +375,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 添加编译模板
-   * @method [模板] - addCompileTemp
+   * @method [模板] - addCompileTemp ( 添加编译模板 )
    * @param name
    * @param compile
    */
@@ -384,7 +384,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取编译模板
-   * @method [模板] - getCompileTemp
+   * @method [模板] - getCompileTemp ( 获取编译模板 )
    * @param name
    * @return {*}
    */
@@ -394,7 +394,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加状态数据
    *
-   * @method [状态] - addStatus
+   * @method [状态] - addStatus ( 添加状态数据 )
    * @param name
    * @param value
    * @author wyj 15.1.7
@@ -405,7 +405,7 @@ Est.extend(Application.prototype, {
   /**
    * 获取状态数据
    *
-   * @method [状态] - getStatus
+   * @method [状态] - getStatus ( 获取状态数据 )
    * @param name
    * @param value
    * @author wyj 15.1.7
@@ -415,7 +415,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取所有状态数据
-   * @method [状态] - getAllStatus
+   * @method [状态] - getAllStatus ( 获取所有状态数据 )
    * @return {{}|*|Application.status}
    * @author wyj 15.1.9
    */
@@ -423,8 +423,8 @@ Est.extend(Application.prototype, {
     return this.status;
   },
   /**
-   * 缓存cookie
-   * @method [cookie] - addCookie
+   * 添加cookie
+   * @method [cookie] - addCookie ( 添加cookie )
    * @author wyj 15.1.13
    */
   addCookie: function (name) {
@@ -435,7 +435,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取所有保存的cookie
-   * @method [cookie] - getCookies
+   * @method [cookie] - getCookies ( 获取所有保存的cookie )
    * @return {Array}
    * @author wyj 15.1.13
    */
