@@ -25,7 +25,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 传递options进来
      *
-     * @method [构造器] - constructor
+     * @method [private] - constructor
      * @private
      * @param options
      * @author wyj 14.12.16
@@ -57,7 +57,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 处理url 与 分页
      *
-     * @method [初始化] - _parse
+     * @method [private] - _parse
      * @private
      * @param resp
      * @param xhr
@@ -84,7 +84,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 处理url地址， 加上分页参数
      *
-     * @method [分页] - _parseUrl
+     * @method [private] - _parseUrl
      * @private
      * @param model
      * @author wyj 14.11.16
@@ -109,7 +109,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 设置分页模型类
      *
-     * @method [分页] - _parsePagination
+     * @method [private] - _parsePagination
      * @private
      * @param resp
      * @author wyj 14.11.16
@@ -127,7 +127,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 渲染分页
      *
-     * @method [分页] - _paginationRender
+     * @method [private] - _paginationRender
      * @private
      * @author wyj 14.11.16
      */
@@ -148,7 +148,6 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
      * 加载列表
      *
      * @method [集合] - _load
-     * @private
      * @param instance 实例对象
      * @param context 上下文
      * @param model 模型类
@@ -194,7 +193,6 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
      * 清空列表
      *
      * @method [集合] - _empty
-     * @private
      * @author wyj 14.11.15
      */
     _empty: function () {

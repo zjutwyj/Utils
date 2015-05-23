@@ -205,7 +205,7 @@
   };
   /**
    * 解码ASCII码
-   * @method fromCharCode
+   * @method [字符串] - fromCharCode
    * @param code
    * @return {string}
    * @author wyj 15.2.9

@@ -25,7 +25,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 初始化请求连接, 判断是否为新对象， 否自动加上ID
        *
-       * @method [地址] - url
+       * @method [private] - url
        * @private
        * @return {*}
        * @author wyj 14.11.16
@@ -180,7 +180,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 获取子模型
        *
-       * @method [获取] - _getChildren
+       * @method [private] - _getChildren
        * @private
        * @return {*}
        * @author wyj 14.12.18

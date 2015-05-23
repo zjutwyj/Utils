@@ -40,7 +40,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 初始化参数
        *
-       * @method [初始化] - _initOptions
+       * @method [private] - _initOptions
        * @private
        * @author wyj 15.1.12
        */
@@ -51,7 +51,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
        *
-       * @method [初始化] - _initTemplate
+       * @method [private] - _initTemplate
        * @private
        * @author wyj 15.1.12
        */
@@ -66,7 +66,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 初始化列表视图容器
        *
-       * @method [初始化] - _initList
+       * @method [private] - _initList
        * @private
        * @author wyj 15.1.12
        */
@@ -112,7 +112,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        * 若存在则从服务器端获取详细内容
        * 若为添加， 则在ctx 与模型类里设置 _isAdd = true
        *
-       * @method [初始化] - _initModel
+       * @method [private] - _initModel
        * @private
        * @param model
        * @param ctx
@@ -295,7 +295,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 保存结果
        *
-       * @method [表单] - _save
+       * @method [private] - _save
        * @private
        * @author wyj 14.11.18
        */
@@ -305,7 +305,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 保存表单
        *
-       * @method [表单] - _saveItem
+       * @method [private] - _saveItem
        * @private
        * @param callback
        * @param context
@@ -335,7 +335,6 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        * 重置表单
        *
        * @method [表单] - _reset
-       * @private
        * @author wyj 14.11.18
        */
       _reset: function () {
@@ -357,7 +356,6 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        * 移除所有绑定的事件
        *
        * @method [事件] - _close
-       * @private
        * @author wyj 14.11.16
        */
       _close: function () {

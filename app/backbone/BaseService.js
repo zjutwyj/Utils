@@ -38,6 +38,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * 初始化树
      *
      * @method initTree
+     * @private
      * @param options
      * @param result
      * @author wyj 15.1.26
@@ -62,6 +63,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * 初始化选择框
      *
      * @method initSelect
+     * @private
      * @param options
      * @param result
      * @author wyj 15.1.26
@@ -83,6 +85,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * 初始化是否展开
      *
      * @method initExtend
+     * @private
      * @param options
      * @param result
      * @author wyj 15.1.27
@@ -96,6 +99,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
      * 添加默认选项
      *
      * @method initDefault
+     * @private
      * @param options
      * @param result
      * @author wyj 15.1.27

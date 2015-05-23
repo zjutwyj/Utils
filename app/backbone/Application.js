@@ -1,5 +1,5 @@
 /**
- * @description 应用程序管理器 - 中介者模式， 用于注册视图、模块、路由、模板等
+ * @description 应用程序管理器 - 中介者模式， 用于注册视图、模块、路由、模板等。
  * 注册视图、注册模块等以抽象工厂模式实现
  * @class Application - 应用程序管理器
  * @author yongjin<zjut_wyj@163.com> 2014/12/28
@@ -28,7 +28,7 @@ Est.extend(Application.prototype, {
    * 返回当前应用底层使用的是backbone版本
    *
    * @method [版本] - getAppType
-   * @returns {string}
+   * @return {string}
    * @author wyj 15.5.20
    */
   getAppType: function(){

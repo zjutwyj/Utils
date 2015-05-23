@@ -54,7 +54,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 初始化参数
      *
-     * @method [初始化] - _initOptions
+     * @method [private] - _initOptions
      * @private
      * @author wyj 15.1.12
      */
@@ -64,7 +64,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 初始化展开收缩
      *
-     * @method [初始化] - _initCollapse
+     * @method [private] - _initCollapse
      * @param options
      * @private
      * @author wyj 15.2.14
@@ -78,7 +78,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
      *
-     * @method [初始化] - _initTemplate
+     * @method [private] - _initTemplate
      * @private
      * @author wyj 15.1.12
      */
@@ -95,7 +95,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 绑定事件， 如添加事件， 重置事件
      *
-     * @method [初始化] - _initBind
+     * @method [private] - _initBind
      * @private
      * @author wyj 14.11.16
      */
@@ -109,7 +109,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 初始化视图
      *
-     * @method [初始化] - _initView
+     * @method [private] - _initView
      * @param options
      * @private
      * @author wyj 15.2.14
@@ -123,7 +123,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 初始化样式
      *
-     * @method [初始化] - _initStyle
+     * @method [private] - _initStyle
      * @private
      * @author wyj 15.2.14
      */
@@ -208,10 +208,8 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 设置viewId
      *
-     * @method [设置] - _setViewId
-     * @private
+     * @method [参数] - _setViewId
      * @param name
-     * @private
      * @author wyj 14.12.20
      */
     _setViewId: function (name) {
@@ -220,7 +218,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 设置模型类
      *
-     * @method [设置] - _setInitModel
+     * @method [private] - _setInitModel
      * @private
      * @param model
      * @author wyj 14.11.20
@@ -231,7 +229,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 绑定展开收缩事件
      *
-     * @method [展开收缩] - _setupEvents
+     * @method [private] - _setupEvents
      * @private
      * @author wyj 14.12.9
      */
@@ -246,7 +244,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 展开收缩
      *
-     * @method [展开收缩] - _toggleCollapse
+     * @method [private] - _toggleCollapse
      * @private
      * @author wyj 14.12.9
      */
@@ -267,7 +265,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 渲染前事件
      *
-     * @method [渲染] - _onBeforeRender
+     * @method [private] - _onBeforeRender
      * @private
      * @author wyj 14.12.3
      */
@@ -277,7 +275,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 渲染后事件
      *
-     * @method [渲染] - _onAfterRender
+     * @method [private] - _onAfterRender
      * @private
      * @author wyj 14.12.3
      */
@@ -287,7 +285,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 移除监听
      *
-     * @method [事件] - _close
+     * @method [private] - _close
      * @private
      * @author wyj 14.11.16
      */
@@ -298,7 +296,7 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
     /**
      * 移除此模型
      *
-     * @method [渲染] - _clear
+     * @method [private] - _clear
      * @private
      * @author wyj 14.11.16
      */
@@ -384,7 +382,6 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * 上移
      *
      * @method [移动] - _moveUp
-     * @private
      * @param e
      * @author wyj 14.12.14
      */
@@ -403,7 +400,6 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      *
      * @method [移动] - _moveDown
      * @param e
-     * @private
      * @author wyj 14.12.14
      */
     _moveDown: function (e) {
@@ -422,7 +418,6 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * 保存sort排序
      *
      * @method [保存] - _saveSort
-     * @private
      * @author wyj 14.12.14
      */
     _saveSort: function () {
@@ -542,7 +537,6 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      *  删除模型类
      *
      *  @method [删除] - _del
-     *  @private
      *  @author wyj 14.11.16
      */
     _del: function (e) {
@@ -589,7 +583,6 @@ define('BaseItem', ['SuperView', 'HandlebarsHelper'], function (require, exports
      * 修改模型类
      *
      * @method [修改] - _edit
-     * @private
      * @param options [title: 标题][width: 宽度][height: 高度]
      *                [url: 地址][reload: 关闭后是否重新从服务器获取数据][close: 关闭回调方法]
      *                [hideSaveBtn: 隐藏保存按钮][hideResetBtn: 隐藏重置按钮][oniframeload: 页面载入后回调]

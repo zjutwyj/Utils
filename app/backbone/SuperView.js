@@ -15,7 +15,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 传递options进来
        *
-       * @method [构造器] - constructor
+       * @method [private] - constructor
        * @private
        * @param options
        * @author wyj 14.12.16
@@ -110,7 +110,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 模型类双向绑定
        *
-       * @method [模型] - _modelBind
+       * @method [private] - _modelBind
        * @private
        * @author wyj 14.12.25
        * @example
@@ -168,7 +168,6 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
        *
        * @method [模型] - _parseJSON
        * @param array
-       * @private
        */
       _parseJSON: function (array) {
         var keys, result;
@@ -205,7 +204,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 回车事件
        *
-       * @method [事件] - _initEnterEvent
+       * @method [private] - _initEnterEvent
        * @private
        * @author wyj 14.12.10
        */
@@ -261,7 +260,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
        * @param array
        * @author wyj 15.2.2
        * @example
-       *
+       *      this._bind('name', []);
        */
       _bind: function (modelId, array) {
         this.model.on('change:' + modelId, function () {

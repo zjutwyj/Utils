@@ -215,7 +215,7 @@ Application.prototype = {
   /**
    * 返回当前应用底层使用的是什么版本
    * @method [版本] - getAppType
-   * @returns {string}
+   * @return {string}
    * @author wyj 15.5.20
    */
   getAppType: function(){
