@@ -20,7 +20,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 传递options进来
      *
-     * @method [private] - constructor
+     * @method [初始化] - constructor
      * @private
      * @param options
      * @author wyj 14.12.16
@@ -32,7 +32,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 初始化
      *
-     * @method [override] - _initialize
+     * @method [初始化] - _initialize
      * @param options
      * @author wyj 14.11.20
      * @example
@@ -102,7 +102,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 初始化集合类
      *
-     * @method [private] - _init
+     * @method [初始化] - _init
      * @private
      * @param collection 对应的collection集合类， 如ProductCollection
      * @param options [beforeLoad: 加载数据前执行] [item: 集合单个视图] [model: 模型类]
@@ -126,7 +126,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 初始化参数
-     * @method _initOptions
+     *
+     * @method [初始化] - _initOptions
      * @private
      * @author wyj 15.1.12
      */
@@ -138,7 +139,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
-     * @method _initTemplate
+     *
+     * @method [初始化] - _initTemplate
      * @private
      * @author wyj 15.1.12
      */
@@ -156,7 +158,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 回车事件
      *
-     * @method [private] - _initEnterEvent
+     * @method [初始化] - _initEnterEvent
      * @private
      * @author wyj 14.12.10
      */
@@ -171,7 +173,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 初始化列表视图容器
-     * @method _initList
+     *
+     * @method [初始化] - _initList
      * @private
      * @author wyj 15.1.12
      */
@@ -195,7 +198,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 初始化collection集合
-     * @method _initCollection
+     *
+     * @method [初始化] - _initCollection
      * @param collection
      * @private
      */
@@ -219,7 +223,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 初始化单个枚举视图
      *
-     * @method [private] - _initItemView
+     * @method [初始化] - _initItemView
      * @private
      * @param itemView
      * @author wyj 14.11.16
@@ -230,7 +234,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 初始化模型类, 设置index索引
      *
-     * @method [private] - _initModel
+     * @method [初始化] - _initModel
      * @private
      * @param model
      * @author wyj 14.11.20
@@ -240,7 +244,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 绑定事件， 如添加事件， 重置事件
-     * @method [private] - _initBind
+     * @method [初始化] - _initBind
      * @private
      * @author wyj 14.11.16
      */
@@ -253,7 +257,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 初始化分页
      *
-     * @method [public] - _initPagination
+     * @method [分页] - _initPagination
      * @param options
      * @private
      * @author wyj 14.11.17
@@ -272,7 +276,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 获取集合数据
      *
-     * @method [public] - _load
+     * @method [渲染] - _load
      * @param options [beforeLoad: 载入前方法][page: 当前页][pageSize: 每页显示条数]
      * @param model 分页模型类 或为全查必填
      * @author wyj 14.11.16
@@ -359,7 +363,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 初始化完成后执行
-     * @method _finally
+     *
+     * @method [渲染] - _finally
      * @private
      */
     _finally: function () {
@@ -370,7 +375,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 列表载入前执行
-     * @method _beforeLoad
+     *
+     * @method [渲染] - _beforeLoad
      * @param options
      * @private
      */
@@ -381,7 +387,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 列表载入后执行
-     * @method _afterLoad
+     *
+     * @method [渲染] - _afterLoad
      * @private
      */
     _afterLoad: function (options) {
@@ -391,7 +398,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 初始化items
-     * @method [private] - _initItems
+     *
+     * @method [初始化] - _initItems
      * @private
      * @author wyj 15.1.8
      */
@@ -415,7 +423,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 缓存编译模板
-     * @method [private] - _setTemplate
+     *
+     * @method [模板] - _setTemplate
+     * @private
      * @author wyj 15.2.14
      */
     _setTemplate: function (compile) {
@@ -423,7 +433,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 获取编译模板
-     * @method [private] - _getTemplate
+     *
+     * @method [模板] - _getTemplate
+     * @private
      * @author wyj 15.2.14
      */
     _getTemplate: function () {
@@ -431,16 +443,20 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 停止遍历
-     * @method [public] - _stop
-     * @author wyj 15.1.27
      *
+     * @method [渲染] - _stop
+     * @author wyj 15.1.27
+     * @example
+     *        this._stop();
      */
     _stop: function () {
       this.stopIterator = true;
     },
     /**
      * 检查是否停止遍历
-     * @method _check
+     *
+     * @method [渲染] - _check
+     * @private
      * @return {boolean}
      * @author wyj 15.1.27
      */
@@ -454,7 +470,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 渲染视图
      *
-     * @method [override] - _render
+     * @method [渲染] - _render
      * @author wyj 14.11.16
      * @example
      *
@@ -467,7 +483,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 过滤父级元素
      *
-     * @method [private] - _filterRoot
+     * @method [集合] - _filterRoot
      * @private
      * @author wyj 14.12.9
      */
@@ -521,7 +537,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 向视图添加元素
      *
-     * @method [private] - _addOne
+     * @method [集合] - _addOne
      * @private
      * @param model
      * @author wyj 14.11.16
@@ -569,7 +585,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 刷新列表
-     * @method [public] - _reload
+     *
+     * @method [集合] - _reload
      * @author wyj 15.1.24
      * @example
      *        this._reload();
@@ -580,7 +597,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 过滤集合
-     * @method [private] - _filterCollection
+     *
+     * @method [集合] - _filterCollection
      * @private
      * @author wyj 15.1.10
      */
@@ -589,7 +607,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 静态分页
-     * @method [private] - _renderListByPagination
+     *
+     * @method [分页] - _renderListByPagination
      * @private
      * @author wyj 15.1.8
      */
@@ -611,7 +630,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 清空列表， 并移除所有绑定的事件
      *
-     * @method [public] - _empty
+     * @method [集合] - _empty
      * @author wyj 14.11.16
      * @example
      *      this._empty();
@@ -643,7 +662,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 清空DOM列表
-     * @method [public] - _clear
+     *
+     * @method [集合] - _clear
      * @author wyj 15.1.24
      * @example
      *        this._clear();
@@ -656,7 +676,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 添加所有元素， 相当于刷新视图
      *
-     * @method [private] - _addAll
+     * @method [集合] - _addAll
      * @private
      * @author wyj 14.11.16
      */
@@ -668,8 +688,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 搜索
      *
-     * @method [public] - _search
-     * @param array
+     * @method [搜索] - _search
      * @param options [onBeforeAdd: 自定义过滤]
      * @author wyj 14.12.8
      * @example
@@ -710,7 +729,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 过滤collection
      *
-     * @method [private] - _filter
+     * @method [过滤] - _filter
      * @param array
      * @param options
      * @private
@@ -755,7 +774,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 过滤items
      *
-     * @method [private] - _filterItems
+     * @method [过滤] - _filterItems
      * @param array
      * @param options
      * @private
@@ -803,7 +822,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 弹出查看详细信息对话框
      *
-     * @method [public] - _detail
+     * @method [详细] - _detail
      * @param options [title: 标题][width: 宽度][height: 高度][padding: 内补丁]
      *                [url: 地址][hideSaveBtn: 隐藏保存按钮][hideResetBtn: 隐藏重置按钮]
      *                [oniframeload: 页面载入后回调， 参数为window对象]
@@ -901,7 +920,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 全选checkbox选择框
      *
-     * @method [private] - _toggleAllChecked
+     * @method [选取] - _toggleAllChecked
      * @private
      * @author wyj 14.11.16
      */
@@ -914,7 +933,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 保存sort值
      *
-     * @method [private] - _saveSort
+     * @method [保存] - _saveSort
      * @param model
      * @private
      * @author wyj 14.12.4
@@ -927,7 +946,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 交换位置
      *
-     * @method [private] - _exchangeOrder
+     * @method [移动] - _exchangeOrder
      * @param original_index
      * @param new_index
      * @param options
@@ -969,7 +988,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 上移, 默认以sort为字段进行上移操作， 如果字段不为sort， 则需重载并设置options
      *
-     * @method [public] - _moveUp
+     * @method [移动] - _moveUp
      * @param model
      * @author wyj 14.12.4
      * @example
@@ -1017,7 +1036,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 下移
      *
-     * @method [public] - _moveDown
+     * @method [移动] - _moveDown
      * @param model
      * @author wyj 14.12.4
      */
@@ -1059,9 +1078,9 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       });
     },
     /**
-     *  获取checkbox选中项
+     *  获取checkbox选中项所有ID值列表
      *
-     * @method [public] - _getCheckboxIds
+     * @method [选取] - _getCheckboxIds
      * @return {*}
      * @author wyj 14.12.8
      * @example
@@ -1073,7 +1092,7 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      *  获取checkbox选中项
      *
-     * @method [public] - _getCheckedItems
+     * @method [选取] - _getCheckedItems
      * @return {*}
      * @author wyj 14.12.8
      * @example
@@ -1086,7 +1105,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     },
     /**
      * 转换成[{key: '', value: ''}, ... ] 数组格式 并返回
-     * @method [public] - _getItems
+     *
+     * @method [集合] - _getItems
      * @author wyj 15.1.15
      * @example
      *      app.getView('productList').getItems();
@@ -1095,8 +1115,23 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       return Est.pluck(this.collection.models, 'attributes');
     },
     /**
+     * 获取集合中某个元素
+     *
+     * @method [集合] - getItem
+     * @param index
+     * @return {*}
+     * @author wyj 15.5.22
+     */
+    _getItem: function (index) {
+      var list = this._getItems();
+      index = index || 0;
+      if (list.length > index) return list[index];
+      return null;
+    },
+    /**
      * 向集合末尾添加元素
-     * @method [public] - _add
+     *
+     * @method [集合] - _add
      * @author wyj 15.1.15
      * @example
      *      app.getView('productList')._add(new model());
@@ -1107,10 +1142,15 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 批量删除， 隐藏等基础接口
      *
-     * @method [private] - _batch
+     * @method [批量] - _batch
      * @param options [url: 批量请求地址] [tip: 操作成功后的消息提示]
-     * @private
      * @author wyj 14.12.14
+     * @example
+     *        this._batch({
+                url: ctx.collection.batchDel,
+                tip: '删除成功'
+              });
+     *
      */
     _batch: function (options) {
       var ctx = this;
@@ -1134,9 +1174,8 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
     /**
      * 批量删除
      *
-     * @method [private] - _batchDel
+     * @method [批量] - _batchDel
      * @param options
-     * @private
      * @author wyj 14.12.14
      * @example
      *      this._batchDel({
@@ -1159,6 +1198,14 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
         }
       });
     },
+    /**
+     * 使所有的checkbox初始化为未选择状态
+     *
+     * @method [选取] - _batchDel
+     * @author wyj 14.12.14
+     * @example
+     *      this._clearChecked();
+     */
     _clearChecked: function(){
       Est.each(this.collection.models, function(model){
         model.attributes['checked']=false;

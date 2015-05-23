@@ -25,7 +25,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 初始化请求连接, 判断是否为新对象， 否自动加上ID
        *
-       * @method [private] - url
+       * @method [地址] - url
        * @private
        * @return {*}
        * @author wyj 14.11.16
@@ -48,7 +48,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 模型类初始化
        *
-       * @method [override] - _initialize
+       * @method [初始化] - _initialize
        * @author wyj 14.11.16
        * @example
        *      this._initialize();
@@ -139,7 +139,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 保存模型类
        *
-       * @method [public] - _saveField
+       * @method [保存] - _saveField
        * @param keyValue
        * @param ctx
        * @param options [success: 成功回调][async: 是否异步]
@@ -180,7 +180,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 获取子模型
        *
-       * @method [private] - _getChildren
+       * @method [获取] - _getChildren
        * @private
        * @return {*}
        * @author wyj 14.12.18
@@ -196,7 +196,8 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       },
       /**
        * 隐藏保存后的提示对话框
-       * @method [public] - _hideTip
+       *
+       * @method [对话框] - _hideTip
        * @author wyj 15.1.29
        * @example
        *      this.model._hideTip();
@@ -207,7 +208,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 设置checkbox选择框状态
        *
-       * @method [public] - _toggle
+       * @method [选取] - _toggle
        * @author wyj 14.11.16
        * @example
        *      this.model._toggle();
@@ -218,7 +219,7 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       /**
        * 预处理验证， 若模型类里有silent=true字段，则取消验证
        *
-       * @method [public] - _validate
+       * @method [验证] - _validate
        * @param attributes
        * @param callback
        * @author wyj 14.11.21
@@ -239,7 +240,8 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       },
       /**
        * 获取model值
-       * @method [public] - _getValue
+       *
+       * @method [获取] - _getValue
        * @param path
        * @author wyj 15.1.30
        * @example
@@ -250,7 +252,8 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
       },
       /**
        * 设置model值
-       * @method [public] - _setValue
+       *
+       * @method [设置] - _setValue
        * @param path
        * @param val
        * @author wyj 15.1.30

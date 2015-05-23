@@ -15,7 +15,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 传递options进来
        *
-       * @method [private] - constructor
+       * @method [构造器] - constructor
        * @private
        * @param options
        * @author wyj 14.12.16
@@ -29,7 +29,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 导航
-       * @method [public] - _navigate
+       *
+       * @method [导航] - _navigate
        * @param name
        * @author wyj 15.1.13
        */
@@ -39,7 +40,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 静态对话框， 当你需要显示某个组件的视图但不是以iframe形式打开时
-       * @method [public] - _dialog
+       *
+       * @method [对话框] - _dialog
        * @param options
        * @author wyj 15.1.22
        * @example
@@ -108,7 +110,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 模型类双向绑定
        *
-       * @method [private] - _modelBind
+       * @method [模型] - _modelBind
        * @private
        * @author wyj 14.12.25
        * @example
@@ -142,7 +144,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 字段序列化成字符串
-       * @method [public] - _stringifyJSON
+       *
+       * @method [模型] - _stringifyJSON
        * @param array
        * @author wyj 15.1.29
        * @example
@@ -162,7 +165,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 反序列化字符串
-       * @method [public] - _parseJSON
+       *
+       * @method [模型] - _parseJSON
        * @param array
        * @private
        */
@@ -185,7 +189,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 设置参数
        *
-       * @method [public] - _setOption
+       * @method [参数] - _setOption
        * @param obj
        * @return {BaseList}
        * @author wyj 14.12.12
@@ -201,7 +205,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       /**
        * 回车事件
        *
-       * @method [private] - _initEnterEvent
+       * @method [事件] - _initEnterEvent
        * @private
        * @author wyj 14.12.10
        */
@@ -216,7 +220,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 获取配置参数
-       * @method [public] - _getOption
+       *
+       * @method [参数] - _getOption
        * @param name
        * @return {*}
        * @author wyj 15.1.29
@@ -226,7 +231,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 获取model值
-       * @method [public] - _getValue
+       *
+       * @method [模型] - _getValue
        * @param path
        * @author wyj 15.1.30
        * @example
@@ -237,7 +243,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 设置model值
-       * @method [public] - _setValue
+       *
+       * @method [模型] - _setValue
        * @param path
        * @param val
        * @author wyj 15.1.30
@@ -249,7 +256,8 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 绑定单个字段进行重渲染
-       * @method [public] - _bind
+       *
+       * @method [模型] - _bind
        * @param array
        * @author wyj 15.2.2
        * @example

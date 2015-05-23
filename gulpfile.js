@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
-/** 项目发布相关 */
+//** 项目发布相关 */
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var imagemin = require('gulp-imagemin');
@@ -9,7 +9,7 @@ var usemin = require('gulp-usemin');
 var htmlmin = require('gulp-htmlmin');
 var del = require('del');
 
-/** 打包压缩相关 */
+//** 打包压缩相关 */
 var coffee = require('gulp-coffee');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
@@ -17,7 +17,7 @@ var yuidoc = require("gulp-yuidoc");
 var bower = require('gulp-bower');
 var wiredep = require('wiredep').stream;
 
-/** ==================================================== 压缩打包 ====================================================*/
+//** ==================================================== 压缩打包 ====================================================*/
 var paths = {};
 function doTask(item, debug) {
   for (var key in paths[item]) {
@@ -87,7 +87,7 @@ function doTask(item, debug) {
   }
 }
 
-/** ace样式压缩 */
+//** ace样式压缩 */
 paths['acecss'] = { styles: { source: [
   'app/styles/theme/ace/jhw.min.css', 'app/styles/theme/ace/jhw-rtl.css', 'app/styles/theme/ace/jhw-skins.css',
   'app/styles/theme/ace/blueimp-gallery.min.css', 'app/styles/theme/ace/bootstrap-image-gallery.min.css',
@@ -100,7 +100,7 @@ gulp.task('acecss.min', function () {
   doTask('acecss', false);
 });
 
-/** 项目 jhw_v2  output: app -> scripts -> app.min.js*/
+//** 项目 jhw_v2  output: app -> scripts -> app.min.js*/
 paths['jhw'] = { scripts: { source: [
   'app/vendor/jquery/jquery.min.js',
   'app/vendor/angular-custom/angular.js',
@@ -149,7 +149,7 @@ gulp.task('jhw.min', function () {
   doTask('jhw', false);
 });
 
-/** 项目 Account  output: app -> modules -> Account -> app.min.js*/
+//** 项目 Account  output: app -> modules -> Account -> app.min.js*/
 paths['Account'] = { scripts: { source: [
   'app/vendor/jquery/jquery.min.js',
   'app/scripts/utils/Est.min.js',
@@ -171,7 +171,7 @@ gulp.task('Account.min', function () {
   doTask('Account', false);
 });
 
-/** 项目 jhw_v2 -> modules -> Design  output: app -> modules -> Design -> app.min.js*/
+//** 项目 jhw_v2 -> modules -> Design  output: app -> modules -> Design -> app.min.js*/
 paths['Design'] = { scripts: { source: [
   // base
   'app/vendor/jquery/jquery.min.js',
@@ -201,7 +201,7 @@ gulp.task('Design.min', function () {
   doTask('Design', false);
 });
 
-/** 项目 jhw_v2 -> modules -> ProductImport  output: app -> modules -> ProductImport -> base.js*/
+//** 项目 jhw_v2 -> modules -> ProductImport  output: app -> modules -> ProductImport -> base.js*/
 paths['ProductImport'] = { scripts: { source: [
   './app/vendor/jquery/jquery.min.js',
   './app/scripts/utils/Est.min.js'
@@ -213,7 +213,7 @@ gulp.task('ProductImport.min', function () {
   doTask('ProductImport', false);
 });
 
-/** 低版本浏览器兼容代码 */
+//** 低版本浏览器兼容代码 */
 paths['patch'] = { scripts: { source: [
   'app/vendor/es5-shim/es5-shim.js',
   'app/vendor/json3/json3.js',
@@ -228,7 +228,7 @@ gulp.task('patch.min', function () {
   doTask('patch', false);
 });
 
-/** Est */
+//** Est */
 paths['Est'] = { scripts: { source: [
   'app/scripts/utils/Est.source.js'
 ], dist: 'app/scripts/utils', name: 'Est.min.js' } }
@@ -239,7 +239,7 @@ gulp.task('Est.min', function () {
   doTask('Est', false);
 });
 
-/** Ext */
+//** Ext */
 paths['Ext'] = { scripts: { source: [
   'app/vendor/Ext/sencha-touch-all-debug.js'
 ], dist: 'app/vendor/Ext', name: 'sencha-touch-all-min.js' } }
@@ -250,7 +250,7 @@ gulp.task('Ext.min', function () {
   doTask('Ext', false);
 });
 
-/** Canvas */
+//** Canvas */
 paths['Canvas'] = { scripts: { source: [
   'app/scripts/utils/Canvas.source.js'
 ], dist: 'app/scripts/utils', name: 'Canvas.min.js' }};
@@ -261,7 +261,7 @@ gulp.task('Canvas.min', function () {
   doTask('Canvas', false);
 });
 
-/** fileupload */
+//** fileupload */
 paths['fileupload'] = { scripts: { source: [
   'app/modules/Upload/vendor/jq-upload/jquery.ui.widget.js',
   'app/modules/Upload/vendor/jq-upload/load-image.min.js',
@@ -282,7 +282,7 @@ gulp.task('fileupload.min', function () {
   doTask('fileupload', false);
 });
 
-/** gallery */
+//** gallery */
 paths['gallery'] = { scripts: { source: [
   'app/vendor/image-gallery/jquery.blueimp-gallery.min.js',
   'app/vendor/image-gallery/bootstrap-image-gallery.js'
@@ -294,7 +294,7 @@ gulp.task('gallery.min', function () {
   doTask('gallery', false);
 });
 
-/** ueditor */
+//** ueditor */
 paths['ueditor'] = { scripts: { source: [
   'app/vendor/ueditor1_4_3/ueditor.config.js',
   'app/vendor/ueditor1_4_3/ueditor.all.js',
@@ -307,7 +307,7 @@ gulp.task('ueditor.min', function () {
   doTask('ueditor', false);
 });
 
-/** seditor */
+//** seditor */
 paths['seditor'] = { scripts: { source: [
   'app/vendor/seditor/src/seditorutil.js', 'app/vendor/seditor/src/seditor.js'
 ], dist: 'app/vendor/seditor/src', name: 'seditor.min.js' },
@@ -321,7 +321,7 @@ gulp.task('seditor.min', function () {
   doTask('seditor', false);
 });
 
-/** drawcanvas */
+//** drawcanvas */
 paths['drawcanvas'] = { scripts: { source: [
   './app/vendor/drawcanvas/drawcanvas.js'
 ], dist: './app/vendor/drawcanvas', name: 'drawcanvas.min.js' } }
@@ -332,7 +332,7 @@ gulp.task('drawcanvas.min', function () {
   doTask('drawcanvas', false);
 });
 
-/** jihui88 */
+//** jihui88 */
 paths['jihui88'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
@@ -357,9 +357,122 @@ gulp.task('jihui881.min', function () {
 });
 
 
-/** ==================================================== userManagement ====================================================*/
+//** ==================================================== userManagement ==================================================== */
 
-/** 基础代码 */
+//** BaseUtils */
+paths['BaseUtils'] = { scripts: { source: ['./app/backbone/BaseUtils.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseUtils.js' } }
+gulp.task('BaseUtils', function () {
+  doTask('BaseUtils', true);
+});
+gulp.task('BaseUtils.min', function () {
+  doTask('BaseUtils', false);
+});
+
+//** BaseService */
+paths['BaseService'] = { scripts: { source: ['./app/backbone/BaseService.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseService.js' } }
+gulp.task('BaseService', function () {
+  doTask('BaseService', true);
+});
+gulp.task('BaseService.min', function () {
+  doTask('BaseService', false);
+});
+
+//** BaseCollection */
+paths['BaseCollection'] = { scripts: { source: ['./app/backbone/BaseCollection.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseCollection.js' } }
+gulp.task('BaseCollection', function () {
+  doTask('BaseCollection', true);
+});
+gulp.task('BaseCollection.min', function () {
+  doTask('BaseCollection', false);
+});
+
+//** BaseComposite */
+paths['BaseComposite'] = { scripts: { source: ['./app/backbone/BaseComposite.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseComposite.js' } }
+gulp.task('BaseComposite', function () {
+  doTask('BaseComposite', true);
+});
+gulp.task('BaseComposite.min', function () {
+  doTask('BaseComposite', false);
+});
+
+//** BaseDetail */
+paths['BaseDetail'] = { scripts: { source: ['./app/backbone/BaseDetail.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseDetail.js' } }
+gulp.task('BaseDetail', function () {
+  doTask('BaseDetail', true);
+});
+gulp.task('BaseDetail.min', function () {
+  doTask('BaseDetail', false);
+});
+
+//** BaseList */
+paths['BaseList'] = { scripts: { source: ['./app/backbone/BaseList.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseList.js' } }
+gulp.task('BaseList', function () {
+  doTask('BaseList', true);
+});
+gulp.task('BaseList.min', function () {
+  doTask('BaseList', false);
+});
+
+//** BaseItem */
+paths['BaseItem'] = { scripts: { source: ['./app/backbone/BaseItem.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseItem.js' } }
+gulp.task('BaseItem', function () {
+  doTask('BaseItem', true);
+});
+gulp.task('BaseItem.min', function () {
+  doTask('BaseItem', false);
+});
+
+// BaseModel */
+paths['BaseModel'] = { scripts: { source: ['./app/backbone/BaseModel.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseModel.js' } }
+gulp.task('BaseModel', function () {
+  doTask('BaseModel', true);
+});
+gulp.task('BaseModel.min', function () {
+  doTask('BaseModel', false);
+});
+
+//** BaseView */
+paths['BaseView'] = { scripts: { source: ['./app/backbone/BaseView.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseView.js' } }
+gulp.task('BaseView', function () {
+  doTask('BaseView', true);
+});
+gulp.task('BaseView.min', function () {
+  doTask('BaseView', false);
+});
+
+//** SuperView */
+paths['SuperView'] = { scripts: { source: ['./app/backbone/SuperView.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'SuperView.js' } }
+gulp.task('SuperView', function () {
+  doTask('SuperView', true);
+});
+gulp.task('SuperView.min', function () {
+  doTask('SuperView', false);
+});
+
+//** BaseService */
+paths['BaseService'] = { scripts: { source: ['./app/backbone/BaseService.js'], dist: 'C:/software/WebstormProjects/userManagement/app/lib', name: 'BaseService.js' } }
+gulp.task('BaseService', function () {
+  doTask('BaseService', true);
+});
+gulp.task('BaseService.min', function () {
+  doTask('BaseService', false);
+});
+
+//** Base模块压缩 */
+gulp.task('base-min', function () {
+  doTask('BaseUtils', false);
+  doTask('BaseCollection', false);
+  doTask('BaseComposite', false);
+  doTask('BaseDetail', false);
+  doTask('BaseItem', false);
+  doTask('BaseModel', false);
+  doTask('BaseView', false);
+  doTask('BaseList', false);
+  doTask('SuperView', false);
+  doTask('BaseService', false);
+});
+
+//** 基础代码 */ */
 paths['userManagement'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
@@ -376,13 +489,13 @@ gulp.task('userManagement.min', function () {
   doTask('userManagement', false);
 });
 
-/** 微传单*/
+//** 微传单 */
 paths['leaflet'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/scripts/utils/Est.source.js',
   'app/backbone/Application.js'
-], name: 'base.js', dist: 'C:/software/WebstormProjects/userManagement/app/modules/leaflet' } };
+], name: 'base.js', dist: 'C:/software/WebstormProjects/userManagement/app/modules/wwy/leaflet/website/scripts' } };
 gulp.task('leaflet', function () {
   doTask('leaflet', true);
 });
@@ -390,16 +503,50 @@ gulp.task('leaflet.min', function () {
   doTask('leaflet', false);
 });
 
-/** 手机后台 */
+//** 手机后台 */
 paths['mobileManagement'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/scripts/utils/Est.source.js',
-  'app/modules/mobileManagement/Application.js'
-], name: 'base.js', dist: 'C:/software/WebstormProjects/userManagement/app/modules/mobileManagement' } }
+  'app/appjs_v3/Application.js'
+], name: 'base.js', dist: 'C:/software/WebstormProjects/userManagement/app/modules/mobile/mobileManagement/scripts' } }
 gulp.task('mobileManagement', function () {
   doTask('mobileManagement', true);
 });
 gulp.task('mobileManagement.min', function () {
   doTask('mobileManagement', false);
+});
+/*[1]APP*/
+paths['appjs_merge'] = {
+  scripts: { source: ['app/appjs_v3/zepto.min.js', 'app/vendor/zepto/fx.js',
+    'app/appjs_v3/lib/clickable.js', 'app/appjs_v3/lib/swapper.js', 'app/appjs_v3/lib/scrollable.js',
+    'app/appjs_v3/app.js', 'app/appjs_v3/utils.js', 'app/appjs_v3/dialog.js', 'app/appjs_v3/events.js',
+    'app/appjs_v3/metrics.js', 'app/appjs_v3/scroll.js', 'app/appjs_v3/scroll-fix.js', 'app/appjs_v3/pages.js', 'app/appjs_v3/stack.js',
+    'app/appjs_v3/transitions.js', 'app/appjs_v3/navigation.js' , 'app/appjs_v3/android-touch-fix', 'app/appjs_v3/custom.js'
+  ], dist: 'app/vendor/appjs', name: 'app.min.js' }
+}
+gulp.task('appjs_merge', function () {
+  doTask('appjs_merge', true);
+});
+gulp.task('appjs_merge.min', function () {
+  doTask('appjs_merge', false);
+});
+
+/*包装appjs define*/
+paths['appjs_wrap'] = {
+  scripts: { source: ['app/appjs_v3/define_pre.js', 'app/vendor/appjs/app.min.js', 'app/appjs_v3/define_last.js'
+  ], dist: 'app/vendor/appjs', name: 'App.js' },
+  styles: {
+    source: [
+      'app/appjs_v3/stylesheet/default.css'
+    ],
+    name: 'base.css',
+    dist: 'app/vendor/appjs'
+  }
+}
+gulp.task('appjs_wrap', function () {
+  doTask('appjs_wrap', true);
+});
+gulp.task('appjs_wrap.min', function () {
+  doTask('appjs_wrap', false);
 });

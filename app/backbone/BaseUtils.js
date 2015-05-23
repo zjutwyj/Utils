@@ -8,7 +8,8 @@ define('BaseUtils', [], function (require, exports, module) {
   var BaseUtils = {
     /**
      * 初始化选择框
-     * @method initSelect
+     *
+     * @method [表单] - initSelect
      * @param options
      * @author wyj 15.1.27
      * @example
@@ -68,7 +69,8 @@ define('BaseUtils', [], function (require, exports, module) {
     },
     /**
      * 初始化下拉框
-     * @method initDropDown
+     *
+     * @method [表单] - initDropDown
      * @param options
      * @author wyj 15.2.17
      * @example
@@ -417,8 +419,9 @@ define('BaseUtils', [], function (require, exports, module) {
     },
     /**
      * 初始化拖动
+     *
      * @method [拖放] - initDrag
-     * @param optoins
+     * @param options
      * @author wyj 15.03.24
      * @example
      *     Utils.initDrag({
@@ -517,6 +520,7 @@ define('BaseUtils', [], function (require, exports, module) {
     },
     /**
      * 初始化缩放
+     *
      * @method [缩放] - initResize
      * @param optoins
      * @author wyj 15.03.24
@@ -545,6 +549,7 @@ define('BaseUtils', [], function (require, exports, module) {
     },
     /**
      * 调用方法 - 命令模式[说明， 只有在需要记录日志，撤销、恢复操作等功能时调用该方法]
+     *
      * @method [调用] - execute
      * @param name
      * @return {*}

@@ -23,7 +23,16 @@ Est.extend(Application.prototype, {
     this.cookies = [];
     this.models = [];
     this.compileTemps = {};
-
+  },
+  /**
+   * 返回当前应用底层使用的是backbone版本
+   *
+   * @method [版本] - getAppType
+   * @returns {string}
+   * @author wyj 15.5.20
+   */
+  getAppType: function(){
+    return 'backbone';
   },
   /**
    * 添加面板

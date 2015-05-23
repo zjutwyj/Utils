@@ -25,7 +25,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 传递options进来
      *
-     * @method [private] - constructor
+     * @method [构造器] - constructor
      * @private
      * @param options
      * @author wyj 14.12.16
@@ -37,7 +37,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 初始化
      *
-     * @method [override] - _initialize
+     * @method [初始化] - _initialize
      * @author wyj 14.11.16
      * @example
               initialize: function () {
@@ -57,7 +57,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 处理url 与 分页
      *
-     * @method [private] - _parse
+     * @method [初始化] - _parse
      * @private
      * @param resp
      * @param xhr
@@ -84,7 +84,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 处理url地址， 加上分页参数
      *
-     * @method [private] - _parseUrl
+     * @method [分页] - _parseUrl
      * @private
      * @param model
      * @author wyj 14.11.16
@@ -109,7 +109,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 设置分页模型类
      *
-     * @method [private] - _parsePagination
+     * @method [分页] - _parsePagination
      * @private
      * @param resp
      * @author wyj 14.11.16
@@ -127,7 +127,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 渲染分页
      *
-     * @method [private] - _paginationRender
+     * @method [分页] - _paginationRender
      * @private
      * @author wyj 14.11.16
      */
@@ -147,7 +147,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 加载列表
      *
-     * @method [private] - _load
+     * @method [集合] - _load
      * @private
      * @param instance 实例对象
      * @param context 上下文
@@ -180,7 +180,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 设置itemId
      *
-     * @method [public] - _setItemId
+     * @method [分类] - _setItemId
      * @param itemId
      * @author wyj 14.12.16
      * @example
@@ -193,7 +193,7 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
     /**
      * 清空列表
      *
-     * @method [private] - _empty
+     * @method [集合] - _empty
      * @private
      * @author wyj 14.11.15
      */

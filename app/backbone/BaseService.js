@@ -17,6 +17,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
   BaseService.prototype = {
     /**
      * 基础ajax
+     *
      * @method ajax
      * @param options
      * @return {*}
@@ -35,6 +36,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
     },
     /**
      * 初始化树
+     *
      * @method initTree
      * @param options
      * @param result
@@ -58,6 +60,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
     },
     /**
      * 初始化选择框
+     *
      * @method initSelect
      * @param options
      * @param result
@@ -78,6 +81,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
     },
     /**
      * 初始化是否展开
+     *
      * @method initExtend
      * @param options
      * @param result
@@ -90,6 +94,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
     },
     /**
      * 添加默认选项
+     *
      * @method initDefault
      * @param options
      * @param result
@@ -102,6 +107,7 @@ define('BaseService', ['jquery'], function (require, exports, module) {
     },
     /**
      * 基础工厂类 - 工厂模式，通过不同的url请求不同的数据
+     *
      * @method factory
      * @param options
      * @return {Est.promise}

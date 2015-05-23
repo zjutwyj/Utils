@@ -16,7 +16,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 初始化
        *
-       * @method [override] - _initialize
+       * @method [初始化] - _initialize
        * @param options
        * @author wyj 14.11.20
        * @example
@@ -39,7 +39,8 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       },
       /**
        * 初始化参数
-       * @method _initOptions
+       *
+       * @method [初始化] - _initOptions
        * @private
        * @author wyj 15.1.12
        */
@@ -49,7 +50,8 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       },
       /**
        * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
-       * @method _initTemplate
+       *
+       * @method [初始化] - _initTemplate
        * @private
        * @author wyj 15.1.12
        */
@@ -63,7 +65,8 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       },
       /**
        * 初始化列表视图容器
-       * @method _initList
+       *
+       * @method [初始化] - _initList
        * @private
        * @author wyj 15.1.12
        */
@@ -85,7 +88,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 渲染
        *
-       * @method [override] - _render
+       * @method [渲染] - _render
        * @author wyj 14.11.20
        * @example
        *        this._render();
@@ -109,7 +112,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
        * 若存在则从服务器端获取详细内容
        * 若为添加， 则在ctx 与模型类里设置 _isAdd = true
        *
-       * @method [private] - _initModel
+       * @method [初始化] - _initModel
        * @private
        * @param model
        * @param ctx
@@ -142,7 +145,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * form包装器， 传递表单选择符
        *
-       * @method [public] - _form
+       * @method [表单] - _form
        * @param {String} formSelector 选择器
        * @return {BaseDetail}
        * @author wyj on 14.11.15
@@ -172,7 +175,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 启用表单验证
        *
-       * @method [public] - _validate
+       * @method [表单] - _validate
        * @return {BaseDetail}
        * @param options [url: 远程验证地址][fields{Array}: 字段名称]
        * @author wyj 14.11.15
@@ -216,7 +219,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 绑定提交按钮
        *
-       * @method [public] - _init
+       * @method [表单] - _init
        * @param options [onBeforeSave: 保存前方法] [onAfterSave: 保存后方法]
        * @author wyj 14.11.15
        * @example
@@ -292,7 +295,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 保存结果
        *
-       * @method [private] - _save
+       * @method [表单] - _save
        * @private
        * @author wyj 14.11.18
        */
@@ -302,7 +305,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 保存表单
        *
-       * @method [private] - _saveItem
+       * @method [表单] - _saveItem
        * @private
        * @param callback
        * @param context
@@ -330,7 +333,8 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       },
       /**
        * 重置表单
-       * @method [private] - _reset
+       *
+       * @method [表单] - _reset
        * @private
        * @author wyj 14.11.18
        */
@@ -340,7 +344,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 清空视图， 并移除所有绑定的事件
        *
-       * @method [public] - _empty
+       * @method [渲染] - _empty
        * @author wyj 14.11.16
        * @example
        *      this._empty();
@@ -352,7 +356,7 @@ define('BaseDetail', ['SuperView', 'HandlebarsHelper', 'Utils', 'Service'],
       /**
        * 移除所有绑定的事件
        *
-       * @method [private] - _close
+       * @method [事件] - _close
        * @private
        * @author wyj 14.11.16
        */

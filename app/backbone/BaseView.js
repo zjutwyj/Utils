@@ -28,7 +28,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       /**
        * 初始化
        *
-       * @method [override] - _initialize
+       * @method [初始化] - _initialize
        * @param options [template: 字符串模板][model: 实例模型]
        * @author wyj 14.11.20
        * @example
@@ -50,7 +50,8 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       },
       /**
        * 初始化参数
-       * @method _initOptions
+       *
+       * @method [初始化] - _initOptions
        * @private
        * @author wyj 15.1.12
        */
@@ -60,7 +61,8 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       },
       /**
        * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
-       * @method _initTemplate
+       *
+       * @method [初始化] - _initTemplate
        * @private
        * @author wyj 15.1.12
        */
@@ -72,7 +74,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       /**
        * 初始化模型类, 设置index索引
        *
-       * @method [private] - _initModel
+       * @method [初始化] - _initModel
        * @private
        * @param model
        * @author wyj 14.11.20
@@ -82,7 +84,8 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       },
       /**
        * 绑定事件， 如添加事件， 重置事件
-       * @method [private] - _initBind
+       *
+       * @method [初始化] - _initBind
        * @private
        * @author wyj 14.11.16
        */
@@ -94,7 +97,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       /**
        * 渲染
        *
-       * @method [override] - _render
+       * @method [渲染] - _render
        * @private
        * @author wyj 14.11.20
        * @example
@@ -117,7 +120,7 @@ define('BaseView', ['SuperView', 'backbone', 'Utils', 'HandlebarsHelper'],
       /**
        * 移除事件
        *
-       * @method [private] - _empty
+       * @method [渲染] - _empty
        * @private
        * @return {BaseView}
        * @author wyj 14.11.16

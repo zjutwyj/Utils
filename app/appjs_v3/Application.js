@@ -213,6 +213,15 @@ Application.prototype = {
     this.lazyLoadCount = 0;
   },
   /**
+   * 返回当前应用底层使用的是什么版本
+   * @method [版本] - getAppType
+   * @returns {string}
+   * @author wyj 15.5.20
+   */
+  getAppType: function(){
+    return 'appjs';
+  },
+  /**
    * 添加数据, 用于存放全局变量， 各个模块之间的数据通讯
    *
    * @method [数据] - addData
