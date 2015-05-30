@@ -730,11 +730,14 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
       ctx.filter = false;
       while (len > 0) {
         if (this._check()) len = -1;
+
         var item = ctx.collection.models[len - 1];
         var pass = true;
+
         Est.each(array, function (obj) {
           var match = false;
           var keyval = Est.getValue(item.attributes, obj.key);
+
           if (Est.typeOf(obj.match) === 'regexp') {
             match = !obj.match.test(keyval);
           } else {
@@ -747,7 +750,10 @@ define('BaseList', ['SuperView', 'Utils', 'HandlebarsHelper'], function (require
           }
         });
         if (pass && options.onBeforeAdd) {
-          pass = options.onBeforeAdd.call(this, item);
+          var _before_add_result = options.onBeforeAdd.call(this, item);
+          if (Est.typeOf(_before_add_result) === 'boolean' && !_before_add_result){
+            pass = false;
+          }
         }
         if (pass) {
           result.unshift(item);

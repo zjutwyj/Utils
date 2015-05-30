@@ -753,7 +753,7 @@ Application.prototype = {
    * @method [滚动] - scroll ( 屏幕滚动到某处 )
    * @author wyj 15.4.24
    * @example
-   *    App.scroll(50, 5, page);
+   *    App.scroll(50, 5, page); // 50表示距离顶部多少， 5表示时间
    */
   scroll: function (scrollTo, time, page) {
     debug('【Util】App.scroll:' + scrollTo);
