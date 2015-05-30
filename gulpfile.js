@@ -526,10 +526,10 @@ paths['UserManagement_mobileManagement_base'] = { scripts: { source: [
   'app/appjs_v3/Application.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/mobile/mobileManagement/scripts' } }
 gulp.task('UserManagement_mobileManagement_base', function () {
-  doTask('mobileManagement', true);
+  doTask('UserManagement_mobileManagement_base', true);
 });
 gulp.task('UserManagement_mobileManagement_base.min', function () {
-  doTask('mobileManagement', false);
+  doTask('UserManagement_mobileManagement_base', false);
 });
 
 //** 手机后台 - App.js */
@@ -542,10 +542,10 @@ paths['UserManagement_appjs_merge'] = {
   ], dist: 'app/appjs_v3', name: 'app.min.js' }
 }
 gulp.task('UserManagement_appjs_merge', function () {
-  doTask('appjs_merge', true);
+  doTask('UserManagement_appjs_merge', true);
 });
 gulp.task('UserManagement_appjs_merge.min', function () {
-  doTask('appjs_merge', false);
+  doTask('UserManagement_appjs_merge', false);
 });
 
 //** 手机后台 - 包装App.js */

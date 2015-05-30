@@ -40,6 +40,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
       },
       /**
        * 静态对话框， 当你需要显示某个组件的视图但不是以iframe形式打开时
+       * 对话框参数将作为模块里的options参数
        *
        * @method [对话框] - _dialog ( 静态对话框 )
        * @param options
@@ -48,7 +49,7 @@ define('SuperView', ['jquery', 'underscore', 'backbone', 'Utils', 'HandlebarsHel
        *        this._dialog({
                     moduleId: 'SeoDetail', // 模块ID
                     title: 'Seo修改', // 对话框标题
-                    id: this.model.get('id'), // 初始化模块时传入的ID
+                    id: this.model.get('id'), // 初始化模块时传入的ID， 如productId
                     width: 600, // 对话框宽度
                     height: 250, // 对话框高度
                     skin: 'form-horizontal', // className

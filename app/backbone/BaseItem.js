@@ -8,7 +8,7 @@
  *     'click .btn-del': '_del', // 删除
        'click .btn-move-up': '_moveUp', // 上移
        'click .btn-move-down': '_moveDown', // 下移
-       'click .toggle': '_toggleChecked',// 全选按钮
+       'click .btn-toggle': '_toggleChecked',// 全选按钮
        'change .input-sort': '_saveSort', // 保存sort字段
        'click .btn-more': '_more', // 更多
  *  }，

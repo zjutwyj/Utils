@@ -129,7 +129,7 @@ window.debug = function (str, options) {
 /**
  * Application
  *
- * @method Application
+ * @method [对象] - Application
  * @author wyj 15.4.24
  */
 var Application = function (options) {
@@ -214,7 +214,7 @@ Application.prototype = {
   },
   /**
    * 返回当前应用底层使用的是什么版本
-   * @method [版本] - getAppType
+   * @method [版本] - getAppType ( 获取版本 )
    * @return {string}
    * @author wyj 15.5.20
    */
@@ -224,7 +224,7 @@ Application.prototype = {
   /**
    * 添加数据, 用于存放全局变量， 各个模块之间的数据通讯
    *
-   * @method [数据] - addData
+   * @method [数据] - addData ( 添加数据 )
    * @param {String} name 变量名称
    * @param data
    * @author wyj 14.12.28
@@ -240,7 +240,7 @@ Application.prototype = {
   /**
    * 获取数据
    *
-   * @method [数据] - getData
+   * @method [数据] - getData ( 获取数据 )
    * @param name
    * @return {*}
    * @author wyj 14.12.28
@@ -253,7 +253,7 @@ Application.prototype = {
   /**
    * 视图添加
    *
-   * @method [视图] - addView
+   * @method [视图] - addView ( 添加视图 )
    * @param name
    * @param instance
    * @return {*}
@@ -271,7 +271,7 @@ Application.prototype = {
   },
   /**
    * 设置当前视图
-   * @method [视图] - setCurrentView
+   * @method [视图] - setCurrentView ( 设置当前视图 )
    * @param name
    * @example
    *      app.setCurrentView('list', new List());
@@ -281,7 +281,7 @@ Application.prototype = {
   },
   /**
    * 获取当前视图
-   * @method [视图] - getCurrentView
+   * @method [视图] - getCurrentView ( 获取当前视图 )
    * @return {*|Application.currentView}
    * @author wyj 15.1.9
    * @example
@@ -293,7 +293,7 @@ Application.prototype = {
   /**
    * 获取视图
    *
-   * @method [视图] - getView
+   * @method [视图] - getView ( 获取视图 )
    * @param name
    * @return {*}
    * @author wyj 14.12.28
@@ -307,7 +307,7 @@ Application.prototype = {
    * 视图移除， 移除视图绑定的事件及所有itemView的绑定事件,
    * 并移除所有在此视图创建的对话框
    *
-   * @method [视图] - removeView
+   * @method [视图] - removeView ( 移除视图 )
    * @param name
    * @return {Application}
    * @example
@@ -329,7 +329,7 @@ Application.prototype = {
   /**
    * 添加控制器
    *
-   * @method [控制器] - addController
+   * @method [控制器] - addController ( 添加控制器 )
    * @param name
    * @param fn
    * @author wyj 15.4.24
@@ -351,7 +351,7 @@ Application.prototype = {
   /**
    * 获取所有控制器
    *
-   * @method [控制器] - getControllers
+   * @method [控制器] - getControllers （ 获取所有控制器 ）
    * @return {*}
    * @author wyj 15.4.24
    * @example
@@ -360,10 +360,10 @@ Application.prototype = {
     return this['controllers'];
   },
   /**
-   * 添加模板 分拆seajs配置文件，
+   * 添加模块 分拆seajs配置文件，
    * 实现每个模板都有自己的模块配置文件
    *
-   * @method [模块] - addModule
+   * @method [模块] - addModule ( 添加模块 )
    * @param name
    * @param val
    * @author wyj 14.12.28
@@ -377,7 +377,7 @@ Application.prototype = {
   /**
    * 获取所有模块
    *
-   * @method [模块] - getModules
+   * @method [模块] - getModules ( 获取所有模块 )
    * @return {*}
    * @author wyj 14.12.28
    * @example
@@ -389,7 +389,7 @@ Application.prototype = {
   /**
    * 添加状态
    *
-   * @method [状态] - addStatus
+   * @method [状态] - addStatus ( 添加状态 )
    * @param name
    * @param value
    * @author wyj 15.4.24
@@ -402,7 +402,7 @@ Application.prototype = {
   /**
    * 获取状态数据
    *
-   * @method [状态] - getStatus
+   * @method [状态] - getStatus ( 获取状态数据 )
    * @param name
    * @return {*}
    * @author wyj 15.4.24
@@ -413,7 +413,7 @@ Application.prototype = {
   /**
    * 获取所有的状态数据
    *
-   * @method [状态] - getAllStatus
+   * @method [状态] - getAllStatus ( 获取所有状态数据 )
    * @return {{}|*|Application.status}
    * @author wyj 15.4.24
    * @example
@@ -425,7 +425,7 @@ Application.prototype = {
   /**
    * 添加模板
    *
-   * @method [模板] - addTemplate
+   * @method [模板] - addTemplate ( 添加模板 )
    * @param name
    * @param fn
    * @author wyj 15.4.25
@@ -441,7 +441,7 @@ Application.prototype = {
   /**
    * 获取模板
    *
-   * @method [模板] - getTemplates
+   * @method [模板] - getTemplates ( 获取模板 )
    * @return {*}
    * @author wyj 15.4.24
    * @example
@@ -452,7 +452,7 @@ Application.prototype = {
   },
   /**
    * 注入时使用
-   * @method [模式] - setArguments
+   * @method [模式] - setArguments ( 设置参数 )
    * @param args
    * @author wyj 15.4.24
    * @example
@@ -464,7 +464,7 @@ Application.prototype = {
   /**
    * 订阅\发布
    *
-   * @method [模式] - trigger
+   * @method [模式] - trigger ( 订阅\发布 )
    * @param topic
    * @param args
    * @return {boolean}
@@ -518,7 +518,7 @@ Application.prototype = {
   /**
    * 方法注入
    *
-   * @method [模式] - inject
+   * @method [模式] - inject ( AOP切面 )
    * @param aOrgFunc
    * @param aBeforeExec
    * @param aAtferExec
@@ -554,7 +554,7 @@ Application.prototype = {
   /**
    * 添加缓存数据
    *
-   * @method [缓存] - addCache
+   * @method [缓存] - addCache ( 添加缓存数据 )
    * @param name
    * @param data
    * @author wyj 15.4.24
@@ -567,7 +567,7 @@ Application.prototype = {
   /**
    * 获取缓存数据
    *
-   * @method [缓存] - getCache
+   * @method [缓存] - getCache ( 获取缓存数据 )
    * @param name
    * @return {*}
    * @author wyj 15.4.24
@@ -579,7 +579,7 @@ Application.prototype = {
   },
   /** 添加浏览器hash
    *
-   * @method [页面] - addHash
+   * @method [页面] - addHash ( 添加浏览器hash )
    * @author wyj 15.4.24
    * @example
    *    App.addHash('home');
@@ -591,7 +591,7 @@ Application.prototype = {
   /**
    * 获取当前浏览器hash值
    *
-   * @method [页面] - getCurrentHansh
+   * @method [页面] - getCurrentHansh ( 获取当前浏览器hash值 )
    * @return {*}
    * @author wyj 15.4.24
    * @example
@@ -604,7 +604,7 @@ Application.prototype = {
   },
   /**
    * 设置返回页面
-   * @method [页面] - setBackPage
+   * @method [页面] - setBackPage ( 设置返回页面 )
    * @author wyj 15.4.24
    * @example
    *    App.setBackPage('home');
@@ -615,7 +615,7 @@ Application.prototype = {
   /**
    * 获取返回页面
    *
-   * @method [页面] - getBackPage
+   * @method [页面] - getBackPage ( 获取返回页面 )
    * @return {*}
    * @author wyj 15.4.24
    * @example
@@ -631,7 +631,7 @@ Application.prototype = {
   /**
    * 判断是否存在返回页面
    *
-   * @method [页面] - hasBackPage
+   * @method [页面] - hasBackPage ( 判断是否存在返回页面)
    * @author wyj 15.4.24
    * @example
    *      App.hasBackPage(); => true/flase
@@ -642,7 +642,7 @@ Application.prototype = {
   /**
    * 清空栈, 清空所有page页面
    *
-   * @method [导航] - clearStack
+   * @method [导航] - clearStack ( 清空栈 )
    * @author wyj 15.4.24
    * @example
    *    App.clearStack();
@@ -658,7 +658,7 @@ Application.prototype = {
   /**
    * 获取浏览器参数
    *
-   * @method [参数] - getUrlParam
+   * @method [参数] - getUrlParam ( 获取浏览器参数 )
    * @author wyj 15.4.24
    * @example
    *    App.getUrlParam('productId', location.href);
@@ -677,7 +677,7 @@ Application.prototype = {
   /**
    * 获取参数
    *
-   * @method [参数] - getParams
+   * @method [参数] - getParams ( 获取参数 )
    * @param url
    * @return {{}}
    * @author wyj 15.4.24
@@ -701,7 +701,7 @@ Application.prototype = {
   /**
    * 设置参数
    *
-   * @method [参数] - setParams
+   * @method [参数] - setParams ( 设置参数 )
    * @param url
    * @author wyj 15.4.24
    * @example
@@ -714,7 +714,7 @@ Application.prototype = {
   /**
    * 自动隐藏
    *
-   * @method [隐藏] - autoHide
+   * @method [隐藏] - autoHide ( 自动隐藏 )
    * @author wyj 15.4.24
    * @example
    *      var $appLogo = $('#app-index-logo', $(page));
@@ -750,7 +750,7 @@ Application.prototype = {
   /**
    * 屏幕滚动到某处, 比如回到顶部按钮， 点击输入框
    *
-   * @method [滚动] - scroll
+   * @method [滚动] - scroll ( 屏幕滚动到某处 )
    * @author wyj 15.4.24
    * @example
    *    App.scroll(50, 5, page);
@@ -774,7 +774,7 @@ Application.prototype = {
   /**
    * 图片延迟加载
    *
-   * @method [加载] - initLazyLoad
+   * @method [加载] - initLazyLoad ( 图片延迟加载 )
    * @author wyj 15.4.24
    * @example
    *       // html
@@ -834,7 +834,7 @@ Application.prototype = {
   /**
    * 重置延迟加载
    *
-   * @method [加载] - resetLazyLoad
+   * @method [加载] - resetLazyLoad ( 重置延迟加载 )
    * @param page
    * @author wyj 15.4.24
    * @example
@@ -850,7 +850,7 @@ Application.prototype = {
   /**
    * 使延迟加载失效
    *
-   * @method [加载] - disableLazyLoad
+   * @method [加载] - disableLazyLoad ( 使延迟加载失效 )
    * @author wyj 15.4.24
    * @example
    *    App.disableLazyLoad();
@@ -861,7 +861,7 @@ Application.prototype = {
   /**
    * 判断是否正处在延迟加载中
    *
-   * @method [加载] - isLazyLoad
+   * @method [加载] - isLazyLoad ( 判断是否正处在延迟加载中 )
    * @return {isLazyLoad}
    * @author wyj 15.4.24
    * @example
@@ -873,7 +873,7 @@ Application.prototype = {
   /**
    * 添加加载动画
    *
-   * @method [加载] - addLoading
+   * @method [加载] - addLoading ( 添加加载动画 )
    * @author wyj 15.4.24
    * @example
    *      App.addLoading();
@@ -891,7 +891,7 @@ Application.prototype = {
   /**
    * 获取加载动画元素
    *
-   * @method [加载] - getLoading
+   * @method [加载] - getLoading ( 获取加载动画元素 )
    * @author wyj 15.4.24
    * @example
    *      App.getLoading();
@@ -902,7 +902,7 @@ Application.prototype = {
   /**
    * 移除加载动画
    *
-   * @method [加载] - removeLoading
+   * @method [加载] - removeLoading ( 移除加载动画 )
    * @author wyj 15.4.24
    * @example
    *      App.removeLoading();
@@ -912,9 +912,20 @@ Application.prototype = {
     else $('.loading').remove();
   },
   /**
+   * 页面刷新
+   * @method [页面] - reloadPage
+   * @author wyj 15.5.28
+   * @example
+   *      App.reloadPage('home', page);
+   */
+  reloadPage: function(pageName){
+    App._Stack.pop();
+    App.load(pageName);
+  },
+  /**
    * 添加底部右侧工具栏
    *
-   * @method [工具] - addTool
+   * @method [工具] - addTool ( 添加底部右侧工具栏 )
    * @author wyj 15.4.24
    * @example
    *    App.addTool(page, _page);
@@ -956,7 +967,7 @@ Application.prototype = {
   /**
    * 获取自定义stack, 主要用于当页面刷新时， 需要获取
    *
-   * @method [导航] - getCustomPage
+   * @method [导航] - getCustomPage ( 获取自定义stack )
    * @param pageName
    * @param back
    * @return {*}
@@ -979,7 +990,7 @@ Application.prototype = {
   /**
    * 回退到进入前的页面, 并移除参数配置
    *
-   * @method [导航] - goToRootPage
+   * @method [导航] - goToRootPage ( 回退到进入前的页面 )
    * @author wyj 15.4.24
    * @example
    *       App.goToRootPage();
@@ -992,7 +1003,7 @@ Application.prototype = {
   /**
    * 页面载入后初始化， 比如hashchange, 用户session会话， 进入前的网址记录， stacks, 参数提取
    *
-   * @method [初始化] - initPageReady
+   * @method [初始化] - initPageReady ( 页面载入后初始化 )
    * @author wyj 15.4.24
    * @example
    *      App.initPageReady(App);
@@ -1066,9 +1077,9 @@ Application.prototype = {
     }
   },
   /**
-   * 初始化app-content容器
+   * 初始化app-content容器, 当页面变长时， 需调用此方法
    *
-   * @method [初始化] - initContent
+   * @method [初始化] - initContent ( 初始化app-content容器 )
    * @param page
    * @param height
    * @author wyj 15.4.24
@@ -1088,7 +1099,7 @@ Application.prototype = {
   /**
    * 初始化事件， 形如backbone的  events: {} , 统一管理， 便于维护
    *
-   * @method [初始化] - initEvents
+   * @method [初始化] - initEvents ( 初始化事件 )
    * @param page
    * @param events
    * @author wyj 15.4.24
@@ -1111,7 +1122,7 @@ Application.prototype = {
    * 初始化页面， 比如滚动[Scrollable]、点击按钮事件[data-target="order_list"]等等操作
    * 当app-content里的内容改变时， 需初始化下页面， 使按钮、滚动等生效
    *
-   * @method [初始化] - initPage
+   * @method [初始化] - initPage ( 初始化页面 )
    * @param page
    * @author wyj 15.4.24
    * @example
@@ -1137,7 +1148,7 @@ Application.prototype = {
   /**
    * 获取元素距离顶部的距离
    *
-   * @method [样式] - getElementTop
+   * @method [样式] - getElementTop ( 获取元素距离顶部的距离 )
    * @param element
    * @return {Number|number}
    * @author wyj 15.4.24
@@ -1157,7 +1168,7 @@ Application.prototype = {
   /**
    * 获取当前元素相对父元素的sffset值
    *
-   * @method [样式] - offsetRelative
+   * @method [样式] - offsetRelative ( 获取当前元素相对父元素的sffset值 )
    * @author wyj 15.4.24
    * @example
    *    App.offsetRelative(); => {top: 3, left: 5}
@@ -1180,7 +1191,7 @@ Application.prototype = {
    * 初始化表单元素 作用是当用户点击这个input框时， 这个框会滚动到顶部，
    * 解决部分iphone4s屏幕小看不到输入框的问题
    *
-   * @method [表单] - initInput
+   * @method [表单] - initInput ( 初始化表单元素 )
    * @param page
    * @author wyj 15.4.24
    * @example
@@ -1217,7 +1228,7 @@ Application.prototype = {
   /**
    * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
    *
-   * @method [会话] - addSession
+   * @method [会话] - addSession ( 添加session会话 )
    * @param name
    * @param value
    * @return {*}
@@ -1232,7 +1243,7 @@ Application.prototype = {
   /**
    * 读取session会话
    *
-   * @method [会话] - getSession
+   * @method [会话] - getSession ( 读取session会话 )
    * @param name
    * @return {Object}
    * @example
@@ -1244,7 +1255,7 @@ Application.prototype = {
   /**
    * 判断是否已经登录, 只要需要请求运程数据时都会触发此方法， 若未登录则跳转到登录页面, 可手动触发
    *
-   * @method [会话] - checkLogin
+   * @method [会话] - checkLogin ( 判断是否已经登录 )
    * @return {boolean}
    * @example
    *      App.checkLogin(); => true/false
@@ -1277,7 +1288,7 @@ Application.prototype = {
   },
   /**
    * 计算hash值
-   * @method [哈唏] - hash
+   * @method [哈唏] - hash ( 计算hash值 )
    * @param str
    * @return {number}
    * @author wyj 15.4.24
@@ -1299,7 +1310,7 @@ Application.prototype = {
   /**
    * 查询数据 ， 查询成功后触发queryEvent事件
    *
-   * @method [数据API] - query
+   * @method [数据API] - query ( 查询数据 )
    * @param query
    * @param options
    * @return {*}
@@ -1348,7 +1359,7 @@ Application.prototype = {
   },
   /**
    * 表单提交
-   * @method [数据API] - post
+   * @method [数据API] - post ( 表单提交 )
    * @param options
    * @author wyj 15.4.24
    * @example
@@ -1382,7 +1393,7 @@ Application.prototype = {
   },
   /**
    * 数据删除操作
-   * @method [数据API] - del
+   * @method [数据API] - del ( 数据删除操作 )
    * @author wyj 15.4.24
    * @example
    *    App.del('/shop/order/detail/001', function(result){
@@ -1401,7 +1412,7 @@ Application.prototype = {
   /**
    * form包装器， 传递表单选择符
    *
-   * @method [表单] - _form
+   * @method [表单] - _form ( form包装器 )
    * @param {String} formSelector 选择器
    * @return {BaseDetail}
    * @author wyj on 14.11.15
@@ -1469,8 +1480,13 @@ Application.prototype = {
         }
       });
       if (passed) {
-        if (typeof options.onBeforeSave !== 'undefined')
-          options.onBeforeSave.call(null, __model);
+        if (typeof options.onBeforeSave !== 'undefined'){
+          var beforeSaveResult = options.onBeforeSave.call(null, __model);
+          if (typeof beforeSaveResult !== 'undefined' && !beforeSaveResult){
+            return;
+          }
+        }
+
         $button.html('提交中...');
         options.data = __model;
         App.post(options.url, options, function () {
@@ -1480,9 +1496,9 @@ Application.prototype = {
     });
   },
   /**
-   * 模型类双向绑定
+   * 模型类单向绑定
    *
-   * @method [private] - modelBind
+   * @method [private] - modelBind ( 模型类单向绑定 )
    * @private
    * @author wyj 14.12.25
    * @example
@@ -1514,7 +1530,7 @@ Application.prototype = {
   },
   /**
    * 项目主方法 一切由此开始, 并记录App.rootPage // 进入前的网址
-   * @method [Main] - initLoad
+   * @method [Main] - initLoad ( 项目主方法 )
    * @param {DOM} page 作用域
    * @param {Object} options 配置参数
    * @param content 上下文

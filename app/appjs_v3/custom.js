@@ -131,6 +131,8 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
       }
     } catch (e) {
       debug('【Error】App.back' + e);
+      alert(e);
+      App.load('home');
     }
     return new App.setArguments(arguments);
   }, function () {

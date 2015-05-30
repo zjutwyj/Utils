@@ -104,12 +104,15 @@ define('BaseModel', ['jquery', 'underscore', 'backbone', 'dialog', 'Utils'],
               this.close();
             }, autofocus: true });
           }
-          dialog({
+          var d = dialog({
             title: '提示：',
             content: response.msg,
             width: 250,
             button: buttons
           }).show();
+          setTimeout(function(){
+            d.close().remove();
+          }, 2);
         } else if(!this.hideTip){
           debug('服务器返回的msg为空! 因此无弹出框信息。 url：' + this.baseUrl);
         }

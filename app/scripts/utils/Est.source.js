@@ -121,7 +121,7 @@
    * 如果list是数组，callback的参数是：(element, index, list, first, last)。
    * 如果list是个JavaScript对象，callback的参数是 (value, key, list, index, first, last))。返回list以方便链式调用。
    * 如果callback 返回false,则中止遍历
-   * @method [数组] - each
+   * @method [数组] - each ( 遍历数据或对象 )
    * @param {Array/Object} obj 遍历对象
    * @param {Function} callback 回调函数
    * @param {Object} context 上下文
@@ -154,7 +154,7 @@
   /**
    * @description 复制source对象中的所有属性覆盖到destination对象上，并且返回 destination 对象.
    * 复制是按顺序的, 所以后面的对象属性会把前面的对象属性覆盖掉(如果有重复).
-   * @method [对象] - extend
+   * @method [对象] - extend ( 继承 )
    * @param {Object} obj destination对象
    * @return {Object} 返回 destination 对象
    * @author wyj on 14/5/22
@@ -176,7 +176,7 @@
   if (typeof /./ !== 'function') {
     /**
      * @description 如果object是一个参数对象，返回true
-     * @method [对象] - isFunction
+     * @method [对象] - isFunction ( 判断是否是对象 )
      * @param {*} obj 待检测参数
      * @return {boolean}
      * @author wyj on 14/5/22
@@ -189,7 +189,7 @@
   }
   /**
    * @description 返回一个对象里所有的方法名, 而且是已经排序的 — 也就是说, 对象里每个方法(属性值是一个函数)的名称.
-   * @method [对象] - functions
+   * @method [对象] - functions ( 返回一个对象里所有的方法名 )
    * @param {Object} obj 检测对象
    * @return {Array} 返回包含方法数组
    * @author wyj on 14/5/22
@@ -205,7 +205,7 @@
   };
   /**
    * 解码ASCII码
-   * @method [字符串] - fromCharCode
+   * @method [字符串] - fromCharCode ( 解码ASCII码 )
    * @param code
    * @return {string}
    * @author wyj 15.2.9
@@ -218,7 +218,7 @@
   }
   /**
    * @description 返回一个封装的对象. 在封装的对象上调用方法会返回封装的对象本身, 直道 value 方法调用为止.
-   * @method [对象] - chain
+   * @method [对象] - chain ( 返回一个封装的对象 )
    * @param value
    * @return {*}
    * @author wyj on 14/5/22
@@ -238,7 +238,7 @@
   };
   /**
    * @description 如果对象 object 中的属性 property 是函数, 则调用它, 否则, 返回它。
-   * @method [对象] - result
+   * @method [对象] - result ( 返回结果 )
    * @param obj
    * @return {*}
    * @author wyj on 14/5/22
@@ -254,7 +254,7 @@
   // ObjectUtils
   /**
    * @description [1]检测数据类型 [undefined][number][string][function][regexp][array][date][error]
-   * @method [对象] - typeOf
+   * @method [对象] - typeOf ( 检测数据类型 )
    * @param {*} target 检测对象
    * @return {*|string}
    * @author wyj on 14/5/24
@@ -273,7 +273,7 @@
   /**
    * @description 检测数据类型2 此版本 new Number(4) new String("abc") new Boolean(true) new ReferenceError()
    * 分别生成 Number String Boolean Error
-   * @method [对象] - getType
+   * @method [对象] - getType ( 检测数据类型2 )
    * @param {object} value
    * @return {String}
    * @author wyj on 14/8/5
@@ -320,7 +320,7 @@
 
   /**
    * @description 根据字段获取值
-   * @method [对象] - getValue
+   * @method [对象] - getValue ( 根据字段获取值 )
    * @param object
    * @param path
    * @return {*}
@@ -377,7 +377,7 @@
   /**
    * @description 设置对象值
    *
-   * @method [对象] - setValue
+   * @method [对象] - setValue ( 设置对象值 )
    * @param object
    * @param path
    * @param value
@@ -413,7 +413,7 @@
 
   /**
    * javascript 对象转换成path路径
-   * @method [对象] - objToPath
+   * @method [对象] - objToPath ( 对象转换成path路径 )
    * @return {Object}
    * @author wyj 15.1.28
    * @example
@@ -440,7 +440,7 @@
 
   /**
    * @description 判断是否为空 (空数组， 空对象， 空字符串， 空方法， 空参数, null, undefined) 不包括数字0和1 【注】苹果手机有问题
-   * @method [对象] - isEmpty
+   * @method [对象] - isEmpty ( 判断是否为空 )
    * @param {Object} value
    * @return {boolean}
    * @author wyj on 14/6/26
@@ -466,7 +466,7 @@
   Est.isEmpty = isEmpty;
   /**
    * @description 返回值函数
-   * @method [对象] - valueFn
+   * @method [对象] - valueFn ( 返回值函数 )
    * @param value
    * @return {Function}
    * @author wyj on 14/6/26
@@ -482,7 +482,7 @@
   Est.valueFn = valueFn;
   /**
    * @description 反转key value  用于forEach
-   * @method [对象] - reverseParams
+   * @method [对象] - reverseParams ( 反转key value )
    * @param {Function} iteratorFn
    * @return {Function}
    * @author wyj on 14/6/26
@@ -497,7 +497,7 @@
   Est.reverseParams = reverseParams;
   /**
    * @description [2]判断对象是否含有某个键 不是原型对象
-   * @method [对象] - hasKey
+   * @method [对象] - hasKey ( 判断对象是否含有某个键 )
    * @param {Object} obj 检测对象
    * @param {Sting} key 检测键
    * @return {boolean|*}
@@ -513,7 +513,7 @@
   Est.hasKey = hasKey;
   /**
    * @description 计算hash值
-   * @method [对象] - hashKey
+   * @method [对象] - hashKey ( 计算hash值 )
    * @param obj
    * @return {string}
    * @author wyj on 14/6/25
@@ -538,7 +538,7 @@
 
   /**
    * 字符串转换成hash值
-   * @method [字符串] - hash
+   * @method [字符串] - hash ( 字符串转换成hash值 )
    * @param str
    * @return {number}
    * @author wyh 15.2.28
@@ -555,7 +555,7 @@
   Est.hash = hash;
   /**
    * @description 设置hashKey
-   * @method [对象] - setHashKey
+   * @method [对象] - setHashKey ( 设置hashKey )
    * @param {Object} obj
    * @param {String} h
    */
@@ -571,7 +571,7 @@
   Est.setHashKey = setHashKey;
   /**
    * md5加密
-   * @method [字符串] - md5
+   * @method [字符串] - md5 ( md5加密 )
    * @param string
    * @return {string}
    * @author wyj 15.2.28
@@ -778,7 +778,7 @@
   Est.md5 = md5;
   /**
    * @description [3]过滤对象字段
-   * @method [对象] - pick
+   * @method [对象] - pick ( 过滤对象字段 )
    * @param {Object} obj 过滤对象
    * @param {Function} callback 回调函数
    * @param context
@@ -808,7 +808,7 @@
   Est.pick = pick;
   /**
    * @description 返回获取对象属性值的方法
-   * @method [对象] - property
+   * @method [对象] - property ( 返回获取对象属性值 )
    * @param {Object} key
    * @return {Function}
    */
@@ -822,7 +822,7 @@
   Est.property = property;
   /**
    * @description 翠取对象中key对应的值
-   * @method [对象] - pluck
+   * @method [对象] - pluck ( 翠取对象中key对应的值 )
    * @param obj
    * @param key
    * @return {*}
@@ -839,7 +839,7 @@
 
   /**
    * @description 释放数组， 若数组池个数少于最大值， 则压入数组池以备用
-   * @method [数组] - releaseArray
+   * @method [数组] - releaseArray ( 释放数组 )
    * @author wyj on 14/7/1
    * @example
    *      Est.releaseArray(array);
@@ -854,7 +854,7 @@
   Est.releaseArray = releaseArray;
   /**
    * @description 释放对象， 若对象池个数少于最大值， 则压入对象池以备用
-   * @method [对象] - releaseObject
+   * @method [对象] - releaseObject ( 释放对象 )
    * @author wyj on 14/7/1
    * @example
    *      Est.releaseObject(object);
@@ -869,7 +869,7 @@
   Est.releaseObject = releaseObject;
   /**
    * @description 获取数组池
-   * @method [数组] - getArray
+   * @method [数组] - getArray ( 获取数组池 )
    * @return {Array}
    * @author wyj on 14/7/1
    * @example
@@ -882,7 +882,7 @@
   Est.getArray = getArray;
   /**
    * @description 获取对象池 主要用于优化性能
-   * @method [对象] - getObject
+   * @method [对象] - getObject ( 获取对象池 )
    * @return {Object}
    * @author wyj on 14/7/1
    * @example
@@ -960,7 +960,7 @@
 
   /**
    * @description 浅复制
-   * @method [对象] - clone
+   * @method [对象] - clone ( 浅复制 )
    * @param value
    * @param callback
    * @param context
@@ -977,7 +977,7 @@
   Est.clone = clone;
   /**
    * @description 深复制
-   * @method [对象] - cloneDeep
+   * @method [对象] - cloneDeep ( 深复制 )
    * @param value
    * @param callback
    * @param context
@@ -995,7 +995,7 @@
 
   /**
    * @description 返回一个设置参数的对象
-   * @method [对象] - setArguments
+   * @method [对象] - setArguments ( 返回一个设置参数的对象 )
    * @param args
    * @author wyj on 14.9.12
    *
@@ -1008,7 +1008,7 @@
 
   /**
    * @description 对象路由控制
-   * @method [对象] - keyRoute
+   * @method [对象] - keyRoute ( 对象路由控制 )
    * @param {Object} handle 待控制对象
    * @param {String} pathname 路由名称
    * @param {Object} response 参数
@@ -1038,7 +1038,7 @@
 
   /**
    * @description 表单验证
-   * @method [表单] - validation
+   * @method [表单] - validation ( 表单验证 )
    * @param  {String} str  待验证字符串 str可为数组 判断所有元素是否都为数字
    * @param  {String} type 验证类型
    * @return {Boolean}      返回true/false
@@ -1087,7 +1087,7 @@
   // StringUtils =============================================================================================================================================
   /**
    * @description 产生唯一身份标识， 如'012ABC', 若为数字较容易数字溢出
-   * @method [字符串] - nextUid
+   * @method [字符串] - nextUid ( 产生唯一身份标识 )
    * @return {string}
    * @param {String} prefix 前缀
    * @author wyj on 14/6/23
@@ -1120,7 +1120,7 @@
 
   /**
    * @description id值瘦身 去掉前面的字母与0 比如 Product_0000000000000000000132 瘦身为132
-   * @method [字符串] - encodeId
+   * @method [字符串] - encodeId ( id值瘦身 )
    * @param target
    * @return {string}
    * @author wyj 15.1.9
@@ -1135,7 +1135,7 @@
 
   /**
    * 还原ID
-   * @method [字符串] - decodeId
+   * @method [字符串] - decodeId ( 还原ID )
    * @param id
    * @param prefix
    * @param length
@@ -1153,7 +1153,7 @@
 
   /**
    * @description 转换成小写字母
-   * @method [字符串] - lowercase
+   * @method [字符串] - lowercase ( 转换成小写字母 )
    * @param {String} string 原字符串
    * @return {string}
    * @author wyj on 14/6/17
@@ -1167,7 +1167,7 @@
   Est.lowercase = lowercase;
   /**
    * @description 转换成大写字母
-   * @method [字符串] - uppercase
+   * @method [字符串] - uppercase ( 转换成大写字母 )
    * @param {String} string 原字符串
    * @return {string}
    * @author wyj on 14/6/17
@@ -1182,7 +1182,7 @@
 
   /**
    * @description 二分法将一个字符串重复自身N次
-   * @method [字符串] - repeat
+   * @method [字符串] - repeat ( 字符串重复自身N次 )
    * @param {String} target 原字符串
    * @param {Number} n 重复次数
    * @return {String} 返回字符串
@@ -1208,7 +1208,7 @@
   Est.repeat = repeat;
   /**
    * @description 判定一个字符串是否包含另一个字符串
-   * @method [字符串] - contains
+   * @method [字符串] - contains ( 字符串是否包含另一个字符串 )
    * @param {string} target 目标字符串
    * @param {string} 包含字符串
    * @param {string} 判定一个元素的className 是否包含某个特定的class
@@ -1224,7 +1224,7 @@
   Est.contains = contains;
   /**
    * @description 判定目标字符串是否位于原字符串的开始之处
-   * @method [字符串] - startsWidth
+   * @method [字符串] - startsWidth ( 字符串是否位于原字符串的开始之处 )
    * @param {target} 原字符串
    * @param {str} 目标字符串
    * @param {boolean} 是否忽略大小写
@@ -1241,7 +1241,7 @@
   Est.startsWidth = startsWith;
   /**
    * @description 判定目标字符串是否位于原字符串的结束之处
-   * @method [字符串] - endsWidth
+   * @method [字符串] - endsWidth ( 字符串是否位于原字符串的结束之处 )
    * @param {target} 原字符串
    * @param {str} 目标字符串
    * @param {boolean} 是否忽略大小写
@@ -1258,7 +1258,7 @@
   Est.endsWidth = endsWidth;
   /**
    * @description 取得一个字符串所有字节的长度
-   * @method [字符串] - byteLen
+   * @method [字符串] - byteLen ( 取得一个字符串所有字节的长度 )
    * @param target 目标字符串
    * @param fix 汉字字节长度，如mysql存储汉字时， 是用3个字节
    * @return {Number}
@@ -1275,7 +1275,7 @@
   Est.byteLen = byteLen;
   /**
    * @description 对字符串进行截取处理，默认添加三个点号【版本一】
-   * @method [字符串] - truncate
+   * @method [字符串] - truncate ( 对字符串进行截取处理 )
    * @param target 目标字符串
    * @param length 截取长度
    * @param truncation 结尾符号
@@ -1293,7 +1293,7 @@
   Est.truncate = truncate;
   /**
    * @description 对字符串进行截取处理，默认添加三个点号【版本二】
-   * @method [字符串] - cutByte
+   * @method [字符串] - cutByte ( 对字符串进行截取处理 )
    * @param str 目标字符串
    * @param length 截取长度
    * @param truncation 结尾符号
@@ -1343,7 +1343,7 @@
   Est.cutByte = cutByte;
   /**
    * @description 替换指定的html标签, 当第3个参数为true时， 删除该标签并删除标签里的内容
-   * @method [字符串] - stripTabName
+   * @method [字符串] - stripTabName ( 替换指定的html标签 )
    * @param {String} target 目标字符串
    * @param {String} tagName 标签名称
    * @param {String} deep 是否删除标签内的内容
@@ -1361,7 +1361,7 @@
   Est.stripTagName = stripTagName;
   /**
    * @description 移除字符串中所有的script标签。弥补stripTags 方法的缺陷。此方法应在stripTags之前调用
-   * @method [字符串] - stripScripts
+   * @method [字符串] - stripScripts ( 移除字符串中所有的script标签 )
    * @param {String} target 目标字符串
    * @return {string} 返回字符串
    * @author wyj on 14/5/5
@@ -1375,7 +1375,7 @@
   Est.stripScripts = stripScripts;
   /**
    * @description 移除字符串中的html标签, 若字符串中有script标签，则先调用stripScripts方法
-   * @method [字符串] - stripTags
+   * @method [字符串] - stripTags ( 移除字符串中的html标签 )
    * @param {String} target 原字符串
    * @return {string} 返回新字符串
    * @author wyj on 14/5/5
@@ -1389,7 +1389,7 @@
   Est.stripTags = stripTags;
   /**
    * @description 替换原字符串中的“< > " '”为 “&lt;&gt;&quot;&#39;”
-   * @method [字符串] - escapeHTML
+   * @method [字符串] - escapeHTML ( 替换原字符串中的“< > " '” )
    * @param {String} target 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/5
@@ -1407,7 +1407,7 @@
   Est.escapeHTML = escapeHTML;
   /**
    * @description 替换原字符串中的“&lt;&gt;&quot;&#39;”为 “< > " '”
-   * @method [字符串] - unescapeHTML
+   * @method [字符串] - unescapeHTML ( 替换原字符串中的“&lt;&gt;&quot;&#39; )
    * @param {String} target 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/5
@@ -1428,7 +1428,7 @@
   Est.unescapeHTML = unescapeHTML;
   /**
    * @description 将字符串安全格式化为正则表达式的源码
-   * @method [字符串] - escapeRegExp
+   * @method [字符串] - escapeRegExp ( 将字符串安全格式化为正则表达式的源码 )
    * @param {String} target 原字符串
    * @return {*}
    * @author wyj on 14/5/16
@@ -1442,7 +1442,7 @@
   Est.escapeRegExp = escapeRegExp;
   /**
    * @description 为字符串的某一端添加字符串。 如：005
-   * @method [字符串] - pad
+   * @method [字符串] - pad ( 为字符串的某一端添加字符串 )
    * @param {String/Number} target 原字符串或数字
    * @param {Number} n 填充位数
    * @param {String} filling 填充字符串
@@ -1476,7 +1476,7 @@
   Est.pad = pad;
   /**
    * @description 格式化字符串，类似于模板引擎，但轻量级无逻辑
-   * @method [字符串] - format
+   * @method [字符串] - format ( 格式化字符串 )
    * @param {String} str 原字符串
    * @param {Object} object 若占位符为非零整数形式即对象，则键名为点位符
    * @return {String} 返回结果字符串
@@ -1503,7 +1503,7 @@
 
   /**
    * @description 比format更强大的模板引擎， 支持字符串模板、变量嵌套、四则运算、比较操作符、三元运算符
-   * @method [字符串] - template
+   * @method [字符串] - template ( 比format更强大的模板引擎 )
    * @param {String} str 待格式化字符串
    * @param {Object} data 替换对象
    * @return {String} result
@@ -1567,7 +1567,7 @@
 
   /**
    * @description 移除字符串左端的空白
-   * @method [字符串] - ltrim
+   * @method [字符串] - ltrim ( 移除字符串左端的空白 )
    * @param {String} str 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/6
@@ -1587,7 +1587,7 @@
   Est.ltrim = ltrim;
   /**
    * @description 移除字符串右端的空白
-   * @method [字符串] - rtrim
+   * @method [字符串] - rtrim ( 移除字符串右端的空白 )
    * @param {String} str 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/6
@@ -1607,7 +1607,7 @@
   Est.rtrim = rtrim;
   /**
    * @description 移除字符串两端的空白, 当字符串为undefined时， 返回null
-   * @method [字符串] - trim
+   * @method [字符串] - trim ( 移除字符串两端的空白 )
    * @param {String} str 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/6
@@ -1634,7 +1634,7 @@
   Est.trim = trim;
   /**
    * @description 去除字符串中的所有空格
-   * @method [字符串] - deepTrim
+   * @method [字符串] - deepTrim ( 去除字符串中的所有空格 )
    * @param {String} str 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/6
@@ -1649,7 +1649,7 @@
 
   /**
    * @description 字符串反转
-   * @method [字符串] - reverse
+   * @method [字符串] - reverse ( 字符串反转 )
    * @param {String} str 原字符串
    * @return {String} 返回新字符串
    * @author wyj on 14/5/6
@@ -1671,7 +1671,7 @@
   // ArrayUtils ===============================================================================================================================================
   /**
    * @description 根据索引值移除数组元素
-   * @method [数组] - removeAt
+   * @method [数组] - removeAt ( 根据索引值移除数组元素 )
    * @param {Array} list 原数组
    * @param {Nubmer} index 数组索引
    * @return {Boolean} 返回是否删除成功
@@ -1686,7 +1686,7 @@
   Est.removeAt = removeAt;
   /**
    * @description 删除数组中的元素
-   * @method [数组] - arrayRemove
+   * @method [数组] - arrayRemove ( 删除数组中的元素 )
    * @param {Array} array 目标数组
    * @param {*} value 删除的元素
    * @return {*}
@@ -1705,7 +1705,7 @@
   Est.arrayRemove = arrayRemove;
   /**
    * @description 获取对象的所有KEY值
-   * @method [数组] - keys
+   * @method [数组] - keys ( 获取对象的所有KEY值 )
    * @param {Object} obj 目标对象
    * @return {Array}
    * @author wyj on 14/5/25
@@ -1723,7 +1723,7 @@
   Est.keys = keys;
   /**
    * @description 用来辨别 给定的对象是否匹配指定键/值属性的列表
-   * @method [数组] - matches
+   * @method [数组] - matches ( 对象是否匹配指定键/值属性的列表 )
    * @param attrs
    * @return {Function}
    * @author wyj on 14/6/26
@@ -1741,7 +1741,7 @@
   Est.matches = matches;
   /**
    * @description 数组过滤
-   * @method [数组] - filter
+   * @method [数组] - filter ( 数组过滤 )
    * @param {Array} collection 数组
    * @param {Function} callback 回调函数
    * @param args
@@ -1766,7 +1766,7 @@
 
   /**
    * @description 数组中查找符合条件的索引值 比较原始值用indexOf
-   * @method [数组] - findIndex
+   * @method [数组] - findIndex ( 数组中查找符合条件的索引值 )
    * @param array
    * @param {Function} callback 回调函数
    * @param {Object} context 上下文
@@ -1796,7 +1796,7 @@
 
   /**
    * @description 数组转化为object 如果对象key值为数字类型， 则按数字从小到大排序
-   * @method [数组] - arrayToObject
+   * @method [数组] - arrayToObject ( 数组转化为object )
    * @param {Array} list 目标数组
    * @param {String} name key
    * @param {String} val value
@@ -1820,7 +1820,7 @@
   Est.arrayToObject = arrayToObject;
   /**
    * @description 对象转化为数组
-   * @method [数组] - arrayFromObject
+   * @method [数组] - arrayFromObject ( 对象转化为数组 )
    * @param {Object} obj 待转化的对象
    * @return {Array} 返回数组
    * @author wyj on 14/5/24
@@ -1847,7 +1847,7 @@
   Est.arrayFromObject = arrayFromObject;
   /**
    * @description 交换元素
-   * @method [数组] - arrayExchange
+   * @method [数组] - arrayExchange ( 交换元素 )
    * @param {Array} list 原数组
    * @param {Number} thisdx 第一个元素索引值
    * @param {Number} targetdx 第二个元素索引值
@@ -1889,7 +1889,7 @@
   Est.arrayExchange = arrayExchange;
   /**
    * @description 数组插序
-   * @method [数组] - arrayInsert
+   * @method [数组] - arrayInsert ( 数组插序 )
    * @param {Array} list 原数组
    * @param {Number} thisdx 第一个元素索引
    * @param {Number} targetdx 第二个元素索引
@@ -1925,7 +1925,7 @@
   Est.arrayInsert = arrayInsert;
   /**
    * @description 遍历MAP对象
-   * @method [数组] - map
+   * @method [数组] - map ( 遍历MAP对象 )
    * @param {Array} obj 目标数组
    * @param callback 回调函数
    * @param context 上下文
@@ -1950,7 +1950,7 @@
   Est.map = map;
   /**
    * @description 字符串转化成MAP对象，以逗号隔开， 用于FORM表单
-   * @method [数组] - makeMap
+   * @method [数组] - makeMap ( 字符串转化成MAP对象 )
    * @param str
    * @return {{}}
    * @author wyj on 14/6/23
@@ -1967,7 +1967,7 @@
   Est.makeMap = makeMap;
   /**
    * @description 判断元素是否存在于数组中
-   * @method [数组] - indexOf
+   * @method [数组] - indexOf ( 判断元素是否存在于数组中 )
    * @param {Array} array 原型数组
    * @param {*} value 值
    * @return {Number}
@@ -1987,7 +1987,7 @@
   Est.indexOf = indexOf;
   /**
    * @description 数组排序
-   * @method [数组] - sortBy
+   * @method [数组] - sortBy ( 数组排序 )
    * @param obj
    * @param iterator
    * @param context
@@ -2049,7 +2049,7 @@
   Est.sortBy = sortBy;
   /**
    * @description 截取数组
-   * @method [数组] - arraySlice / take
+   * @method [数组] - arraySlice / take ( 截取数组 )
    * @param {Array} array 数据
    * @param {Number} start 起始
    * @param {Number} end 若未设置值， 则取索引为start的一个值
@@ -2081,7 +2081,7 @@
 
   /**
    * @description  获取图片地址缩放等级
-   * @method [图片] - picUrl
+   * @method [图片] - picUrl ( 获取图片地址缩放等级 )
    * @param src
    * @param zoom
    * @return {string}
@@ -2101,7 +2101,7 @@
 
   /**
    * @description 获取居中图片的margin值, 若图片宽高比太大，则不剪切
-   * @method [图片] - imageCrop
+   * @method [图片] - imageCrop ( 获取居中图片的margin值 )
    * @param {Number} naturalW 图片宽度
    * @param {Number} naturalH 图片高度
    * @param {Number} targetW 展示框宽度
@@ -2179,7 +2179,7 @@
   Est.imageCrop = imageCrop;
   /**
    * @description 图片上传预览
-   * @method [图片] - setImagePreview
+   * @method [图片] - setImagePreview ( 图片上传预览 )
    * @param {Object} option option.inputFile : file input表单元素,  option.imgNode : 待显示的img元素
    * @return {boolean} 返回 true 与 false
    * @author wyj on 14/8/30
@@ -2234,7 +2234,7 @@
 
   /**
    * @description 绘制canvas图片 解决苹果屏幕模糊问题 注意：此方法将移除， 转移到Canvas.min.js中
-   * @method [图片] - drawImage
+   * @method [图片] - drawImage ( 绘制canvas图片 )
    * @param {Object} opts 详见例子
    * @author wyj on 14.9.4
    * @example
@@ -2305,7 +2305,7 @@
   // GirdUtils
   /**
    * @description 列表两端对齐，
-   * @method [图片] - girdJustify
+   * @method [图片] - girdJustify ( 列表两端对齐 )
    * @param options
    * @author wyj on 14/5/11
    * @example
@@ -2358,7 +2358,7 @@
   // TreeUtils
   /**
    * @description 构建树 注意：categoryId， belongId别弄错， 否则会报‘Maximum call stack size exceeded’错误
-   * @method [树] - bulidSubNode
+   * @method [树] - bulidSubNode ( 构建树 )
    * @param {Array} rootlist 根节点列表
    * @param {Array} totalList 总列表 {String}
    * @param {Object} opts {String} opts.category_id 分类Id {String} opts.belong_id 父类Id
@@ -2420,7 +2420,7 @@
   Est.bulidSubNode = bulidSubNode;
   /**
    * @description 获取select表单控件样式的树
-   * @method [树] - bulidSelectNode
+   * @method [树] - bulidSelectNode ( 获取select表单控件样式的树 )
    * @param {Array} rootlist 根节点列表
    * @param {Number} zoom 缩进
    * @param {Object} obj {String} opts.name 字段名称
@@ -2455,7 +2455,7 @@
 
   /**
    * @description 扩展树
-   * @method [树] - extendTree
+   * @method [树] - extendTree ( 扩展树 )
    * @param {Array} rootlist 根节点列表
    * @author wyj on 14/5/15
    * @example
@@ -2482,7 +2482,7 @@
 
   /**
    * @description 构建树
-   * @method [树] - bulidTreeNode
+   * @method [树] - bulidTreeNode ( 构建树 )
    * @param {Array} list
    * @param {String} name 父分类的字段名称
    * @param {String} value 值
@@ -2521,7 +2521,7 @@
 
   /**
    * @description 获取面包屑导航
-   * @method [树] - bulidBreakNav
+   * @method [树] - bulidBreakNav ( 获取面包屑导航 )
    * @param {Array} list 总列表
    * @param {String} nodeId ID标识符
    * @param {String} nodeValue id值
@@ -2558,7 +2558,7 @@
   // PaginationUtils
   /**
    * @description 获取最大页数
-   * @method [分页] - getMaxPage
+   * @method [分页] - getMaxPage ( 获取最大页数 )
    * @param {number} totalCount 总条数
    * @param {number} pageSize 每页显示的条数
    * @return {number} 返回最大页数
@@ -2573,7 +2573,7 @@
   Est.getMaxPage = getMaxPage;
   /**
    * @description 获取最大页数【版本二】
-   * @method [分页] - getMaxPage_2
+   * @method [分页] - getMaxPage_2 ( 获取最大页数 )
    * @param { Number} totalCount otalCount 总条数
    * @param {Number} pageSize pageSize 每页显示的条数
    * @return {Number} 返回最大页数
@@ -2588,7 +2588,7 @@
   Est.getMaxPage_2 = getMaxPage_2;
   /**
    * @description 根据pageList总列表， page当前页   pageSize显示条数  截取列表
-   * @method [分页] - getListByPage
+   * @method [分页] - getListByPage ( 根据page, pageSize获取列表 )
    * @param {Array} pageList  全部列表
    * @param page 当前页
    * @param pageSize  每页显示几条
@@ -2616,7 +2616,7 @@
   Est.getListByPage = getListByPage;
   /**
    * @description 通过当前页、总页数及显示个数获取分页数字
-   * @method [分页] - getPaginationNumber
+   * @method [分页] - getPaginationNumber ( 获取分页数字 )
    * @param {Number} page 当前页
    * @param {Number} totalPage 总页数
    * @param {Number} length 显示数
@@ -2657,7 +2657,7 @@
   // CacheUtils
   /**
    * @description 数据缓存
-   * @method [缓存] - getCache
+   * @method [缓存] - getCache ( 数据缓存 )
    * @param {String} uId 唯一标识符
    * @param {Object} ctx 缓存对象
    * @param {String} options.area 缓存分区
@@ -2694,7 +2694,7 @@
   // CssUtils
   /**
    * @description 获取当前元素的css选择符，规则：父模块的ID值 + 当前元素的ID值 > class值
-   * @method [样式] - getSelector
+   * @method [样式] - getSelector ( 获取当前元素的css选择符 )
    * @param {Element} target 目标元素
    * @param {String} parentClass 父模块class选择符
    * @param {Object} $  jquery对象 或 其它
@@ -2722,7 +2722,7 @@
   Est.getSelector = getSelector;
   /**
    * @description 获取元素的标签符号 , 大写的转换成小写的
-   * @method [样式] - getTagName
+   * @method [样式] - getTagName ( 获取元素的标签符号 )
    * @param {Element} target 目标元素
    * @return {string} 返回标签符号
    * @author wyj on 14/5/6
@@ -2736,7 +2736,7 @@
   Est.getTagName = getTagName;
   /**
    * @description 加载样式文件
-   * @method [样式] - loadCss
+   * @method [样式] - loadCss ( 加载样式文件 )
    * @param url
    * @author wyj on 14/7/7
    * @example
@@ -2754,7 +2754,7 @@
   // DateUtils
   /**
    * @description 格式化时间 当输入的时间是已经格式好好的且为IE浏览器， 则原样输出
-   * @method [时间] - dateFormat
+   * @method [时间] - dateFormat ( 格式化时间 )
    * @param {String} date 时间
    * @param {String} fmt 格式化规则 如‘yyyy-MM-dd’
    * @return {String} 返回格式化时间
@@ -2795,7 +2795,7 @@
 
   /**
    * @description 获取每月的天数
-   * @method [时间] - getDays
+   * @method [时间] - getDays ( 获取每月的天数 )
    * @param Year
    * @param Mon
    * @return {number}
@@ -2819,7 +2819,7 @@
   /**
    * @description 清空该元素下面的所有子节点【大数据量时】 在数据量小的情况下可以用jQuery的empty()方法
    * parentNode必须为DOM对象，$('#selector').get(0);
-   * @method [文档] - clearAllNode
+   * @method [文档] - clearAllNode ( 清空所有子节点 )
    * @param parentNode
    * @return {*}
    * @author wyj on 14-04-26
@@ -2837,7 +2837,7 @@
 
   /**
    * @description 获取元素居中显示距离左与上的像素值
-   * @method [文档] - center
+   * @method [文档] - center ( 元素居中 )
    * @param  {number} clientWidth  [浏览器宽度]
    * @param  {number} clientHeight [浏览器高度]
    * @param  {number} width        [元素宽度]
@@ -2861,7 +2861,7 @@
   // BrowerUtils
   /**
    * @description 判断是否是IE浏览器，并返回版本号
-   * @method [浏览器] - msie
+   * @method [浏览器] - msie ( 判断是否是IE浏览器 )
    * @return {mise}
    * @author wyj on 14/6/17
    * @example
@@ -2881,7 +2881,7 @@
   Est.msie = msie;
   /**
    * @description 获取浏览器参数列表
-   * @method [浏览器] - getUrlParam
+   * @method [浏览器] - getUrlParam ( 获取浏览器参数列表 )
    * @param {String} name 参数名称
    * @param {String} url 指定URL
    * @return {String} 不存在返回NULL
@@ -2907,7 +2907,7 @@
 
   /**
    * @description 过滤地址
-   * @method [浏览器] - urlResolve
+   * @method [浏览器] - urlResolve ( 过滤地址 )
    * @param {String} url
    * @return  {*}
    * @author wyj on 14/6/26
@@ -2959,7 +2959,7 @@
 
   /**
    * @description cookie
-   * @method [浏览器] - cookie
+   * @method [浏览器] - cookie ( cookie )
    * @param key
    * @param value
    * @param options
@@ -3022,7 +3022,7 @@
 
   /**
    * @description url 路由
-   * @method [浏览器] - route
+   * @method [浏览器] - route ( url 路由 )
    * @param {String} path
    * @param {String} templateId
    * @param controller
@@ -3103,7 +3103,7 @@
 
   /**
    * @description 给元素添加虚线框
-   * @method [浏览器] - dashedFrame
+   * @method [浏览器] - dashedFrame ( 给元素添加虚线框 )
    * @param {Element} target 元素
    * @param {Object} 选择器
    * @author wyj on 14/8/8
@@ -3134,7 +3134,7 @@
   // PatternUtils ==========================================================================================================================================
   /**
    * @description 通过原型继承创建一个新对象
-   * @method [模式] - inherit
+   * @method [模式] - inherit ( 通过原型继承创建一个新对象 )
    * @param {Object} target 继承对象
    * @param {Object} extra 额外对象
    * @return {*}
@@ -3157,7 +3157,7 @@
   Est.inherit = inherit;
   /**
    * 装饰者模式 - 接口
-   * @method [模式] - interface
+   * @method [模式] - interface ( 接口 )
    * @param objectName
    * @param methods
    * @author wyj 15.2.20
@@ -3228,7 +3228,7 @@
 
   /**
    * @description 装饰者模式 - 面向方面AOP编程功能
-   * @method [模式] - inject
+   * @method [模式] - inject ( 面向方面AOP编程 )
    * @param {Function} aOrgFunc 原始方法
    * @param {Function} aBeforeExec 在原始方法前切入的方法 【注】 必须这样返回修改的参数： return new Est.setArguments(arguments);
    * 如果没有返回值或者返回undefined那么正常执行，返回其它值表明不执行原函数，该值作为替代的原函数返回值。
@@ -3278,7 +3278,7 @@
 
   /**
    * @description 模块模式 - 模块定义 如果项目中存在require.js 则调用require.js
-   * @method [模式] - define
+   * @method [模式] - define ( 模块定义 )
    * @param {String} name 模块名称
    * @param {Array} dependencies 依赖模块
    * @param {Function} factory 方法
@@ -3301,7 +3301,7 @@
   }
   /**
    * @description 模块请求 如果项目中存在require.js 则调用require.js
-   * @method [模式] - require
+   * @method [模式] - require ( 模块请求 )
    * @param {String} pathArr 文件中第
    * @param {Function} callback 回调函数
    * @author wyj on 14/6/29
@@ -3360,7 +3360,7 @@
 
   /**
    * @description promise模式 - 异步操作执行成功、失败时执行的方法
-   * @method [模式] - promise
+   * @method [模式] - promise ( promise模式 )
    * @param {Function} fn
    * @author wyj on 14/8/14
    * @example
@@ -3448,7 +3448,7 @@
 
   /**
    * 发布/订阅模式 - 发布/订阅
-   * @method [模式] - trigger
+   * @method [模式] - trigger ( 发布/订阅 )
    * @param topic
    * @param args
    * @return {boolean}
@@ -3504,7 +3504,7 @@
 
   /**
    * @description 延迟模式 - 避免在 ms 段时间内，多次执行func。常用 resize、scoll、mousemove等连续性事件中
-   * @method [模式] - delay
+   * @method [模式] - delay ( 延迟模式 )
    * @param {Function} func 方法
    * @param {Number} ms 缓冲时间
    * @param context
@@ -3526,7 +3526,7 @@
 
   /**
    * 代理模式
-   * @method [模式] - proxy
+   * @method [模式] - proxy ( 代理模式 )
    * @param fn
    * @param context
    * @return {*}
@@ -3551,7 +3551,7 @@
   /**
    * @description 织入模式 - 实用程序函数扩展Est。
    * 传递一个 {name: function}定义的哈希添加到Est对象，以及面向对象封装。
-   * @method [模式] - mixin
+   * @method [模式] - mixin ( 织入模式 )
    * @param obj
    * @param {Boolean} isExtend 是否是Est的扩展
    * @author wyj on 14/5/22
