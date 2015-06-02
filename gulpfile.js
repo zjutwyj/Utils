@@ -490,6 +490,45 @@ gulp.task('UserManagement_base', function () {
 gulp.task('UserManagement_base.min', function () {
   doTask('UserManagement_base', false);
 });
+
+
+paths['UserManagement_Bbap'] = { scripts: { source: [
+  'app/vendor/seajs/sea.js',
+  'app/vendor/seajs/seajs-text-debug.js',
+  'app/vendor/pace/pace.js',
+  'app/vendor/prefix/prefixfree.min.js',
+  'app/vendor/json3/json3.js',
+
+  'app/vendor/jquery/jquery-1.10.2.js',
+  'app/vendor/underscore/underscore.js',
+  'app/vendor/backbone/backbone-debug.js',
+  'app/scripts/utils/Est.source.js',
+  'app/backbone/Application.js',
+
+  'app/vendor/handlebars/handlebars-debug.js',
+
+  'app/backbone/Bbap/BaseUtils.js',
+  'app/backbone/Bbap/BaseService.js',
+  'app/backbone/Bbap/SuperView.js',
+  'app/backbone/Bbap/BaseView.js',
+  'app/backbone/Bbap/BaseList.js',
+  'app/backbone/Bbap/BaseItem.js',
+  'app/backbone/Bbap/BaseCollection.js',
+  'app/backbone/Bbap/BaseModel.js',
+  'app/backbone/Bbap/BaseDetail.js'
+
+
+], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/scripts' } };
+gulp.task('UserManagement_Bbap', function () {
+  doTask("UserManagement_Bbap", true);
+});
+gulp.task('UserManagement_Bbap.min', function () {
+  doTask('UserManagement_Bbap', false);
+});
+
+
+
+
 paths['UserManagement_doc'] = { doc: { source: [
   'app/backbone/*.*',
   'app/scripts/utils/Est.source.js',
@@ -509,7 +548,8 @@ paths['UserManagement_leaflet'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/scripts/utils/Est.source.js',
-  'app/backbone/Application.js'
+  'app/backbone/Application.js',
+  'app/vendor/handlebars/handlebars-debug.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/wwy/leaflet/website/scripts' } };
 gulp.task('UserManagement_leaflet', function () {
   doTask('leaflet', true);
@@ -523,7 +563,8 @@ paths['UserManagement_mobileManagement_base'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/scripts/utils/Est.source.js',
-  'app/appjs_v3/Application.js'
+  'app/appjs_v3/Application.js',
+  'app/vendor/backbone/backbone-debug.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/mobile/mobileManagement/scripts' } }
 gulp.task('UserManagement_mobileManagement_base', function () {
   doTask('UserManagement_mobileManagement_base', true);

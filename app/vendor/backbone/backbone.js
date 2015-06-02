@@ -19,9 +19,8 @@
     } else if (typeof exports !== 'undefined') {
         var _ = require('underscore');
         factory(root, exports, _);
-
-        // Finally, as a browser global.
     } else {
+        // Finally, as a browser global.
         root.Backbone = factory(root, {}, root._, (root.jQuery || root.Zepto || root.ender || root.$));
     }
 
@@ -55,13 +54,13 @@
     // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
     // will fake `"PATCH"`, `"PUT"` and `"DELETE"` requests via the `_method` parameter and
     // set a `X-Http-Method-Override` header.
-    Backbone.emulateHTTP = false;
+    Backbone.emulateHTTP = true;
 
     // Turn on `emulateJSON` to support legacy servers that can't deal with direct
     // `application/json` requests ... this will encode the body as
     // `application/x-www-form-urlencoded` instead and will send the model in a
     // form param named `model`.
-    Backbone.emulateJSON = false;
+    Backbone.emulateJSON = true;
 
     // Backbone.Events
     // ---------------
@@ -412,7 +411,7 @@
 
         // Return an object containing all the attributes that have changed, or
         // false if there are no changed attributes. Useful for determining what
-        // parts of a view need to be updated and/or what attributes need to be
+        // parts of a views need to be updated and/or what attributes need to be
         // persisted to the server. Unset attributes will be set to undefined.
         // You can also pass an attributes object to diff against the model,
         // determining if there *would be* a change.
@@ -1030,7 +1029,7 @@
     // DOM. This might be a single item, an entire list, a sidebar or panel, or
     // even the surrounding frame which wraps your whole app. Defining a chunk of
     // UI as a **View** allows you to define your DOM events declaratively, without
-    // having to worry about render order ... and makes it easy for the view to
+    // having to worry about render order ... and makes it easy for the views to
     // react to specific changes in the state of your models.
 
     // Creating a Backbone.View creates its initial element outside of the DOM,
@@ -1046,7 +1045,7 @@
     // Cached regex to split keys for `delegate`.
     var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
-    // List of view options to be merged as properties.
+    // List of views options to be merged as properties.
     var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events'];
 
     // Set up all inheritable **Backbone.View** properties and methods.
@@ -1056,7 +1055,7 @@
         tagName: 'div',
 
         // jQuery delegate for element lookup, scoped to DOM elements within the
-        // current view. This should be preferred to global lookups where possible.
+        // current views. This should be preferred to global lookups where possible.
         $: function(selector) {
             return this.$el.find(selector);
         },
@@ -1065,14 +1064,14 @@
         // initialization logic.
         initialize: function(){},
 
-        // **render** is the core function that your view should override, in order
+        // **render** is the core function that your views should override, in order
         // to populate its element (`this.el`), with the appropriate HTML. The
         // convention is for **render** to always return `this`.
         render: function() {
             return this;
         },
 
-        // Remove this view by taking the element out of the DOM, and removing any
+        // Remove this views by taking the element out of the DOM, and removing any
         // applicable Backbone.Events listeners.
         remove: function() {
             this._removeElement();
@@ -1080,15 +1079,15 @@
             return this;
         },
 
-        // Remove this view's element from the document and all event listeners
+        // Remove this views's element from the document and all event listeners
         // attached to it. Exposed for subclasses using an alternative DOM
         // manipulation API.
         _removeElement: function() {
             this.$el.remove();
         },
 
-        // Change the view's element (`this.el` property) and re-delegate the
-        // view's events on the new element.
+        // Change the views's element (`this.el` property) and re-delegate the
+        // views's events on the new element.
         setElement: function(element) {
             this.undelegateEvents();
             this._setElement(element);
@@ -1096,7 +1095,7 @@
             return this;
         },
 
-        // Creates the `this.el` and `this.$el` references for this view using the
+        // Creates the `this.el` and `this.$el` references for this views using the
         // given `el`. `el` can be a CSS selector or an HTML string, a jQuery
         // context or an element. Subclasses can override this to utilize an
         // alternative DOM manipulation API and are only required to set the
@@ -1116,7 +1115,7 @@
         //       'click .open':       function(e) { ... }
         //     }
         //
-        // pairs. Callbacks will be bound to the view, with `this` set properly.
+        // pairs. Callbacks will be bound to the views, with `this` set properly.
         // Uses event delegation for efficiency.
         // Omitting the selector binds the event to `this.el`.
         delegateEvents: function(events) {
@@ -1132,14 +1131,14 @@
             return this;
         },
 
-        // Add a single event listener to the view's element (or a child element
+        // Add a single event listener to the views's element (or a child element
         // using `selector`). This only works for delegate-able events: not `focus`,
         // `blur`, and not `change`, `submit`, and `reset` in Internet Explorer.
         delegate: function(eventName, selector, listener) {
             this.$el.on(eventName + '.delegateEvents' + this.cid, selector, listener);
         },
 
-        // Clears all callbacks previously bound to the view by `delegateEvents`.
+        // Clears all callbacks previously bound to the views by `delegateEvents`.
         // You usually don't need to use this, but may wish to if you have multiple
         // Backbone views attached to the same DOM element.
         undelegateEvents: function() {
@@ -1153,7 +1152,7 @@
             this.$el.off(eventName + '.delegateEvents' + this.cid, selector, listener);
         },
 
-        // Produces a DOM element to be assigned to your view. Exposed for
+        // Produces a DOM element to be assigned to your views. Exposed for
         // subclasses using an alternative DOM manipulation API.
         _createElement: function(tagName) {
             return document.createElement(tagName);
@@ -1175,7 +1174,7 @@
             }
         },
 
-        // Set attributes from a hash on this view's element.  Exposed for
+        // Set attributes from a hash on this views's element.  Exposed for
         // subclasses using an alternative DOM manipulation API.
         _setAttributes: function(attributes) {
             this.$el.attr(attributes);
@@ -1689,7 +1688,7 @@
         return child;
     };
 
-    // Set up inheritance for the model, collection, router, view and history.
+    // Set up inheritance for the model, collection, router, views and history.
     Model.extend = Collection.extend = Router.extend = View.extend = History.extend = extend;
 
     // Throw an error when a URL is needed, and none is supplied.

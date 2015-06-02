@@ -163,7 +163,7 @@ define('BaseUtils', [], function (require, exports, module) {
      * @author wyj 14.12.17
      * @example
      *      // 图片添加
-     *      Utils.openUpload({
+     *      BaseUtils.openUpload({
        *       albumId: app.getData('curAlbumId'),
        *       username: app.getData('user').username, // 必填
        *       auto: true,
@@ -219,7 +219,7 @@ define('BaseUtils', [], function (require, exports, module) {
      * @param options
      * @author wyj 14.12.18
      * @example
-     *      Utils.initEditor({
+     *      BaseUtils.initEditor({
        *        render: '.ckeditor'
        *      });
      */
@@ -386,7 +386,7 @@ define('BaseUtils', [], function (require, exports, module) {
      * @param options
      * @author wyj 14.12.18
      * @example
-     *        Utils.initCopy('#photo-copy-dialog', {
+     *        BaseUtils.initCopy('#photo-copy-dialog', {
        *           success: function(){
        *             window.copyDialog.close();
        *           }
@@ -424,7 +424,7 @@ define('BaseUtils', [], function (require, exports, module) {
      * @param options
      * @author wyj 15.03.24
      * @example
-     *     Utils.initDrag({
+     *     BaseUtils.initDrag({
         render: '.drag',
         resize: true, // 是否启用缩放
         dragend: function (ev, dd) { // 拖放结束后执行
@@ -456,7 +456,7 @@ define('BaseUtils', [], function (require, exports, module) {
           options.click && options.click.call(this);
         })
           .drag("init", function () {
-            if (!$(this).hasClass('lock')){
+            if (!$(this).hasClass('lock')) {
               for (var name in CKEDITOR.instances) {
                 CKEDITOR.instances[name].destroy()
               }
@@ -525,7 +525,7 @@ define('BaseUtils', [], function (require, exports, module) {
      * @param optoins
      * @author wyj 15.03.24
      * @example
-     *      Utils.initResize({
+     *      BaseUtils.initResize({
      *        render: 'img',
      *        callback: function(ev, dd){}
      *      });
@@ -545,6 +545,76 @@ define('BaseUtils', [], function (require, exports, module) {
         }, { relative: true, handle: '.drag-handle'}).drag('dragend', function (ev, dd) {
           options.dragend && options.dragend.apply(this, [ev, dd]);
         });
+      });
+    },
+    /**
+     * 对话框
+     *
+     * @method [对话框] - dialog
+     * @param options [title: ][width: ][height: ][target: ][success: 确定按钮回调]
+     * @author wyj 14.12.18
+     * @example
+     *      BaseUtils.initDialog({
+       *         id: 'copyDialog',
+       *         title: '复制图片',
+       *         target: '.btn-email-bind',
+       *         width: 800,
+       *         hideCloseBtn: false, // 是否隐藏关闭按钮
+       *         content: this.copyDetail({
+       *           filename: this.model.get('filename'),
+       *           serverPath: this.model.get('serverPath')
+       *         }),
+       *         cover: true, // 是否显示遮罩
+       *         load: function(){
+       *           ...base.js
+       *         },
+       *         success: function(){
+       *           this.close();
+       *         }
+       *       });
+     */
+    initDialog: function (options) {
+      var button = options.button || [];
+      seajs.use(['dialog-plus'], function (dialog) {
+        if (options.success) {
+          button.push({ value: '确定', autofocus: true,
+            callback: function () {
+              options.success.apply(this, arguments);
+            }
+          });
+        }
+        if (!options.hideCloseBtn) {
+          button.push({
+            value: '关闭',
+            callback: function () {
+              this.close().remove();
+            } });
+        }
+        options = Est.extend({
+          id: 'dialog' + Est.nextUid(),
+          title: '对话框',
+          width: 150, content: '',
+          button: button
+        }, options);
+        if (options.target) {
+          options.target = $(options.target).get(0);
+        }
+        options.oniframeload = function () {
+          try {
+            this.iframeNode.contentWindow.topDialog = thisDialog;
+            this.iframeNode.contentWindow.app = app;
+            delete app.getRoutes()['index'];
+          } catch (e) {
+          }
+          if (typeof options.load === 'function') {
+            options.load.call(this, arguments);
+          }
+        }
+        if (options.cover) {
+          app.addDialog(dialog(options), options.id).showModal(options.target);
+        } else {
+          app.addDialog(dialog(options), options.id).show(options.target);
+        }
       });
     },
     /**
