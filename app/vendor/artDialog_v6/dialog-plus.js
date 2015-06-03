@@ -8,8 +8,7 @@
  * For details, see: http://www.gnu.org/licenses/lgpl-2.1.html
  */
 define(function (require) {
-
-var $ = require('jquery');
+if (!$) var $ = require('jquery');
 var dialog = require('./dialog');
 var drag = require('./drag');
 
@@ -101,17 +100,16 @@ dialog.oncreate = function (api) {
             } catch (e) {} 
         }
     }
-
-
     // 拖拽支持
+  if (drag){
     $(api.node).on(drag.types.start, '[i=title]', function (event) {
-        // 排除气泡类型的对话框
-        if (!api.follow) {
-            api.focus();
-            drag.create(api.node, event);
-        }
+      // 排除气泡类型的对话框
+      if (!api.follow) {
+        api.focus();
+        drag.create(api.node, event);
+      }
     });
-
+  }
 };
 
 

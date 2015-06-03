@@ -8,8 +8,7 @@
  * For details, see: http://www.gnu.org/licenses/lgpl-2.1.html
  */
 define(function (require) {
-
-var $ = require('jquery');
+if (!$) var $ = require('jquery');
 var Popup = require('./popup');
 var defaults = require('./dialog-config');
 var css = defaults.cssUri;
@@ -333,7 +332,7 @@ $.extend(prototype, {
      * @param    {String}   标题内容
      */
     title: function (text) {
-        this._$('title').text(text);
+        this._$('title').html(text);
         this._$('header')[text ? 'show' : 'hide']();
         return this;
     },

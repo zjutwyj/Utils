@@ -2436,17 +2436,16 @@
     for (var i = 0, len = rootlist.length; i < len; i++) {
       var space = '';
       if (!opts.top) {
-        for (var j = 0; j < z; j++) {
-          space = space + '　';
-        }
+        space = Est.pad(space, z-1, '　', false, 10);
       }
       space = space + "|-";
       rootlist[i][opts['name']] = space + rootlist[i][opts['name']];
       if (rootlist[i].hasChild) {
         opts.top = false;
-        bulidSelectNode(rootlist[i].cates, zoom = z + 2, opts);
+        bulidSelectNode(rootlist[i].cates, zoom = z + 1, opts);
       }
     }
+    opts.top = true;
     return rootlist;
   }
 

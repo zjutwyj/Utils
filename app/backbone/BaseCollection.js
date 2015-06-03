@@ -9,18 +9,15 @@
  * @class BaseCollection 集合类
  * @author yongjin<zjut_wyj@163.com> 2014/11/6
  */
-define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require, exports, module) {
-  var Backbone, BaseCollection, PaginationModel;
 
-  Backbone = require('backbone');
-  PaginationModel = Backbone.Model.extend({
+  var PaginationModel = Backbone.Model.extend({
     defaults: { page: 1, pageSize: 16, count: 0 },
     initialize: function () {
       debug('3.PaginationModel.initialize');
     }
   });
 
-  BaseCollection = Backbone.Collection.extend({
+  var BaseCollection = Backbone.Collection.extend({
     //localStorage: new Backbone.LocalStorage('base-collection'),
     /**
      * 传递options进来
@@ -206,6 +203,3 @@ define('BaseCollection', ['jquery', 'underscore', 'backbone'], function (require
       }
     }
   });
-
-  module.exports = BaseCollection;
-});

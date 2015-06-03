@@ -27,8 +27,8 @@ function doTask(item, debug) {
           gulp.task(item + key, function () {
             if (debug) {
               return gulp.src(paths[item].scripts.source)
-                .pipe(jshint())
-                .pipe(jshint.reporter(stylish))
+                /*.pipe(jshint())
+                .pipe(jshint.reporter(stylish))*/
                 .pipe(concat(paths[item].scripts.name))
                 .pipe(gulp.dest(paths[item].scripts.dist));
             }
@@ -356,143 +356,16 @@ gulp.task('jihui881.min', function () {
   doTask('jihui881', false);
 });
 
-//** ==================================================== UserManagement ==================================================== */
-//** [1].用户后台 UserManagement.min */
-//** [2].微传单 UserManagement_leaflet.min */
-//** [3].手机后台 UserManagement_mobileManagement.min */
+// ==================================================== UserManagement ==================================================== */
 
-//** 用户后台 - BaseUtils */
-paths['UserManagement_BaseUtils'] = { scripts: { source: ['./app/backbone/BaseUtils.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseUtils.js' } }
-gulp.task('UserManagement_BaseUtils', function () {
-  doTask('UserManagement_BaseUtils', true);
-});
-gulp.task('UserManagement_BaseUtils.min', function () {
-  doTask('UserManagement_BaseUtils', false);
-});
+// [1].用户后台 gulp.min */
 
-//** 用户后台 - BaseService */
-paths['UserManagement_BaseService'] = { scripts: { source: ['./app/backbone/BaseService.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseService.js' } }
-gulp.task('UserManagement_BaseService', function () {
-  doTask('UserManagement_BaseService', true);
-});
-gulp.task('UserManagement_BaseService.min', function () {
-  doTask('UserManagement_BaseService', false);
-});
+// [2].微传单 UserManagement_leaflet.min */
 
-//** 用户后台 - BaseCollection */
-paths['UserManagement_BaseCollection'] = { scripts: { source: ['./app/backbone/BaseCollection.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseCollection.js' } }
-gulp.task('UserManagement_BaseCollection', function () {
-  doTask('UserManagement_BaseCollection', true);
-});
-gulp.task('UserManagement_BaseCollection.min', function () {
-  doTask('UserManagement_BaseCollection', false);
-});
-
-//** 用户后台 - BaseComposite */
-paths['UserManagement_BaseComposite'] = { scripts: { source: ['./app/backbone/BaseComposite.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseComposite.js' } }
-gulp.task('UserManagement_BaseComposite', function () {
-  doTask('UserManagement_BaseComposite', true);
-});
-gulp.task('UserManagement_BaseComposite.min', function () {
-  doTask('UserManagement_BaseComposite', false);
-});
-
-//** 用户后台 - BaseDetail */
-paths['UserManagement_BaseDetail'] = { scripts: { source: ['./app/backbone/BaseDetail.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseDetail.js' } }
-gulp.task('UserManagement_BaseDetail', function () {
-  doTask('UserManagement_BaseDetail', true);
-});
-gulp.task('UserManagement_BaseDetail.min', function () {
-  doTask('UserManagement_BaseDetail', false);
-});
-
-//** 用户后台 - BaseList */
-paths['UserManagement_BaseList'] = { scripts: { source: ['./app/backbone/BaseList.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseList.js' } }
-gulp.task('UserManagement_BaseList', function () {
-  doTask('UserManagement_BaseList', true);
-});
-gulp.task('UserManagement_BaseList.min', function () {
-  doTask('UserManagement_BaseList', false);
-});
-
-//** 用户后台 - BaseItem */
-paths['UserManagement_BaseItem'] = { scripts: { source: ['./app/backbone/BaseItem.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseItem.js' } }
-gulp.task('UserManagement_BaseItem', function () {
-  doTask('UserManagement_BaseItem', true);
-});
-gulp.task('UserManagement_BaseItem.min', function () {
-  doTask('UserManagement_BaseItem', false);
-});
-
-// 用户后台 - BaseModel */
-paths['UserManagement_BaseModel'] = { scripts: { source: ['./app/backbone/BaseModel.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseModel.js' } }
-gulp.task('UserManagement_BaseModel', function () {
-  doTask('UserManagement_BaseModel', true);
-});
-gulp.task('UserManagement_BaseModel.min', function () {
-  doTask('UserManagement_BaseModel', false);
-});
-
-//** 用户后台 - BaseView */
-paths['UserManagement_BaseView'] = { scripts: { source: ['./app/backbone/BaseView.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseView.js' } }
-gulp.task('UserManagement_BaseView', function () {
-  doTask('UserManagement_BaseView', true);
-});
-gulp.task('UserManagement_BaseView.min', function () {
-  doTask('UserManagement_BaseView', false);
-});
-
-//** 用户后台 - SuperView */
-paths['UserManagement_SuperView'] = { scripts: { source: ['./app/backbone/SuperView.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'SuperView.js' } }
-gulp.task('UserManagement_SuperView', function () {
-  doTask('UserManagement_SuperView', true);
-});
-gulp.task('UserManagement_SuperView.min', function () {
-  doTask('UserManagement_SuperView', false);
-});
-
-//** 用户后台 - BaseService */
-paths['UserManagement_BaseService'] = { scripts: { source: ['./app/backbone/BaseService.js'], dist: 'C:/software/WebstormProjects/UserManagement/app/lib', name: 'BaseService.js' } }
-gulp.task('UserManagement_BaseService', function () {
-  doTask('UserManagement_BaseService', true);
-});
-gulp.task('UserManagement_BaseService.min', function () {
-  doTask('UserManagement_BaseService', false);
-});
-
-//** 用户后台 - Base模块压缩 */
-gulp.task('UserManagement_lib.min', function () {
-  doTask('UserManagement_BaseUtils', false);
-  doTask('UserManagement_BaseCollection', false);
-  doTask('UserManagement_BaseComposite', false);
-  doTask('UserManagement_BaseDetail', false);
-  doTask('UserManagement_BaseItem', false);
-  doTask('UserManagement_BaseModel', false);
-  doTask('UserManagement_BaseView', false);
-  doTask('UserManagement_BaseList', false);
-  doTask('UserManagement_SuperView', false);
-  doTask('UserManagement_BaseService', false);
-});
+// [3].手机后台 UserManagement_mobileManagement.min */
 
 //** 用户后台 - 基础代码 */ */
 paths['UserManagement_base'] = { scripts: { source: [
-  'app/vendor/seajs/sea.js',
-  'app/vendor/seajs/seajs-text-debug.js',
-  'app/vendor/pace/pace.js',
-  'app/vendor/prefix/prefixfree.min.js',
-  'app/vendor/json3/json3.js',
-  'app/scripts/utils/Est.source.js',
-  'app/backbone/Application.js'
-], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/scripts' } };
-gulp.task('UserManagement_base', function () {
-  doTask("UserManagement_base", true);
-});
-gulp.task('UserManagement_base.min', function () {
-  doTask('UserManagement_base', false);
-});
-
-
-paths['UserManagement_Bbap'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/vendor/pace/pace.js',
@@ -507,27 +380,24 @@ paths['UserManagement_Bbap'] = { scripts: { source: [
 
   'app/vendor/handlebars/handlebars-debug.js',
 
-  'app/backbone/Bbap/BaseUtils.js',
-  'app/backbone/Bbap/BaseService.js',
-  'app/backbone/Bbap/SuperView.js',
-  'app/backbone/Bbap/BaseView.js',
-  'app/backbone/Bbap/BaseList.js',
-  'app/backbone/Bbap/BaseItem.js',
-  'app/backbone/Bbap/BaseCollection.js',
-  'app/backbone/Bbap/BaseModel.js',
-  'app/backbone/Bbap/BaseDetail.js'
+  'app/backbone/BaseUtils.js',
+  'app/backbone/BaseService.js',
+  'app/backbone/SuperView.js',
+  'app/backbone/BaseView.js',
+  'app/backbone/BaseList.js',
+  'app/backbone/BaseItem.js',
+  'app/backbone/BaseCollection.js',
+  'app/backbone/BaseModel.js',
+  'app/backbone/BaseDetail.js'
 
 
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/scripts' } };
-gulp.task('UserManagement_Bbap', function () {
-  doTask("UserManagement_Bbap", true);
+gulp.task('UserManagement_base', function () {
+  doTask("UserManagement_base", true);
 });
-gulp.task('UserManagement_Bbap.min', function () {
-  doTask('UserManagement_Bbap', false);
+gulp.task('UserManagement_base.min', function () {
+  doTask('UserManagement_base', false);
 });
-
-
-
 
 paths['UserManagement_doc'] = { doc: { source: [
   'app/backbone/*.*',
@@ -540,7 +410,10 @@ gulp.task('UserManagement_doc', function () {
 
 //** 用户后台 打包*/
 gulp.task('UserManagement.min', function(){
-  return [gulp.start('UserManagement_lib.min'), gulp.start('UserManagement_base.min'), gulp.start('UserManagement_doc')];
+  return [gulp.start('UserManagement_base.min'), gulp.start('UserManagement_doc')];
+});
+gulp.task('UserManagement', function(){
+  return [gulp.start('UserManagement_base'), gulp.start('UserManagement_doc')];
 });
 
 //** 微传单 打包*/
@@ -564,7 +437,7 @@ paths['UserManagement_mobileManagement_base'] = { scripts: { source: [
   'app/vendor/seajs/seajs-text-debug.js',
   'app/scripts/utils/Est.source.js',
   'app/appjs_v3/Application.js',
-  'app/vendor/backbone/backbone-debug.js'
+  'app/vendor/handlebars/handlebars-debug.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/mobile/mobileManagement/scripts' } }
 gulp.task('UserManagement_mobileManagement_base', function () {
   doTask('UserManagement_mobileManagement_base', true);
@@ -610,5 +483,5 @@ gulp.task('UserManagement_appjs_wrap.min', function () {
 
 //** 手机后台 - 打包 */
 gulp.task('UserManagement_mobileManagement.min', function(){
-  return [gulp.start('UserManagement_mobileManagement.min'), gulp.start('UserManagement_appjs_merge.min'), gulp.start('UserManagement_appjs_wrap.min')];
+  return [gulp.start('UserManagement_mobileManagement_base.min'), gulp.start('UserManagement_appjs_merge.min'), gulp.start('UserManagement_appjs_wrap.min')];
 });

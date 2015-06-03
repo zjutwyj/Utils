@@ -173,7 +173,6 @@ QUnit.test('Est.interface', function (assert) {
 
 //判断对象是否实现了上述两个接口
   var object = new Class();
-  debugger
   Est.interface.implements(object, Composite, FormItem);
 
   assert.equal(object.add(), 'add', 'passed');
