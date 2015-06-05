@@ -35,6 +35,7 @@ var BaseItem = SuperView.extend({
        *            detail: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少 , 且开头为“#/”  需配置路由如： app.addRoute('product/:id', function (id) {
                             productDetail(Est.decodeId(id, 'Product_', 32));
                             }); 如果需要弹出对话框， 则route为具体的详细页模块 如：ProductDetail
+                    encodeUrl: false, // 是否缩减url    如： #/product/Product_000000000000000000099 =>> #/product/99  路由中需解码：Est.decodeId(id, 'Product_', 32)
        *            filter: function(model){ // 过滤模型类
        *            },
        *            beforeRender: function(model){},
@@ -218,7 +219,7 @@ var BaseItem = SuperView.extend({
    * @author wyj 14.12.20
    */
   _setViewId: function (name) {
-    this._options.viewId = name;
+    if (this._options) this._options.viewId = name;
   },
   /**
    * 设置模型类
@@ -598,10 +599,10 @@ var BaseItem = SuperView.extend({
     try {
       if (!this.model.get('_isSearch') && Est.typeOf(options.detail) === 'string'
         && options.detail.indexOf('#/') !== -1) {
-        this._navigate(options.detail + '/' + Est.encodeId(this.model.get('id')), true);
+        this._navigate(options.detail + '/' + (this._options.encodeUrl ? Est.encodeId(this.model.get('id')) : this.model.get('id')), true);
       } else if (this.model.get('_isSearch') && options.detail.indexOf('#/') !== -1) {
         // 如果是搜索结果列表时， 新建一个窗口
-        window.open(options.detail + '/' + Est.encodeId(this.model.get('id')));
+        window.open(options.detail + '/' + (this._options.encodeUrl ? Est.encodeId(this.model.get('id')) : this.model.get('id')));
       } else {
         // 当detail为moduleId时， 以对话框的形式打开
         this._dialog({

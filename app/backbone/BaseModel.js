@@ -49,7 +49,7 @@ var BaseModel = Backbone.Model.extend({
    */
   _initialize: function (options) {
     this.validateMsg = null;
-    debug('9.BaseModel._initialize');
+    debug('9.BaseModel._initialize ' + this.baseId);
   },
   /**
    * 过滤结果, 并提示信息对话框, 若不想提示信息可以设置hideTip为true
