@@ -109,8 +109,9 @@ BaseService.prototype = {
    * @author wyj 15.1.27
    */
   initDefault: function (options, result) {
+    options.defaultValue = Est.typeOf(options.defaultValue) === 'string' ? options.defaultValue : '/';
     if (options.defaults && Est.typeOf(result.attributes.data) === 'array') {
-      result.attributes.data.unshift({text: '请选择', value: '/'});
+      result.attributes.data.unshift({text: '请选择', value: options.defaultValue});
     }
   },
   /**
@@ -127,6 +128,7 @@ BaseService.prototype = {
               tree: true, // 是否构建树
               extend: true, // 是否全部展开
               defaults： false, // 是否添加默认选项
+              defaultValue: '/', // 默认为 /
 
               // 如果tree为true时， 表示需要构建树， 则需补充以下字段
               rootKey: 'isroot', // 构建树时的父级字段名称

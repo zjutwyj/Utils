@@ -126,7 +126,7 @@ Est.extend(Application.prototype, {
     }
     this['instance'][name] = instance;
     this.setCurrentView(name);
-    return this;
+    return this['instance'][name];
   },
   add: function (name, instance) {
     return this.addView(name, instance);

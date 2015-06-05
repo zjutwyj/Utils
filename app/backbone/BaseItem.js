@@ -32,7 +32,9 @@ var BaseItem = SuperView.extend({
        *            // 可选
        *            modelBind: false, // 绑定模型类， 比如文本框内容改变， 模型类相应改变; 当元素为checkbox是， 需设置true-value="01" false-value="00",
        *            若不设置默认为true/false
-       *            detail: '', // 修改或添加页面地址
+       *            detail: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少 , 且开头为“#/”  需配置路由如： app.addRoute('product/:id', function (id) {
+                            productDetail(Est.decodeId(id, 'Product_', 32));
+                            }); 如果需要弹出对话框， 则route为具体的详细页模块 如：ProductDetail
        *            filter: function(model){ // 过滤模型类
        *            },
        *            beforeRender: function(model){},
@@ -169,6 +171,8 @@ var BaseItem = SuperView.extend({
       this._setupEvents(modelOptions);
 
       _.each(this.model._getChildren(modelOptions._collection), function (newmodel) {
+        var childView = null;
+
         if (modelOptions._items) {
           newmodel = new modelOptions._model(newmodel);
         }
@@ -186,6 +190,9 @@ var BaseItem = SuperView.extend({
         });
         childView._setInitModel(ctx.initModel);
         childView._setViewId(ctx._options.viewId);
+        //TODO 解决子类下的移序问题
+        newmodel.view = childView;
+
         tree.append(childView.$el);
         if (ctx._options.views) {
           ctx._options.views.push(childView);
@@ -248,7 +255,10 @@ var BaseItem = SuperView.extend({
    */
   _toggleCollapse: function (opts) {
     var ctx = this;
-    if (this.model.stopCollapse) return;
+    if (this.model.stopCollapse) {
+      this.$(opts._subRender + ':first').addClass('hide');
+      return;
+    }
     ctx.collapsed = !ctx.collapsed;
 
     if (ctx.collapsed) {
@@ -584,82 +594,31 @@ var BaseItem = SuperView.extend({
     debug('1.BaseItem._edit');
     this._itemActive();
     options = Est.extend({}, options);
-    // 如果是搜索结果列表时， 使用dialog形式
-    options.route = this._options.route || options.route;
-    if (options.route) {
-      this._navigate(options.route + '/' + Est.encodeId(this.model.get('id')), true);
-    } else {
-      debug('【Error】XXXList中是否设置route', {type: 'error'});
+    options.detail = this._options.detail || options.detail;
+    try {
+      if (!this.model.get('_isSearch') && Est.typeOf(options.detail) === 'string'
+        && options.detail.indexOf('#/') !== -1) {
+        this._navigate(options.detail + '/' + Est.encodeId(this.model.get('id')), true);
+      } else if (this.model.get('_isSearch') && options.detail.indexOf('#/') !== -1) {
+        // 如果是搜索结果列表时， 新建一个窗口
+        window.open(options.detail + '/' + Est.encodeId(this.model.get('id')));
+      } else {
+        // 当detail为moduleId时， 以对话框的形式打开
+        this._dialog({
+          moduleId: options.detail, // 模块ID
+          title: '修改', // 对话框标题
+          id: this.model.get('id'), // 初始化模块时传入的ID
+          width: 1000, // 对话框宽度
+          height: 'auto', // 对话框高度
+          skin: 'form-horizontal', // className
+          onShow: function () {
+          }, // 对话框弹出后调用
+          onClose: function () {
+          }
+        }, this);
+      }
+    } catch (e) {
+      debug('【Error: BaseItem._edit】' + e);
     }
-    /*if (!this.model.get('_isSearch') && options.route) {
-     this._navigate(options.route + '/' + Est.encodeId(ctx.model.get('id')), true);
-     } else {
-     this._dialog({
-     moduleId: 'SeoDetail', // 模块ID
-     title: '修改', // 对话框标题
-     id: this.model.get('id'), // 初始化模块时传入的ID
-     width: 1000, // 对话框宽度
-     height: 'auto', // 对话框高度
-     skin: 'form-horizontal', // className
-     hideSaveBtn: true, // 是否隐藏保存按钮， 默认为false
-     onShow: function(){}, // 对话框弹出后调用
-     onClose: function(){
-     }
-     }, this);
-     seajs.use(['dialog-plus'], function (dialog) {
-     window.dialog = dialog;
-     var buttons = [];
-     if (!options.hideSaveBtn) buttons.push({
-     value: '保存',
-     callback: function () {
-     this.title(CONST.SUBMIT_TIP);
-     this.iframeNode.contentWindow.$("#submit").click();
-     return false;
-     },
-     autofocus: true
-     });
-     */
-    /*if (!options.hideResetBtn) buttons.push({
-     value: '重置',
-     callback: function () {
-     this.iframeNode.contentWindow.$("#reset").click();
-     return false;
-     }
-     });*/
-    /*
-     buttons.push({ value: '关闭' });
-     window.detailDialog = dialog({
-     id: 'edit-dialog',
-     title: options.title || '修改',
-     width: options.width || 1000,
-     height: options.height || 'auto',
-     url: options.url || ctx._options.detail +
-     '?id=' + ctx.model.id,
-     button: buttons,
-     oniframeload: function () {
-     var load = options.load || function () {
-     };
-     this.iframeNode.contentWindow.topDialog = window.detailDialog;
-     //this.iframeNode.contentWindow.app = app;
-     delete app.getRoutes()['index'];
-     load.call(this, this.iframeNode.contentWindow);
-     },
-     onclose: function () {
-     ctx.model.set(Est.cloneDeep(window.model));
-     if (options.reload) ctx.model.fetch({
-     wait: true,
-     success: function () {
-     ctx.model.reset && ctx.model.reset();
-     }
-     });
-     if (options.close) options.close.call(this);
-     this.remove();
-     window.detailDialog = null;
-     window.model = {};
-     }
-     });
-     window.detailDialog.showModal();
-     });
-     }*/
   }
 });

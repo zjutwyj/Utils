@@ -47,6 +47,7 @@ var SuperView = Backbone.View.extend({
                     height: 250, // 对话框高度
                     skin: 'form-horizontal', // className
                     hideSaveBtn: false, // 是否隐藏保存按钮， 默认为false
+                    autoClose: true, // 提交后自动关闭对话框
                     button: [ // 自定义按钮
                       {
                         value: '保存',
@@ -66,15 +67,22 @@ var SuperView = Backbone.View.extend({
    */
   _dialog: function (options, context) {
     var ctx = context || this;
+
     options.width = options.width || 700;
     options.cover = Est.typeOf(options.cover) === 'boolean' ? options.cover : true;
     options.button = options.button || [];
+
     if (typeof options.hideSaveBtn === 'undefined' ||
       (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
       options.button.push(
         {value: '提交', callback: function () {
           Utils.addLoading();
           $('#' + options.moduleId + ' #submit').click();
+          if (options.autoClose){
+            Est.on('_dialog_submit_callback', Est.proxy(function(){
+              this.close().remove();
+            }, this));
+          }
           return false;
         }, autofocus: true});
     }
@@ -94,8 +102,7 @@ var SuperView = Backbone.View.extend({
         }
       },
       onclose: function () {
-        options.onClose &&
-        options.onClose.call(ctx, options);
+        options.onClose && options.onClose.call(ctx, options);
         app.getDialogs().pop();
       }
     });

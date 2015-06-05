@@ -16,6 +16,9 @@ var BaseDetail = SuperView.extend({
        *         template : template, // 字符串模板
        *         model: ProductModel, // 模型类
        *         // 可选
+       *         hideSaveBtn: true, // 保存成功后的弹出提示框中是否隐藏保存按钮
+       *         hideOkBtn: true, // 保存成功后的弹出提示框中是否隐藏确定按钮
+       *         autoHide: true, // 保存成功后是否自动隐藏提示对话框
        *         enterRender: '#submit' // 执行回车后的按钮点击的元素选择符
        *         id: ctx.model.get('id'), // 当不是以dialog形式打开的时候， 需要传递ID值
                  page: ctx._getPage() // 点击返回按钮且需要定位到第几页时， 传入page值，
@@ -108,20 +111,21 @@ var BaseDetail = SuperView.extend({
    * @author wyj 14.11.15
    */
   _initModel: function (model, ctx) {
-    ctx.passId = this.options.id || Est.getUrlParam('id', window.location.href);
+
     debug(function () {
       if (!model) {
         return 'XxxDetail未找到模型类， 请检查继承BaseDetail时是否设置model参数，如XxxDetail = BaseDetail.extend({' +
           'model: XxxModel, initialize: function(){..}})';
       }
     }, {type: 'error'});
+    ctx.passId = this.options.id || Est.getUrlParam('id', window.location.href);
+
     if (!Est.isEmpty(this.passId)) {
       ctx.model = new model();
       ctx.model.set('id', ctx.passId);
       ctx.model.set('_data', ctx._options.data);
       ctx.model.fetch().done(function () {
-        ctx.model.set('_isAdd', ctx._isAdd = false);
-        ctx.render();
+        ctx.model.set('_isAdd', ctx._isAdd = false), ctx.render();
       });
     } else {
       ctx.passId = new Date().getTime();
@@ -130,6 +134,11 @@ var BaseDetail = SuperView.extend({
       ctx.model.set('_isAdd', ctx._isAdd = true);
       ctx.render();
     }
+
+    if (this._options.hideOkBtn) ctx.model.hideOkBtn = true;
+    if (this._options.hideSaveBtn) ctx.model.hideSaveBtn = true;
+    if (this._options.autoHide) ctx.model.autoHide = true;
+
   },
   /**
    * form包装器， 传递表单选择符

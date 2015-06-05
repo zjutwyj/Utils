@@ -358,7 +358,7 @@ gulp.task('jihui881.min', function () {
 
 // ==================================================== UserManagement ==================================================== */
 
-// [1].用户后台 gulp.min */
+// [1].用户后台 UserManagement.min */
 
 // [2].微传单 UserManagement_leaflet.min */
 

@@ -53,6 +53,9 @@ var BaseModel = Backbone.Model.extend({
   },
   /**
    * 过滤结果, 并提示信息对话框, 若不想提示信息可以设置hideTip为true
+   * this.model.hideTip = true; // 无提示信息弹出框
+   * this.model.hideOkBtn = true; // 隐藏保存按钮
+   * this.model.autoHide = true; // 自动隐藏提示信息
    *
    * @method [private] - parse
    * @private
@@ -64,7 +67,7 @@ var BaseModel = Backbone.Model.extend({
   parse: function (response, options) {
     var ctx = this, buttons = [],
       _isNew = false;
-    Utils.removeLoading();
+    if ('msg' in response) Utils.removeLoading();
 
     if (Est.isEmpty(response)) {
       var url = Est.typeOf(this.url) === 'function' ? this.url() : this.url;
@@ -75,14 +78,14 @@ var BaseModel = Backbone.Model.extend({
     if (response.msg && !this.hideTip) {
 
       if (response.success) {
-        if (ctx.isNew()) {
+        if (ctx.isNew() && !this.autoHide) {
           buttons.push({ value: '继续添加', callback: function () {
             ctx.set('id', null);
             ctx.set(ctx.baseId, null);
           }});
           _isNew = true;
         }
-        buttons.push({ value: '确定', callback: function () {
+        !this.hideOkBtn && buttons.push({ value: '确定', callback: function () {
           if (typeof window.topDialog != 'undefined') {
             window.topDialog.close(); // 关键性语句
             window.topDialog = null;
@@ -101,6 +104,7 @@ var BaseModel = Backbone.Model.extend({
           this.close();
         }, autofocus: true });
       }
+      Est.trigger('_dialog_submit_callback');
       var dialog_msg = BaseUtils.initDialog({
         id: 'dialog_msg',
         title: '提示：',
@@ -109,10 +113,10 @@ var BaseModel = Backbone.Model.extend({
         button: buttons
       });
       setTimeout(function () {
-        app.getDialog('dialog_msg') && !_isNew &&
+        app.getDialog('dialog_msg') && (ctx.autoHide || !_isNew) &&
         app.getDialog('dialog_msg').close().remove();
       }, 2000);
-    } else if (!this.hideTip) {
+    } else if ('msg' in response && Est.isEmpty(response.msg)) {
       debug('服务器返回的msg为空! 因此无弹出框信息。 url：' + this.baseUrl);
     }
     if (Est.typeOf(response.success) === 'boolean' && !response.success) {
@@ -154,6 +158,7 @@ var BaseModel = Backbone.Model.extend({
        *          success: function(){}, // 保存成功回调
        *          async: false, // 是否同步
        *          hideTip: false // 是否隐藏提示
+       *          hideOkBtn: false // 是否隐藏确定按钮
        *        });
    */
   _saveField: function (keyValue, ctx, options) {
@@ -165,6 +170,7 @@ var BaseModel = Backbone.Model.extend({
     newModel.set(keyValue);
     newModel.set('silent', true);
     if (options.hideTip) newModel.hideTip = true;
+    newModel.hideOkBtn = true;
     newModel.set('editField', true);
     debug(function () {
       if (!newModel.baseUrl) return '当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl';

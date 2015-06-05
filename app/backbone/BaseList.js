@@ -50,13 +50,8 @@ var BaseList = SuperView.extend({
        *        max: 5, // 限制显示个数
        *        sortField: 'sort', // 上移下移字段名称， 默认为sort
        *        itemId: 'Category_00000000000123', // 当需要根据某个ID查找列表时， 启用此参数， 方便
-       *        detail: 添加页面url地址 配合route使用 主要用于搜索后打开弹出对话框 如 CONST.HOST + '/modules/product/product_detail.html'
-       *        route: '#/product', // 详细页面路由  如果不是以dialog形式弹出时 ， 此项不能少   需配置路由如： app.addRoute('product/:id', function (id) {
-                            productDetail(Est.decodeId(id, 'Product_', 32));
-                            });
        *        filter: [ {key: 'name', value: this.searchKey }] // 过滤结果
        *        clearDialog: true, // 清除所有的对话框， 默认为true
-       *        reference: this, // 对当前实例的引用
        *        beforeLoad: function(collection){ // collection载入列表前执行
        *            this.setCategoryId(options.categoryId); // collection载入后执行
        *          },
@@ -558,10 +553,7 @@ var BaseList = SuperView.extend({
         viewId: this._options.viewId,
         speed: this._options.speed,
         data: this._data,
-        detail: this._options.detail,
-        route: this._options.route,
-        views: this.views,
-        reference: this._options.reference
+        views: this.views
       });
       itemView._setInitModel(this.initModel);
       //TODO 优先级 new对象里的viewId > _options > getCurrentView()
@@ -951,10 +943,12 @@ var BaseList = SuperView.extend({
     var temp = this.collection.at(original_index);
     var next = this.collection.at(new_index);
     // 互换dx
-    var thisDx = temp.view.model.get('dx');
-    var nextDx = next.view.model.get('dx');
-    tempObj['dx'] = nextDx;
-    nextObj['dx'] = thisDx;
+    if (temp.view && next.view){
+      var thisDx = temp.view.model.get('dx');
+      var nextDx = next.view.model.get('dx');
+      tempObj['dx'] = nextDx;
+      nextObj['dx'] = thisDx;
+    }
     // 互换sort值
     if (options.path) {
       var thisValue = temp.view.model.get(options.path);
@@ -962,8 +956,11 @@ var BaseList = SuperView.extend({
       tempObj[options.path] = nextValue;
       nextObj[options.path] = thisValue;
     }
+    temp.view.model.stopCollapse = true;
+    next.view.model.stopCollapse = true;
     temp.view.model.set(tempObj);
     next.view.model.set(nextObj);
+
     // 交换model
     this.collection.models[new_index] = this.collection.models.splice(original_index, 1, this.collection.models[new_index])[0];
     // 交换位置
@@ -1011,14 +1008,15 @@ var BaseList = SuperView.extend({
       if (first === 0) return;
       last = first - 1;
     }
-    model.stopCollapse = true;
+    //model.stopCollapse = true;
     this._exchangeOrder(first, last, {
       path: this.sortField || 'sort',
       success: function (thisNode, nextNode) {
         if (thisNode.get('id') && nextNode.get('id')) {
           this._saveSort(thisNode);
           this._saveSort(nextNode);
-          model.stopCollapse = false;
+          thisNode.stopCollapse = false;
+          nextNode.stopCollapse = false;
         } else {
           debug('模型类中不存在id, 检查XxxModel中的baseId是否正确？');
         }
@@ -1055,14 +1053,15 @@ var BaseList = SuperView.extend({
       if (first === this.collection.models.length - 1) return;
       last = first + 1;
     }
-    model.stopCollapse = true;
+    //model.stopCollapse = true;
     this._exchangeOrder(first, last, {
       path: this._options.sortField,
       success: function (thisNode, nextNode) {
         if (thisNode.get('id') && nextNode.get('id')) {
           this._saveSort(thisNode);
           this._saveSort(nextNode);
-          model.stopCollapse = false;
+          thisNode.stopCollapse = false;
+          nextNode.stopCollapse = false;
         } else {
           debug('模型类中不存在id, 检查XxxModel中的baseId是否正确？');
         }

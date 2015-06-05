@@ -345,6 +345,7 @@ var BaseUtils = {
     seajs.use(['xheditor'], function (xheditor) {
       function startEditor(obj) {
         try {
+          if (!$(obj).xheditor) window.location.reload();
           var editor = $(obj).xheditor(
             {
               plugins: allPlugin,
