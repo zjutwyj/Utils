@@ -381,6 +381,32 @@ var BaseUtils = {
     });
   },
   /**
+   * 初始化内联编辑器
+   * @method [编辑器] - initInlineEditor
+   * @author wyj 15.6.11
+   * @example
+   *      BaseUtils.initInlineEditor(target, callback);
+   */
+  initInlineEditor: function (target, callback) {
+    seajs.use(['ckeditor'], function (ckeditor) {
+      try {
+        window.inline_ckeditor = CKEDITOR.inline(target.get(0));
+        window.inline_ckeditor.on('blur', function (e) {
+          var okToDestroy = false;
+          if (e.editor.checkDirty()) {
+            okToDestroy = true;
+          } else {
+            okToDestroy = true;
+          }
+          if (okToDestroy)
+            e.editor.destroy();
+          callback && callback.call(this);
+        });
+      } catch (e) {
+      }
+    });
+  },
+  /**
    * 初始化复制按钮
    *
    * @method [复制] - initCopy ( 初始化复制按钮 )
@@ -448,7 +474,7 @@ var BaseUtils = {
       });
    */
   initDrag: function (options) {
-    seajs.use(['jquery', 'drag'], function ($, drag) {
+    seajs.use(['drag'], function (drag) {
       var _resize = false;
       $(options.render).click(function () {
         var $dragSelected = $(options.render + '.drag-selected');
@@ -459,8 +485,11 @@ var BaseUtils = {
       })
         .drag("init", function () {
           if (!$(this).hasClass('lock')) {
-            for (var name in CKEDITOR.instances) {
-              CKEDITOR.instances[name].destroy()
+            try {
+              for (var name in CKEDITOR.instances) {
+                CKEDITOR.instances[name].destroy()
+              }
+            } catch (e) {
             }
           }
           if ($(this).hasClass('lock')) return false;
@@ -684,6 +713,7 @@ var BaseUtils = {
   initTip: function (msg, options) {
     options = options || {time: 3000, title: '提示信息：'};
     seajs.use(['dialog-plus'], function (dialog) {
+      window.tipsDialog && window.tipsDialog.close().remove();
       window.tipsDialog = app.addDialog(dialog({
         id: 'tip-dialog' + Est.nextUid(),
         title: options.title,

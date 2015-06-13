@@ -525,7 +525,7 @@ var BaseList = SuperView.extend({
    * @param model
    * @author wyj 14.11.16
    */
-  _addOne: function (model) {
+  _addOne: function (model, arg1, arg2) {
     var ctx = this;
     if (!this.filter && !this.composite && this.dx < this._options.max) {
       model.set('dx', this.dx++);
@@ -559,9 +559,49 @@ var BaseList = SuperView.extend({
       //TODO 优先级 new对象里的viewId > _options > getCurrentView()
       itemView._setViewId(this._options.viewId || app.getCurrentView());
 
-      this.list.append(itemView._render().el);
+      if (arg2 && arg2.at < this.dx - 1) {
+        this.collection.models[arg2.at - 1].view.$el.after(itemView._render().el);
+      } else {
+        this.list.append(itemView._render().el);
+      }
       this.views.push(itemView);
     }
+  },
+  /**
+   * 向列表中添加数据
+   * @method [集合] - _push
+   * @param model
+   * @param opts
+   * @author wyj 15.6.10
+   * @example
+   *        this._push(new model());
+   *        this._push(new model(), {at: 0});
+   */
+  _push: function (model, opts) {
+    opts = opts || {};
+    var obj;
+    obj = Est.typeOf(model) === 'array' ? Est.pluck(model, function (item) {
+      return item.attributes;
+    }) : model.attributes;
+    if (Est.typeOf(opts.at) === 'number') {
+      this._options.items && this._options.items.splice(opts.at = opts.at + 1, 0, obj);
+    } else {
+      this._options.items && this._options.items.push(obj);
+    }
+    this.collection.push(model, opts);
+    debug('【BaseList】_push');
+  },
+  /**
+   * 获取当前模型类在集合类中的索引值
+   * @method [集合] - _findIndex
+   * @param model
+   * @return {number}
+   * @author wyj 15.6.10
+   * @example
+   *      this._findIndex(this.curModel); ==> 1
+   */
+  _findIndex: function (model) {
+    return Est.findIndex(this.collection.models, {cid: model.cid});
   },
   /**
    * 刷新列表
@@ -943,7 +983,7 @@ var BaseList = SuperView.extend({
     var temp = this.collection.at(original_index);
     var next = this.collection.at(new_index);
     // 互换dx
-    if (temp.view && next.view){
+    if (temp.view && next.view) {
       var thisDx = temp.view.model.get('dx');
       var nextDx = next.view.model.get('dx');
       tempObj['dx'] = nextDx;
@@ -1157,7 +1197,10 @@ var BaseList = SuperView.extend({
       type: 'POST', async: false, url: options.url,
       data: { ids: ctx.checkboxIds.join(',') },
       success: function (result) {
-        BaseUtils.initTip(options.tip);
+        if (!result.success) {
+          BaseUtils.initTip(result.msg);
+        } else
+          BaseUtils.initTip(options.tip);
         ctx._load();
       }
     });

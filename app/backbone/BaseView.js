@@ -118,7 +118,6 @@ var BaseView = SuperView.extend({
    * @author wyj 14.11.16
    */
   _empty: function () {
-    debug('BaseView.remove');
-    //this.model && this.model.remove();
+    debug('BaseView._empty');
   }
 });

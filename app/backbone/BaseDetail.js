@@ -231,9 +231,11 @@ var BaseDetail = SuperView.extend({
    *
    */
   _init: function (options) {
-    var ctx = this;
-    var passed = true;
-    var modelObj = {};
+    var ctx = this,
+      passed = true,
+      modelObj = {},
+      isPassed = true;
+
     options = options || {};
     $('#submit', this.el).on('click', function () {
       var $button = $(this);
@@ -274,7 +276,8 @@ var BaseDetail = SuperView.extend({
       });
       if (passed) {
         if (typeof options.onBeforeSave !== 'undefined')
-          options.onBeforeSave.call(ctx);
+          isPassed = options.onBeforeSave.call(ctx);
+        if (Est.typeOf(isPassed) !== 'undefined' && !isPassed) return false;
         $button.html('提交中...');
         ctx._save(function (response) {
           if (options.onAfterSave) {

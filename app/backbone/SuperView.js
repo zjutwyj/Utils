@@ -54,6 +54,7 @@ var SuperView = Backbone.View.extend({
                         callback: function () {
                         this.title('正在提交..');
                         $("#SeoDetail" + " #submit").click(); // 弹出的对话ID选择符为moduleId值
+                        app.getView('SeoDetail'); // 视图为moduleId
                         return false; // 去掉此行将直接关闭对话框
                       }}
                     ],
@@ -78,8 +79,8 @@ var SuperView = Backbone.View.extend({
         {value: '提交', callback: function () {
           Utils.addLoading();
           $('#' + options.moduleId + ' #submit').click();
-          if (options.autoClose){
-            Est.on('_dialog_submit_callback', Est.proxy(function(){
+          if (options.autoClose) {
+            Est.on('_dialog_submit_callback', Est.proxy(function () {
               this.close().remove();
             }, this));
           }
@@ -271,5 +272,16 @@ var SuperView = Backbone.View.extend({
         $parent.html(compile(this));
       }, this);
     })
+  },
+  /**
+   * 获取点击事件源对象
+   * @method [事件] - _getTarget
+   * @param e
+   * @return {*|jQuery|HTMLElement}
+   *  @example
+   *      this._getTarget(e);
+   */
+  _getTarget: function (e) {
+    return e.target ? $(e.target) : $(e.currentTarget);
   }
 });

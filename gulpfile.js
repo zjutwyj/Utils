@@ -361,6 +361,7 @@ gulp.task('jihui881.min', function () {
 // [1].用户后台 UserManagement.min */
 
 // [2].微传单 UserManagement_leaflet.min */
+// [2].微传单 UserManagement_leaflet_v2.min */ 第二版
 
 // [3].手机后台 UserManagement_mobileManagement.min */
 
@@ -425,10 +426,26 @@ paths['UserManagement_leaflet'] = { scripts: { source: [
   'app/vendor/handlebars/handlebars-debug.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/wwy/leaflet/website/scripts' } };
 gulp.task('UserManagement_leaflet', function () {
-  doTask('leaflet', true);
+  doTask('UserManagement_leaflet', true);
 });
 gulp.task('UserManagement_leaflet.min', function () {
-  doTask('leaflet', false);
+  doTask('UserManagement_leaflet', false);
+});
+//** 微传单第二版 打包*/
+paths['UserManagement_leaflet_v2'] = { scripts: { source: [
+  'app/vendor/seajs/sea.js',
+  'app/vendor/seajs/seajs-text-debug.js',
+  'app/scripts/utils/Est.source.js',
+  'app/backbone/Application.js',
+  'app/vendor/handlebars/handlebars-debug.js',
+  'app/vendor/zepto/zepto.min.js',
+  'app/vendor/fullPage/FullPage.js'
+], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/wwy/leaflet_v2/website/scripts' } };
+gulp.task('UserManagement_leaflet_v2', function () {
+  doTask('UserManagement_leaflet_v2', true);
+});
+gulp.task('UserManagement_leaflet_v2.min', function () {
+  doTask('UserManagement_leaflet_v2', false);
 });
 
 //** 手机后台 - base.js */

@@ -564,7 +564,7 @@ var BaseItem = SuperView.extend({
     app.addData('delItemDialog', BaseUtils.initConfirm({
       title: '温馨提示',
       content: '是否删除?',
-      target: context.$el.find('.delete').get(0),
+      target: e && this._getTarget(e).get(0),
       success: function (resp) {
         context.model.destroy({
           wait: true,
@@ -576,11 +576,26 @@ var BaseItem = SuperView.extend({
             BaseUtils.initDialog({ title: '提示：', content: resp.msg, width: 250, button: buttons });
           },
           success: function () {
+            context._removeFromItems(context.model.get('dx'));
             callback && callback.call(this);
           }
         });
       }
     }));
+  },
+  /**
+   * 从this._options.items中通过dx移除元素
+   * @method [集合] - _removeFromItems
+   * @param dx
+   * @author wyj 15.6.10
+   * @example
+   *      this._removeFromItems(context.model.get('dx'));
+   */
+  _removeFromItems: function (dx) {
+    if (app.getView(this._options.viewId) &&
+      app.getView(this._options.viewId)._options.items) {
+      Est.removeAt(app.getView(this._options.viewId)._options.items, dx);
+    }
   },
   /**
    * 修改模型类

@@ -109,7 +109,6 @@ BaseService.prototype = {
    * @author wyj 15.1.27
    */
   initDefault: function (options, result) {
-    options.defaultValue = Est.typeOf(options.defaultValue) === 'string' ? options.defaultValue : '/';
     if (options.defaults && Est.typeOf(result.attributes.data) === 'array') {
       result.attributes.data.unshift({text: '请选择', value: options.defaultValue});
     }
