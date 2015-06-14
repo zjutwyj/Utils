@@ -502,3 +502,6 @@ gulp.task('UserManagement_appjs_wrap.min', function () {
 gulp.task('UserManagement_mobileManagement.min', function(){
   return [gulp.start('UserManagement_mobileManagement_base.min'), gulp.start('UserManagement_appjs_merge.min'), gulp.start('UserManagement_appjs_wrap.min')];
 });
+gulp.task('UserManagement_mobileManagement', function(){
+  return [gulp.start('UserManagement_mobileManagement_base'), gulp.start('UserManagement_appjs_merge'), gulp.start('UserManagement_appjs_wrap')];
+});
