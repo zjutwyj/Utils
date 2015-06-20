@@ -88,7 +88,6 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
     }
   }
   App.back = App.inject(App.back, function (pageName, callback) {
-    //debugger
     var item = null;
     try {
       if (typeof pageName === 'undefined' || typeof pageName === 'function') {
@@ -134,8 +133,9 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
       alert(e);
       App.load('home');
     }
-    return new App.setArguments(arguments);
-  }, function () {
+    return new App.setArguments(arguments, pageName);
+  }, function (pageName, callback, append) {
+    App.trigger(arguments[arguments.length - 1] + '_render');
   });
 
 }(window, document, Clickable, Scrollable, App, App._Utils, App._Events, App._Metrics, App._Scroll);

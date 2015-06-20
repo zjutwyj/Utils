@@ -74,7 +74,7 @@ var BaseList = SuperView.extend({
        *        parentId: 'belongId', // 分类 的父类ID
        *        categoryId: 'categoryId', // 分类 的当前ID
        *        rootId: 'isroot', // 一级分类字段名称
-       *        rootValue: '00' // 一级分类字段值
+       *        rootValue: '00' // 一级分类字段值  可为数组[null, 'Syscode_']   数组里的选项可为方法， 返回true与false
        *        extend: true // false收缩 true为展开
        *       });
    */
@@ -507,7 +507,29 @@ var BaseList = SuperView.extend({
       }
       thisModel.set('children', _children);
       // 添加父级元素
-      if (thisModel.get(ctx._options.rootId) === ctx._options.rootValue) {
+
+      if (Est.typeOf(ctx._options.rootValue) === 'array') {
+        //TODO 如果存入的rootValue为数组
+        Est.each(ctx._options.rootValue, Est.proxy(function (item) {
+          if (Est.typeOf(item) === 'function') {
+            // 判断是否是方法， 如果返回true则添加到roots中
+            if (item.call(this, item)) {
+              thisModel.set('level', 1);
+              roots.push(thisModel);
+            }
+          } else {
+            if (!Est.isEmpty(item) && thisModel.get(ctx._options.rootId) && thisModel.get(ctx._options.rootId).indexOf(item) > -1) {
+              // 判断不为null 且索引是否大于-1
+              thisModel.set('level', 1);
+              roots.push(thisModel);
+            } else if (thisModel.get(ctx._options.rootId) === item) {
+              // 如果为null值， 则直接===比较， true则添加到roots中
+              thisModel.set('level', 1);
+              roots.push(thisModel);
+            }
+          }
+        }, this));
+      } else if (thisModel.get(ctx._options.rootId) === ctx._options.rootValue) {
         thisModel.set('level', 1);
         roots.push(thisModel);
       }

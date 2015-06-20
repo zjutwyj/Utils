@@ -1,6 +1,6 @@
 /**
- * @description 顶级父类
- * @class SuperView - 顶级父类
+ * @description 所有BaseXxx模块的超类， 子类继承超类的一切方法
+ * @class SuperView - 所有BaseXxx模块的超类
  * @author yongjin<zjut_wyj@163.com> 2015/1/24
  */
 
@@ -283,5 +283,37 @@ var SuperView = Backbone.View.extend({
    */
   _getTarget: function (e) {
     return e.target ? $(e.target) : $(e.currentTarget);
+  },
+  /**
+   * 单次执行
+   * @method [事件] - _one
+   * @param callback
+   * @author wyj 15.6.14
+   * @example
+   *      this._one('_pageRender', function(){
+   *        ....
+   *      });
+   */
+  _one: function (name, callback) {
+    var _name, isArray = Est.typeOf(name) === 'array';
+    _name = isArray ? name.join('_') : name;
+    if (this['_one_' + _name] = Est.typeOf(this['_one_' + _name]) === 'undefined' ? true : false) {
+      if (isArray)  this._require(name, callback);
+      else  callback && callback.call(this);
+    }
+  },
+  /**
+   * 异步加载
+   * @method [加载] - _require
+   * @param dependent
+   * @param callback
+   * @author wyj 15.6.14
+   * @example
+   *        this._require(['Module'], function(Module){
+   *            new Module();
+   *        });
+   */
+  _require: function (dependent, callback) {
+    seajs.use(dependent, Est.proxy(callback, this));
   }
 });

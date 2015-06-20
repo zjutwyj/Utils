@@ -267,7 +267,7 @@ Est.extend(Application.prototype, {
    */
   addData: function (name, data) {
     if (name in this['data']) {
-      console.log('数据对象重复' + name);
+      console.log('重新赋值' + name);
     }
     this['data'][name] = data;
   },

@@ -218,7 +218,7 @@ Application.prototype = {
    * @return {string}
    * @author wyj 15.5.20
    */
-  getAppType: function(){
+  getAppType: function () {
     return 'appjs';
   },
   /**
@@ -458,8 +458,9 @@ Application.prototype = {
    * @example
    *
    */
-  setArguments: function (args) {
+  setArguments: function (args, append) {
     this.value = [].slice.call(args);
+    this.append = append;
   },
   /**
    * 订阅\发布
@@ -471,14 +472,14 @@ Application.prototype = {
    * @author wyj 15.4.24
    * @example
    *      // 注册
-          App.on('addressDetailRender', function (name, areaModel) {
+   App.on('addressDetailRender', function (name, areaModel) {
             model['areaPath'] = areaModel.areaPath;
             model['areaName'] = areaModel.areaName;
             render(model);
             App.initPage(page);
           });
-          // 触发
-          App.trigger('addressDetailRender', areaModel, function () {
+   // 触发
+   App.trigger('addressDetailRender', areaModel, function () {
           });
    */
   trigger: function (topic, args) {
@@ -544,7 +545,7 @@ Application.prototype = {
       !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
 
       if (typeof(aAtferExec) == 'function')
-        Result = aAtferExec.apply(this, args.concat(isDenied));
+        Result = aAtferExec.apply(this, args.concat(isDenied, Result.append));
       else
         Result = undefined;
 
@@ -918,7 +919,7 @@ Application.prototype = {
    * @example
    *      App.reloadPage('home', page);
    */
-  reloadPage: function(pageName){
+  reloadPage: function (pageName) {
     App._Stack.pop();
     App.load(pageName);
   },
@@ -998,7 +999,7 @@ Application.prototype = {
   goToRootPage: function () {
     App.clearStack();
     localStorage['__APPJS_PARAMS__'] = JSON.stringify({});
-    window.location.href = App.rootPage;
+    window.location.href = App.getSession('rootPage');
   },
   /**
    * 页面载入后初始化， 比如hashchange, 用户session会话， 进入前的网址记录， stacks, 参数提取
@@ -1021,7 +1022,7 @@ Application.prototype = {
           //if (App.pageOut) return;
           if (location.hash.length > 0) {
             _page = location.hash.substring(2, location.hash.length);
-            if (App._CustomStack && App._CustomStack.length > 0) {
+            if (App._CustomStack && App._CustomStack.length > 0 && _page !== 'login') {
               item = App.getCustomPage(_page, true);
               if (item) {
                 App.back(item[0][0], item[0][1]);
@@ -1031,7 +1032,8 @@ Application.prototype = {
               return;
             }
             if (_page === 'undefined') App.load('home');
-            if (App._CustomStack.length === 0) {
+            if (App._CustomStack.length === 0 && _page !== 'login' && App._Stack.size() < 2) {
+              // 如果自定义寨为空  App._Stack.size为0或1， 且不为登录页面
               App.load(_page);
             } else {
               App.back();
@@ -1046,8 +1048,10 @@ Application.prototype = {
     App.enableDragTransition();
     try {
       //debugger
-      //记录进入前的页面网址
-      App.rootPage = document.referrer;
+      //记录进入前的页面网址, 并判断是否是本后台的网址， 若是则不记录session
+      if (document.referrer && document.referrer.indexOf('mobile_background') === -1) {
+        App.addSession('rootPage', document.referrer);
+      }
       App.params = JSON.parse(localStorage['__APPJS_PARAMS__'] || '{}');
       if (location.hash.length > 0 && location.hash !== '#/home') {
         App._CustomStack = App.getRestoreStacks();
@@ -1279,6 +1283,7 @@ Application.prototype = {
         }
       });
       if (!App.isLogin && location.hash !== '#/login') {
+        App.addSession('beforeLoginHref', document.location.href);
         App.load('login');
       } else {
         return true;
@@ -1327,19 +1332,20 @@ Application.prototype = {
    *
    */
   query: function (query, options) {
-    if (typeof options.session === 'undefined') {
-      options.session = true;
-    }
-    if (options.session && !App.checkLogin()) return false;
+    debug('【Query】:' + CONST.API + query + '?' + params);
     try {
-      var params = '';
+      var params = '',
+        cacheId;
+
+      App.addLoading && App.addLoading();
+      if (typeof options.session === 'undefined') options.session = true;
+      if (options.session && !App.checkLogin()) return false;
       if (options.data) {
         for (var key in options.data) {
           params += options.data[key];
         }
       }
-      debug('【Query】:' + CONST.API + query + '?' + params);
-      var cacheId = options.data ? ('_hash' + App.hash(query) + params) : '_hash' + App.hash(query);
+      cacheId = options.data ? ('_hash' + App.hash(query) + params) : '_hash' + App.hash(query);
       if (options.cache && App.getCache(cacheId)) {
         options.success && options.success.call(this, App.getCache(cacheId));
       } else {
@@ -1348,18 +1354,24 @@ Application.prototype = {
           url: CONST.API + query,
           data: options.data,
           success: function (result) {
+            App.removeLoading && App.removeLoading();
             if (options.cache) App.addCache(cacheId, result);
             options.success && options.success.call(this, result);
             App.trigger('queryEvent', cacheId); // 触发事件
+          },
+          error: function (result) {
+            App.removeLoading && App.removeLoading();
+            options.error && options.error.call(this, result);
           }
         });
       }
     } catch (e) {
+      console.log(e);
     }
   },
   /**
    * 表单提交
-   * @method [数据API] - post ( 表单提交 )
+   * @method [ajax] - post ( 表单提交 )
    * @param options
    * @author wyj 15.4.24
    * @example
@@ -1370,7 +1382,8 @@ Application.prototype = {
             $button.html(preText);
          });
    */
-  post: function (url, options, callback) {
+  post: function (url, options) {
+    App.addLoading && App.addLoading();
     $.ajax({
       type: 'post',
       url: CONST.API + url + (options.data[options.baseId] ? ('/' + options.data[options.baseId]) : ''),
@@ -1380,6 +1393,7 @@ Application.prototype = {
         _method: options.data[options.baseId] ? 'PUT' : 'POST'
       },
       success: function (response) {
+        App.removeLoading && App.removeLoading();
         if (options.onAfterSave) {
           options.onAfterSave = Est.inject(options.onAfterSave, function (response) {
             return new Est.setArguments(arguments);
@@ -1387,7 +1401,11 @@ Application.prototype = {
           });
           options.onAfterSave.call(null, response);
         }
-        callback && callback.call(null, response);
+        options.success && options.success.call(null, response);
+      },
+      error: function (response) {
+        App.removeLoading && App.removeLoading();
+        options.error && options.error.call(this, response);
       }
     });
   },
@@ -1399,13 +1417,19 @@ Application.prototype = {
    *    App.del('/shop/order/detail/001', function(result){
    *    });
    */
-  del: function (url, fn) {
+  del: function (url, options) {
+    App.addLoading && App.addLoading();
     $.ajax({
       type: 'post',
       url: CONST.API + url,
       data: { _method: 'DELETE' },
       success: function (result) {
-        fn && fn.call(this, result);
+        App.removeLoading && App.removeLoading();
+        options.success && options.success.call(this, result);
+      },
+      error: function (result) {
+        App.removeLoading && App.removeLoading();
+        options.error && options.error.call(this, result);
       }
     });
   },
@@ -1480,18 +1504,14 @@ Application.prototype = {
         }
       });
       if (passed) {
-        if (typeof options.onBeforeSave !== 'undefined'){
+        if (typeof options.onBeforeSave !== 'undefined') {
           var beforeSaveResult = options.onBeforeSave.call(null, __model);
-          if (typeof beforeSaveResult !== 'undefined' && !beforeSaveResult){
+          if (typeof beforeSaveResult !== 'undefined' && !beforeSaveResult) {
             return;
           }
         }
-
-        $button.html('提交中...');
         options.data = __model;
-        App.post(options.url, options, function () {
-          $button.html(preText);
-        });
+        App.post(options.url, options);
       }
     });
   },
@@ -1527,6 +1547,20 @@ Application.prototype = {
         }
       });
     });
+  },
+  /**
+   * 页面渲染
+   *
+   * @method [渲染] - render ( 页面渲染 )
+   * @param page
+   * @param render
+   * @author wyj 15.6.17
+   * @example
+   *
+   */
+  render: function (page, render) {
+    render && render.call(this);
+    App.on($(page).attr('data-page') + '_render', render);
   },
   /**
    * 项目主方法 一切由此开始, 并记录App.rootPage // 进入前的网址

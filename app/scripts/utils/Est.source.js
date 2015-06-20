@@ -3235,21 +3235,24 @@
    * @return {Function}
    * @author wyj on 14.9.12
    * @example
-   *      var doTest = function (a) {
+   *        // 原始方法
+   *        var doTest = function (a) {
                return a
-           };
-   function beforeTest(a) {
+            };
+            // 执行前调用
+            function beforeTest(a) {
                 alert('before exec: a='+a);
                 a += 3;
                 return new Est.setArguments(arguments);
             };
-   //这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
-   function afterTest(a, result, isDenied) {
+            //执行后调用 ， 这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
+            function afterTest(a, result, isDenied) {
                 alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
                 return result+5;
             };
-   doTest = Est.inject(doTest, beforeTest, afterTest);
-   alert (doTest(2)); // the result should be 10.
+            // 覆盖doTest
+            doTest = Est.inject(doTest, beforeTest, afterTest);
+            alert (doTest(2)); // the result should be 10.
    */
   function inject(aOrgFunc, aBeforeExec, aAtferExec) {
     return function () {

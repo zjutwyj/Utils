@@ -28,7 +28,7 @@ function doTask(item, debug) {
             if (debug) {
               return gulp.src(paths[item].scripts.source)
                 /*.pipe(jshint())
-                .pipe(jshint.reporter(stylish))*/
+                 .pipe(jshint.reporter(stylish))*/
                 .pipe(concat(paths[item].scripts.name))
                 .pipe(gulp.dest(paths[item].scripts.dist));
             }
@@ -410,10 +410,10 @@ gulp.task('UserManagement_doc', function () {
 });
 
 //** 用户后台 打包*/
-gulp.task('UserManagement.min', function(){
+gulp.task('UserManagement.min', function () {
   return [gulp.start('UserManagement_base.min'), gulp.start('UserManagement_doc')];
 });
-gulp.task('UserManagement', function(){
+gulp.task('UserManagement', function () {
   return [gulp.start('UserManagement_base'), gulp.start('UserManagement_doc')];
 });
 
@@ -456,10 +456,10 @@ paths['UserManagement_mobileManagement_base'] = { scripts: { source: [
   'app/appjs_v3/Application.js',
   'app/vendor/handlebars/handlebars-debug.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/mobile/mobileManagement/scripts' } }
-gulp.task('UserManagement_mobileManagement_base', function () {
+gulp.task('UserManagement_mobileManagement_base', [], function () {
   doTask('UserManagement_mobileManagement_base', true);
 });
-gulp.task('UserManagement_mobileManagement_base.min', function () {
+gulp.task('UserManagement_mobileManagement_base.min', [], function () {
   doTask('UserManagement_mobileManagement_base', false);
 });
 
@@ -472,10 +472,10 @@ paths['UserManagement_appjs_merge'] = {
     'app/appjs_v3/transitions.js', 'app/appjs_v3/navigation.js' , 'app/appjs_v3/android-touch-fix', 'app/appjs_v3/custom.js'
   ], dist: 'app/appjs_v3', name: 'app.min.js' }
 }
-gulp.task('UserManagement_appjs_merge', function () {
+gulp.task('UserManagement_appjs_merge', ['UserManagement_mobileManagement_base'], function () {
   doTask('UserManagement_appjs_merge', true);
 });
-gulp.task('UserManagement_appjs_merge.min', function () {
+gulp.task('UserManagement_appjs_merge.min', ['UserManagement_mobileManagement_base.min'], function () {
   doTask('UserManagement_appjs_merge', false);
 });
 
@@ -491,17 +491,15 @@ paths['UserManagement_appjs_wrap'] = {
   ], name: 'base.css', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/mobile/mobileManagement/styles'
   }
 }
-gulp.task('UserManagement_appjs_wrap', function () {
+gulp.task('UserManagement_appjs_wrap', ['UserManagement_appjs_merge'], function () {
   doTask('UserManagement_appjs_wrap', true);
 });
-gulp.task('UserManagement_appjs_wrap.min', function () {
+gulp.task('UserManagement_appjs_wrap.min', ['UserManagement_appjs_merge.min'], function () {
   doTask('UserManagement_appjs_wrap', false);
 });
 
 //** 手机后台 - 打包 */
-gulp.task('UserManagement_mobileManagement.min', function(){
-  return [gulp.start('UserManagement_mobileManagement_base.min'), gulp.start('UserManagement_appjs_merge.min'), gulp.start('UserManagement_appjs_wrap.min')];
+gulp.task('UserManagement_mobileManagement.min', ['UserManagement_appjs_wrap.min'], function () {
 });
-gulp.task('UserManagement_mobileManagement', function(){
-  return [gulp.start('UserManagement_mobileManagement_base'), gulp.start('UserManagement_appjs_merge'), gulp.start('UserManagement_appjs_wrap')];
+gulp.task('UserManagement_mobileManagement', ['UserManagement_appjs_wrap'], function () {
 });

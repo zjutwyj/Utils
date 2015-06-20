@@ -474,7 +474,7 @@ var BaseUtils = {
       });
    */
   initDrag: function (options) {
-    seajs.use(['drag'], function (drag) {
+    this.doDrag = function (options) {
       var _resize = false;
       $(options.render).click(function () {
         var $dragSelected = $(options.render + '.drag-selected');
@@ -547,7 +547,14 @@ var BaseUtils = {
             options.resizeend && options.resizeend.apply(this, [ev, dd]);
           }
         });
-    });
+    }
+    if (!$.fn.drag) {
+      seajs.use(['drag'], Est.proxy(function (drag) {
+        this.doDrag(options);
+      }, this));
+    } else {
+      this.doDrag(options);
+    }
   },
   /**
    * 初始化缩放
