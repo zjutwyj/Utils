@@ -768,15 +768,19 @@ var BaseUtils = {
             value: '确定',
             autofocus: true,
             callback: function () {
-              options.success.call(this);
+              options.success && options.success.call(this);
             }},
           {
             value: '取消',
             callback: function () {
               window.comfirmDialog.close().remove();
+              options.cancel && options.cancel.call(this);
             }
           }
-        ]
+        ],
+        onClose: function(){
+          options.cancel && options.cancel.call(this);
+        }
       })).show(options.target);
     });
   },

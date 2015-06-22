@@ -23,6 +23,10 @@ Est.extend(Application.prototype, {
     this.cookies = [];
     this.models = [];
     this.compileTemps = {};
+    this.filters = {
+      navigator: [],
+      form: []
+    };
   },
   /**
    * 返回当前应用底层使用的是backbone版本
@@ -31,7 +35,7 @@ Est.extend(Application.prototype, {
    * @return {string}
    * @author wyj 15.5.20
    */
-  getAppType: function(){
+  getAppType: function () {
     return 'backbone';
   },
   /**
@@ -199,7 +203,7 @@ Est.extend(Application.prototype, {
    */
   addDialog: function (dialog, id) {
     this.dialog.push(dialog);
-    if (id){
+    if (id) {
       this.dialogs[id] = dialog;
     }
     return dialog;
@@ -219,7 +223,7 @@ Est.extend(Application.prototype, {
    * @author wyj 15.03.20
    *
    */
-  getDialog: function(id){
+  getDialog: function (id) {
     if (Est.isEmpty(id)) return this.dialogs;
     return this.dialogs[id];
   },
@@ -415,12 +419,39 @@ Est.extend(Application.prototype, {
   },
   /**
    * 获取所有状态数据
+   *
    * @method [状态] - getAllStatus ( 获取所有状态数据 )
    * @return {{}|*|Application.status}
    * @author wyj 15.1.9
    */
   getAllStatus: function () {
     return this.status;
+  },
+  /**
+   * 添加过滤器
+   *
+   * @method [过滤] - addFilter
+   * @param {string} name
+   * @param {fn} fn
+   * @author wyj 15.6.22
+   * @example
+   *
+   */
+  addFilter: function (name, fn) {
+    this.filters[name].push(fn);
+  },
+  /**
+   * 获取过滤器
+   *
+   * @method [过滤] - getFilters
+   * @param name
+   * @return {*}
+   * @author wyj 15.6.22
+   * @example
+   *      App.getFilters('navigator');
+   */
+  getFilters: function (name) {
+    return this.filters[name];
   },
   /**
    * 添加cookie

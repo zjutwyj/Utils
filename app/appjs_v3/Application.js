@@ -1049,7 +1049,8 @@ Application.prototype = {
     try {
       //debugger
       //记录进入前的页面网址, 并判断是否是本后台的网址， 若是则不记录session
-      if (document.referrer && document.referrer.indexOf('mobile_background') === -1) {
+      if (document.referrer && document.referrer.indexOf('mobile_background') === -1 &&
+        document.referrer.indexOf('rest/pay') === -1) {
         App.addSession('rootPage', document.referrer);
       }
       App.params = JSON.parse(localStorage['__APPJS_PARAMS__'] || '{}');
@@ -1332,7 +1333,6 @@ Application.prototype = {
    *
    */
   query: function (query, options) {
-    debug('【Query】:' + CONST.API + query + '?' + params);
     try {
       var params = '',
         cacheId;
@@ -1349,6 +1349,7 @@ Application.prototype = {
       if (options.cache && App.getCache(cacheId)) {
         options.success && options.success.call(this, App.getCache(cacheId));
       } else {
+        debug('【Query】:' + CONST.API + query);
         return $.ajax({
           type: 'get',
           url: CONST.API + query,

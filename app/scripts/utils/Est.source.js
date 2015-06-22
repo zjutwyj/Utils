@@ -2911,6 +2911,17 @@
    * @return  {*}
    * @author wyj on 14/6/26
    * @example
+   *        var obj = Est.urlResolve(window.location.href);
+            assert.deepEqual(obj, {
+                "hash": "",
+                "host": "jihui88.com",
+                "hostname": "jihui88.com",
+                "href": "http://jihui88.com/utils/test/Est_qunit.html",
+                "pathname": "/utils/test/Est_qunit.html",
+                "port": "",
+                "protocol": "http",
+                "search": ""
+            }, "passed!");
    *
    */
   function urlResolve(url) {
@@ -3268,7 +3279,7 @@
       !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
 
       if (typeof(aAtferExec) == 'function')
-        Result = aAtferExec.apply(this, args.concat(isDenied));
+        Result = aAtferExec.apply(this, args.concat(isDenied, Result.append));
       else
         Result = undefined;
 
