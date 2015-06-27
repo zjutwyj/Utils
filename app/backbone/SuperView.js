@@ -47,7 +47,7 @@ var SuperView = Backbone.View.extend({
                     height: 250, // 对话框高度
                     skin: 'form-horizontal', // className
                     hideSaveBtn: false, // 是否隐藏保存按钮， 默认为false
-                    autoClose: true, // 提交后自动关闭对话框
+                    autoClose: true, // 提交后按确定按钮  自动关闭对话框
                     button: [ // 自定义按钮
                       {
                         value: '保存',
@@ -155,6 +155,7 @@ var SuperView = Backbone.View.extend({
    */
   _stringifyJSON: function (array) {
     var keys, result;
+    if (!JSON.stringify) alert('您的浏览器版本过低， 请升级到IE9及以上或下载谷歌浏览器(https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html)！');
     Est.each(array, function (item) {
       keys = item.split('.');
       if (keys.length > 1) {
@@ -173,16 +174,18 @@ var SuperView = Backbone.View.extend({
    */
   _parseJSON: function (array) {
     var keys, result;
+    var parse = JSON.parse || $.parseJSON;
+    if (!parse) alert('您的浏览器版本过低， 请升级到IE9及以上或下载谷歌浏览器(https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html)！');
     Est.each(array, function (item) {
       keys = item.split('.');
       if (keys.length > 1) {
         result = Est.getValue(this.model.toJSON(), item);
         if (Est.typeOf(result) === 'string') {
-          Est.setValue(this.model.toJSON(), item, JSON.parse(result));
+          Est.setValue(this.model.toJSON(), item, parse(result));
         }
       } else {
         if (Est.typeOf(this.model.get(item)) === 'string') {
-          this.model.set(item, JSON.parse(this.model.get(item)));
+          this.model.set(item, parse(this.model.get(item)));
         }
       }
     }, this);

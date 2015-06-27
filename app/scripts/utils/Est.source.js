@@ -1000,8 +1000,9 @@
    * @author wyj on 14.9.12
    *
    */
-  function setArguments(args) {
+  function setArguments(args, append) {
     this.value = [].slice.call(args);
+    this.append = append;
   }
 
   Est.setArguments = setArguments;
@@ -3254,7 +3255,7 @@
             function beforeTest(a) {
                 alert('before exec: a='+a);
                 a += 3;
-                return new Est.setArguments(arguments);
+                return new Est.setArguments(arguments); // 如果return false; 则不执行doTest方法
             };
             //执行后调用 ， 这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
             function afterTest(a, result, isDenied) {

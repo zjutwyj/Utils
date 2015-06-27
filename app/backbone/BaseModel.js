@@ -53,6 +53,19 @@ var BaseModel = Backbone.Model.extend({
   },
   /**
    * 过滤结果, 并提示信息对话框, 若不想提示信息可以设置hideTip为true
+   *
+   * step 1:
+   *  当服务器有返回msg消息 并参数设置hideTip为false时  弹出提示信息
+   *  成功保存后 当为添加元素时 添加“继续添加”按钮， 点击继续添加按钮， 重新设置id为null, baseId为null, 使其变为新对象
+   *  当参数hideOkBtn为false时添加 “确定”按钮， 当点击按钮地， 触发_dialog_submit_callback事件， 关闭_dialog对话框，
+   *  关闭当前消息对话框， 当文档中存在btn-back按钮时， 返回列表页面
+   * step 2:
+   *  当success为false时， 直接返回服务器错误的response信息
+   * step 3:
+   *  处理data数据， 并把data数据赋值到response对象上
+   * step 4:
+   *  设置backbone 模型类里的id值， 默认不选中， 设置时间戳
+   *
    * this.model.hideTip = true; // 无提示信息弹出框
    * this.model.hideOkBtn = true; // 隐藏保存按钮
    * this.model.autoHide = true; // 自动隐藏提示信息
@@ -75,8 +88,11 @@ var BaseModel = Backbone.Model.extend({
       BaseUtils.initTooltip('数据异常, 稍后请重试！');
       return false;
     }
+    // 当服务器有返回msg消息 并参数设置hideTip为false时  弹出提示信息
+    // 成功保存后 当为添加元素时 添加“继续添加”按钮， 点击继续添加按钮， 重新设置id为null, baseId为null, 使其变为新对象
+    // 当参数hideOkBtn为false时添加 “确定”按钮， 当点击按钮地， 触发_dialog_submit_callback事件， 关闭_dialog对话框，
+    // 关闭当前消息对话框， 当文档中存在btn-back按钮时， 返回列表页面
     if (response.msg && !this.hideTip) {
-
       if (response.success) {
         if (ctx.isNew() && !this.autoHide) {
           buttons.push({ value: '继续添加', callback: function () {
@@ -86,6 +102,7 @@ var BaseModel = Backbone.Model.extend({
           _isNew = true;
         }
         !this.hideOkBtn && buttons.push({ value: '确定', callback: function () {
+          Est.trigger('_dialog_submit_callback');
           if (typeof window.topDialog != 'undefined') {
             window.topDialog.close(); // 关键性语句
             window.topDialog = null;
@@ -104,7 +121,7 @@ var BaseModel = Backbone.Model.extend({
           this.close();
         }, autofocus: true });
       }
-      Est.trigger('_dialog_submit_callback');
+      this.hideOkBtn && Est.trigger('_dialog_submit_callback');
       var dialog_msg = BaseUtils.initDialog({
         id: 'dialog_msg',
         title: '提示：',
@@ -119,10 +136,12 @@ var BaseModel = Backbone.Model.extend({
     } else if ('msg' in response && Est.isEmpty(response.msg)) {
       debug('服务器返回的msg为空! 因此无弹出框信息。 url：' + this.baseUrl);
     }
+    // 当success为false时， 直接返回服务器错误的response信息
     if (Est.typeOf(response.success) === 'boolean' && !response.success) {
       ctx.attributes._response = response;
       return ctx.attributes;
     }
+    // 处理data数据， 并把data数据赋值到response对象上
     if (response.attributes && response.attributes.data) {
       var keys = Est.keys(response.attributes);
       if (keys.length > 1) {
@@ -133,6 +152,7 @@ var BaseModel = Backbone.Model.extend({
       }
       response = response.attributes.data;
     }
+    // 设置backbone 模型类里的id值， 默认不选中， 设置时间戳
     if (response) {
       response.id = response[ctx.baseId || 'id'];
       response.checked = false;
@@ -140,8 +160,6 @@ var BaseModel = Backbone.Model.extend({
     }
     return response;
   },
-
-
   /**
    * 保存模型类
    *

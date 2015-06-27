@@ -61,6 +61,7 @@ var BaseItem = SuperView.extend({
    */
   _initOptions: function (options) {
     this._options = Est.extend(options || {}, this.options);
+    this._options.speed = this._options.speed || 9;
   },
   /**
    * 初始化展开收缩
@@ -133,7 +134,7 @@ var BaseItem = SuperView.extend({
     if (options.speed > 1) {
       var item_id = this.model.get('id') || (this.model.get('dx') + 1) + '';
       if (this.model.get('dx') % 2 === 0) this.$el.addClass('bui-grid-row-even');
-      this.$el.addClass('_item_el_' + (this.options.viewId || '') + '_' + item_id.replace(/^[^1-9]+/, ""));
+      this.$el.addClass('_item_el_' + (this._options.viewId || '') + '_' + item_id.replace(/^[^1-9]+/, ""));
       this.$el.hover(function () {
         ctx.$el.addClass('hover');
       }, function () {
@@ -330,8 +331,8 @@ var BaseItem = SuperView.extend({
     this._checkAppend = typeof this.model.get('_options')._checkAppend === 'undefined' ? true :
       this.model.get('_options')._checkAppend;
     if (!this._checkAppend) {
-      if (this.options.viewId) {
-        app.getView(this.options.viewId) && app.getView(this.options.viewId)._clearChecked();
+      if (this._options.viewId) {
+        app.getView(this._options.viewId) && app.getView(this._options.viewId)._clearChecked();
       } else {
         debug('您当前选择的是不追加选择， 请检查XxxList的options中添加viewId?', {type: 'error'});
       }

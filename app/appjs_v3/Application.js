@@ -725,24 +725,41 @@ Application.prototype = {
             },
             hide: function (scrollTop) { // 当页面向下移动时
               $appLogo.addClass('index-logo-hide');
-            }
+            },
+            topShow: true // 是否页面滚动到顶部才显示 默认为到顶部才显示
         });
    */
-  autoHide: function (page, options) {
-    debug('【Util】App.autoHide:');
+  initAutoHide: function (page, options) {
+    debug('【Util】App.initAutoHide:');
     try {
       var $appContent = $('.app-content', $(page));
       var isHide = false;
+      var up = false;
+      var down = true;
+      var topShow = typeof options.topShow === 'undefined' ? true : options.topShow;
+      var curScrollTop = 0;
+      var scrollTop = 0;
+
+      var doScroll = function (show, hide, scrollTop) {
+        if (show && !isHide) {
+          isHide = options.topShow ? true : false;
+          curScrollTop = scrollTop;
+          down && options.hide && options.hide.call(this, scrollTop);
+          up = true;
+          down = false;
+        } else if (hide) {
+          isHide = false
+          curScrollTop = scrollTop;
+          up && options.show && options.show.call(this, scrollTop);
+          up = false;
+          down = true;
+        }
+      };
       $('.app-content', $(page)).get(0) &&
       $('.app-content', $(page)).get(0).addEventListener("scroll", function (event) {
-        var scrollTop = $appContent.scrollTop();
-        if (scrollTop > 0 && !isHide) {
-          isHide = true;
-          options.hide && options.hide.call(this, scrollTop);
-        } else if (scrollTop === 0 && isHide) {
-          isHide = false
-          options.show && options.show.call(this, scrollTop);
-        }
+        scrollTop = $appContent.scrollTop();
+        //debug('【scroll】:' + scrollTop);
+        doScroll(topShow ? scrollTop > 0 : scrollTop - curScrollTop > 0, topShow ? scrollTop === 0 : scrollTop - curScrollTop < 0, scrollTop);
       });
     } catch (e) {
       debug('【Error】' + e);
@@ -1231,6 +1248,67 @@ Application.prototype = {
     }
   },
   /**
+   * 初始化tab标签
+   * @param options
+   * @author wyj 15.6.26
+   * @example
+   *      App.initTab(page, {
+   *        tab: '#search-tab',
+   *        tabItem: '.tab-item',
+   *        panel: '#tab-panel',
+   *        change: function(item){
+   *          ...
+   *        }
+   *      });
+   */
+  initTab: function (page, options) {
+    var $tab = $(options.tab, $(page));
+    var $subPanel = $(options.panel, $(page));
+    var $subPanelNodes = $subPanel.children();
+
+    $(options.tabItem, $tab).each(function (index) {
+      $(this).on('click', function () {
+        $(this).addClass('cur').siblings(options.tabItem).removeClass('cur');
+        $subPanelNodes.size() > 0 && $subPanelNodes.eq(index).addClass('cur').siblings().removeClass('cur');
+        options.change && options.change.call(this, index);
+      });
+      if ($(this).hasClass('cur'))$(this).click();
+    });
+  },
+  /**
+   * 初始化无限加载列表[静态列表]
+   *
+   * @method [列表] - initInfiniteScroll
+   * @param container
+   * @param list
+   * @param pageSize
+   * @param buildFn
+   * @author wyj 15.6.26
+   * @example
+   *
+   */
+  initInfiniteScroll: function (container, list, pageSize, buildFn) {
+    var $list = container,
+      totalPage = Est.getMaxPage(list.length, pageSize),
+      pageNumber = 1,
+      i = 1;
+
+    $list.empty();
+    App.infiniteScroll($list, { loading: App.getLoading()}, function (callback) {
+      if (totalPage && (pageNumber > totalPage)) return null;
+      var $nodeList = [];
+      var _list = Est.getListByPage(list, pageNumber, pageSize);
+
+      for (var j = 0; j < _list.length; j++) {
+        var $node = $(buildFn.call(this, _list[j]));
+        $nodeList.push($node);
+      }
+      i += pageSize;
+      pageNumber += 1;
+      callback($nodeList);
+    });
+  },
+  /**
    * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
    *
    * @method [会话] - addSession ( 添加session会话 )
@@ -1242,7 +1320,7 @@ Application.prototype = {
    *      App.addSession('__USER__', {username: 'ggggfj'});
    */
   addSession: function (name, value) {
-    localStorage[name] = value;
+    localStorage['___JHW_APPJS__' + name] = value;
     return value;
   },
   /**
@@ -1255,7 +1333,7 @@ Application.prototype = {
    *      App.getSession('__USER__'); => {username: 'ggggfj'}
    */
   getSession: function (name) {
-    return localStorage[name];
+    return localStorage['___JHW_APPJS__' + name];
   },
   /**
    * 判断是否已经登录, 只要需要请求运程数据时都会触发此方法， 若未登录则跳转到登录页面, 可手动触发
