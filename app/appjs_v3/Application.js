@@ -578,6 +578,15 @@ Application.prototype = {
   getCache: function (name) {
     return this.cache[name];
   },
+  /**
+   * 清除缓存
+   *
+   * @method [缓存] - cleanCache ( 清除缓存 )
+   * @author wyj 15.7.1
+   */
+  cleanCache: function () {
+    this.cache = {};
+  },
   /** 添加浏览器hash
    *
    * @method [页面] - addHash ( 添加浏览器hash )
@@ -1053,7 +1062,7 @@ Application.prototype = {
               // 如果自定义寨为空  App._Stack.size为0或1， 且不为登录页面
               App.load(_page);
             } else {
-              App.back();
+              App.back(_page);
             }
           }
         }
@@ -1249,6 +1258,8 @@ Application.prototype = {
   },
   /**
    * 初始化tab标签
+   *
+   * @method [初始化] - initTab
    * @param options
    * @author wyj 15.6.26
    * @example
@@ -1309,6 +1320,107 @@ Application.prototype = {
     });
   },
   /**
+   * 基础对话框
+   * @method [对话框] - dialog
+   * @param options
+   * @author wyj 15.6.29
+   * @example
+   *
+   */
+  initDialog: function (options) {
+    var button = options.button || [];
+    seajs.use(['dialog-plus'], function (dialog) {
+      if (options.success)
+        button.push({ value: '确定', autofocus: true,
+          callback: function () {
+            options.success.apply(this, arguments);
+          }
+        });
+      if (!options.hideCloseBtn)
+        button.push({
+          value: '关闭',
+          callback: function () {
+            this.close().remove();
+          } });
+      options = Est.extend({
+        id: 'dialog' + Est.nextUid(),
+        title: '',
+        width: 'auto', content: '',
+        button: button
+      }, options);
+      if (options.target)
+        options.target = $(options.target).get(0);
+      options.onShow = function () {
+        try {
+          if (typeof options.onShow === 'function') {
+            options.onShow.call(this, arguments);
+          }
+        } catch (e) {
+        }
+      };
+      if (options.cover) {
+        options.quickClose = true;
+        dialog(options).showModal(options.target);
+      }
+      else dialog(options).show(options.target);
+    });
+  },
+  /**
+   * 初始化对话框
+   *
+   * @method [对话框] - initDialog
+   * @param options
+   * @author wyj 15.6.29
+   * @example
+   *        App.initDialog({
+   *
+   *        });
+   */
+  /*initDialog: function (options, context) {
+   var ctx = context || this;
+
+   options.width = options.width || 'auto';
+   options.cover = Est.typeOf(options.cover) === 'boolean' ? options.cover : true;
+   options.button = options.button || [];
+
+   if (typeof options.hideSaveBtn === 'undefined' ||
+   (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
+   options.button.push(
+   {value: '提交', callback: function () {
+   $('#' + options.moduleId + ' #submit').click();
+   if (options.autoClose) {
+   Est.on('_dialog_submit_callback', Est.proxy(function () {
+   this.close().remove();
+   }, this));
+   }
+   return false;
+   }, autofocus: true});
+   }
+   options = Est.extend(options, {
+   el: '#base_item_dialog' + options.moduleId,
+   content: options.content || '<div id="' + options.moduleId + '"></div>',
+   viewId: options.moduleId,
+   onshow: function () {
+   options.onShow && options.onShow.call(this, options);
+   if (options.moduleId) {
+   seajs.use([options.moduleId], function (instance) {
+   app.addPanel(options.moduleId, {
+   el: '#' + options.moduleId,
+   template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
+   }).addView(options.moduleId, new instance(options));
+   });
+   }
+   },
+   onclose: function () {
+   options.onClose && options.onClose.call(ctx, options);
+   }
+   });
+   App.dialog(options);
+   },*/
+  getTarget: function (e) {
+    return e.target ? $(e.target) : $(e.currentTarget);
+  },
+  /**
    * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
    *
    * @method [会话] - addSession ( 添加session会话 )
@@ -1336,6 +1448,31 @@ Application.prototype = {
     return localStorage['___JHW_APPJS__' + name];
   },
   /**
+   * 添加查询延迟定时器， 以访多次重复查询
+   *
+   * @param delayId
+   * @return {*}
+   */
+  addQueryDelay: function (delayId) {
+    window['queryTimer' + delayId] = setTimeout(function () {
+      window['queryTimer' + delayId] = null;
+    }, 50);
+    return window['queryTimer' + delayId];
+  },
+  /**
+   * 检验是否正在执行
+   * @param delayId
+   * @returns {boolean}
+   */
+  checkQueryDelay: function (delayId) {
+    if (window['queryTimer' + delayId]) {
+      App.addQueryDelay(delayId);
+      return true;
+    }
+    App.addQueryDelay(delayId);
+    return false;
+  },
+  /**
    * 判断是否已经登录, 只要需要请求运程数据时都会触发此方法， 若未登录则跳转到登录页面, 可手动触发
    *
    * @method [会话] - checkLogin ( 判断是否已经登录 )
@@ -1343,9 +1480,9 @@ Application.prototype = {
    * @example
    *      App.checkLogin(); => true/false
    */
-  checkLogin: function () {
+  checkLogin: function (authenticate) {
     //return true;
-    if (!App.isLogin) {
+    if (authenticate && !App.isLogin) {
       //查询是否已经登录
       $.ajax({
         type: 'get',
@@ -1394,7 +1531,7 @@ Application.prototype = {
   /**
    * 查询数据 ， 查询成功后触发queryEvent事件
    *
-   * @method [数据API] - query ( 查询数据 )
+   * @method [ajax] - query ( 查询数据 )
    * @param query
    * @param options
    * @return {*}
@@ -1416,25 +1553,31 @@ Application.prototype = {
         cacheId;
 
       App.addLoading && App.addLoading();
+      options.authenticate = Est.typeOf(options.authenticate) === 'boolean' ? options.authenticate : true;
+
       if (typeof options.session === 'undefined') options.session = true;
-      if (options.session && !App.checkLogin()) return false;
-      if (options.data) {
-        for (var key in options.data) {
-          params += options.data[key];
-        }
+      if (options.session && !App.checkLogin(options.authenticate))
+        return false;
+      if (options.data) for (var key in options.data) {
+        params += options.data[key];
       }
       cacheId = options.data ? ('_hash' + App.hash(query) + params) : '_hash' + App.hash(query);
-      if (options.cache && App.getCache(cacheId)) {
+      if (App.getCache(cacheId)) {
         options.success && options.success.call(this, App.getCache(cacheId));
+        App.removeLoading && App.removeLoading(); // 移除加载动画
+        App.trigger('queryEvent', cacheId); // 触发事件
       } else {
-        debug('【Query】:' + CONST.API + query);
+        // 判断是否是同一个请求 如果是的话 判断是否存在window.queryTimer
+        // 若存在 则 return;
+        if (App.checkQueryDelay(cacheId)) return;
+        debug('【Query】:' + (options.session ? CONST.API : CONST.PUBLIC_API) + query);
         return $.ajax({
           type: 'get',
-          url: CONST.API + query,
+          url: (options.session ? CONST.API : CONST.PUBLIC_API) + query,
           data: options.data,
           success: function (result) {
             App.removeLoading && App.removeLoading();
-            if (options.cache) App.addCache(cacheId, result);
+            result.success && App.addCache(cacheId, result);
             options.success && options.success.call(this, result);
             App.trigger('queryEvent', cacheId); // 触发事件
           },
@@ -1462,15 +1605,26 @@ Application.prototype = {
          });
    */
   post: function (url, options) {
+    var cacheId = null;
+    var params = '';
     App.addLoading && App.addLoading();
+    if (options.data) {
+      for (var key in options.data) {
+        params += options.data[key];
+      }
+    }
+    cacheId = options.data ? ('_hash' + App.hash(url) + params) : '_hash' + App.hash(url);
+    if (App.checkQueryDelay(cacheId)) return;
+    App.cleanCache();
+    debug('【Post】:' + (options.session ? CONST.API : CONST.PUBLIC_API) + url);
     $.ajax({
       type: 'post',
       url: CONST.API + url + (options.data[options.baseId] ? ('/' + options.data[options.baseId]) : ''),
       async: options.async || false,
-      data: {
+      data: Est.extend({
         model: JSON.stringify(options.data),
         _method: options.data[options.baseId] ? 'PUT' : 'POST'
-      },
+      }, options.params || {}),
       success: function (response) {
         App.removeLoading && App.removeLoading();
         if (options.onAfterSave) {
@@ -1490,7 +1644,7 @@ Application.prototype = {
   },
   /**
    * 数据删除操作
-   * @method [数据API] - del ( 数据删除操作 )
+   * @method [ajax] - del ( 数据删除操作 )
    * @author wyj 15.4.24
    * @example
    *    App.del('/shop/order/detail/001', function(result){
@@ -1498,6 +1652,8 @@ Application.prototype = {
    */
   del: function (url, options) {
     App.addLoading && App.addLoading();
+    App.cleanCache();
+    debug('【Del】:' + (options.session ? CONST.API : CONST.PUBLIC_API) + url);
     $.ajax({
       type: 'post',
       url: CONST.API + url,
@@ -1526,6 +1682,7 @@ Application.prototype = {
               submit: '.form-submit', // 提交按钮选择符， 可为node元素
               model: model, // 模型类 若内有id值， 则执行的是保存操作
               baseId: 'productId', // 模型类ID标识符
+              data: {}, // 附加数据
               onBeforeSave: function (model) {
                 model.quantity = parseInt(model.quantity, 10);
               },
@@ -1590,6 +1747,7 @@ Application.prototype = {
           }
         }
         options.data = __model;
+        options.params = options.data;
         App.post(options.url, options);
       }
     });
@@ -1666,7 +1824,7 @@ Application.prototype = {
         $(page).on('appForward', function () {
           setTimeout(function () {
             App.removeLoading();
-          }, 500);
+          }, 200);
           options.appForward && options.appForward.call(context, page);
         });
         $(page).on('appLayout', function () {

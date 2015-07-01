@@ -137,5 +137,6 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
   }, function (pageName, callback, append) {
     App.trigger(arguments[arguments.length - 1] + '_render');
   });
-
+  App._IScroll = iScroll;
+  App.Scrollable = Scrollable;
 }(window, document, Clickable, Scrollable, App, App._Utils, App._Events, App._Metrics, App._Scroll);

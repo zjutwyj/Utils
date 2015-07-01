@@ -278,21 +278,21 @@
    * @return {String}
    * @author wyj on 14/8/5
    * @example
-   *    var results = [];
-   var fn = Est.getType;
-   results.push(fn({a: 4})); // "Object"
-   results.push(fn([1, 2, 3])); // "Array"
-   (function() { results.push(fn(arguments));}()); // "Argements"
-   results.push(fn(new ReferenceError())); // "Error"
-   results.push(fn(new Date())); // "Date"
-   results.push(fn(/a-z/)); // "RegExp"
-   results.push(fn(Math)); // "Math"
-   results.push(fn(JSON)); // "JSON"
-   results.push(fn(new Number(4))); // "Number"
-   results.push(fn(new String("abc"))); // "String"
-   results.push(fn(new Boolean(true))); // "Boolean"
-   results.push(fn(null)); // "null"
-   => [ "Object", "Array", "Arguments", "Error", "Date", "RegExp", "Math", "JSON", "Number", "String", "Boolean", "null" ]
+   *      var results = [];
+   *      var fn = Est.getType;
+   *      results.push(fn({a: 4})); // "Object"
+   *      results.push(fn([1, 2, 3])); // "Array"
+   *      (function() { results.push(fn(arguments));}()); // "Argements"
+   *      results.push(fn(new ReferenceError())); // "Error"
+   *      results.push(fn(new Date())); // "Date"
+   *      results.push(fn(/a-z/)); // "RegExp"
+   *      results.push(fn(Math)); // "Math"
+   *      results.push(fn(JSON)); // "JSON"
+   *      results.push(fn(new Number(4))); // "Number"
+   *      results.push(fn(new String("abc"))); // "String"
+   *      results.push(fn(new Boolean(true))); // "Boolean"
+   *      results.push(fn(null)); // "null"
+   *      => [ "Object", "Array", "Arguments", "Error", "Date", "RegExp", "Math", "JSON", "Number", "String", "Boolean", "null" ]
    */
   function getType(value) {
     if (value === null) return "null";
@@ -392,9 +392,7 @@
 
     function set(object, array, value) {
       each(array, function (key) {
-        if (!(key in object)) {
-          object[key] = {};
-        }
+        if (!(key in object)) object[key] = {};
         if (array.length === 1) {
           object[key] = value;
         } else {
@@ -406,7 +404,6 @@
     }
 
     set(object, array, value);
-
   }
 
   Est.setValue = setValue;
@@ -545,13 +542,14 @@
    * @example
    *        Est.hash('aaaaa');
    */
-  function hash(str){
+  function hash(str) {
     var hash = 5381,
-      i    = str.length
-    while(i)
+      i = str.length
+    while (i)
       hash = (hash * 33) ^ str.charCodeAt(--i)
     return hash >>> 0;
   }
+
   Est.hash = hash;
   /**
    * @description 设置hashKey
@@ -580,16 +578,16 @@
    */
   function md5(string) {
     function RotateLeft(lValue, iShiftBits) {
-      return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
+      return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
     }
 
-    function AddUnsigned(lX,lY) {
-      var lX4,lY4,lX8,lY8,lResult;
+    function AddUnsigned(lX, lY) {
+      var lX4, lY4, lX8, lY8, lResult;
       lX8 = (lX & 0x80000000);
       lY8 = (lY & 0x80000000);
       lX4 = (lX & 0x40000000);
       lY4 = (lY & 0x40000000);
-      lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
+      lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
       if (lX4 & lY4) {
         return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
       }
@@ -604,27 +602,38 @@
       }
     }
 
-    function F(x,y,z) { return (x & y) | ((~x) & z); }
-    function G(x,y,z) { return (x & z) | (y & (~z)); }
-    function H(x,y,z) { return (x ^ y ^ z); }
-    function I(x,y,z) { return (y ^ (x | (~z))); }
+    function F(x, y, z) {
+      return (x & y) | ((~x) & z);
+    }
 
-    function FF(a,b,c,d,x,s,ac) {
+    function G(x, y, z) {
+      return (x & z) | (y & (~z));
+    }
+
+    function H(x, y, z) {
+      return (x ^ y ^ z);
+    }
+
+    function I(x, y, z) {
+      return (y ^ (x | (~z)));
+    }
+
+    function FF(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     };
 
-    function GG(a,b,c,d,x,s,ac) {
+    function GG(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     };
 
-    function HH(a,b,c,d,x,s,ac) {
+    function HH(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     };
 
-    function II(a,b,c,d,x,s,ac) {
+    function II(a, b, c, d, x, s, ac) {
       a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
       return AddUnsigned(RotateLeft(a, s), b);
     };
@@ -632,38 +641,38 @@
     function ConvertToWordArray(string) {
       var lWordCount;
       var lMessageLength = string.length;
-      var lNumberOfWords_temp1=lMessageLength + 8;
-      var lNumberOfWords_temp2=(lNumberOfWords_temp1-(lNumberOfWords_temp1 % 64))/64;
-      var lNumberOfWords = (lNumberOfWords_temp2+1)*16;
-      var lWordArray=Array(lNumberOfWords-1);
+      var lNumberOfWords_temp1 = lMessageLength + 8;
+      var lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64;
+      var lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16;
+      var lWordArray = Array(lNumberOfWords - 1);
       var lBytePosition = 0;
       var lByteCount = 0;
-      while ( lByteCount < lMessageLength ) {
-        lWordCount = (lByteCount-(lByteCount % 4))/4;
-        lBytePosition = (lByteCount % 4)*8;
-        lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount)<<lBytePosition));
+      while (lByteCount < lMessageLength) {
+        lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+        lBytePosition = (lByteCount % 4) * 8;
+        lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
         lByteCount++;
       }
-      lWordCount = (lByteCount-(lByteCount % 4))/4;
-      lBytePosition = (lByteCount % 4)*8;
-      lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80<<lBytePosition);
-      lWordArray[lNumberOfWords-2] = lMessageLength<<3;
-      lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
+      lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+      lBytePosition = (lByteCount % 4) * 8;
+      lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
+      lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
+      lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
       return lWordArray;
     };
 
     function WordToHex(lValue) {
-      var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
-      for (lCount = 0;lCount<=3;lCount++) {
-        lByte = (lValue>>>(lCount*8)) & 255;
+      var WordToHexValue = "", WordToHexValue_temp = "", lByte, lCount;
+      for (lCount = 0; lCount <= 3; lCount++) {
+        lByte = (lValue >>> (lCount * 8)) & 255;
         WordToHexValue_temp = "0" + lByte.toString(16);
-        WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length-2,2);
+        WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
       }
       return WordToHexValue;
     };
 
     function Utf8Encode(string) {
-      string = string.replace(/\r\n/g,"\n");
+      string = string.replace(/\r\n/g, "\n");
       var utftext = "";
 
       for (var n = 0; n < string.length; n++) {
@@ -672,7 +681,7 @@
         if (c < 128) {
           utftext += String.fromCharCode(c);
         }
-        else if((c > 127) && (c < 2048)) {
+        else if ((c > 127) && (c < 2048)) {
           utftext += String.fromCharCode((c >> 6) | 192);
           utftext += String.fromCharCode((c & 63) | 128);
         }
@@ -686,95 +695,102 @@
       return utftext;
     };
 
-    var x=Array();
-    var k,AA,BB,CC,DD,a,b,c,d;
-    var S11=7, S12=12, S13=17, S14=22;
-    var S21=5, S22=9 , S23=14, S24=20;
-    var S31=4, S32=11, S33=16, S34=23;
-    var S41=6, S42=10, S43=15, S44=21;
+    var x = Array();
+    var k, AA, BB, CC, DD, a, b, c, d;
+    var S11 = 7, S12 = 12, S13 = 17, S14 = 22;
+    var S21 = 5, S22 = 9 , S23 = 14, S24 = 20;
+    var S31 = 4, S32 = 11, S33 = 16, S34 = 23;
+    var S41 = 6, S42 = 10, S43 = 15, S44 = 21;
 
     string = Utf8Encode(string);
 
     x = ConvertToWordArray(string);
 
-    a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+    a = 0x67452301;
+    b = 0xEFCDAB89;
+    c = 0x98BADCFE;
+    d = 0x10325476;
 
-    for (k=0;k<x.length;k+=16) {
-      AA=a; BB=b; CC=c; DD=d;
-      a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
-      d=FF(d,a,b,c,x[k+1], S12,0xE8C7B756);
-      c=FF(c,d,a,b,x[k+2], S13,0x242070DB);
-      b=FF(b,c,d,a,x[k+3], S14,0xC1BDCEEE);
-      a=FF(a,b,c,d,x[k+4], S11,0xF57C0FAF);
-      d=FF(d,a,b,c,x[k+5], S12,0x4787C62A);
-      c=FF(c,d,a,b,x[k+6], S13,0xA8304613);
-      b=FF(b,c,d,a,x[k+7], S14,0xFD469501);
-      a=FF(a,b,c,d,x[k+8], S11,0x698098D8);
-      d=FF(d,a,b,c,x[k+9], S12,0x8B44F7AF);
-      c=FF(c,d,a,b,x[k+10],S13,0xFFFF5BB1);
-      b=FF(b,c,d,a,x[k+11],S14,0x895CD7BE);
-      a=FF(a,b,c,d,x[k+12],S11,0x6B901122);
-      d=FF(d,a,b,c,x[k+13],S12,0xFD987193);
-      c=FF(c,d,a,b,x[k+14],S13,0xA679438E);
-      b=FF(b,c,d,a,x[k+15],S14,0x49B40821);
-      a=GG(a,b,c,d,x[k+1], S21,0xF61E2562);
-      d=GG(d,a,b,c,x[k+6], S22,0xC040B340);
-      c=GG(c,d,a,b,x[k+11],S23,0x265E5A51);
-      b=GG(b,c,d,a,x[k+0], S24,0xE9B6C7AA);
-      a=GG(a,b,c,d,x[k+5], S21,0xD62F105D);
-      d=GG(d,a,b,c,x[k+10],S22,0x2441453);
-      c=GG(c,d,a,b,x[k+15],S23,0xD8A1E681);
-      b=GG(b,c,d,a,x[k+4], S24,0xE7D3FBC8);
-      a=GG(a,b,c,d,x[k+9], S21,0x21E1CDE6);
-      d=GG(d,a,b,c,x[k+14],S22,0xC33707D6);
-      c=GG(c,d,a,b,x[k+3], S23,0xF4D50D87);
-      b=GG(b,c,d,a,x[k+8], S24,0x455A14ED);
-      a=GG(a,b,c,d,x[k+13],S21,0xA9E3E905);
-      d=GG(d,a,b,c,x[k+2], S22,0xFCEFA3F8);
-      c=GG(c,d,a,b,x[k+7], S23,0x676F02D9);
-      b=GG(b,c,d,a,x[k+12],S24,0x8D2A4C8A);
-      a=HH(a,b,c,d,x[k+5], S31,0xFFFA3942);
-      d=HH(d,a,b,c,x[k+8], S32,0x8771F681);
-      c=HH(c,d,a,b,x[k+11],S33,0x6D9D6122);
-      b=HH(b,c,d,a,x[k+14],S34,0xFDE5380C);
-      a=HH(a,b,c,d,x[k+1], S31,0xA4BEEA44);
-      d=HH(d,a,b,c,x[k+4], S32,0x4BDECFA9);
-      c=HH(c,d,a,b,x[k+7], S33,0xF6BB4B60);
-      b=HH(b,c,d,a,x[k+10],S34,0xBEBFBC70);
-      a=HH(a,b,c,d,x[k+13],S31,0x289B7EC6);
-      d=HH(d,a,b,c,x[k+0], S32,0xEAA127FA);
-      c=HH(c,d,a,b,x[k+3], S33,0xD4EF3085);
-      b=HH(b,c,d,a,x[k+6], S34,0x4881D05);
-      a=HH(a,b,c,d,x[k+9], S31,0xD9D4D039);
-      d=HH(d,a,b,c,x[k+12],S32,0xE6DB99E5);
-      c=HH(c,d,a,b,x[k+15],S33,0x1FA27CF8);
-      b=HH(b,c,d,a,x[k+2], S34,0xC4AC5665);
-      a=II(a,b,c,d,x[k+0], S41,0xF4292244);
-      d=II(d,a,b,c,x[k+7], S42,0x432AFF97);
-      c=II(c,d,a,b,x[k+14],S43,0xAB9423A7);
-      b=II(b,c,d,a,x[k+5], S44,0xFC93A039);
-      a=II(a,b,c,d,x[k+12],S41,0x655B59C3);
-      d=II(d,a,b,c,x[k+3], S42,0x8F0CCC92);
-      c=II(c,d,a,b,x[k+10],S43,0xFFEFF47D);
-      b=II(b,c,d,a,x[k+1], S44,0x85845DD1);
-      a=II(a,b,c,d,x[k+8], S41,0x6FA87E4F);
-      d=II(d,a,b,c,x[k+15],S42,0xFE2CE6E0);
-      c=II(c,d,a,b,x[k+6], S43,0xA3014314);
-      b=II(b,c,d,a,x[k+13],S44,0x4E0811A1);
-      a=II(a,b,c,d,x[k+4], S41,0xF7537E82);
-      d=II(d,a,b,c,x[k+11],S42,0xBD3AF235);
-      c=II(c,d,a,b,x[k+2], S43,0x2AD7D2BB);
-      b=II(b,c,d,a,x[k+9], S44,0xEB86D391);
-      a=AddUnsigned(a,AA);
-      b=AddUnsigned(b,BB);
-      c=AddUnsigned(c,CC);
-      d=AddUnsigned(d,DD);
+    for (k = 0; k < x.length; k += 16) {
+      AA = a;
+      BB = b;
+      CC = c;
+      DD = d;
+      a = FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
+      d = FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
+      c = FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
+      b = FF(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
+      a = FF(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
+      d = FF(d, a, b, c, x[k + 5], S12, 0x4787C62A);
+      c = FF(c, d, a, b, x[k + 6], S13, 0xA8304613);
+      b = FF(b, c, d, a, x[k + 7], S14, 0xFD469501);
+      a = FF(a, b, c, d, x[k + 8], S11, 0x698098D8);
+      d = FF(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
+      c = FF(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
+      b = FF(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
+      a = FF(a, b, c, d, x[k + 12], S11, 0x6B901122);
+      d = FF(d, a, b, c, x[k + 13], S12, 0xFD987193);
+      c = FF(c, d, a, b, x[k + 14], S13, 0xA679438E);
+      b = FF(b, c, d, a, x[k + 15], S14, 0x49B40821);
+      a = GG(a, b, c, d, x[k + 1], S21, 0xF61E2562);
+      d = GG(d, a, b, c, x[k + 6], S22, 0xC040B340);
+      c = GG(c, d, a, b, x[k + 11], S23, 0x265E5A51);
+      b = GG(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
+      a = GG(a, b, c, d, x[k + 5], S21, 0xD62F105D);
+      d = GG(d, a, b, c, x[k + 10], S22, 0x2441453);
+      c = GG(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
+      b = GG(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
+      a = GG(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
+      d = GG(d, a, b, c, x[k + 14], S22, 0xC33707D6);
+      c = GG(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
+      b = GG(b, c, d, a, x[k + 8], S24, 0x455A14ED);
+      a = GG(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
+      d = GG(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
+      c = GG(c, d, a, b, x[k + 7], S23, 0x676F02D9);
+      b = GG(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
+      a = HH(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
+      d = HH(d, a, b, c, x[k + 8], S32, 0x8771F681);
+      c = HH(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
+      b = HH(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
+      a = HH(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
+      d = HH(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
+      c = HH(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
+      b = HH(b, c, d, a, x[k + 10], S34, 0xBEBFBC70);
+      a = HH(a, b, c, d, x[k + 13], S31, 0x289B7EC6);
+      d = HH(d, a, b, c, x[k + 0], S32, 0xEAA127FA);
+      c = HH(c, d, a, b, x[k + 3], S33, 0xD4EF3085);
+      b = HH(b, c, d, a, x[k + 6], S34, 0x4881D05);
+      a = HH(a, b, c, d, x[k + 9], S31, 0xD9D4D039);
+      d = HH(d, a, b, c, x[k + 12], S32, 0xE6DB99E5);
+      c = HH(c, d, a, b, x[k + 15], S33, 0x1FA27CF8);
+      b = HH(b, c, d, a, x[k + 2], S34, 0xC4AC5665);
+      a = II(a, b, c, d, x[k + 0], S41, 0xF4292244);
+      d = II(d, a, b, c, x[k + 7], S42, 0x432AFF97);
+      c = II(c, d, a, b, x[k + 14], S43, 0xAB9423A7);
+      b = II(b, c, d, a, x[k + 5], S44, 0xFC93A039);
+      a = II(a, b, c, d, x[k + 12], S41, 0x655B59C3);
+      d = II(d, a, b, c, x[k + 3], S42, 0x8F0CCC92);
+      c = II(c, d, a, b, x[k + 10], S43, 0xFFEFF47D);
+      b = II(b, c, d, a, x[k + 1], S44, 0x85845DD1);
+      a = II(a, b, c, d, x[k + 8], S41, 0x6FA87E4F);
+      d = II(d, a, b, c, x[k + 15], S42, 0xFE2CE6E0);
+      c = II(c, d, a, b, x[k + 6], S43, 0xA3014314);
+      b = II(b, c, d, a, x[k + 13], S44, 0x4E0811A1);
+      a = II(a, b, c, d, x[k + 4], S41, 0xF7537E82);
+      d = II(d, a, b, c, x[k + 11], S42, 0xBD3AF235);
+      c = II(c, d, a, b, x[k + 2], S43, 0x2AD7D2BB);
+      b = II(b, c, d, a, x[k + 9], S44, 0xEB86D391);
+      a = AddUnsigned(a, AA);
+      b = AddUnsigned(b, BB);
+      c = AddUnsigned(c, CC);
+      d = AddUnsigned(d, DD);
     }
 
-    var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
+    var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d);
 
     return temp.toLowerCase();
   }
+
   Est.md5 = md5;
   /**
    * @description [3]过滤对象字段
@@ -786,8 +802,7 @@
    * @author wyj on 14/5/26
    * @example
    *      var object3 = {name:'a', sort: '1', sId: '000002'};
-   *      Est.pick(object3, ['name','sort']) =>
-   *      {"name":"a","sort":"1"}
+   *      Est.pick(object3, ['name','sort']) => {"name":"a","sort":"1"}
    */
   function pick(obj, callback, context) {
     var result = {}, key;
@@ -829,8 +844,7 @@
    * @author wyj on 14/7/5
    * @example
    *      var characters = [ { 'name': 'barney', 'age': 36 }, { 'name': 'fred',   'age': 40 } ];
-   *      var result = Est.pluck(characters, 'name'); =>
-   *      [ "barney", "fred" ]
+   *      var result = Est.pluck(characters, 'name'); => [ "barney", "fred" ]
    */
   function pluck(obj, key) {
     return map(obj, property(key), null);
@@ -997,8 +1011,9 @@
    * @description 返回一个设置参数的对象
    * @method [对象] - setArguments ( 返回一个设置参数的对象 )
    * @param args
+   * @param {object/string} append
    * @author wyj on 14.9.12
-   *
+   *      return Est.setArguments(arguments, {age： 1});
    */
   function setArguments(args, append) {
     this.value = [].slice.call(args);
@@ -1015,15 +1030,11 @@
    * @param {Object} response 参数
    * @author wyj on 14/8/1
    * @example
-   *    var handle = {
-     * 			route1: function(reponse){
-
-     			},
-     			route2: function(){
-
-     			}
-     		}
-   *    Est.keyRoute(handle, 'route1', {});
+   *      var handle = {
+   *			  route1: function(reponse){ },
+   * 			  route2: function(){ }
+   * 		  }
+   *      Est.keyRoute(handle, 'route1', {});
    */
   function keyRoute(handle, pathname, response) {
     if (Est.typeOf(handle[pathname]) === 'function') {
@@ -1046,10 +1057,10 @@
    * @author wyj on 14.9.29
    * @example
    *      var result_n = Est.validation(number, 'number'); // 数字或带小数点数字
-   var result_e = Est.validation(email, 'email'); // 邮箱
-   var result_c = Est.validation(cellphone, 'cellphone'); // 手机号码
-   var result_d = Est.validation(digits, 'digits'); // 纯数字， 不带小数点
-   var result_u = Est.validation(url, 'url'); // url地址
+   *      var result_e = Est.validation(email, 'email'); // 邮箱
+   *      var result_c = Est.validation(cellphone, 'cellphone'); // 手机号码
+   *      var result_d = Est.validation(digits, 'digits'); // 纯数字， 不带小数点
+   *      var result_u = Est.validation(url, 'url'); // url地址
    */
   function validation(str, type) {
     var pattern, flag = true;
@@ -1093,7 +1104,7 @@
    * @param {String} prefix 前缀
    * @author wyj on 14/6/23
    * @example
-   *      var uid = Est.nextUid(); => '001'
+   *      var uid = Est.nextUid('Uid'); => 'Uid001'
    */
   function nextUid(prefix) {
     var index = uid.length, digit;
@@ -1173,7 +1184,7 @@
    * @return {string}
    * @author wyj on 14/6/17
    * @example
-   *      Est.lowercase("le"); => LE
+   *      Est.uppercase("le"); => LE
    */
   function uppercase(string) {
     return typeOf(string) === 'string' ? string.toUpperCase() : string;
@@ -1511,39 +1522,34 @@
    * @author wyj on 14.10.9
    * @example
    *         // 字符串
-   var result3 =Est.template('hello {{name}}', { name: 'feenan'}); => "hello feenan"
-
-   // 变量嵌套
-   var result8 =Est.template('hello {{person.age}}', { person: {age: 50}}); => "hello 50"
-
-   // 四则运算
-   var result4 =Est.template('(1+2)*age = {{ (1+2)*age}}', {age: 18}); => (1+2)*age = 54
-
-   // 比较操作符
-   var result5 =Est.template('{{1>2}}', {}); => false
-   var result6 =Est.template('{{age > 18}}', {age: 20}); => true
-
-   // 三元运算符
-   var result7 =Est.template('{{ 2 > 1 ? name : ""}}', {name: 'feenan'}); => feenan
-
-   // 综合
-   var tmpl1 = '<div id="{{id}}" class="{{(i % 2 == 1 ? " even" : "")}}"> ' +
-   '<div class="grid_1 alpha right">' +
-   '<img class="righted" src="{{profile_image_url}}"/>' +
-   '</div>' +
-   '<div class="grid_6 omega contents">' +
-   '<p><b><a href="/{{from_user}}">{{from_user}}</a>:</b>{{info.text}}</p>' +
-   '</div>' +
-   '</div>';
-   var result = Est.template(tmpl1, {
-        i: 5,
-        id: "form_user",
-        from_user: "Krasimir Tsonev",
-        profile_image_url: "http://www.baidu.com/img/aaa.jpg",
-        info: {
-            text: "text"
-        }
-    });
+   *        var result3 =Est.template('hello {{name}}', { name: 'feenan'}); => "hello feenan"
+   *        // 变量嵌套
+   *        var result8 =Est.template('hello {{person.age}}', { person: {age: 50}}); => "hello 50"
+   *        // 四则运算
+   *        var result4 =Est.template('(1+2)*age = {{ (1+2)*age}}', {age: 18}); => (1+2)*age = 54
+   *        // 比较操作符
+   *        var result5 =Est.template('{{1>2}}', {}); => false
+   *        var result6 =Est.template('{{age > 18}}', {age: 20}); => true
+   *        // 三元运算符
+   *        var result7 =Est.template('{{ 2 > 1 ? name : ""}}', {name: 'feenan'}); => feenan
+   *        // 综合
+   *        var tmpl1 = '<div id="{{id}}" class="{{(i % 2 == 1 ? " even" : "")}}"> ' +
+   *        '<div class="grid_1 alpha right">' +
+   *        '<img class="righted" src="{{profile_image_url}}"/>' +
+   *        '</div>' +
+   *        '<div class="grid_6 omega contents">' +
+   *        '<p><b><a href="/{{from_user}}">{{from_user}}</a>:</b>{{info.text}}</p>' +
+   *        '</div>' +
+   *        '</div>';
+   *        var result = Est.template(tmpl1, {
+   *              i: 5,
+   *              id: "form_user",
+   *              from_user: "Krasimir Tsonev",
+   *              profile_image_url: "http://www.baidu.com/img/aaa.jpg",
+   *              info: {
+   *                  text: "text"
+   *              }
+   *         });
    */
   function template(str, data) {
     var fn = !/\W/.test(str) ?
@@ -1750,8 +1756,8 @@
    * @example
    *      var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
    *      var result = Est.filter(list, function(item){
-     *          return item.name.indexOf('b') > -1;
-     *      }); => [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ]
+   *          return item.name.indexOf('b') > -1;
+   *      }); => [ { "name": "bb" }, { "address": "zjut", "name": "bb" } ]
    */
   function filter(collection, callback, context) {
     var results = [];
@@ -1777,8 +1783,8 @@
    *      var list = [{"name":"aa"},{"name":"bb"},{"name":"cc"}, {"name":"bb", address:"zjut"}];
    *      var index = Est.findIndex(list, {name: 'aa'}); => 0
    *      var index2 =  Est.findIndex(list, function(item){
-     *          return item.name === 'aa';
-     *      }); => 0
+   *         return item.name === 'aa';
+   *      }); => 0
    */
   function findIndex(array, callback, context) {
     var index = -1,
@@ -1857,10 +1863,10 @@
    * @example
    *      var list2 = [{name:1, sort:1},{name:2, sort:2}];
    *      Est.arrayExchange(list2, 0 , 1, {
-     *          column:'sort',
-     *          callback:function(thisNode, targetNode){
-     *          }
-     *       }); =>
+   *          column:'sort',
+   *            callback:function(thisNode, targetNode){
+   *           }
+   *          }); =>
    *      {name:2,sort:1}
    *      {name:1,sort:2}
    */
@@ -1935,8 +1941,8 @@
    * @example
    *      var list = [1, 2, 3];
    *      var result = Est.map(list, function(value, list, index){
-     *      return list[index] + 1;
-     *      }); => [2, 3, 4]
+   *        return list[index] + 1;
+   *      }); => [2, 3, 4]
    */
   function map(obj, callback, context) {
     var results = [];
@@ -2057,9 +2063,8 @@
    * @return {*}
    * @author wyj on 14/7/7
    * @example
-   *      var youngest = Est.chain(characters)
-   .sortBy('age').take(0)   // 获取第一个值
-   .pluck('age').value();
+   *      var youngest = Est.chain(characters) .sortBy('age').take(0)   // 获取第一个值
+   *      .pluck('age').value();
    */
   function arraySlice(array, start, end) {
     start || (start = 0);
@@ -2112,13 +2117,13 @@
    * @author wyj on 14-04-24
    * @example
    *      $.each($(".imageCrop"), function(){
-     *          $(this).load(function(response, status, xhr){
-     *              var w = $(this).get(0).naturalWidth, h = $(this).get(0).naturalHeight;
-     *              var width = $(this).attr("data-width"), height = $(this).attr("data-height");
-     *              $(this).css(Est.imageCrop(w, h, width, height), 'fast');
-     *              $(this).fadeIn('fast');
-     *          });
-     *      });
+   *           $(this).load(function(response, status, xhr){
+   *               var w = $(this).get(0).naturalWidth, h = $(this).get(0).naturalHeight;
+   *               var width = $(this).attr("data-width"), height = $(this).attr("data-height");
+   *               $(this).css(Est.imageCrop(w, h, width, height), 'fast');
+   *               $(this).fadeIn('fast');
+   *           });
+   *       });
    */
   function imageCrop(naturalW, naturalH, targetW, targetH, fill) {
     var _w = parseInt(naturalW, 10), _h = parseInt(naturalH, 10),
@@ -2186,9 +2191,9 @@
    * @author wyj on 14/8/30
    * @example
    *       Est.imagePreview({
-     *              inputFile: $("input[type=file]").get(0),
-     *              imgNode: $(".img").get(0)
-     *       });
+   *               inputFile: $("input[type=file]").get(0),
+   *               imgNode: $(".img").get(0)
+   *        });
    */
   function imagePreview(option) {
     var docObj = option['inputFile']; // file input表单元素
@@ -2239,14 +2244,14 @@
    * @param {Object} opts 详见例子
    * @author wyj on 14.9.4
    * @example
-   * Est.drawImage({
-                context2D: context2D, // canvas.getContext("2d")
-				canvas: canvas, // 画布
-				image: imageObj, // image对象
-				desx: result.marginLeft, // 开始剪切的 x 坐标位置
-				desy: result.marginTop, // 开始剪切的 y 坐标位置
-				desw: result.width,// 被剪切图像的宽度
-				desh: result.height}); // 被剪切图像的高度
+   *        Est.drawImage({
+   *            context2D: context2D, // canvas.getContext("2d")
+	 *		        canvas: canvas, // 画布
+	 *		        image: imageObj, // image对象
+	 *			        desx: result.marginLeft, // 开始剪切的 x 坐标位置
+	 *		        desy: result.marginTop, // 开始剪切的 y 坐标位置
+	 *		        desw: result.width,// 被剪切图像的宽度
+	 *		        desh: result.height}); // 被剪切图像的高度
    */
   function drawImage(opts) {
     if (!opts.canvas) {
@@ -2314,19 +2319,19 @@
    *          var justifyCont = $("#gird");
    *          var justifylist = $("li", justifyCont);
    *          var justifyOpts = {
-     *                  containerWidth: justifyCont.width(), //容器总宽度
-     *                  childLength: justifylist.size(), //子元素个数
-     *                  childWidth: justifylist.eq(0).width(), // 子元素宽度
-     *                  childSpace: 10, //默认右边距
-     *                  callback: function (i, space) { // 回调函数， 执行CSS操作， i为第几个元素， space为边距
-     *                      justifylist.eq(i).css("margin-right", space);
-     *                  }
-     *              };
+   *                  containerWidth: justifyCont.width(), //容器总宽度
+   *                  childLength: justifylist.size(), //子元素个数
+   *                  childWidth: justifylist.eq(0).width(), // 子元素宽度
+   *                  childSpace: 10, //默认右边距
+   *                  callback: function (i, space) { // 回调函数， 执行CSS操作， i为第几个元素， space为边距
+   *                      justifylist.eq(i).css("margin-right", space);
+   *                  }
+   *              };
    *          Est.girdJustify(justifyOpts);
    *          $(window).bind("resize", function () {
-     *              justifyOpts.containerWidth = justifyCont.width();
-     *              Est.girdJustify(justifyOpts);
-     *          });
+   *              justifyOpts.containerWidth = justifyCont.width();
+   *              Est.girdJustify(justifyOpts);
+   *          });
    *      </script>
    */
   function girdJustify(opts) {
@@ -2367,16 +2372,16 @@
    * @example
    *      var root = [];
    *      for(var i = 0, len = list.length; i < len; i++){
-     *          if(list[i]['grade'] === '01'){
-     *              root.push(list[i]);
-     *          }
-     *      }
+   *          if(list[i]['grade'] === '01'){
+   *              root.push(list[i]);
+   *          }
+   *      }
    *      Est.bulidSubNode(root, list, {
-     *          categoryId: 'category_id', // 分类ＩＤ
-     *          belongId: 'belong_id', // 父类ＩＤ
-     *          childTag: 'cates', // 存放子类字段名称
-     *          dxs: []
-     *      });
+   *          categoryId: 'category_id', // 分类ＩＤ
+   *          belongId: 'belong_id', // 父类ＩＤ
+   *          childTag: 'cates', // 存放子类字段名称
+   *          dxs: []
+   *      });
    */
   function bulidSubNode(rootlist, totalList, opts) {
     var options = {
@@ -2428,8 +2433,8 @@
    * @author wyj on 14/5/15
    * @example
    *      Est.bulidSelectNode(rootlist, 2, {
-     *          name : 'name'
-     *      });
+   *          name : 'name'
+   *      });
    */
   function bulidSelectNode(rootlist, zoom, opts) {
     var z = zoom;
@@ -2437,7 +2442,7 @@
     for (var i = 0, len = rootlist.length; i < len; i++) {
       var space = '';
       if (!opts.top) {
-        space = Est.pad(space, z-1, '　', false, 10);
+        space = Est.pad(space, z - 1, '　', false, 10);
       }
       space = space + "|-";
       rootlist[i][opts['name']] = space + rootlist[i][opts['name']];
@@ -2491,12 +2496,12 @@
    * @author wyj on 14/7/9
    * @example
    *      Est.bulidTreeNode(list, 'grade', '01', {
-     *          categoryId: 'category_id',// 分类ＩＤ
-     *          belongId: 'belong_id',// 父类ＩＤ
-     *          childTag: 'cates', // 子分类集的字段名称
-     *          sortBy: 'sort', // 按某个字段排序
-     *          callback: function(item){}  // 回调函数
-     *      });
+   *          categoryId: 'category_id',// 分类ＩＤ
+   *          belongId: 'belong_id',// 父类ＩＤ
+   *          childTag: 'cates', // 子分类集的字段名称
+   *          sortBy: 'sort', // 按某个字段排序
+   *          callback: function(item){}  // 回调函数
+   *      });
    */
   function bulidTreeNode(list, name, value, opts) {
     var root = [];
@@ -2666,11 +2671,11 @@
    * @author wyj on 14/5/3
    * @example
    *     Est.getCache('uId', session, {
-     *          area : 'dd',
-     *          getData : function(data){
-     *              return cache_data;
-     *          }
-     *      }))
+   *          area : 'dd',
+   *          getData : function(data){
+   *              return cache_data;
+   *          }
+   *      }))
    */
   function getCache(uId, ctx, options) {
     var opts = {
@@ -2844,10 +2849,10 @@
    * @param  {number} height       [元素高度]
    * @return {object}              [返回left, top的对象]
    * @example
-   *      var result = Est.center(1000, 800, 100, 50);
-   var result2 = Est.center('100.8', '800', '100', '50');
-   assert.deepEqual(result, {left:450, top:375}, 'passed!');
-   assert.deepEqual(result2, {left:450, top:375}, 'passed!');
+   *        var result = Est.center(1000, 800, 100, 50);
+   *        var result2 = Est.center('100.8', '800', '100', '50');
+   *        assert.deepEqual(result, {left:450, top:375}, 'passed!');
+   *        assert.deepEqual(result2, {left:450, top:375}, 'passed!');
    */
   function center(clientWidth, clientHeight, width, height) {
     if (!this.validation([clientWidth, clientHeight, width, height], 'number'))
@@ -2889,9 +2894,8 @@
    * @example
    *      (function($, Est){ $.getUrlParam = Est.getUrlParam;})(jQuery, Est);
    *      console.log($.getUrlParam('name'));
-
-   Est.getUrlParam('name', url); // 指定url
-
+   *
+   *      Est.getUrlParam('name', url); // 指定url
    */
   function getUrlParam(name, url) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -2913,16 +2917,16 @@
    * @author wyj on 14/6/26
    * @example
    *        var obj = Est.urlResolve(window.location.href);
-            assert.deepEqual(obj, {
-                "hash": "",
-                "host": "jihui88.com",
-                "hostname": "jihui88.com",
-                "href": "http://jihui88.com/utils/test/Est_qunit.html",
-                "pathname": "/utils/test/Est_qunit.html",
-                "port": "",
-                "protocol": "http",
-                "search": ""
-            }, "passed!");
+   *        assert.deepEqual(obj, {
+   *            "hash": "",
+   *            "host": "jihui88.com",
+   *            "hostname": "jihui88.com",
+   *            "href": "http://jihui88.com/utils/test/Est_qunit.html",
+   *            "pathname": "/utils/test/Est_qunit.html",
+   *            "port": "",
+   *            "protocol": "http",
+   *            "search": ""
+   *        }, "passed!");
    *
    */
   function urlResolve(url) {
@@ -3040,36 +3044,19 @@
    * @author wyj on 14.10.28
    * @example
    *      // HTML
-   *      <ul>
-   <li><a href="#">Home</a></li>
-   <li><a href="#/page1">Page 1</a></li>
-   <li><a href="#/page2">Page 2</a></li>
-   </ul>
-   <div id="view"></div>
-   <script type="text/html" id="home">
-   <h1>Router FTW!</h1>
-   </script>
-   <script type="text/html" id="template1">
-   <h1>Page 1: {{greeting}}></h1>
-   <p>{{moreText}}></p>
-   </script>
-   <script type="text/html" id="template2">
-   <h1>Page 2: {{heading}}></h1>
-   <p>Lorem ipsum...</p>
-   </script>
-   *
+   *      <ul> <li><a href="#">Home</a></li> <li><a href="#/page1">Page 1</a></li> <li><a href="#/page2">Page 2</a></li> </ul> <div id="view"></div> <script type="text/html" id="home"> <h1>Router FTW!</h1> </script> <script type="text/html" id="template1"> <h1>Page 1: {{greeting}}></h1> <p>{{moreText}}></p> </script> <script type="text/html" id="template2"> <h1>Page 2: {{heading}}></h1> <p>Lorem ipsum...</p> </script>
    *      // JAVASCRIPT
    *      route('/', 'home', function(){});
-   route('/page1', 'template1', function () {
-                this.greeting = 'Hello world!';
-                this.moreText = 'Loading...';
-                setTimeout(function () {
-                    this.moreText = 'Bacon ipsum...';
-                }.bind(this), 500);
-            });
-   route('/page2', 'template2', function () {
-                this.heading = 'I\'m page two!';
-            });
+   *      route('/page1', 'template1', function () {
+   *             this.greeting = 'Hello world!';
+   *             this.moreText = 'Loading...';
+   *             setTimeout(function () {
+   *                 this.moreText = 'Bacon ipsum...';
+   *             }.bind(this), 500);
+   *         });
+   *      route('/page2', 'template2', function () {
+   *             this.heading = 'I\'m page two!';
+   *         });
    *
    */
   function route(path, templateId, controller) {
@@ -3174,35 +3161,34 @@
    * @author wyj 15.2.20
    * @example
    *        var test = new Est.interface('test', ['details', 'age']);
-   var properties = {
-    name: "Mark McDonnell",
-    actions: {
-      details: function () {
-        return "I am " + this.age() + " years old.";
-      },
-      age: (function (birthdate) {
-        var dob = new Date(birthdate),
-          today = new Date(),
-          ms = today.valueOf() - dob.valueOf(),
-          minutes = ms / 1000 / 60,
-          hours = minutes / 60,
-          days = hours / 24,
-          years = days / 365,
-          age = Math.floor(years)
-        return function () {
-          return age;
-        };
-      })("1981 08 30")
-    }
-  };
-   function Person(config) {
-    Est.interface.ensureImplements(config.actions, test);
-    this.name = config.name;
-    this.methods = config.actions;
-  }
-   var me = new Person(properties);
-   result1 = me.methods.age();
-   result2 = me.methods.details();
+   *        var properties = {
+   *           name: "Mark McDonnell",
+   *           actions: {
+   *           details: function () {
+   *              return "I am " + this.age() + " years old.";
+   *           },
+   *           age: (function (birthdate) {
+   *              var dob = new Date(birthdate),
+   *               today = new Date(),
+   *               ms = today.valueOf() - dob.valueOf(),
+   *               hours = minutes / 60,
+   *               days = hours / 24,
+   *               years = days / 365,
+   *               age = Math.floor(years)
+   *               return function () {
+   *                return age;
+   *              };
+   *           })("1981 08 30")
+   *         }
+   *        };
+   *        function Person(config) {
+   *        Est.interface.ensureImplements(config.actions, test);
+   *          this.name = config.name;
+   *          this.methods = config.actions;
+   *        }
+   *        var me = new Person(properties);
+   *        result1 = me.methods.age();
+   *        result2 = me.methods.details();
    */
   function Interface(objectName, methods) {
     if (arguments.length != 2) {
@@ -3249,22 +3235,22 @@
    * @example
    *        // 原始方法
    *        var doTest = function (a) {
-               return a
-            };
-            // 执行前调用
-            function beforeTest(a) {
-                alert('before exec: a='+a);
-                a += 3;
-                return new Est.setArguments(arguments); // 如果return false; 则不执行doTest方法
-            };
-            //执行后调用 ， 这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
-            function afterTest(a, result, isDenied) {
-                alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
-                return result+5;
-            };
-            // 覆盖doTest
-            doTest = Est.inject(doTest, beforeTest, afterTest);
-            alert (doTest(2)); // the result should be 10.
+   *            return a
+   *        };
+   *        // 执行前调用
+   *        function beforeTest(a) {
+   *             alert('before exec: a='+a);
+   *             a += 3;
+   *             return new Est.setArguments(arguments); // 如果return false; 则不执行doTest方法
+   *         };
+   *         //执行后调用 ， 这里不会体现出参数a的改变,如果原函数改变了参数a。因为在js中所有参数都是值参。sDenied 该值为真表明没有执行原函数
+   *        function afterTest(a, result, isDenied) {
+   *             alert('after exec: a='+a+'; result='+result+';isDenied='+isDenied);
+   *             return result+5;
+   *        };
+   *        // 覆盖doTest
+   *        doTest = Est.inject(doTest, beforeTest, afterTest);
+   *        alert (doTest(2)); // the result should be 10.
    */
   function inject(aOrgFunc, aBeforeExec, aAtferExec) {
     return function () {
@@ -3379,18 +3365,18 @@
    * @author wyj on 14/8/14
    * @example
    *      var str = '';
-   var doFn = function(){
-                return new Est.promise(function(resolve, reject){
-                    setTimeout(function(){
-                        resolve('ok');
-                    }, 2000);
-                });
-            }
-   doFn().then(function(data){
-                str = data;
-                assert.equal(str, 'ok', 'passed!');
-                QUnit.start();
-            });
+   *      var doFn = function(){
+   *           return new Est.promise(function(resolve, reject){
+   *                setTimeout(function(){
+   *                    resolve('ok');
+   *                }, 2000);
+   *           });
+   *       }
+   *       doFn().then(function(data){
+   *            str = data;
+   *            assert.equal(str, 'ok', 'passed!');
+   *            QUnit.start();
+   *       });
    */
   function promise(fn) {
     var state = 'pending',
@@ -3469,10 +3455,10 @@
    * @author wyj 15.2.13
    * @example
    *        Est.on('event1', function(data){ // 绑定事件
-              result = data;
-            });
-   Est.trigger('event1', 'aaa'); // 触发事件
-   Est.off('event1'); // 取消订阅
+   *          result = data;
+   *        });
+   *        Est.trigger('event1', 'aaa'); // 触发事件
+   *        Est.off('event1'); // 取消订阅
    */
   function trigger(topic, args) {
     if (!topics[topic]) return false;
