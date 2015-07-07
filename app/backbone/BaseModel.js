@@ -69,9 +69,9 @@ var BaseModel = Backbone.Model.extend({
    * this.model.hideTip = true; // 无提示信息弹出框
    * this.model.hideOkBtn = true; // 隐藏保存按钮
    * this.model.autoHide = true; // 自动隐藏提示信息
+   * this.model.autoBack = true; // 保存成功后自动返回列表页面
    *
    * @method [private] - parse
-   * @private
    * @param response
    * @param options
    * @return {*}
@@ -103,14 +103,15 @@ var BaseModel = Backbone.Model.extend({
         }
         !this.hideOkBtn && buttons.push({ value: '确定', callback: function () {
           Est.trigger('_dialog_submit_callback');
+          this.autoBack = Est.typeOf(this.autoBack) === 'undefined' ? true : this.autoBack;
           if (typeof window.topDialog != 'undefined') {
             window.topDialog.close(); // 关键性语句
             window.topDialog = null;
-            $ && $(".btn-back").click();
+            $ && this.autoBack && $(".btn-back").click();
           } else if (app.getDialogs().length > 0) {
             try {
               app.getDialogs().pop().close().remove();
-              $ && $(".btn-back").click();
+              $ && this.autoBack && $(".btn-back").click();
             } catch (e) {
             }
           }

@@ -1450,6 +1450,7 @@ Application.prototype = {
   /**
    * 添加查询延迟定时器， 以访多次重复查询
    *
+   * @method [延迟] - addQueryDelay
    * @param delayId
    * @return {*}
    */
@@ -1461,8 +1462,10 @@ Application.prototype = {
   },
   /**
    * 检验是否正在执行
+   *
+   * @method [延迟] - checkQueryDelay
    * @param delayId
-   * @returns {boolean}
+   * @return {boolean}
    */
   checkQueryDelay: function (delayId) {
     if (window['queryTimer' + delayId]) {

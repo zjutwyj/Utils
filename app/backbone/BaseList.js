@@ -329,7 +329,7 @@ var BaseList = SuperView.extend({
           /*if (ctx.options.instance)
            app.addData(ctx.options.instance, result.models);*/
           ctx.list.find('.no-result').remove();
-          if (result.attributes.data.length === 0) {
+          if (Est.isEmpty(result) || result.attributes.data.length === 0) {
             ctx._options.append ? ctx.list.append('<div class="no-result">已全部加载</div>') :
               ctx.list.append('<div class="no-result">暂无数据</div>');
             debug(function () {
