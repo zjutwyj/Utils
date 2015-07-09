@@ -11,7 +11,7 @@ var BaseUtils = {
    * @param options
    * @author wyj 15.1.27
    * @example
-   *      BaseUtils.initSelect({
+   *      Utils.initSelect({
             render: '#select',  // 渲染区域
             target: '#model-categoryId', // 目标input元素
             text: 'name', // 名称字段
@@ -72,7 +72,7 @@ var BaseUtils = {
    * @param options
    * @author wyj 15.2.17
    * @example
-   *      BaseUtils.initDropDown({
+   *      Utils.initDropDown({
             target: '#drop-down-content', // 显示下拉框的触发按钮
             height: 250, // 默认为auto
             width: 150, // 默认为auto
@@ -87,7 +87,7 @@ var BaseUtils = {
                 }, 1000);
             }
         });
-   BaseUtils.initDropDown({
+   Utils.initDropDown({
             target: '#drop-down-module-id',
             moduleId: 'AttributesAdd',
             items: ['111', '222', '333'],
@@ -124,12 +124,215 @@ var BaseUtils = {
     });
   },
   /**
+   * 初始化tab选项卡
+   *
+   * @method [选项卡] - initTab ( 初始化tab选项卡 )
+   * @param options
+   * @author wyj 14.12.24
+   * @example
+   *        Utils.initTab({
+       *          render: '#tab',
+       *          elCls: 'nav-tabs',
+       *          panelContainer: '#panel',
+       *          autoRender: true,
+       *          children: [
+       *            {title: '常规', value: '1', selected: true},
+       *            {title: '产品描述', value: '2'},
+       *            {title: '产品属性', value: '3'},
+       *            {title: '商城属性', value: '4'},
+       *            {title: '产品标签', value: '5'},
+       *            {title: '搜索引擎优化', value: '6'}
+       *          ],
+       *          change: function(ev){ // 点击标签页面回调事件
+       *              console.log(ev);
+       *          }
+       *        });
+   */
+  initTab: function(options){
+    BUI.use(['bui/tab', 'bui/mask'], function (Tab) {
+      var tab = new Tab.TabPanel(options);
+      tab.on('selectedchange', function (ev) {
+        options.change && options.change.call(this, ev);
+      });
+      tab.render();
+      /*Est.on(options.viewId || 'tab', function(){
+
+       });*/
+      app.addView(options.viewId || 'tab', tab);
+      if (options.afterRender) {
+        options.afterRender.call(this, tab);
+      }
+    });
+  },
+  /**
+   * 初始化button tab选项卡
+   *
+   * @method [选项卡] - initButtonTab ( 初始化按钮形式的tab选项卡 )
+   * @param options
+   * @author wyj 14.12.24
+   * @example
+   *        Utils.initButtonTab({
+       *          render: '#tab',
+       *          elCls: 'button-tabs',
+       *          autoRender: true,
+       *          children: [
+       *            {title: '常规', value: '1', selected: true},
+       *            {title: '产品描述', value: '2'},
+       *            {title: '产品属性', value: '3'},
+       *            {title: '商城属性', value: '4'},
+       *            {title: '产品标签', value: '5'},
+       *            {title: '搜索引擎优化', value: '6'}
+       *          ],
+       *          change: function(ev){ // 点击标签页面回调事件
+       *              console.log(ev);
+       *          }
+       *        });
+   */
+  initButtonTab: function (options) {
+    options = Est.extend({
+      elCls: 'button-tabs',
+      autoRender: true
+    }, options);
+    BUI.use(['bui/tab'], function (Tab) {
+      var tab = new Tab.Tab(options);
+      tab.on('selectedchange', function (ev) {
+        options.change && options.change.call(this, ev);
+      });
+      tab.setSelected(tab.getItemAt(0));
+      app.addView(options.viewId || 'buttontab', tab);
+      if (options.afterRender) {
+        options.afterRender.call(this, tab);
+      }
+    });
+  },
+  /**
+   * 初始化日期选择器
+   *
+   * @method [表单] - initDate ( 初始化时间组件 )
+   * @param options [render: 选择符][showTime: true/false 是否显示时间]
+   * @author wyj 14.12.17
+   * @example
+   *      Utils.initDate({
+       *         render: '.calendar',
+       *         showTime: false
+       *       });
+   */
+  initDate: function (options) {
+    BUI.use('bui/calendar', function (Calendar) {
+      new Calendar.DatePicker({
+        trigger: options.render || '.calendar',
+        showTime: options.showTime || false,
+        autoRender: true
+      });
+    });
+  },
+  /**
+   * 初始化多标签
+   *
+   * @method [表单] - initCombox ( 初始化多标签组件 )
+   * @param options
+   * @return {Est.promise}
+   * @author wyj 14.12.17
+   * @example
+   *      Utils.initCombox({
+       *         render: '#tag',
+       *         target: '#model-tag',
+       *         itemId: 'categoryId'
+       *           items: [ '选项一', '选项二', '选项三', '选项四' ]
+       *       });
+   */
+  initCombox: function (options) {
+    var $q = Est.promise;
+    return new $q(function (resolve, reject) {
+      var container = {};
+      var target = options.target || '#category';
+      var render = options.render || '#s1';
+      var itemId = options.itemId || 'categoryId';
+      var width = options.width || '500';
+      var items = options.items || [];
+      BUI.use('bui/select', function (Select) {
+        container[render] = new Select.Combox({
+          render: render,
+          showTag: true,
+          valueField: target,
+          elCls: 'bui-tag-follow',
+          width: width,
+          items: items
+        });
+        container[render].render();
+        /*container[render].on('change', function (ev) {
+         //$(target).val($(target)Est.trim(ev.item[itemId]));
+         if (typeof options.change !== 'undefined')
+         options.change.call(this, ev.item[itemId]);
+         });*/
+      });
+    });
+  },
+  /**
+   * 初始化动画
+   * @method [动画] - initAnimate ( 初始化动画 )
+   * @param target
+   * @author wyj 15.3.30
+   * @example
+   *
+   *    Utils.initAnimate(this);
+   */
+  initAnimate: function (target) {
+    $('.animated', $(target)).each(function () {
+      setTimeout(Est.proxy(function () {
+        var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+        var animate = 'animated ' + $(this).attr('data-animate');
+        var duration = $(this).attr('data-duration');
+        var delay = $(this).attr('data-delay');
+        var count = $(this).attr('data-count');
+        $(this).css({
+          '-webkit-animation-duration': (duration || 1) + 's',
+          '-webkit-animation-delay': (delay || 0) + 's'
+        });
+        $(this).removeClass(animate);
+        $(this).addClass(animate).one(animationEnd, function () {
+          //$(this).removeClass(animate);
+        });
+      }, this), 0);
+    });
+  },
+  /**
+   * 添加加载动画
+   * @method [加载] - addLoading ( 添加加载动画 )
+   * @author wyj 15.04.08
+   * @example
+   *      Utils.addLoading();
+   */
+  addLoading: function (options) {
+    debug('【Utils】Utils.addLoading');
+    try {
+      if (window.$loading) window.$loading.remove();
+      window.$loading = $('<div class="loading"></div>');
+      $('body').append(window.$loading);
+    } catch (e) {
+      debug('【Error】' + e);
+    }
+    return window.$loading;
+  },
+  /**
+   * 移除加载动画
+   * @method [加载] - removeLoading ( 移除加载动画 )
+   * @author wyj 15.04.08
+   * @example
+   *      Utils.removeLoading();
+   */
+  removeLoading: function () {
+    debug('【Utils】Utils.removeLoading');
+    if (window.$loading) window.$loading.remove();
+    //else $('.loading').remove();
+  },
+  /**
    * 初始化级联地区
    *
    * @method [地区] - initDistrict ( 初始化级联地区 )
    * @author wyj 15.1.6
    * @example
-   *        BaseUtils.initDistrict({
+   *        Utils.initDistrict({
                  id: 'district1' ,// 必填
                  render: '#district-container', // 目标选择符
                  target: '#model-dist',
@@ -162,7 +365,7 @@ var BaseUtils = {
    * @author wyj 14.12.17
    * @example
    *      // 图片添加
-   *      BaseUtils.openUpload({
+   *      Utils.openUpload({
        *       albumId: app.getData('curAlbumId'),
        *       username: app.getData('user').username, // 必填
        *       auto: true,
@@ -218,7 +421,7 @@ var BaseUtils = {
    * @param options
    * @author wyj 14.12.18
    * @example
-   *      BaseUtils.initEditor({
+   *      Utils.initEditor({
        *        render: '.ckeditor'
        *      });
    */
@@ -385,7 +588,7 @@ var BaseUtils = {
    * @method [编辑器] - initInlineEditor
    * @author wyj 15.6.11
    * @example
-   *      BaseUtils.initInlineEditor(target, callback);
+   *      Utils.initInlineEditor(target, callback);
    */
   initInlineEditor: function (target, callback) {
     seajs.use(['ckeditor'], function (ckeditor) {
@@ -414,7 +617,7 @@ var BaseUtils = {
    * @param options
    * @author wyj 14.12.18
    * @example
-   *        BaseUtils.initCopy('#photo-copy-dialog', {
+   *        Utils.initCopy('#photo-copy-dialog', {
        *           success: function(){
        *             window.copyDialog.close();
        *           }
@@ -452,7 +655,7 @@ var BaseUtils = {
    * @param options
    * @author wyj 15.03.24
    * @example
-   *     BaseUtils.initDrag({
+   *     Utils.initDrag({
         render: '.drag',
         resize: true, // 是否启用缩放
         dragend: function (ev, dd) { // 拖放结束后执行
@@ -560,10 +763,10 @@ var BaseUtils = {
    * 初始化缩放
    *
    * @method [缩放] - initResize ( 初始化缩放 )
-   * @param optoins
+   * @param options
    * @author wyj 15.03.24
    * @example
-   *      BaseUtils.initResize({
+   *      Utils.initResize({
      *        render: 'img',
      *        callback: function(ev, dd){}
      *      });
@@ -592,7 +795,7 @@ var BaseUtils = {
    * @param options [title: ][width: ][height: ][target: ][success: 确定按钮回调]
    * @author wyj 14.12.18
    * @example
-   *      BaseUtils.initDialog({
+   *      Utils.initDialog({
        *         id: 'copyDialog',
        *         title: '复制图片',
        *         target: '.btn-email-bind',
@@ -662,7 +865,7 @@ var BaseUtils = {
    * @param options [url: ''] [title: 标题][width: ][height: ][success: 确定按钮成功回调方法][target:　绑定到对象]
    * @author wyj 14.12.15
    * @example
-   *      BaseUtils.initIframeDialog({
+   *      Utils.initIframeDialog({
        *         title: '黑名单',
        *         url: CONST.DOMAIN + '/user/blacklist/view',
        *         width: 500,
@@ -712,7 +915,7 @@ var BaseUtils = {
    * @param options
    * @author wyj 14.12.18
    * @example
-   *      BaseUtils.initTip('提示内容', {
+   *      Utils.initTip('提示内容', {
        *        time: 1000,
        *        title: '温馨提示'
        *      });
@@ -739,7 +942,7 @@ var BaseUtils = {
    * @param opts [title: 标题][content: 内容][success: 成功回调]
    * @author wyj 14.12.8
    * @example
-   *      BaseUtils.initConfirm({
+   *      Utils.initConfirm({
        *        title: '提示',
        *        target: this.$('.name').get(0),
        *        content: '是否删除?',
@@ -790,7 +993,7 @@ var BaseUtils = {
    * @param optoins
    * @author wyj 15.04.08
    * @example
-   *      BaseUtils.addLoading();
+   *      Utils.addLoading();
    */
   addLoading: function (options) {
     try {
@@ -807,9 +1010,9 @@ var BaseUtils = {
    * @method [加载] - removeLoading
    * @author wyj 15.04.08
    * @example
-   *      BaseUtils.removeLoading();
+   *      Utils.removeLoading();
    */
-  removeLoading: function () {
+  removeLoading: function (options) {
     if (window.$loading) window.$loading.remove();
     else $('.loading').remove();
   },
@@ -825,7 +1028,7 @@ var BaseUtils = {
        *          var title = $(this).attr('title');
        *          if (title){
        *            $(this).click(function(){
-       *            BaseUtils.initTooltip(title, {
+       *            Utils.initTooltip(title, {
        *              align: 'right',
        *              target: $(this).get(0)
        *            });
@@ -857,7 +1060,7 @@ var BaseUtils = {
    * @return {*}
    * @author wyj 15.2.15
    * @example
-   *      BaseUtils.execute( "initSelect", {
+   *      Utils.execute( "initSelect", {
      *        ...
      *      }, this);
    */
