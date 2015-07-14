@@ -3262,11 +3262,11 @@
         else if (isDenied = Result !== undefined)
           args.push(Result)
       }
-
+      if (typeof Result === 'undefined') return false;
       !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
 
       if (typeof(aAtferExec) == 'function')
-        Result = aAtferExec.apply(this, args.concat(isDenied, Result.append));
+        Result = aAtferExec.apply(this, args.concat(isDenied, Result && Result.append));
       else
         Result = undefined;
 

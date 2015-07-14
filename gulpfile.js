@@ -361,9 +361,9 @@ gulp.task('jihui881.min', function () {
 // [1].用户后台 UserManagement.min */
 
 // [2].微传单 UserManagement_leaflet.min */
-// [2].微传单 UserManagement_leaflet_v2.min */ 第二版
+// [3].微传单 UserManagement_leaflet_v2.min */ 第二版
 
-// [3].手机后台 UserManagement_mobileManagement.min */
+// [4].手机后台 UserManagement_mobileManagement.min */
 
 //** 用户后台 - 基础代码 */ */
 paths['UserManagement_base'] = { scripts: { source: [

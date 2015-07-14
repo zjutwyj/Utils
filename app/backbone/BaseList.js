@@ -137,6 +137,7 @@ var BaseList = SuperView.extend({
   _initTemplate: function (options) {
     this._data = options.data = options.data || {};
     if (options.template) {
+      this._options.beforeRender && this._options.beforeRender.call(this);
       this.template = Handlebars.compile(options.template);
       if (this._options.append)
         this.$el.append(this.template(options.data));

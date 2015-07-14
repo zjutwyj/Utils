@@ -151,13 +151,13 @@ App._Transitions = function (window, document, Swapper, App, Utils, Scroll, Page
 		var isIOS7SlideUp = (Utils.os.ios && (Utils.os.version >= 7) && { 'slideon-down':1, 'slideoff-down':1 }[options.transition]);
 		if ( !options.duration ) {
 			if ( !Utils.os.ios ) {
-				options.duration = 200;
+				options.duration = 300;
 			} else if (Utils.os.version < 7) {
-				options.duration = 200;
+				options.duration = 300;
 			} else if (isIOS7SlideUp) {
-				options.duration = 200;
+				options.duration = 300;
 			} else {
-				options.duration = 200;
+				options.duration = 300;
 			}
 		}
 		if ( !options.easing ) {

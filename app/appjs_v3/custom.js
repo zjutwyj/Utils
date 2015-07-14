@@ -61,10 +61,9 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
     var page = null;
     //debugger
     if (App._CustomStack && App._CustomStack.length > 0) {
-      page = App._CustomStack[App._CustomStack.length - 1];
-      App._CustomStack.pop();
+      page = App._CustomStack.pop();
     }
-    if (App._Stack.size() > 0) {
+    else if (App._Stack.size() > 0) {
       page = App._Stack.get()[App._Stack.size() - 2];
       //App._Stack.pop();
     }
@@ -98,9 +97,10 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
           return;
         }
       }
-      if (typeof pageName !== 'function') {
+      var _item = App.pickStackItem(pageName);
+      if (typeof pageName !== 'function' && _item) {
         App.addHash('#/' + pageName);
-        App.addLoading();// [custom]
+        App.addLoading();
       }
       App._CustomStack = App._CustomStack || [];
       if (App._Stack.size() === 0 && App._CustomStack.length === 0) {
@@ -110,12 +110,17 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
         App.load(pageName);
         return;
       }
+      else if (Est.typeOf(pageName) === 'array'){
+        App.load(pageName[0][0], pageName[0][1]);
+        return;
+      }
       else if (typeof pageName === 'string') {
-        item = App.pickStackItem(pageName);
-        if (!item) {
-          item = App.getBeforeStackItem();
+        if (!_item) {
+          App.load(item[0], item[1]);
+          return;
+          /*item = App.getBeforeStackItem();
           pageName = item ? item[0] : 'home';
-          App.addHash('#/' + pageName);
+          App.addHash('#/' + pageName);*/
         }
       }
       else if (typeof pageName === 'undefined' || typeof pageName === 'function') {

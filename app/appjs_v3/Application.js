@@ -494,16 +494,20 @@ Application.prototype = {
     }, 0);
     return true;
   },
-  on: function (topic, func) {
+  on: function (topic, func, uid) {
     if (!this.topics[topic]) this.topics[topic] = [];
+    if (Est.findIndex(this.topics[topic], function (item) {
+      return item['uid'] === uid;
+    }) > -1) return;
     var token = (++this.subUid).toString();
     this.topics[topic].push({
       token: token,
-      func: func
+      func: func,
+      uid: uid
     });
     return token;
   },
-  off: function (token) {
+  off: function (token, deep) {
     for (var m in this.topics) {
       if (this.topics[m]) {
         for (var i = 0, j = this.topics[m].length; i < j; i++) {
@@ -541,11 +545,12 @@ Application.prototype = {
         else if (isDenied = Result !== undefined)
           args.push(Result)
       }
+      if (typeof Result === 'undefined') return false;
 
       !isDenied && args.push(aOrgFunc.apply(this, args)); //if (!isDenied) args.push(aOrgFunc.apply(this, args));
 
       if (typeof(aAtferExec) == 'function')
-        Result = aAtferExec.apply(this, args.concat(isDenied, Result.append));
+        Result = aAtferExec.apply(this, args.concat(isDenied, Result && Result.append));
       else
         Result = undefined;
 
@@ -1043,27 +1048,19 @@ Application.prototype = {
       try {
         debug('【Hash】onhashchange: ' + localStorage['_currentHash'] + ' -> ' + location.hash);
         var _page, item;
-        //debugger
         if (localStorage['_currentHash'] && localStorage['_currentHash'] !== location.hash) {
-          //if (App.pageOut) return;
           if (location.hash.length > 0) {
             _page = location.hash.substring(2, location.hash.length);
             if (App._CustomStack && App._CustomStack.length > 0 && _page !== 'login') {
               item = App.getCustomPage(_page, true);
-              if (item) {
-                App.back(item[0][0], item[0][1]);
-              } else {
-                App.load(_page);
-              }
+              if (item) App.back(item);
+              else App.load(_page);
               return;
             }
             if (_page === 'undefined') App.load('home');
-            if (App._CustomStack.length === 0 && _page !== 'login' && App._Stack.size() < 2) {
-              // 如果自定义寨为空  App._Stack.size为0或1， 且不为登录页面
-              App.load(_page);
-            } else {
-              App.back(_page);
-            }
+            // 如果自定义寨为空  App._Stack.size为0或1， 且不为登录页面
+            if (App._CustomStack.length === 0 && _page !== 'login' && App._Stack.size() < 2) App.load(_page);
+            else App.back(_page);
           }
         }
       } catch (e) {
@@ -1073,7 +1070,6 @@ Application.prototype = {
     }
     App.enableDragTransition();
     try {
-      //debugger
       //记录进入前的页面网址, 并判断是否是本后台的网址， 若是则不记录session
       if (document.referrer && document.referrer.indexOf('mobile_background') === -1 &&
         document.referrer.indexOf('rest/pay') === -1) {
@@ -1091,18 +1087,11 @@ Application.prototype = {
         else if (App._CustomStack && App._CustomStack.length > 0) {
           //存在CustomStack且有记录时
           item = App.getCustomPage(pageName);
-          if (item) {
-            App.load(item[0][0], item[0][1]);
-          } else {
-            App.load(pageName);
-          }
+          if (item) App.load(item[0][0], item[0][1]);
+          else App.load(pageName);
         }
-        else {
-          App.load(pageName);
-        }
-      } else {
-        App.load('home');
-      }
+        else App.load(pageName);
+      } else App.load('home');
     } catch (err) {
       App.load('home');
     }
@@ -1148,33 +1137,6 @@ Application.prototype = {
         fn && fn.apply(this, arguments);
       });
     })
-  },
-  /**
-   * 初始化页面， 比如滚动[Scrollable]、点击按钮事件[data-target="order_list"]等等操作
-   * 当app-content里的内容改变时， 需初始化下页面， 使按钮、滚动等生效
-   *
-   * @method [初始化] - initPage ( 初始化页面 )
-   * @param page
-   * @author wyj 15.4.24
-   * @example
-   *    App.initPage();
-   */
-  initPage: function (page) {
-    debug('【Init】initPage');
-    try {
-      setTimeout(function () { // 初始化滚动
-        App._Pages.fixContent(page)
-      }, 0);
-      setTimeout(function () { // 初始化页面
-        App._Scroll.setup(page)
-      }, 0);
-      setTimeout(function () { // 初始化点击按钮
-        //alert('initClick');
-        App.initClick(page);
-      }, 0);
-    } catch (e) {
-      debug('【Error】: App.initPage' + e);
-    }
   },
   /**
    * 获取元素距离顶部的距离
@@ -1376,47 +1338,6 @@ Application.prototype = {
    *
    *        });
    */
-  /*initDialog: function (options, context) {
-   var ctx = context || this;
-
-   options.width = options.width || 'auto';
-   options.cover = Est.typeOf(options.cover) === 'boolean' ? options.cover : true;
-   options.button = options.button || [];
-
-   if (typeof options.hideSaveBtn === 'undefined' ||
-   (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
-   options.button.push(
-   {value: '提交', callback: function () {
-   $('#' + options.moduleId + ' #submit').click();
-   if (options.autoClose) {
-   Est.on('_dialog_submit_callback', Est.proxy(function () {
-   this.close().remove();
-   }, this));
-   }
-   return false;
-   }, autofocus: true});
-   }
-   options = Est.extend(options, {
-   el: '#base_item_dialog' + options.moduleId,
-   content: options.content || '<div id="' + options.moduleId + '"></div>',
-   viewId: options.moduleId,
-   onshow: function () {
-   options.onShow && options.onShow.call(this, options);
-   if (options.moduleId) {
-   seajs.use([options.moduleId], function (instance) {
-   app.addPanel(options.moduleId, {
-   el: '#' + options.moduleId,
-   template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
-   }).addView(options.moduleId, new instance(options));
-   });
-   }
-   },
-   onclose: function () {
-   options.onClose && options.onClose.call(ctx, options);
-   }
-   });
-   App.dialog(options);
-   },*/
   getTarget: function (e) {
     return e.target ? $(e.target) : $(e.currentTarget);
   },
@@ -1450,29 +1371,29 @@ Application.prototype = {
   /**
    * 添加查询延迟定时器， 以访多次重复查询
    *
-   * @method [延迟] - addQueryDelay
+   * @method [延迟] - addDelay
    * @param delayId
    * @return {*}
    */
-  addQueryDelay: function (delayId) {
-    window['queryTimer' + delayId] = setTimeout(function () {
-      window['queryTimer' + delayId] = null;
-    }, 50);
-    return window['queryTimer' + delayId];
+  addDelay: function (delayId) {
+    window['delayTimer' + delayId] = setTimeout(function () {
+      window['delayTimer' + delayId] = null;
+    }, 10);
+    return window['delayTimer' + delayId];
   },
   /**
    * 检验是否正在执行
    *
-   * @method [延迟] - checkQueryDelay
+   * @method [延迟] - checkDelay
    * @param delayId
    * @return {boolean}
    */
-  checkQueryDelay: function (delayId) {
-    if (window['queryTimer' + delayId]) {
-      App.addQueryDelay(delayId);
+  checkDelay: function (delayId) {
+    if (window['delayTimer' + delayId]) {
+      App.addDelay(delayId);
       return true;
     }
-    App.addQueryDelay(delayId);
+    App.addDelay(delayId);
     return false;
   },
   /**
@@ -1565,14 +1486,15 @@ Application.prototype = {
         params += options.data[key];
       }
       cacheId = options.data ? ('_hash' + App.hash(query) + params) : '_hash' + App.hash(query);
+
       if (App.getCache(cacheId)) {
         options.success && options.success.call(this, App.getCache(cacheId));
         App.removeLoading && App.removeLoading(); // 移除加载动画
         App.trigger('queryEvent', cacheId); // 触发事件
       } else {
-        // 判断是否是同一个请求 如果是的话 判断是否存在window.queryTimer
+        // 判断是否是同一个请求 如果是的话 判断是否存在window.delayTimer
         // 若存在 则 return;
-        if (App.checkQueryDelay(cacheId)) return;
+        if (App.checkDelay(cacheId)) return;
         debug('【Query】:' + (options.session ? CONST.API : CONST.PUBLIC_API) + query);
         return $.ajax({
           type: 'get',
@@ -1591,7 +1513,7 @@ Application.prototype = {
         });
       }
     } catch (e) {
-      console.log(e);
+      debug(e);
     }
   },
   /**
@@ -1617,7 +1539,7 @@ Application.prototype = {
       }
     }
     cacheId = options.data ? ('_hash' + App.hash(url) + params) : '_hash' + App.hash(url);
-    if (App.checkQueryDelay(cacheId)) return;
+    if (App.checkDelay(cacheId)) return;
     App.cleanCache();
     debug('【Post】:' + (options.session ? CONST.API : CONST.PUBLIC_API) + url);
     $.ajax({
@@ -1803,6 +1725,32 @@ Application.prototype = {
     App.on($(page).attr('data-page') + '_render', render);
   },
   /**
+   * 初始化页面， 比如滚动[Scrollable]、点击按钮事件[data-target="order_list"]等等操作
+   * 当app-content里的内容改变时， 需初始化下页面， 使按钮、滚动等生效
+   *
+   * @method [初始化] - initPage ( 初始化页面 )
+   * @param page
+   * @author wyj 15.4.24
+   * @example
+   *    App.initPage();
+   */
+  initPage: function (page, type) {
+    debug('【Init】initPage----' + type);
+    try {
+      setTimeout(function () { // 初始化滚动
+        App._Pages.fixContent(page)
+      }, 0);
+      setTimeout(function(){
+        App._Scroll.setup(page)
+      }, 0);
+      setTimeout(function () { // 初始化点击按钮
+        App.initClick(page);
+      }, 0);
+    } catch (e) {
+      debug('【Error】: App.initPage' + e);
+    }
+  },
+  /**
    * 项目主方法 一切由此开始, 并记录App.rootPage // 进入前的网址
    * @method [Main] - initLoad ( 项目主方法 )
    * @param {DOM} page 作用域
@@ -1818,6 +1766,7 @@ Application.prototype = {
    */
   initLoad: function (page, options, context) {
     if (page) {
+      debug("【Init】: initLoad");
       App.pageOut = false;
       try {
         App.addLoading(); // 添加加载动画
@@ -1842,14 +1791,15 @@ Application.prototype = {
         $(page).on('appReady', function () {
           debug('【Init】appReady');
           App.removeLoading(); // 移除加载动画
-          App.initPage(page); // 初始化页面
+          App.initPage(page, 'appReady'); // 初始化页面
           //App.addTool(page, options.page); // 添加底部工具栏
           App.initInput(page);
-          App.off('queryEvent'); // 移除queryEvent订阅
           App.on('queryEvent', function (data) { // 添加queryEvent订阅
             debug('【QueryTrigger】');
-            App.initPage(page); // 初始化页面
-          })
+            if (location.hash.substring(2, location.hash.length) !== options['page'])
+              return;
+            App.initPage(page, 'queryTrigger'); // 初始化页面
+          }, options['page']);
           options.appReady && options.appReady.call(context, page);
         });
         /* 页面返回相关事件 */
