@@ -135,12 +135,14 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
       }
     } catch (e) {
       debug('【Error】App.back' + e);
-      alert(e);
       App.load('home');
     }
     return new App.setArguments(arguments, pageName);
   }, function (pageName, callback, append) {
-    App.trigger(arguments[arguments.length - 1] + '_render');
+    var args = Array.prototype.slice.call(arguments, 1);
+    setTimeout(function(){
+      App.trigger(args[args.length - 1] + '_render');
+    }, 0);
   });
   App._IScroll = iScroll;
   App.Scrollable = Scrollable;

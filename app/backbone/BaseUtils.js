@@ -214,15 +214,27 @@ var BaseUtils = {
    * @example
    *      Utils.initDate({
        *         render: '.calendar',
-       *         showTime: false
+       *         showTime: false,
+       *         target: '#model-addTime', // 绑定隐藏域model
+       *         change: function(ev){
+       *          ...
+       *         }
        *       });
    */
   initDate: function (options) {
     BUI.use('bui/calendar', function (Calendar) {
-      new Calendar.DatePicker({
+      var calendar = new Calendar.DatePicker({
         trigger: options.render || '.calendar',
         showTime: options.showTime || false,
         autoRender: true
+      });
+      calendar.on('selectedchange',function (ev) {
+        options.change && options.change.call(this, ev);
+        if(options.target){
+          var $target = $(options.target);
+          $target.val(ev.value.getTime());
+          $target.change();
+        }
       });
     });
   },

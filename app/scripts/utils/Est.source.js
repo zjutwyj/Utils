@@ -2768,6 +2768,7 @@
    *     Est.dateFormat(new Date(), 'yyyy-MM-dd'); => '2014-05-03'
    */
   function dateFormat(date, fmt) {
+    if(Est.typeOf(date) === 'string') date = parseFloat(date);
     var origin = date;
     var date = date ? new Date(date) : new Date();
     var o = {

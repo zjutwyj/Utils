@@ -921,6 +921,42 @@ Application.prototype = {
     return window.$loading;
   },
   /**
+   * 添加遮盖层
+   *
+   * @method [遮盖] - addCover ( 添加遮盖层 )
+   * @author wyj 15.7.20
+   * @example
+   *    var $cover = App.addCover();
+   */
+  addCover: function (options) {
+    var options = options || {};
+    try {
+      if (window.$cover) window.$cover.remove();
+      window.$cover = $('<div class="cover" style="z-index: ' + (options.zIndex || 5000) + ';  height: 100%; width: 100%; position: absolute; background-color: #000; top: 0; bottom: 0; opacity: 0.4; left: 0; right: 0;"></div>');
+      window.$cover.on('click', function (e) {
+        App.removeCover();
+        options.callback && options.callback.call(this);
+        return false;
+      });
+      $('.app-content').append(window.$cover);
+    } catch (e) {
+      debug('【Error】' + e);
+    }
+    return window.$cover;
+  },
+  /**
+   * 移除遮盖层
+   *
+   * @method [加载] - removeCover ( 移除遮盖层 )
+   * @author wyj 15.7.20
+   * @example
+   *      App.removeCover();
+   */
+  removeCover: function () {
+    if (window.$cover) window.$cover.remove();
+    else $('.app-content .cover').remove();
+  },
+  /**
    * 获取加载动画元素
    *
    * @method [加载] - getLoading ( 获取加载动画元素 )
@@ -1282,12 +1318,25 @@ Application.prototype = {
     });
   },
   /**
-   * 基础对话框
-   * @method [对话框] - dialog
+   * 初始化对话框
+   *
+   * @method [对话框] - initDialog
    * @param options
    * @author wyj 15.6.29
    * @example
-   *
+   *        App.initDialog({
+   *          id: '',
+   *          cover: true,
+   *          onshow: function(){
+   *          },
+   *          button: [
+   *            {
+   *              value: '',
+   *              callback: function(){}.
+   *              autofocus: true
+   *            }
+   *          ]
+   *        });
    */
   initDialog: function (options) {
     var button = options.button || [];
@@ -1312,14 +1361,6 @@ Application.prototype = {
       }, options);
       if (options.target)
         options.target = $(options.target).get(0);
-      options.onShow = function () {
-        try {
-          if (typeof options.onShow === 'function') {
-            options.onShow.call(this, arguments);
-          }
-        } catch (e) {
-        }
-      };
       if (options.cover) {
         options.quickClose = true;
         dialog(options).showModal(options.target);
@@ -1327,16 +1368,123 @@ Application.prototype = {
       else dialog(options).show(options.target);
     });
   },
+
+  /** 普通消息对话框
+   * @method [对话框] - msg
+   * @example
+   *      App.msg('提示：', '提示内容', {
+   *        time: 2000 // 2秒后自动关闭
+   *      });
+   */
+  msg: function (title, content, options) {
+    seajs.use(['dialog-plus'], function (dialog) {
+      window.msgDialog = dialog({
+        id: 'showMsg',
+        title: title,
+        content: '<span style="font-size: 30px">' + content + '</span>',
+        width: $(window).width() - 280,
+        button: [
+          {value: '确定'}
+        ]
+      }).showModal();
+      if (options && options.time) {
+        setTimeout(function () {
+          window.msgDialog.close().remove();
+        }, options.time);
+      }
+    })
+  },
   /**
-   * 初始化对话框
+   * 初始化确认对话框
    *
-   * @method [对话框] - initDialog
+   * @method [对话框] - initConfirm
    * @param options
    * @author wyj 15.6.29
    * @example
-   *        App.initDialog({
+   *        App.initConfirm({
    *
    *        });
+   */
+  initConfirm: function (options, callback) {
+    var options = Application.extend({
+      id: 'comfirmDialog'
+    }, options);
+    seajs.use(['dialog-plus'], function (dialog) {
+      window.confirmDialog = dialog({
+        id: options.id,
+        title: options.title || '',
+        content: '<span style="font-size: 30px">' + options.content + '</span>',
+        width: $(window).width() - 280,
+        button: [
+          {
+            value: '确定',
+            callback: options.callback || callback || function () {
+            },
+            autofocus: true
+          },
+          {
+            value: '关闭'
+          }
+        ]
+      }).showModal(options.target || null);
+    })
+  },
+  /**
+   * 初始化下拉菜单
+   * @method [菜单] - initSlideDown
+   * @author wyj 15.7.20
+   * @example
+   *      App.slideDown(page, this,
+   {
+     show: Est.proxy(function () {
+       page.cate_l_render.call(this, page);
+     }, this),
+     close: function () {
+       //alert('close');
+     }
+   });
+   */
+  slideDown: function (page, context, options) {
+    var options = options || {};
+    $(context).siblings().removeClass('slide-down-on');
+    if ($(context).hasClass('slide-down-on')) {
+      App.closeSlideDown(page, context, options.close);
+      return false;
+    }
+    $(context).addClass('slide-down-on');
+    page.$slideDown && page.$slideDown.hide();
+    page.$slideDown = $(context).find('.slide-down');
+    page.$slideDown.show();
+    page.$cover = App.addCover({
+      callback: function () {
+        $(context).removeClass('slide-down-on')
+        page.$slideDown.hide();
+        options.close && options.close.call(this, page);
+      }
+    });
+    options.show && options.show.call(context, page);
+  },
+  /**
+   * 关闭下拉菜单
+   * @method [菜单] - closeSlideDown ( 关闭下拉菜单 )
+   * @param page
+   * @author wyj 15.7.20
+   * @example
+   *     App.closeSlideDown(page, $(this), function(){
+   *      ...
+   *     });
+   */
+  closeSlideDown: function (page, context, callback) {
+    $(context).removeClass('slide-down-on');
+    page.$slideDown.hide();
+    App.removeCover();
+    callback && callback.call(this, page);
+  },
+  /**
+   * 获取事件源元素
+   * @method [元素] - getTarget
+   * @param e
+   * @return {*|jQuery|HTMLElement}
    */
   getTarget: function (e) {
     return e.target ? $(e.target) : $(e.currentTarget);
@@ -1486,8 +1634,7 @@ Application.prototype = {
         params += options.data[key];
       }
       cacheId = options.data ? ('_hash' + App.hash(query) + params) : '_hash' + App.hash(query);
-
-      if (App.getCache(cacheId)) {
+      if (typeof options.cache === 'boolean' && options.cache && App.getCache(cacheId)) {
         options.success && options.success.call(this, App.getCache(cacheId));
         App.removeLoading && App.removeLoading(); // 移除加载动画
         App.trigger('queryEvent', cacheId); // 触发事件
@@ -1502,7 +1649,7 @@ Application.prototype = {
           data: options.data,
           success: function (result) {
             App.removeLoading && App.removeLoading();
-            result.success && App.addCache(cacheId, result);
+            result && result.success && App.addCache(cacheId, result);
             options.success && options.success.call(this, result);
             App.trigger('queryEvent', cacheId); // 触发事件
           },
@@ -1722,6 +1869,7 @@ Application.prototype = {
    */
   render: function (page, render) {
     render && render.call(this);
+    App.off($(page).attr('data-page') + '_render');
     App.on($(page).attr('data-page') + '_render', render);
   },
   /**
@@ -1740,7 +1888,7 @@ Application.prototype = {
       setTimeout(function () { // 初始化滚动
         App._Pages.fixContent(page)
       }, 0);
-      setTimeout(function(){
+      setTimeout(function () {
         App._Scroll.setup(page)
       }, 0);
       setTimeout(function () { // 初始化点击按钮

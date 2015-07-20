@@ -110,9 +110,9 @@ var SuperView = Backbone.View.extend({
     BaseUtils.initDialog(options);
   },
   /**
-   * 模型类双向绑定
+   * 视图到模型类的绑定
    *
-   * @method [private] - _modelBind
+   * @method [绑定] - _modelBind
    * @private
    * @author wyj 14.12.25
    * @example
@@ -143,6 +143,25 @@ var SuperView = Backbone.View.extend({
         }
       });
     });
+  },
+  /**
+   * 模型类到视图的绑定
+   *
+   * @method [绑定] - _viewBind
+   * @param array
+   * @author wyj 15.7.17
+   * @example
+   *      this._viewBind([
+   *        {
+   *          ''
+   *        }
+   *      ]);
+   */
+  _viewBind: function (name, selector, callback) {
+    if(!this.modelBinder) this.modelBinder = new this._modelBinder();
+    var obj = {};
+    obj[name] = [ {selector: selector, converter: callback}, ];
+    this.modelBinder.bind(this.model, this.el, obj);
   },
   /**
    * 字段序列化成字符串

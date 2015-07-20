@@ -84,8 +84,6 @@ var BaseView = SuperView.extend({
    */
   _initBind: function (options) {
     this.model.bind('reset', this.render, this);
-    this.model.bind('change', this.render, this);
-    this.model.bind('destroy', this.remove, this);
   },
   /**
    * 渲染

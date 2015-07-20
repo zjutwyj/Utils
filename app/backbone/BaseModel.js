@@ -68,6 +68,7 @@ var BaseModel = Backbone.Model.extend({
    *
    * this.model.hideTip = true; // 无提示信息弹出框
    * this.model.hideOkBtn = true; // 隐藏保存按钮
+   * this.model.hideAddBtn = true; // 隐藏继续添加按钮
    * this.model.autoHide = true; // 自动隐藏提示信息
    * this.model.autoBack = true; // 保存成功后自动返回列表页面
    *
@@ -94,7 +95,7 @@ var BaseModel = Backbone.Model.extend({
     // 关闭当前消息对话框， 当文档中存在btn-back按钮时， 返回列表页面
     if (response.msg && !this.hideTip) {
       if (response.success) {
-        if (ctx.isNew() && !this.autoHide) {
+        if (ctx.isNew() && !this.autoHide && !this.hideAddBtn) {
           buttons.push({ value: '继续添加', callback: function () {
             ctx.set('id', null);
             ctx.set(ctx.baseId, null);
