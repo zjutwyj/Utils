@@ -8,7 +8,6 @@
  * For details, see: http://www.gnu.org/licenses/lgpl-2.1.html
  */
 define(function (require) {
-if (!$) var $ = require('jquery');
 var Popup = require('./popup');
 var defaults = require('./dialog-config');
 var css = defaults.cssUri;

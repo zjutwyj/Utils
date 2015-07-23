@@ -1,0 +1,98 @@
+<form id="J_Form" action="" class="form-horizontal">
+    <div class="bui-grid bui-simple-list bui-grid-width bui-grid-hover bui-simple-list-hover">
+        <div class="control-group" style="margin-bottom: 3px;">
+            <label class="control-label">抽奖类型：</label>
+
+            <div class="controls">
+                <!--<label><input id="model-ltyType" type="radio" name="ltyType" value="1" {{#compare
+                    ltyType '===' '1'}}checked{{/compare}}>刮刮卡</label>-->
+                <label><input id="model2-ltyType" type="radio" name="ltyType" value="2" {{#compare
+                    ltyType '===' '2'}}checked{{/compare}}>转盘</label>
+                <!--<label><input id="model4-ltyType" type="radio" name="ltyType" value="3" {{#compare
+                    ltyType '===' '3'}}checked{{/compare}}>摇一摇</label>-->
+            </div>
+        </div>
+        <div class="control-group" style="margin-bottom: 3px;">
+            <label class="control-label">封面图片<a href="javascript:;" class="pic-info">[制作说明]</a>：</label>
+
+            <div class="controls control-row-auto">
+                <div id="common-lottery-picture-pick" style="width:580px;"></div>
+            </div>
+        </div>
+        <div class="control-group" style="margin-bottom: 3px;">
+            <label class="control-label">显示中奖结果列表</label>
+
+            <div class="controls control-row-auto">
+                {{{radio name='showLotteryResult' value=showLotteryResult option='{"是": "01", "否": "00"}' }}}
+            </div>
+        </div>
+        <div class="control-group" style="margin-bottom: 3px;">
+            <label class="control-label">抽奖时间段</label>
+
+            <div class="controls control-row-auto">
+                {{{radio name='lotteryTime' value=lotteryTime option='{"是": "01", "否": "00"}' }}}
+                    <span style="display: {{#compare lotteryTime '===' '01'}}block{{else}}none{{/compare}};" id="lotteryTime">
+                    <input id="model-startTime" type="hidden" value="{{startTime}}"/>
+                    <input id="model-endTime" type="hidden" value="{{endTime}}"/>
+                    <input name="startTime" value="{{dateFormat startTime 'yyyy-MM-dd hh:mm:ss'}}" style="width: 145px;"
+                           type="text" class="calendar calendar-startTime input-large">-
+                    <input name="endTime" value="{{dateFormat endTime 'yyyy-MM-dd hh:mm:ss'}}" style="width: 145px;"
+                           type="text" class="calendar calendar-endTime input-large">
+                    </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">奖品设置：</label>
+
+            <div class="controls control-row-auto">
+                <div class="lty-container bui-simple-grid bui-grid-border" style="width:700px;overflow:visible;">
+                    <table cellspacing="0" class="bui-grid-table" cellpadding="0">
+                        <thead>
+                        <tr>
+                            <th class="bui-grid-hd" width="44">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">序号</span></div>
+                            </th>
+                            <th class="bui-grid-hd ">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">奖品名称</span></div>
+                            </th>
+                            <th class="bui-grid-hd " width="110">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">概率<a
+                                        href="javascript:;" class="tip-detail">[说明]</a></span></div>
+                            </th>
+                            <th class="bui-grid-hd " width="80">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">等级</span></div>
+                            </th>
+                            <th class="bui-grid-hd " width="50">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">数量</span></div>
+                            </th>
+                            <th class="bui-grid-hd " width="50">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">剩余</span></div>
+                            </th>
+                            <th class="bui-grid-hd ">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">中奖描述</span></div>
+                            </th>
+                            <!-- <th class="bui-grid-hd " width="100">
+                                 <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">奖品图片</span></div>
+                             </th>-->
+                            <th class="bui-grid-hd " width="60">
+                                <div class="bui-grid-hd-inner"><span class="bui-grid-hd-title">操作</span></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="lty-tbody">
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="8"><a href="javascript:;" class="lty-add"
+                                               style="padding-left:10px;">添加选项</a><span
+                                    class="right">提示： 奖品名称、中奖概率及数量不能为空。概率设置要谨慎<a href="javascript:;" class="tip-detail">[详细]</a>&nbsp;&nbsp;<a
+                                    href="javascript:;"
+                                    class="btn-lty-result">抽奖记录</a></span></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

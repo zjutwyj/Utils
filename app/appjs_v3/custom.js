@@ -71,7 +71,7 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
   }
   App.pickStackItem = function (pageName) {
     var item = null;
-    Application.each(App._Stack.get(), function (stack) {
+    Est.each(App._Stack.get(), function (stack) {
       if (stack[0] === pageName) {
         item = stack;
         return false;

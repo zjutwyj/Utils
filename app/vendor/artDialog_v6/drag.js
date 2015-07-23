@@ -8,7 +8,6 @@
  * For details, see: http://www.gnu.org/licenses/lgpl-2.1.html
  */
 define(function (require) {
-if (!$) var $ = require('jquery');
 var $window = $(window);
 var $document = $(document);
 var isTouch = 'createTouch' in document;

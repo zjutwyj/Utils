@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="UTF-8">
+    <title>多分类</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../styles/default/base.css"/>
+    <link href="../../styles/default/dpl.css" rel="stylesheet">
+    <link href="../../styles/default/bui.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <link href="http://g.tbcdn.cn/fi/bui/css/dpl-min.css" rel="stylesheet">
+    <link href="http://g.tbcdn.cn/fi/bui/css/bui-min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE6]>
+    <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
+    <![endif]-->
+
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
+</head>
+<!--[if IE 7]>
+<body class="ie7"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9"><![endif]-->
+<!--[if IE 10]>
+<body class="ie10"><![endif]-->
+<!--[if IE 11]>
+<body class="ie11"><![endif]-->
+<!--[if !IE]>-->
+<body>
+<!--<![endif]-->
+<form id="J_Form" action="" class="form-horizontal bui-form bui-form-field-container" aria-disabled="false" method="get"
+      aria-pressed="false">
+    <div class="bui-grid bui-simple-list bui-grid-width bui-grid-hover bui-simple-list-hover">
+        <div class="control-group">
+            <label class="control-label"><s>*</s>分类值：</label>
+
+            <div class="controls">
+                <input id="model-category" name="category" value="{{category}}" type="text" class="input-large">
+            </div>
+        </div>
+        <div class="control-group" id="MultiCategory">
+
+        </div>
+    </div>
+</form>
+
+<style>
+    #MultiCategory a {
+        cursor: pointer;
+        float: right
+    }
+    #MultiCategory ._item_el_itemCheck_1 .product-category-add {
+        display: block;
+    }
+    #MultiCategory ._item_el_itemCheck_1 s {
+        display: inline-block;
+    }
+</style>
+<script type="text/javascript" src="../../scripts/base.js"></script>
+<script type="text/javascript" src="../../const.js"></script>
+<script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../app.js"></script>
+<script type="text/javascript" src="../../scripts/helper/HandlebarsHelper.js"></script>
+<script type="text/javascript" src="../../scripts/utils/Utils.js"></script>
+<script type="text/javascript" src="../../scripts/service/Service.js"></script>
+<script type="text/javascript" src="../../common/select/main.js"></script>
+<script type="text/javascript" src="../../common/multi_category/main.js"></script>
+<script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript" src="../data_init/DataInit.js"></script>
+
+<script type="text/javascript">
+    var list = [
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087651", sonCate: null, sort: 2, addTime: 1325296583039, cdesc: "原材料 > ", image: null, image2: null, categoryId2: "87651", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "高档圆形塑料花盆", key: null, state: "01", type: "10" },
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087647", sonCate: null, sort: 4, addTime: 1325296629097, cdesc: "原材料 > ", image: "upload/g/g2/ggggfj/picture/2014/10/28/e963324c-4742-442e-9760-ef9a1a27728a.jpg", image2: "<img src=http://img.jihui88.com/upload/g/g2/ggggfj/picture/2014/10/28/e963324c-4742-442e-9760-ef9a1a27728a.jpg />", categoryId2: "87647", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "高档烤漆圆形花盆1", key: null, state: "01", type: "10" },
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087648", sonCate: null, sort: 5, addTime: 1325296677868, cdesc: "原材料 > ", image: null, image2: null, categoryId2: "87648", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "高档迷你花盆", key: null, state: "01", type: "10" },
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087652", sonCate: null, sort: 6, addTime: 1325296687281, cdesc: "原材料 > ", image: null, image2: null, categoryId2: "87652", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "壁挂花盆", key: null, state: "01", type: "10" },
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087655", sonCate: null, sort: 7, addTime: 1325296593915, cdesc: "原材料 > ", image: null, image2: null, categoryId2: "87655", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "高档方形塑料花盆", key: null, state: "01", type: "10" },
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087653", sonCate: null, sort: 8, addTime: 1325296692684, cdesc: "原材料 > ", image: null, image2: null, categoryId2: "87653", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "吊兰花盆", key: null, state: "01", type: "10" },
+        { enterpriseId: "Enterp_0000000000000000000000039", grade: "01", adduserId: "User_000000000000000000000000082", belongId: "ins_041", categoryId: "Category_00000000000000000087654", sonCate: null, sort: 9, addTime: 1325296698086, cdesc: "原材料 > ", image: null, image2: null, categoryId2: "87654", isroot: "01", isdisplay: "1", hunkDisplay: null, c_url: null, alias: null, ifLeaf: false, newsList: null, name: "种菜盆", key: null, state: "01", type: "10" }
+    ];
+    list = Est.each(list, function (model) {
+        model.text = model.name;
+        model.value = model.categoryId;
+    });
+    seajs.use(['MultiCategory'], function (MultiCategory) {
+
+        app.addView('MultiCategory', new MultiCategory({
+            el: '#MultiCategory',
+            target: '#model-category',
+            viewId: 'MultiCategory',
+            items: [
+                {
+                    category: 'Category_00000000000000000087651'
+
+                },
+                {
+                    category: 'Category_00000000000000000087648'
+                }
+            ],
+            data: list
+        }));
+
+    });
+
+</script>
+</body>
+</html>

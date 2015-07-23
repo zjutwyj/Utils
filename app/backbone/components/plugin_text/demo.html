@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script>
+        document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+    </script>
+    <meta charset="UTF-8">
+    <title>文字编辑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="fragment" content="!">
+    <meta name="description" content="Description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="../../styles/default/base.css"/>
+    <link href="../../styles/default/dpl.css" rel="stylesheet">
+    <link href="../../styles/default/bui.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <link href="http://g.tbcdn.cn/fi/bui/css/dpl-min.css" rel="stylesheet">
+    <link href="http://g.tbcdn.cn/fi/bui/css/bui-min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if IE6]>
+    <script type="text/javascript" src="../../vendor/patch/patch.min.js"></script>
+    <![endif]-->
+
+    <link href="../../vendor/pace/themes/pace-theme-barber-shop.css" rel="stylesheet"/>
+</head>
+<!--[if IE 7]>
+<body class="ie7"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9"><![endif]-->
+<!--[if IE 10]>
+<body class="ie10"><![endif]-->
+<!--[if IE 11]>
+<body class="ie11"><![endif]-->
+<!--[if !IE]>-->
+<body>
+<!--<![endif]-->
+<div style="height: 200px;">ssss</div>
+<div id="PluginText"  style="position: relative; width: 500px;padding-top: 0px;">sfsdfsdfsdfsf</div>
+
+<script type="text/x-handlebars-template" id="template-item-check">
+
+</script>
+<script type="text/javascript" src="../../scripts/base.js"></script>
+<script type="text/javascript" src="../../const.js"></script>
+<script type="text/javascript" src="../../config.local.js"></script>
+<script type="text/javascript" src="../../app.js"></script>
+<script type="text/javascript" src="../../scripts/helper/HandlebarsHelper.js"></script>
+<script type="text/javascript" src="../../scripts/utils/Utils.js"></script>
+<script type="text/javascript" src="../../scripts/service/Service.js"></script>
+<script type="text/javascript" src="../../common/plugin_text/main.js"></script>
+<script type="text/javascript" src="../../config.js"></script>
+<script type="text/javascript" src="../data_init/DataInit.js"></script>
+
+<script type="text/javascript">
+    seajs.use(['ckeditor'], function(ckeditor){
+        CKEDITOR.inline( 'PluginText' );
+    });
+    /*seajs.use(['PluginText'], function (PluginText) {
+        app.addView('PluginText', new PluginText({
+            el: '#PluginText',
+            viewId: 'PluginText',
+            text: '', // 文字 (可选)
+            change: function(item){
+            }
+        }));
+    });*/
+
+</script>
+</body>
+</html>

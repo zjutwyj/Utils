@@ -19,6 +19,15 @@ var wiredep = require('wiredep').stream;
 
 //** ==================================================== 压缩打包 ====================================================*/
 var paths = {};
+var SRCDIR = './app',
+  TMPDIR = './.tmp',
+  DISTDIR = 'C:/software/WebstormProjects',
+  src = {
+    all: [SRCDIR + '/**', TMPDIR + '/**']
+  },
+  dist = {
+    all: DISTDIR + '/**'
+  };
 function doTask(item, debug) {
   for (var key in paths[item]) {
     switch (key) {
@@ -105,7 +114,7 @@ paths['jhw'] = { scripts: { source: [
   'app/vendor/jquery/jquery.min.js',
   'app/vendor/angular-custom/angular.js',
   'app/vendor/bootstrap/bootstrap.js',
-  'app/scripts/utils/Est.source.js',
+  'app/Est/Est.min.js',
   'app/vendor/zeroclipboard/ZeroClipboard.js', // required: swf/ZeroClipboard.swf
   'app/vendor/angular-resource.min.js',
   'app/vendor/angular-cookies/angular-cookies.min.js',
@@ -152,7 +161,7 @@ gulp.task('jhw.min', function () {
 //** 项目 Account  output: app -> modules -> Account -> app.min.js*/
 paths['Account'] = { scripts: { source: [
   'app/vendor/jquery/jquery.min.js',
-  'app/scripts/utils/Est.min.js',
+  'app/Est/Est.min.js',
   'app/vendor/angular-custom/angular.js',
   'app/vendor/bootstrap/bootstrap.min.js',
   'app/vendor/angular-resource/angular-resource.min.js',
@@ -163,7 +172,7 @@ paths['Account'] = { scripts: { source: [
   'app/modules/Account/app.js',
   'app/angular/factorys/BaseFactory.js',
   'app/angular/factorys/AccountFactory.js'
-], dist: 'app/modules/Account', name: 'app.min.js' }, doc: { source: [ 'app/scripts/utils/Est.source.js', 'app/angular/factorys/AccountFactory.js', 'app/modules/Account/app.js'], dist: 'app/modules/Account/doc' } };
+], dist: 'app/modules/Account', name: 'app.min.js' }, doc: { source: [ 'app/Est/Est.min.js', 'app/angular/factorys/AccountFactory.js', 'app/modules/Account/app.js'], dist: 'app/modules/Account/doc' } };
 gulp.task('Account', function () {
   doTask('Account', true);
 });
@@ -175,7 +184,7 @@ gulp.task('Account.min', function () {
 paths['Design'] = { scripts: { source: [
   // base
   'app/vendor/jquery/jquery.min.js',
-  'app/scripts/utils/Est.min.js',
+  'app/Est/Est.min.js',
   'app/vendor/angular-custom/angular.js',
   'app/vendor/angular-resource/angular-resource.min.js',
   'app/vendor/angular-route/angular-route.min.js',
@@ -204,7 +213,7 @@ gulp.task('Design.min', function () {
 //** 项目 jhw_v2 -> modules -> ProductImport  output: app -> modules -> ProductImport -> base.js*/
 paths['ProductImport'] = { scripts: { source: [
   './app/vendor/jquery/jquery.min.js',
-  './app/scripts/utils/Est.min.js'
+  './app/Est/Est.min.js'
 ], name: 'base.js', dist: './app/modules/ProductImport' } };
 gulp.task('ProductImport', function () {
   doTask('ProductImport', true);
@@ -230,8 +239,8 @@ gulp.task('patch.min', function () {
 
 //** Est */
 paths['Est'] = { scripts: { source: [
-  'app/scripts/utils/Est.source.js'
-], dist: 'app/scripts/utils', name: 'Est.min.js' } }
+  'app/Est/Est.source.js'
+], dist: 'app/Est', name: 'Est.min.js' } }
 gulp.task('Est', function () {
   doTask('Est', true);
 });
@@ -356,15 +365,7 @@ gulp.task('jihui881.min', function () {
   doTask('jihui881', false);
 });
 
-// ==================================================== UserManagement ==================================================== */
-
-// [1].用户后台 UserManagement.min */
-
-// [2].微传单 UserManagement_leaflet.min */
-// [3].微传单 UserManagement_leaflet_v2.min */ 第二版
-
-// [4].手机后台 UserManagement_mobileManagement.min */
-
+//==============================================================================================================
 //** 用户后台 - 基础代码 */ */
 paths['UserManagement_base'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
@@ -374,23 +375,22 @@ paths['UserManagement_base'] = { scripts: { source: [
   'app/vendor/json3/json3.js',
 
   'app/vendor/jquery/jquery-1.10.2.js',
+  'app/Est/Est.min.js',
   'app/vendor/underscore/underscore.js',
   'app/vendor/backbone/backbone-debug.js',
-  'app/scripts/utils/Est.source.js',
-  'app/backbone/Application.js',
-
   'app/vendor/handlebars/handlebars-debug.js',
+  'app/handlebars/HandlebarsHelper.js',
 
-  'app/backbone/BaseUtils.js',
-  'app/backbone/BaseService.js',
-  'app/backbone/SuperView.js',
-  'app/backbone/BaseView.js',
-  'app/backbone/BaseList.js',
-  'app/backbone/BaseItem.js',
-  'app/backbone/BaseCollection.js',
-  'app/backbone/BaseModel.js',
-  'app/backbone/BaseDetail.js'
-
+  'app/backbone/src/Application.js',
+  'app/backbone/src/BaseUtils.js',
+  'app/backbone/src/BaseService.js',
+  'app/backbone/src/SuperView.js',
+  'app/backbone/src/BaseView.js',
+  'app/backbone/src/BaseList.js',
+  'app/backbone/src/BaseItem.js',
+  'app/backbone/src/BaseCollection.js',
+  'app/backbone/src/BaseModel.js',
+  'app/backbone/src/BaseDetail.js'
 
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/scripts' } };
 gulp.task('UserManagement_base', function () {
@@ -402,7 +402,7 @@ gulp.task('UserManagement_base.min', function () {
 
 paths['UserManagement_doc'] = { doc: { source: [
   'app/backbone/*.*',
-  'app/scripts/utils/Est.source.js',
+  'app/Est/Est.min.js',
   'app/appjs_v3/Application.js'
 ], dist: 'C:/software/WebstormProjects/UserManagement/doc' } }
 gulp.task('UserManagement_doc', function () {
@@ -416,14 +416,15 @@ gulp.task('UserManagement.min', function () {
 gulp.task('UserManagement', function () {
   return [gulp.start('UserManagement_base'), gulp.start('UserManagement_doc')];
 });
-
+//==============================================================================================================
 //** 微传单 打包*/
 paths['UserManagement_leaflet'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
-  'app/scripts/utils/Est.source.js',
-  'app/backbone/Application.js',
-  'app/vendor/handlebars/handlebars-debug.js'
+  'app/Est/Est.min.js',
+  'app/backbone/src/Application.js',
+  'app/vendor/handlebars/handlebars-debug.js',
+  'app/handlebars/HandlebarsHelper.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/wwy/leaflet/website/scripts' } };
 gulp.task('UserManagement_leaflet', function () {
   doTask('UserManagement_leaflet', true);
@@ -435,9 +436,10 @@ gulp.task('UserManagement_leaflet.min', function () {
 paths['UserManagement_leaflet_v2'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
-  'app/scripts/utils/Est.source.js',
-  'app/backbone/Application.js',
+  'app/Est/Est.min.js',
+  'app/backbone/src/Application.js',
   'app/vendor/handlebars/handlebars-debug.js',
+  'app/handlebars/HandlebarsHelper.js',
   'app/vendor/zepto/zepto.min.js',
   'app/vendor/fullPage/FullPage.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/wwy/leaflet_v2/website/scripts' } };
@@ -447,14 +449,15 @@ gulp.task('UserManagement_leaflet_v2', function () {
 gulp.task('UserManagement_leaflet_v2.min', function () {
   doTask('UserManagement_leaflet_v2', false);
 });
-
+//==============================================================================================================
 //** 手机后台 - base.js */
 paths['UserManagement_mobileManagement_base'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
-  'app/scripts/utils/Est.source.js',
+  'app/Est/Est.min.js',
   'app/appjs_v3/Application.js',
-  'app/vendor/handlebars/handlebars-debug.js'
+  'app/vendor/handlebars/handlebars-debug.js',
+  'app/handlebars/HandlebarsHelper.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/UserManagement/app/modules/mobile/mobileManagement/scripts' } }
 gulp.task('UserManagement_mobileManagement_base', [], function () {
   doTask('UserManagement_mobileManagement_base', true);
@@ -462,7 +465,6 @@ gulp.task('UserManagement_mobileManagement_base', [], function () {
 gulp.task('UserManagement_mobileManagement_base.min', [], function () {
   doTask('UserManagement_mobileManagement_base', false);
 });
-
 //** 手机后台 - App.js */
 paths['UserManagement_appjs_merge'] = {
   scripts: { source: ['app/appjs_v3/zepto.min.js', 'app/vendor/zepto/fx.js',
@@ -478,7 +480,6 @@ gulp.task('UserManagement_appjs_merge', ['UserManagement_mobileManagement_base']
 gulp.task('UserManagement_appjs_merge.min', ['UserManagement_mobileManagement_base.min'], function () {
   doTask('UserManagement_appjs_merge', false);
 });
-
 //** 手机后台 - 包装App.js */
 paths['UserManagement_appjs_wrap'] = {
   scripts: { source: [
@@ -497,9 +498,66 @@ gulp.task('UserManagement_appjs_wrap', ['UserManagement_appjs_merge'], function 
 gulp.task('UserManagement_appjs_wrap.min', ['UserManagement_appjs_merge.min'], function () {
   doTask('UserManagement_appjs_wrap', false);
 });
-
 //** 手机后台 - 打包 */
 gulp.task('UserManagement_mobileManagement.min', ['UserManagement_appjs_wrap.min'], function () {
 });
 gulp.task('UserManagement_mobileManagement', ['UserManagement_appjs_wrap'], function () {
 });
+//===============================================================================================================
+paths['Leaflet_base'] = { scripts: { source: [
+  'app/vendor/seajs/sea.js',
+  'app/vendor/seajs/seajs-text-debug.js',
+  'app/vendor/json3/json3.js',
+
+  'app/vendor/jquery/jquery-1.10.2.js',
+  'app/Est/Est.min.js',
+  'app/vendor/underscore/underscore.js',
+  'app/vendor/backbone/backbone-debug.js',
+  'app/vendor/handlebars/handlebars-debug.js',
+  'app/handlebars/HandlebarsHelper.js',
+
+  'app/backbone/src/Application.js',
+  'app/backbone/src/BaseUtils.js',
+  'app/backbone/src/BaseService.js',
+  'app/backbone/src/SuperView.js',
+  'app/backbone/src/BaseView.js',
+  'app/backbone/src/BaseList.js',
+  'app/backbone/src/BaseItem.js',
+  'app/backbone/src/BaseCollection.js',
+  'app/backbone/src/BaseModel.js',
+  'app/backbone/src/BaseDetail.js'
+
+], name: 'base.js', dist: 'C:/software/WebstormProjects/Leaflet/app/scripts' } };
+
+gulp.task('Leaflet_bui', [], function(){
+  return gulp.src(SRCDIR + '/vendor/bui/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/vendor/bui'));
+});
+gulp.task('Leaflet_artDialog_v6', ['Leaflet_bui'], function(){
+  return gulp.src(SRCDIR + '/vendor/artDialog_v6/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/vendor/artDialog_v6'));
+});
+gulp.task('Leaflet_styles', ['Leaflet_artDialog_v6'], function(){
+  return gulp.src(SRCDIR + '/backbone/styles/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/styles'));
+});
+gulp.task('Leaflet_ui', ['Leaflet_styles'], function(){
+  return gulp.src(SRCDIR + '/backbone/ui/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/ui'));
+});
+gulp.task('Leaflet_components', ['Leaflet_ui'], function(){
+  return gulp.src(SRCDIR + '/backbone/components/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/components'));
+});
+gulp.task('Leaflet_base', ['Leaflet_components'], function(){
+  doTask('Leaflet_base', true);
+});
+gulp.task('Leaflet_base.min', ['Leaflet_components'], function(){
+  doTask('Leaflet_base', false);
+});
+gulp.task('Leaflet', ['Leaflet_base'], function () {
+});
+gulp.task('Leaflet.min', ['Leaflet_base.min'], function () {
+});
+
+// [0].Est工具类库 Est.min
+// [1].用户后台 UserManagement.min
+// [2].微传单 UserManagement_leaflet.min
+// [3].微传单 第二版 UserManagement_leaflet_v2.min
+// [4].手机后台 UserManagement_mobileManagement.min
+// [5].微传单与微手机网站 Leaflet.min

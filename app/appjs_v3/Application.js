@@ -23,7 +23,7 @@ window.debug = function (str, options) {
   var opts, msg;
   if (CONST.DEBUG_CONSOLE) {
     try {
-      opts = Application.extend({ type: 'console' }, options);
+      opts = Est.extend({ type: 'console' }, options);
       msg = typeof str == 'function' ? str() : str;
       if (msg && msg.length > 0) {
         if (opts.type === 'error') {
@@ -129,75 +129,16 @@ window.debug = function (str, options) {
 /**
  * Application
  *
- * @method [对象] - Application
+ * @method [对象] - Application ( 创建对象 )
+ * @param {object} options 配置参数
  * @author wyj 15.4.24
+ * @example
+ *      var app = new Application();
  */
 var Application = function (options) {
   this.options = options;
   this.initialize.apply(this, arguments);
 };
-Application.version = '0605041705';
-Application.each = function (obj, callback, context) {
-  var i, length;
-  if (obj == null) return obj;
-  if (obj.length === +obj.length) {
-    for (i = 0, length = obj.length; i < length; i++) {
-      if (callback(obj[i], i, obj) === false) break;
-    }
-  } else {
-    var ks = Object.keys(obj);
-    for (i = 0, length = ks.length; i < length; i++) {
-      if (callback(obj[ks[i]], ks[i], obj, i) === false) break;
-    }
-  }
-  return obj;
-};
-Application.extend = function (obj) {
-  if (typeof obj === 'undefined') return obj;
-  Array.prototype.slice.call(arguments, 1).forEach(function (source) {
-    for (var prop in source) {
-      obj[prop] = source[prop];
-    }
-  });
-  return obj;
-};
-Application.getValue = function (object, path) {
-  var array, result;
-  if (arguments.length < 2 || typeof path !== 'string') {
-    console.error('参数不能少于2个， 且path为字符串');
-    return;
-  }
-  array = path.split('.');
-  function get(object, array) {
-    Application.each(array, function (key) {
-      if (key in object) {
-        if (array.length === 1) {
-          // 如果为数组最后一个元素， 则返回值
-          result = object[key]
-        } else {
-          // 否则去除数组第一个， 递归调用get方法
-          array.shift();
-          get(object[key], array);
-          // 同样跳出循环
-          return false;
-        }
-      } else {
-        // 没找到直接跳出循环
-        return false;
-      }
-    });
-    return result;
-  }
-
-  return get(object, array);
-};
-Application.fromCharCode = function (code) {
-  try {
-    return String.fromCharCode(code);
-  } catch (e) {
-  }
-};
-Application.url = window.location.href;
 Application.prototype = {
   initialize: function () {
     this.data = { itemActiveList: [] };
@@ -353,6 +294,7 @@ Application.prototype = {
    *
    * @method [控制器] - getControllers （ 获取所有控制器 ）
    * @return {*}
+   * @private
    * @author wyj 15.4.24
    * @example
    */
@@ -379,6 +321,7 @@ Application.prototype = {
    *
    * @method [模块] - getModules ( 获取所有模块 )
    * @return {*}
+   * @private
    * @author wyj 14.12.28
    * @example
    *
@@ -404,6 +347,7 @@ Application.prototype = {
    *
    * @method [状态] - getStatus ( 获取状态数据 )
    * @param name
+   * @private
    * @return {*}
    * @author wyj 15.4.24
    */
@@ -415,6 +359,7 @@ Application.prototype = {
    *
    * @method [状态] - getAllStatus ( 获取所有状态数据 )
    * @return {{}|*|Application.status}
+   * @private
    * @author wyj 15.4.24
    * @example
    *      App.getAllStatus();
@@ -444,6 +389,7 @@ Application.prototype = {
    * @method [模板] - getTemplates ( 获取模板 )
    * @return {*}
    * @author wyj 15.4.24
+   * @private
    * @example
    *      App.getTemplates();
    */
@@ -472,15 +418,17 @@ Application.prototype = {
    * @author wyj 15.4.24
    * @example
    *      // 注册
-   App.on('addressDetailRender', function (name, areaModel) {
-            model['areaPath'] = areaModel.areaPath;
-            model['areaName'] = areaModel.areaName;
-            render(model);
-            App.initPage(page);
-          });
-   // 触发
-   App.trigger('addressDetailRender', areaModel, function () {
-          });
+   *      App.on('addressDetailRender', function (name, areaModel) {
+   *        model['areaPath'] = areaModel.areaPath;
+   *        model['areaName'] = areaModel.areaName;
+   *        render(model);
+   *        App.initPage(page);
+   *      });
+   *      // 注销事件
+   *      App.off('addressDetailRender');
+   *      // 触发
+   *      App.trigger('addressDetailRender', areaModel, function () {
+   *      });
    */
   trigger: function (topic, args) {
     var ctx = this;
@@ -531,9 +479,9 @@ Application.prototype = {
    * @author wyj 15.4.24
    * @example
    *        App.back = App.inject(App.back, function (pageName, callback) {
-              return new App.setArguments(arguments);
-              }, function () {
-            });
+   *          return new App.setArguments(arguments);
+   *          }, function () {
+   *        });
    */
   inject: function (aOrgFunc, aBeforeExec, aAtferExec) {
     return function () {
@@ -733,15 +681,15 @@ Application.prototype = {
    * @author wyj 15.4.24
    * @example
    *      var $appLogo = $('#app-index-logo', $(page));
-   App.autoHide(page, {
-            show: function (scrollTop) { // 当页面移动顶部时
-              $appLogo.removeClass('index-logo-hide');
-            },
-            hide: function (scrollTop) { // 当页面向下移动时
-              $appLogo.addClass('index-logo-hide');
-            },
-            topShow: true // 是否页面滚动到顶部才显示 默认为到顶部才显示
-        });
+   *      App.autoHide(page, {
+   *        show: function (scrollTop) { // 当页面移动顶部时
+   *          $appLogo.removeClass('index-logo-hide');
+   *        },
+   *        hide: function (scrollTop) { // 当页面向下移动时
+   *          $appLogo.addClass('index-logo-hide');
+   *        },
+   *        topShow: true // 是否页面滚动到顶部才显示 默认为到顶部才显示
+   *    });
    */
   initAutoHide: function (page, options) {
     debug('【Util】App.initAutoHide:');
@@ -1167,7 +1115,7 @@ Application.prototype = {
           });
    */
   initEvents: function (page, events) {
-    Application.each(events, function (fn, key) {
+    Est.each(events, function (fn, key) {
       var names = key.split(/\s+/);
       $(names[1], page).on(names[0], function () {
         fn && fn.apply(this, arguments);
@@ -1406,7 +1354,7 @@ Application.prototype = {
    *        });
    */
   initConfirm: function (options, callback) {
-    var options = Application.extend({
+    var options = Est.extend({
       id: 'comfirmDialog'
     }, options);
     seajs.use(['dialog-plus'], function (dialog) {

@@ -10,7 +10,7 @@ define({
     //fixed: false,
     
     // 对话框叠加高度值(重要：此值不能超过浏览器最大限制)
-    //zIndex: 1024,
+    zIndex: 2027,
 
     // 设置遮罩背景颜色
     //backdropBackground: '#000',

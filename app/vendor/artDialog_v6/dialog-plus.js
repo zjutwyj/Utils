@@ -8,7 +8,6 @@
  * For details, see: http://www.gnu.org/licenses/lgpl-2.1.html
  */
 define(function (require) {
-if (!$) var $ = require('jquery');
 var dialog = require('./dialog');
 var drag = require('./drag');
 

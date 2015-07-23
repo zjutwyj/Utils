@@ -8,7 +8,6 @@
  * For details, see: http://www.gnu.org/licenses/lgpl-2.1.html
  */
 define(function (require) {
-if (!$) var $ = require('jquery');
 var _count = 0;
 var _isIE6 = !('minWidth' in $('html')[0].style);
 var _isFixed = !_isIE6;
@@ -55,7 +54,7 @@ function Popup () {
 
 
 $.extend(Popup.prototype, {
-    
+
     /**
      * 初始化完毕事件，在 show()、showModal() 执行
      * @name Popup.prototype.onshow
@@ -159,6 +158,8 @@ $.extend(Popup.prototype, {
 
             if (this.modal) {
                 this.__lock();
+            } else{
+              Popup.zIndex = Popup.zIndex + 3;
             }
 
 
@@ -199,24 +200,24 @@ $.extend(Popup.prototype, {
         this.modal = true;
         return this.show.apply(this, arguments);
     },
-    
-    
+
+
     /** 关闭浮层 */
     close: function (result) {
-        
+
         if (!this.destroyed && this.open) {
-            
+
             if (result !== undefined) {
                 this.returnValue = result;
             }
-            
+
             this.__popup.hide().removeClass(this.className + '-show');
             this.__backdrop.hide();
             this.open = false;
             this.blur();// 恢复焦点，照顾键盘操作的用户
             this.__dispatchEvent('close');
         }
-    
+
         return this;
     },
 
@@ -229,11 +230,11 @@ $.extend(Popup.prototype, {
         }
 
         this.__dispatchEvent('beforeremove');
-        
+
         if (Popup.current === this) {
             Popup.current = null;
         }
-        
+
         this.__unlock();
         this.__popup.remove();
         this.__backdrop.remove();
@@ -400,9 +401,9 @@ $.extend(Popup.prototype, {
 
     // 置顶浮层
     __zIndex: function () {
-    
+
         var index = Popup.zIndex ++;
-        
+
         // 设置叠加高度
         this.__popup.css('zIndex', index);
         this.__backdrop.css('zIndex', index - 1);
@@ -412,13 +413,13 @@ $.extend(Popup.prototype, {
 
     // 居中浮层
     __center: function () {
-    
+
         var popup = this.__popup;
         var $window = $(window);
         var $document = $(document);
         var fixed = this.fixed;
-        var dl = fixed ? 0 : $document.scrollLeft();
-        var dt = fixed ? 0 : $document.scrollTop();
+        var dl = fixed ? 0 : ($document.scrollLeft()||0);
+        var dt = fixed ? 0 : ($document.scrollTop()||0);
         var ww = $window.width();
         var wh = $window.height();
         var ow = popup.width();
@@ -427,18 +428,18 @@ $.extend(Popup.prototype, {
         var top = (wh - oh) * 382 / 1000 + dt;// 黄金比例
         var style = popup[0].style;
 
-        
+
         style.left = Math.max(parseInt(left), dl) + 'px';
         style.top = Math.max(parseInt(top), dt) + 'px';
     },
-    
-    
+
+
     // 指定位置 @param    {HTMLElement, Event}  anchor
     __follow: function (anchor) {
-        
+
         var $elem = anchor.parentNode && $(anchor);
         var popup = this.__popup;
-        
+
 
         if (this.__followSkin) {
             popup.removeClass(this.__followSkin);
@@ -452,7 +453,7 @@ $.extend(Popup.prototype, {
                 return this.__center();
             }
         }
-        
+
         var that = this;
         var fixed = this.fixed;
 
@@ -506,7 +507,7 @@ $.extend(Popup.prototype, {
             top: top + height / 2 - popupHeight / 2
         };
 
-        
+
         var range = {
             left: [minLeft, maxLeft],
             top: [minTop, maxTop]
@@ -538,7 +539,7 @@ $.extend(Popup.prototype, {
 
         //添加follow的css, 为了给css使用
         className += align.join('-') + ' '+ this.className+ '-follow';
-        
+
         that.__followSkin = className;
 
 
@@ -546,7 +547,7 @@ $.extend(Popup.prototype, {
             popup.addClass(className);
         }
 
-        
+
         css[name[align[0]]] = parseInt(temp[0][align[0]]);
         css[name[align[1]]] = parseInt(temp[1][align[1]]);
         popup.css(css);
@@ -568,7 +569,7 @@ $.extend(Popup.prototype, {
         anchor = isNode ? anchor : anchor.target;
         var ownerDocument = anchor.ownerDocument;
         var defaultView = ownerDocument.defaultView || ownerDocument.parentWindow;
-        
+
         if (defaultView == window) {// IE <= 8 只能使用两个等于号
             return offset;
         }
@@ -581,14 +582,14 @@ $.extend(Popup.prototype, {
         var frameOffset = $(frameElement).offset();
         var frameLeft = frameOffset.left;
         var frameTop = frameOffset.top;
-        
+
         return {
             left: offset.left + frameLeft - docLeft,
             top: offset.top + frameTop - docTop
         };
     },
-    
-    
+
+
     // 设置屏锁遮罩
     __lock: function () {
 
@@ -609,7 +610,7 @@ $.extend(Popup.prototype, {
 
 
         popup.addClass(this.className + '-modal');
-        
+
 
         // 避免遮罩不能盖住上一次的对话框
         // 如果当前对话框是上一个对话框创建，点击的那一瞬间它会增长 zIndex 值
@@ -638,7 +639,7 @@ $.extend(Popup.prototype, {
         });
 
     },
-    
+
 
     // 卸载屏锁遮罩
     __unlock: function () {
@@ -649,7 +650,7 @@ $.extend(Popup.prototype, {
             delete this.modal;
         }
     }
-    
+
 });
 
 
