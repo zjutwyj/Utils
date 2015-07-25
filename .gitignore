@@ -2,16 +2,19 @@
 npm-debug.log
 .idea/
 .settings
+/.sass-cache
+*.iml
+*.swp
+/.tmp/
 /node_modules
 /bower_components
 /app/bower_components
 /dist
 /doc
-/.sass-cache
-*.iml
-*.swp
-/.tmp/
-/config.js
 /uploads
 /logs
+/test
+/config.js
+app/scripts/config/config.local.js
+
 

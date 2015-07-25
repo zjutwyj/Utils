@@ -401,8 +401,8 @@ gulp.task('UserManagement_base.min', function () {
 });
 
 paths['UserManagement_doc'] = { doc: { source: [
-  'app/backbone/*.*',
-  'app/Est/Est.min.js',
+  'app/backbone/src/*.*',
+  'app/Est/Est.source.js',
   'app/appjs_v3/Application.js'
 ], dist: 'C:/software/WebstormProjects/UserManagement/doc' } }
 gulp.task('UserManagement_doc', function () {
