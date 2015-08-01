@@ -12,6 +12,7 @@ if (app.getAppType && app.getAppType() === 'backbone' && typeof Backbone !== 'un
     b_routes.routes[key] = fnName;
     b_routes[fnName] = Est.inject(value, function (id, callback, pass) {
       var pass = true;
+      app.emptyDialog();
       Est.each(App.getFilters('navigator'), Est.proxy(function (fn) {
         var result = fn.apply(this, ['#/' + key]);
         if (Est.typeOf(result) !== 'undefined' && !result) {

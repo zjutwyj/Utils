@@ -364,7 +364,6 @@ gulp.task('jihui881', function () {
 gulp.task('jihui881.min', function () {
   doTask('jihui881', false);
 });
-
 //==============================================================================================================
 //** 用户后台 - 基础代码 */ */
 paths['UserManagement_base'] = { scripts: { source: [
@@ -528,8 +527,14 @@ paths['Leaflet_base'] = { scripts: { source: [
   'app/backbone/src/BaseDetail.js'
 
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/Leaflet/app/scripts' } };
-
-gulp.task('Leaflet_bui', [], function(){
+paths['Leaflet_doc'] = { doc: { source: [
+  'app/backbone/src/*.*',
+  'app/Est/Est.source.js'
+], dist: 'C:/software/WebstormProjects/Leaflet/doc' } }
+gulp.task('Leaflet_doc',[],function () {
+  doTask('Leaflet_doc', false);
+});
+gulp.task('Leaflet_bui', ['Leaflet_doc'], function(){
   return gulp.src(SRCDIR + '/vendor/bui/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/vendor/bui'));
 });
 gulp.task('Leaflet_artDialog_v6', ['Leaflet_bui'], function(){

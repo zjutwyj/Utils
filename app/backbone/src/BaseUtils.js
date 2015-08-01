@@ -120,6 +120,8 @@ var BaseUtils = {
         } else {
           app.getView(viewId).show(e);
         }
+        app.addDialog(app.getView(viewId));
+        return false;
       });
     });
   },
@@ -148,7 +150,7 @@ var BaseUtils = {
        *          }
        *        });
    */
-  initTab: function(options){
+  initTab: function (options) {
     BUI.use(['bui/tab', 'bui/mask'], function (Tab) {
       var tab = new Tab.TabPanel(options);
       tab.on('selectedchange', function (ev) {
@@ -228,12 +230,12 @@ var BaseUtils = {
         showTime: options.showTime || false,
         autoRender: true
       });
-      calendar.on('selectedchange',function (ev) {
+      calendar.on('selectedchange', function (ev) {
         options.change && options.change.call(this, ev);
-        if(options.target){
+        if (options.target) {
           var $target = $(options.target);
           $target.val(ev.value.getTime()).trigger('change');
-          $target.css('border','3px solid blue');
+          $target.css('border', '3px solid blue');
         }
       });
     });
@@ -993,7 +995,7 @@ var BaseUtils = {
             }
           }
         ],
-        onClose: function(){
+        onClose: function () {
           options.cancel && options.cancel.call(this);
         }
       })).show(options.target);

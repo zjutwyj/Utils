@@ -509,7 +509,7 @@ var BaseItem = SuperView.extend({
     app.getData('editFieldDialog') && app.getData('editFieldDialog').close();
     return new $q(function (resolve, reject) {
       //context.model.fetch();
-      seajs.use(['dialog'], function (dialog) {
+      seajs.use(['dialog-plus'], function (dialog) {
         var oldName = ctx.model.attributes[options.field];
         var d = dialog({
           title: options.title || '修改',

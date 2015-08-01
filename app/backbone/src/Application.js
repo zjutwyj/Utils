@@ -365,6 +365,27 @@ Est.extend(Application.prototype, {
     }
     this['templates'][name] = fn;
   },
+  addTpl: function(name, fn){
+    try {
+      var _hash = Est.hash(name);
+      if (name in this['templates']) {
+        console.log('已存在的模板：' + name);
+      }
+      if (localStorage) {
+        if (!localStorage['___JHW_APP__' + _hash]) {
+          localStorage['___JHW_APP__' + _hash] = value;
+        } else{
+
+        }
+        fn = Est.inject(function(){}, function(require, exports, module){
+          module.exports = localStorage['___JHW_APP__' + _hash];
+        });
+      }
+      this['templates'][name] = fn;
+    } catch (e) {
+
+    }
+  },
   /**
    * 获取所有模板
    *

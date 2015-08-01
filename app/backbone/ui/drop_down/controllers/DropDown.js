@@ -52,11 +52,18 @@ define('DropDown', ['template/drop_down_view'], function (require, exports, modu
       $(document).click();
       this.$picker.css({
         left: this._options.mouseFollow ? event.pageX + 1 : this.$target.offset().left,
-        top: this._options.mouseFollow ? event.pageY + 1: this.$target.offset().top + 31
+        top: this._options.mouseFollow ? event.pageY + 1 : this.$target.offset().top + 31
       }).show();
       !this.hasContent && this.initContent();
       this.bindCloseEvent();
       return this;
+    },
+    close: function(){
+      this.hide();
+      return this;
+    },
+    remove: function(){
+      this.$picker.off().remove();
     },
     /**
      * 刷新视图
@@ -78,25 +85,32 @@ define('DropDown', ['template/drop_down_view'], function (require, exports, modu
         this._options.callback && this._options.callback.call(this, this._options);
       } else if (this._options.moduleId) {
         //TODO moduleId
-        var viewId = this._options.moduleId;
-        delete this._options.template;
-        this.$content.html('');
-        seajs.use([this._options.moduleId], Est.proxy(function (instance) {
-          // jquery对象无法通过Est.each遍历， 需备份到this._target,
-          // 再移除target, 待克隆完成后把target添加到参数中
-          if (this._options.target && Est.typeOf(this._options.target) !== 'String') {
-            this._target = this._options.target;
-            delete this._options.target;
-          }
-          app.addView(viewId, new instance(Est.extend(Est.cloneDeep(this._options), {
-            el: this.$content,
-            dropDownId: this._options.viewId,
-            viewId: viewId,
-            afterRender: this._options.callback,
-            target: this._target
-          })));
-        }, this));
+        if (Est.typeOf(this._options.moduleId) === 'string') {
+          seajs.use([this._options.moduleId], Est.proxy(function (instance) {
+            this.doRender(instance);
+          }, this));
+        } else {
+          this.doRender(this._options.moduleId);
+        }
       }
+    },
+    doRender: function (instance) {
+      this.viewId = Est.typeOf(this._options.moduleId) === 'string' ? this.viewId : Est.nextUid('DropDown');
+      delete this._options.template;
+      this.$content.html('');
+      // jquery对象无法通过Est.each遍历， 需备份到this._target,
+      // 再移除target, 待克隆完成后把target添加到参数中
+      if (this._options.target && Est.typeOf(this._options.target) !== 'String') {
+        this._target = this._options.target;
+        delete this._options.target;
+      }
+      app.addView(this.viewId, new instance(Est.extend(Est.cloneDeep(this._options), {
+        el: this.$content,
+        dropDownId: this._options.viewId,
+        viewId: this.viewId,
+        afterRender: this._options.callback,
+        target: this._target
+      })));
     },
     /**
      * 隐藏下拉框
