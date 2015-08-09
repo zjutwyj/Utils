@@ -109,7 +109,7 @@ BaseService.prototype = {
    * @author wyj 15.1.27
    */
   initDefault: function (options, result) {
-    if (options.defaults && Est.typeOf(result.attributes.data) === 'array') {
+    if (result.attributes && options.defaults && Est.typeOf(result.attributes.data) === 'array') {
       result.attributes.data.unshift({text: '请选择', value: options.defaultValue});
     }
   },
@@ -147,19 +147,24 @@ BaseService.prototype = {
     var ctx = this;
     var $q = Est.promise;
     options = Est.extend({ select: false, extend: false,
-      defaults: true, tree: false }, options);
+      defaults: true, tree: false, defaultValue: null}, options);
     return new $q(function (topResolve, topReject) {
-      ctx.ajax(options).done(function (result) {
-        if (result.attributes) {
-          ctx.initTree(options, result);
-          ctx.initSelect(options, result);
-          ctx.initExtend(options, result);
-        } else {
-          result.attributes.data = [];
-        }
-        ctx.initDefault(options, result);
-        topResolve(result.attributes.data);
-      });
+      if (CONST.DEBUG_LOCALSERVICE){
+        topResolve([]);
+      } else{
+        ctx.ajax(options).done(function (result) {
+          if (result.attributes) {
+            ctx.initTree(options, result);
+            ctx.initSelect(options, result);
+            ctx.initExtend(options, result);
+          } else {
+            result.attributes = result.attributes || {};
+            result.attributes.data = [];
+          }
+          ctx.initDefault(options, result);
+          topResolve(result.attributes ? result.attributes.data : result);
+        });
+      }
     });
   }
 }

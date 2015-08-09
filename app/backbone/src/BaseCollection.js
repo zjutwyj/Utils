@@ -4,7 +4,7 @@
  * - url: CONST.API + '/product/list',
  * - batchDel: CONST.API + '/product/batch/del',
  * - model: ProductModel,
- * - initialize: function(){}
+ * - initialize: function(){this._initialize();}
  *
  * @class BaseCollection 集合类
  * @author yongjin<zjut_wyj@163.com> 2014/11/6

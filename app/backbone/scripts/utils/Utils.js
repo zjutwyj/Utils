@@ -445,7 +445,7 @@ var Utils = {
    * @param options [title: ][width: ][height: ][target: ][success: 确定按钮回调]
    * @author wyj 14.12.18
    * @example
-   *      Utils.dialog({
+   *      Utils.initDialog({
        *         id: 'copyDialog',
        *         title: '复制图片',
        *         target: '.btn-email-bind',
@@ -456,10 +456,12 @@ var Utils = {
        *           serverPath: this.model.get('serverPath')
        *         }),
        *         cover: true, // 是否显示遮罩
-       *         load: function(){
+       *         onshow: function(){// 对话框显示时回调
+       *         },
+       *         load: function(){ // iframe载入完成后回调
        *           ...base.js
        *         },
-       *         success: function(){
+       *         success: function(){// 按确定按钮时回调
        *           this.close();
        *         }
        *       });

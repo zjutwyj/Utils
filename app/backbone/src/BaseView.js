@@ -31,7 +31,9 @@ var BaseView = SuperView.extend({
        *         data: 对象数据
        *         // 可选
        *         enterRender: 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
-       *         append: false // 视图是否是追加
+       *         append: false // 视图是否是追加,
+       *         beforeRender: function(){},
+       *         afterRender: function(){}
        *      });
    */
   _initialize: function (options) {
@@ -96,6 +98,9 @@ var BaseView = SuperView.extend({
    */
   _render: function () {
     this.trigger('before', this);
+    if (this._options.beforeRender){
+      this._options.beforeRender.call(this, this._options);
+    }
     if (this._options.append)
       this.$el.append(this.template(this.model.toJSON()));
     else
@@ -103,6 +108,9 @@ var BaseView = SuperView.extend({
     this._initEnterEvent(this._options);
     if (this._options.modelBind) this._modelBind();
     this.trigger('after', this);
+    if (this._options.afterRender) {
+      this._options.afterRender.call(this, this._options);
+    }
     if (this._options.afterRender) {
       this._options.afterRender.call(this, this._options);
     }

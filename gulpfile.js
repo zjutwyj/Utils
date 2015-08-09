@@ -531,28 +531,25 @@ paths['Leaflet_doc'] = { doc: { source: [
   'app/backbone/src/*.*',
   'app/Est/Est.source.js'
 ], dist: 'C:/software/WebstormProjects/Leaflet/doc' } }
-gulp.task('Leaflet_doc',[],function () {
+gulp.task('Leaflet_doc', [], function () {
   doTask('Leaflet_doc', false);
 });
-gulp.task('Leaflet_bui', ['Leaflet_doc'], function(){
+gulp.task('Leaflet_bui', ['Leaflet_doc'], function () {
   return gulp.src(SRCDIR + '/vendor/bui/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/vendor/bui'));
 });
-gulp.task('Leaflet_artDialog_v6', ['Leaflet_bui'], function(){
+gulp.task('Leaflet_artDialog_v6', ['Leaflet_bui'], function () {
   return gulp.src(SRCDIR + '/vendor/artDialog_v6/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/vendor/artDialog_v6'));
 });
-gulp.task('Leaflet_styles', ['Leaflet_artDialog_v6'], function(){
+gulp.task('Leaflet_styles', ['Leaflet_artDialog_v6'], function () {
   return gulp.src(SRCDIR + '/backbone/styles/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/styles'));
 });
-gulp.task('Leaflet_ui', ['Leaflet_styles'], function(){
+gulp.task('Leaflet_ui', ['Leaflet_styles'], function () {
   return gulp.src(SRCDIR + '/backbone/ui/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/ui'));
 });
-gulp.task('Leaflet_components', ['Leaflet_ui'], function(){
-  return gulp.src(SRCDIR + '/backbone/components/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/components'));
-});
-gulp.task('Leaflet_base', ['Leaflet_components'], function(){
+gulp.task('Leaflet_base', ['Leaflet_ui'], function () {
   doTask('Leaflet_base', true);
 });
-gulp.task('Leaflet_base.min', ['Leaflet_components'], function(){
+gulp.task('Leaflet_base.min', ['Leaflet_ui'], function () {
   doTask('Leaflet_base', false);
 });
 gulp.task('Leaflet', ['Leaflet_base'], function () {

@@ -122,6 +122,7 @@ var SuperView = Backbone.View.extend({
    *    this._singleBind('#model-name', this.model);
    */
   _singleBind: function (selector, model, changeFn) {
+    var _self = this;
     $(selector).change(function () {
       var val, pass;
       var modelId = $(this).attr('id');
@@ -139,7 +140,7 @@ var SuperView = Backbone.View.extend({
             break;
         }
         if (!pass) {
-          model.set(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
+          _self._setValue(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
           changeFn && changeFn.call(this, model);
         }
       }
@@ -180,7 +181,7 @@ var SuperView = Backbone.View.extend({
     if (!this.modelBinder) this.modelBinder = new this._modelBinder();
     var obj = {};
     obj[name] = [
-      {selector: selector, converter: callback},
+      {selector: selector, converter: callback}
     ];
     this.modelBinder.bind(this.model, this.el, obj);
   },

@@ -286,18 +286,21 @@ var BaseDetail = SuperView.extend({
           isPassed = options.onBeforeSave.call(ctx);
         if (Est.typeOf(isPassed) !== 'undefined' && !isPassed) return false;
         $button.html('提交中...');
+        $button.prop('disabled', true);
         ctx._save(function (response) {
           if (options.onAfterSave) {
             options.onAfterSave = Est.inject(options.onAfterSave, function (response) {
               return new Est.setArguments(arguments);
             }, function (response) {
               $button.html(preText);
+              $button.prop('disabled', false);
             });
             options.onAfterSave.call(ctx, response);
           }
           $button.html(preText);
         });
       }
+      return false;
     });
   },
   /**

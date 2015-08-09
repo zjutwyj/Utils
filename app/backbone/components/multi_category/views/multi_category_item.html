@@ -1,7 +1,0 @@
-<label class="control-label"><s>*</s>产品分类{{#compare dx '!==' 0}}{{dx}}{{/compare}}：</label>
-<div class="controls" style="width:220px;">
-    <div id="multi-category-{{dx}}">
-        <input type="hidden" id="category{{dx}}" value="{{category}}" name="category" class="category">
-        {{#compare dx '===' 0}}<a class="product-category-add">新增分类</a>{{else}}<a class="product-category-delete">删除分类</a>{{/compare}}
-    </div>
-</div>

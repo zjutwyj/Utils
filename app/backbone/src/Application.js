@@ -7,6 +7,9 @@
 var Application = function (options) {
   this.options = options;
   Est.extend(this, options);
+  // 配置ajax请求超时时间
+  $.ajaxSetup({timeout: options.AJAX_TIMEOUT || 10000});
+
   this.initialize.apply(this, arguments);
 };
 Est.extend(Application.prototype, {
@@ -23,10 +26,7 @@ Est.extend(Application.prototype, {
     this.cookies = [];
     this.models = [];
     this.compileTemps = {};
-    this.filters = {
-      navigator: [],
-      form: []
-    };
+    this.filters = { navigator: [], form: [] };
   },
   /**
    * 返回当前应用底层使用的是backbone版本
@@ -365,7 +365,7 @@ Est.extend(Application.prototype, {
     }
     this['templates'][name] = fn;
   },
-  addTpl: function(name, fn){
+  addTpl: function (name, fn) {
     try {
       var _hash = Est.hash(name);
       if (name in this['templates']) {
@@ -374,10 +374,11 @@ Est.extend(Application.prototype, {
       if (localStorage) {
         if (!localStorage['___JHW_APP__' + _hash]) {
           localStorage['___JHW_APP__' + _hash] = value;
-        } else{
+        } else {
 
         }
-        fn = Est.inject(function(){}, function(require, exports, module){
+        fn = Est.inject(function () {
+        }, function (require, exports, module) {
           module.exports = localStorage['___JHW_APP__' + _hash];
         });
       }

@@ -127,7 +127,7 @@ var BaseModel = Backbone.Model.extend({
       var dialog_msg = BaseUtils.initDialog({
         id: 'dialog_msg',
         title: '提示：',
-        content: response.msg,
+        content: '<div style="padding: 20px;">' + response.msg + '</div>',
         width: 250,
         button: buttons
       });

@@ -138,10 +138,16 @@ var BaseList = SuperView.extend({
     this._data = options.data = options.data || {};
     if (options.template) {
       this._options.beforeRender && this._options.beforeRender.call(this);
-      this.template = Handlebars.compile(options.template);
-      this.$template = $(options.template);
-      if (this._options.render)
+      this.$template = $('<div>' + options.template + '</div>');
+      if (this._options.render) {
         this._options.itemTemp = this.$template.find(this._options.render).html();
+        this.$template.find(this._options.render).empty();
+      } else {
+        this._options.itemTemp = this.$template.html();
+        this.$template.empty();
+      }
+      this.template = Handlebars.compile(Est.isEmpty(this._options.itemTemp) ? options.template :
+        this.$template.html());
       if (this._options.append)
         this.$el.append(this.template(options.data));
       else

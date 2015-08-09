@@ -133,7 +133,7 @@ var BaseItem = SuperView.extend({
   _initStyle: function (options) {
     var ctx = this;
     if (options.speed > 1) {
-      var item_id = this.model.get('id') || (this.model.get('dx') + 1) + '';
+      var item_id = (this.model.get('id') + '') || (this.model.get('dx') + 1) + '';
       if (this.model.get('dx') % 2 === 0) this.$el.addClass('bui-grid-row-even');
       this.$el.addClass('_item_el_' + (this._options.viewId || '') + '_' + item_id.replace(/^[^1-9]+/, ""));
       this.$el.hover(function () {
@@ -373,8 +373,9 @@ var BaseItem = SuperView.extend({
    */
   _itemActive: function (options) {
     options = options || {};
-
-    var list = app.getData('itemActiveList');
+    if (!app.getData('itemActiveList' + this._options.viewId))
+      app.addData('itemActiveList' + this._options.viewId, []);
+    var list = app.getData('itemActiveList' + this._options.viewId);
     if (!options.add) {
       Est.each(list, function (selecter) {
         var node = $('.' + selecter);

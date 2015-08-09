@@ -22,6 +22,7 @@ var CONST = {
   DELIVERY_URL: 'http://api.ickd.cn/?id=108377&secret=1d323e291b7778da812664d0386f7b11&type=json&ord=desc&encode=utf8&ver=2',
   ENTER_KEY: 13,
   COLLAPSE_SPEED: 50,
-  SUBMIT_TIP: '提交中...<span style="color:orange;font-size: 12px;">[提交后无反馈信息?请检查每个标签页中是否有红色错误提示]</span>'
+  SUBMIT_TIP: '提交中...<span style="color:orange;font-size: 12px;">[提交后无反馈信息?请检查每个标签页中是否有红色错误提示]</span>',
+  AJAX_TIMEOUT: 10000
 }
 window.CONST = CONST;
