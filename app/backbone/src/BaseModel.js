@@ -194,7 +194,7 @@ var BaseModel = Backbone.Model.extend({
     newModel.set('editField', true);
     debug(function () {
       if (!newModel.baseUrl) return '当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl';
-    }, {type: 'error'});
+    }, {type: 'console'});
     if (newModel.baseUrl) {
       newModel.save(null, {
         success: function (model, result) {
@@ -203,6 +203,8 @@ var BaseModel = Backbone.Model.extend({
           }
         }, wait: wait
       });
+    } else{
+      options.success.call(ctx, keyValue, {});
     }
   },
   /**
@@ -290,5 +292,8 @@ var BaseModel = Backbone.Model.extend({
    */
   _setValue: function (path, val) {
     Est.setValue(this.attributes, path, val);
+  },
+  initialize: function () {
+    this._initialize();
   }
 });

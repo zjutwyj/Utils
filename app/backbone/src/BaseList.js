@@ -609,6 +609,7 @@ var BaseList = SuperView.extend({
    * @example
    *        this._push(new model());
    *        this._push(new model(), {at: 0});
+   *        this._push(new pictureModel(model), {at: this._findIndex(curModel) + 1});
    */
   _push: function (model, opts) {
     opts = opts || {};

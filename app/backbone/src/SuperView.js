@@ -404,5 +404,11 @@ var SuperView = Backbone.View.extend({
    */
   _require: function (dependent, callback) {
     seajs.use(dependent, Est.proxy(callback, this));
+  },
+  initialize: function () {
+    this._initialize();
+  },
+  render: function () {
+    this._render();
   }
 });

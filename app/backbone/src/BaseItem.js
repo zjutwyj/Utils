@@ -514,7 +514,7 @@ var BaseItem = SuperView.extend({
         var oldName = ctx.model.attributes[options.field];
         var d = dialog({
           title: options.title || '修改',
-          content: '<input id="property-returnValue-demo" type="text" class="text" value="' + (oldName || '') + '" />',
+          content: '<div style="padding: 20px;"><input id="property-returnValue-demo" type="text" class="text" value="' + (oldName || '') + '" /></div>',
           button: [
             {
               value: '确定',
@@ -566,7 +566,7 @@ var BaseItem = SuperView.extend({
     }
     app.addData('delItemDialog', BaseUtils.initConfirm({
       title: '温馨提示',
-      content: '是否删除?',
+      content: '<div style="padding:20px;">是否删除?</div>',
       target: e && this._getTarget(e).get(0),
       success: function (resp) {
         context.model.destroy({
@@ -580,7 +580,7 @@ var BaseItem = SuperView.extend({
           },
           success: function () {
             context._removeFromItems(context.model.get('dx'));
-            callback && callback.call(this);
+            callback && callback.call(context);
           }
         });
       }
