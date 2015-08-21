@@ -3,12 +3,21 @@ html {
     background: #fff;
     overflow: auto;
     -webkit-text-size-adjust: none;
+    width: 100%;
+    height: 100%;
 }
 
 * html, * html body {
     background-image: url(about:blank);
     background-attachment: fixed;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
 }
 
 article, aside, blockquote, body, button, code, dd, details, div, dl, dt, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, input, legend, li, menu, nav, ol, p, pre, section, td, textarea, th, ul {
@@ -22,7 +31,7 @@ article, aside, details, figcaption, figure, footer, header, menu, nav, section 
 
 body, button, input, select, textarea {
     font: 12px Tahoma, Arial, Microsoft YaHei, '微软雅黑', '宋体', sans-serif;
-    background: #fff
+    background: #fff;
 }
 
 input, select, textarea {

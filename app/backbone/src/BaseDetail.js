@@ -136,7 +136,7 @@ var BaseDetail = SuperView.extend({
       });
     } else {
       ctx.passId = new Date().getTime();
-      ctx.model = new model();
+      ctx.model = new model(this._options.data || {});
       ctx.model.set('_data', ctx._options.data);
       ctx.model.set('_isAdd', ctx._isAdd = true);
       ctx.render();
@@ -273,8 +273,8 @@ var BaseDetail = SuperView.extend({
             modelKey = modelId.replace(/^model\d?-(.+)$/g, "$1");
             modelList = modelKey.split('.');
             if (modelList.length > 1) {
-              Est.setValue(modelObj, modelKey, val);
-              ctx.model.set(modelList[0], modelObj[modelList[0]]);
+              Est.setValue(ctx.model.attributes, modelKey, val);
+              //ctx.model.set(modelList[0], modelObj[modelList[0]]);
             } else {
               ctx.model.set(modelList[0], val);
             }
@@ -299,6 +299,10 @@ var BaseDetail = SuperView.extend({
           }
           $button.html(preText);
         });
+        setTimeout(function(){
+          $button.html(preText);
+          $button.prop('disabled', false);
+        }, 5000);
       }
       return false;
     });

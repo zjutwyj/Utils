@@ -7,9 +7,6 @@
 var Application = function (options) {
   this.options = options;
   Est.extend(this, options);
-  // 配置ajax请求超时时间
-  $.ajaxSetup({timeout: options.AJAX_TIMEOUT || 10000});
-
   this.initialize.apply(this, arguments);
 };
 Est.extend(Application.prototype, {
@@ -365,6 +362,33 @@ Est.extend(Application.prototype, {
     }
     this['templates'][name] = fn;
   },
+  /**
+   * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
+   *
+   * @method [会话] - addSession ( 添加session会话 )
+   * @param name
+   * @param value
+   * @return {*}
+   * @author wyj 15.4.22
+   * @example
+   *      App.addSession('__USER__', {username: 'ggggfj'});
+   */
+  addSession: function (name, value) {
+    localStorage['___JHW_BACKBONE__' + name] = value;
+    return value;
+  },
+  /**
+   * 读取session会话
+   *
+   * @method [会话] - getSession ( 读取session会话 )
+   * @param name
+   * @return {Object}
+   * @example
+   *      App.getSession('__USER__'); => {username: 'ggggfj'}
+   */
+  getSession: function (name) {
+    return localStorage['___JHW_BACKBONE__' + name];
+  },
   addTpl: function (name, fn) {
     try {
       var _hash = Est.hash(name);
@@ -375,7 +399,6 @@ Est.extend(Application.prototype, {
         if (!localStorage['___JHW_APP__' + _hash]) {
           localStorage['___JHW_APP__' + _hash] = value;
         } else {
-
         }
         fn = Est.inject(function () {
         }, function (require, exports, module) {

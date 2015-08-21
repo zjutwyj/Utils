@@ -230,6 +230,19 @@ Handlebars.registerHelper('CONST', function (name, options) {
 });
 
 /**
+ * 返回图片地址常量
+ * @method [常量] - PIC
+ * @author wyj 14.12.17
+ * @example
+ *        {{PIC 'upload/'}}
+ */
+Handlebars.registerHelper('PIC', function (name, options) {
+  if (!name) return CONST.PIC_URL + '/' + CONST.PIC_NONE;
+  if (Est.startsWidth(name, 'upload')) return CONST.PIC_URL + '/' + name;
+  return CONST.DOMAIN + name;
+});
+
+/**
  * 判断是否为空
  * @method [判断] - isEmpty
  * @author wyj 14.12.27
@@ -292,8 +305,8 @@ Handlebars.registerHelper('checkbox', function (options) {
   var defaultClass = isChecked ? 'icon-checkbox' : 'icon-checkboxno';
   var args = ("'" + random + "'"); // 参数
 
-  var result = '<div> <label for="'+id+'" style="overflow:hidden;display:inline-block;"> ' +
-    '<input onclick="window.ckToggleClass(' + args + ');" type="checkbox" name="' + options.hash.name + '" id="'+id+'" value="' + value + '" ' + (isChecked ? 'checked' : '') + ' true-value="' + options.hash.trueVal + '" false-value="' + options.hash.falseVal + '"  class="rc-hidden" style="display: none;">' +
+  var result = '<div> <label for="' + id + '" style="overflow:hidden;display:inline-block;"> ' +
+    '<input onclick="window.ckToggleClass(' + args + ');" type="checkbox" name="' + options.hash.name + '" id="' + id + '" value="' + value + '" ' + (isChecked ? 'checked' : '') + ' true-value="' + options.hash.trueVal + '" false-value="' + options.hash.falseVal + '"  class="rc-hidden" style="display: none;">' +
     '<i id="' + random + '" class="iconfont ' + defaultClass + '" style="' + icon_style + '"></i>' + options.hash.label +
     '</label></div>';
   return result;

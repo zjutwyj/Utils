@@ -3,12 +3,9 @@
  * @namespace Districk
  * @author yongjin<zjut_wyj@163.com> 2015/1/5
  */
-define('Select', ['template/select_item', 'template/select_list', 'template/select_view'],
-  function (require, exports, module) {
-
+define('Select', ['template/select_view'], function (require, exports, module) {
     var Select, model, item, collection, list;
-    var itemTemp = require('template/select_item');
-    var listTemp = require('template/select_list');
+    var listTemp = '';
     var viewTemp = require('template/select_view');
 
     model = BaseModel.extend({
@@ -33,9 +30,7 @@ define('Select', ['template/select_item', 'template/select_list', 'template/sele
         'click .select-div': 'selectItem'
       },
       initialize: function () {
-        this._initialize({
-          template: itemTemp
-        });
+        this._initialize({});
         this.model.set('text', this.model.get(this._options.data.text));
         this.model.set('value', this.model.get(this._options.data.value));
         this.model.on('autoSelectNode', this.autoSelectNode, this);
@@ -68,7 +63,6 @@ define('Select', ['template/select_item', 'template/select_list', 'template/sele
         app.getView(this._options.viewId).setCurrentSelect(this.$el);
         app.getView(this._options.viewId).setSubSelect(this.model);
         app.getView(this._options.viewId).setValue();
-        //$(this._options.data.inputNode.selector.split(' ')[0]).find('.category').val(this.model.get('value'));
       }
     });
 
@@ -185,6 +179,7 @@ define('Select', ['template/select_item', 'template/select_list', 'template/sele
         this._options.text = this._options.text || 'text';
         this._options.value = this._options.value || 'value';
         this._options.disabled = Est.typeOf(this._options.disabled) === 'boolean' ? this._options.disabled : false;
+        listTemp = this.$template.find('#template-select-list').html();
         this.render();
       },
       /**
@@ -238,7 +233,7 @@ define('Select', ['template/select_item', 'template/select_list', 'template/sele
         if (!items) return;
         var id = $(this._options.target).val();
         Est.each(items, function (item) {
-          if ((item[this._options.value] === id) || (Est.isEmpty(item[this._options.value]) && Est.isEmpty(id))) {
+          if (((item[this._options.value] + '') === id) || (Est.isEmpty(item[this._options.value]) && Est.isEmpty(id))) {
             this.$('.bui-select-input').val(item[this._options.text]);
             if (!this.initRender)
               this._options.change && this._options.change.call(this, item);

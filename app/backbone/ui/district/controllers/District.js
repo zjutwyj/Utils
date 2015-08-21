@@ -3,10 +3,9 @@
  * @namespace Districk
  * @author yongjin<zjut_wyj@163.com> 2015/1/5
  */
-define('District', ['template/district_item', 'template/district_list', 'template/district_view'],
+define('District', ['template/district_list', 'template/district_view'],
   function (require, exports, module) {
     var District, model, item, collection, list;
-    var itemTemp = require('template/district_item');
     var listTemp = require('template/district_list');
     var viewTemp = require('template/district_view');
 
@@ -32,9 +31,7 @@ define('District', ['template/district_item', 'template/district_list', 'templat
         'click .district-div': 'selectItem'
       },
       initialize: function () {
-        this._initialize({
-          template: itemTemp
-        });
+        this._initialize({ });
         if (this._options.data.path &&
           this._options.data.path.indexOf(this.model.get('areaId')) !== -1) {
           setTimeout(Est.proxy(function () {

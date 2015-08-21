@@ -631,9 +631,11 @@ var BaseUtils = {
    * @param options
    * @author wyj 14.12.18
    * @example
-   *        Utils.initCopy('#photo-copy-dialog', {
+   *        html: <span id="" class="design-leaflet-url-copy" clipboard="" data-clipboard-text="{{staticUrl}}">复制</span>
+   *        javascript:
+   *            Utils.initCopy('#photo-copy-dialog', {
        *           success: function(){
-       *             window.copyDialog.close();
+       *             // 成功复制后回调
        *           }
        *         });
    *
@@ -814,6 +816,7 @@ var BaseUtils = {
        *         title: '复制图片',
        *         target: '.btn-email-bind',
        *         width: 800,
+       *         quickClose: true, // 点击空白处关闭对话框
        *         hideCloseBtn: false, // 是否隐藏关闭按钮
        *         content: this.copyDetail({
        *           filename: this.model.get('filename'),
@@ -944,7 +947,7 @@ var BaseUtils = {
         id: 'tip-dialog' + Est.nextUid(),
         title: options.title,
         width: 200,
-        content: msg
+        content: '<div style="padding: 10px;">' + msg + '</div>'
       })).show();
       setTimeout(function () {
         window.tipsDialog.close().remove();
@@ -970,7 +973,7 @@ var BaseUtils = {
   initConfirm: function (opts) {
     var options = {
       title: '温馨提示：',
-      content: '是否删除！',
+      content: '是否删除!',
       success: function () {
       },
       target: null
@@ -980,7 +983,7 @@ var BaseUtils = {
       window.comfirmDialog = app.addDialog(dialog({
         id: 'dialog' + Est.nextUid(),
         title: options.title,
-        content: options.content,
+        content: '<div style="padding: 20px;">' + options.content + '</div>',
         width: options.width || 200,
         button: [
           {

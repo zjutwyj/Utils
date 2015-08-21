@@ -1,0 +1,5 @@
+/* 选择项*/
+.item-check{ float: left; margin: 2px; cursor: pointer; width: 30px; text-align: center; line-height: 30px; position: relative; border: 1px solid #C0E0FF; height: 30px; overflow:hidden;padding: 2px; border-radius: 4px; }
+.item-check .check-icon{ display:none; position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; z-index: 1000; }
+.item-check.item-active .check-icon{display:block;}
+.item-check.item-active{ }

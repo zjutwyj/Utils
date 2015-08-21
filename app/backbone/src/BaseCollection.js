@@ -1,7 +1,7 @@
 /**
  * @description 基础集合类
  *
- * - url: CONST.API + '/product/list',
+ * - url: CONST.API + '/product/list', // 如果是function形式构建的时候，记得带上page 与pageSize;
  * - batchDel: CONST.API + '/product/batch/del',
  * - model: ProductModel,
  * - initialize: function(){this._initialize();}
@@ -50,6 +50,9 @@
           pageSize: this.options.pageSize
         });
       }
+    },
+    initialize: function(){
+      this._initialize();
     },
     /**
      * 处理url 与 分页
@@ -133,7 +136,7 @@
       seajs.use(['Pagination'], function (Pagination) {
         if (!ctx.pagination) {
           ctx.pagination = new Pagination({
-            el: "#pagination-container",
+            el: $("#pagination-container", $(ctx.options.el)),
             model: ctx.paginationModel
           });
         } else {

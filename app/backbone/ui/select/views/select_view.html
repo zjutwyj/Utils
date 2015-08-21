@@ -6,4 +6,22 @@
     <span class="x-icon x-icon-normal down" style="margin-left: -3px;"><i class="icon icon-caret icon-caret-down" style="width: 8px; height: 8px"
             ></i>
     </span>
+
+    <script type="text/x-handlebars-template" id="template-select-list">
+        <div class="bui-list-picker bui-picker bui-overlay bui-ext-position x-align-bl-tl bui-select-custom"
+             aria-disabled="false"
+             aria-pressed="false"
+             style="visibility: visible;width:{{minus width 2}}px; display: none;">
+            {{#if search}}
+            <div class="select-search-container">
+                <input class="select-search-btn" type="hidden"/>
+                <input type="text" class="select-search"  style="width:{{minus width 32}}px;"/>
+            </div>
+            {{/if}}
+            <div class="bui-simple-list bui-select-list" aria-disabled="false" aria-pressed="false">
+                <ul class="select-ul"><div class="bui-list-item-select-inner select-div">{{text}}</div></ul>
+            </div>
+        </div>
+    </script>
 </div>
+

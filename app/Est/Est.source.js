@@ -3588,6 +3588,35 @@
   Est.proxy = proxy;
 
   /**
+   * 节流函数，控制函数执行频率
+   * @param {Object} fn 执行函数
+   * @param {Object} delay 执行间隔
+   * @param {Object} mustRunDelay 必须执行间隔
+   * @param {Object} scope
+   */
+  function throttle(fn, delay, mustRunDelay, scope) {
+    var start = new Date();
+    !mustRunDelay || (mustRunDelay = 5000);
+    return function () {
+      var context = scope || this;
+      clearTimeout(fn.timer);
+      var end = new Date();
+      if (end - start >= mustRunDelay) {
+        clearTimeout(fn.timer);
+        fn.apply(context, arguments);
+      }
+      else {
+        fn.timer = setTimeout(function () {
+          start = new Date();
+          fn.apply(context, arguments);
+        }, delay || 20);
+      }
+    };
+  }
+
+  Est.throttle = throttle;
+
+  /**
    * @description 织入模式 - 实用程序函数扩展Est。
    * 传递一个 {name: function}定义的哈希添加到Est对象，以及面向对象封装。
    * @method [模式] - mixin ( 织入模式 )

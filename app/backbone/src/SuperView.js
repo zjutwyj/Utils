@@ -48,6 +48,7 @@ var SuperView = Backbone.View.extend({
                     skin: 'form-horizontal', // className
                     hideSaveBtn: false, // 是否隐藏保存按钮， 默认为false
                     autoClose: true, // 提交后按确定按钮  自动关闭对话框
+                    quickClose: true, // 点击空白处关闭对话框
                     button: [ // 自定义按钮
                       {
                         value: '保存',
@@ -87,13 +88,20 @@ var SuperView = Backbone.View.extend({
           return false;
         }, autofocus: true});
     }
+    var viewId = Est.typeOf(options.moduleId) === 'string' ? options.moduleId : options.id;
     options = Est.extend(options, {
-      el: '#base_item_dialog' + options.moduleId,
-      content: options.content || '<div id="' + options.moduleId + '"></div>',
-      viewId: options.moduleId,
+      el: '#base_item_dialog' + viewId,
+      content: options.content || '<div id="' + viewId + '"></div>',
+      viewId: viewId,
       onshow: function () {
         options.onShow && options.onShow.call(this, options);
-        if (options.moduleId) {
+        if (Est.typeOf(options.moduleId) === 'function') {
+          app.addPanel(options.id, {
+            el: '#' + options.id,
+            template: '<div id="base_item_dialog' + options.id + '"></div>'
+          }).addView(options.id, new options.moduleId(options));
+        }
+        else if (Est.typeOf(options.moduleId) === 'string') {
           seajs.use([options.moduleId], function (instance) {
             app.addPanel(options.moduleId, {
               el: '#' + options.moduleId,
@@ -198,9 +206,11 @@ var SuperView = Backbone.View.extend({
   _viewReplace: function (selector, model, callback) {
     debug('【双向绑定】selector: ' + selector);
     Est.each(selector.split(','), Est.proxy(function (item) {
-      this['h_temp_' + Est.hash(item)] = this['h_temp_' + Est.hash(item)] ||
-        Handlebars.compile(this.$template.find(selector).wrapAll('<div>').parent().html());
-      this.$(item).replaceWith(this['h_temp_' + Est.hash(item)](model.toJSON()));
+      if (!Est.isEmpty(item)) {
+        this['h_temp_' + Est.hash(item)] = this['h_temp_' + Est.hash(item)] ||
+          Handlebars.compile(this.$template.find(selector).wrapAll('<div>').parent().html());
+        this.$(item).replaceWith(this['h_temp_' + Est.hash(item)](model.toJSON()));
+      }
       callback && callback.call(this, model);
     }, this));
   },
@@ -220,14 +230,16 @@ var SuperView = Backbone.View.extend({
     var _self = this, modelId,
       temp_obj = {},
       list = [];
-    list = Est.typeOf(name) === 'array' ? name : list.push(name);
+
+    if (Est.typeOf(name) === 'array') list = name;
+    else list.push(name);
     Est.each(list, function (item) {
       modelId = item.replace(/^#model\d?-(.+)$/g, "$1");
+      _self._modelBind(item);
       if (modelId in temp_obj) return;
-      _self.model.on('change:' + (temp_obj[modelId] = modelId), function () {
+      _self.model.on('change:' + (temp_obj[modelId] = modelId.split('.')[0]), function () {
         _self._viewReplace(selector, _self.model, callback);
       });
-      _self._modelBind(item);
     });
   },
   /**
@@ -246,9 +258,9 @@ var SuperView = Backbone.View.extend({
       keys = item.split('.');
       if (keys.length > 1) {
         result = Est.getValue(this.model.toJSON(), item);
-        Est.setValue(this.model.toJSON(), item, JSON.stringify(result));
+        Est.setValue(this.model.attributes, item, JSON.stringify(result));
       } else {
-        this.model.set(item, JSON.stringify(this.model.get(item)));
+        Est.setValue(this.model.attributes, item, JSON.stringify(this.model.get(item)));
       }
     }, this);
   },
@@ -342,7 +354,9 @@ var SuperView = Backbone.View.extend({
    *      this._setValue('tip.name', 'aaa');
    */
   _setValue: function (path, val) {
+    // just for trigger
     Est.setValue(this.model.attributes, path, val);
+    this.model.trigger('change:' + path.split('.')[0]);
   },
   /**
    * 绑定单个字段进行重渲染
@@ -384,11 +398,15 @@ var SuperView = Backbone.View.extend({
    *      });
    */
   _one: function (name, callback) {
-    var _name, isArray = Est.typeOf(name) === 'array';
-    _name = isArray ? name.join('_') : name;
-    if (this['_one_' + _name] = Est.typeOf(this['_one_' + _name]) === 'undefined' ? true : false) {
-      if (isArray)  this._require(name, callback);
-      else  callback && callback.call(this);
+    try {
+      var _name, isArray = Est.typeOf(name) === 'array';
+      _name = isArray ? name.join('_') : name;
+      if (this['_one_' + _name] = Est.typeOf(this['_one_' + _name]) === 'undefined' ? true : false) {
+        if (isArray)  this._require(name, callback);
+        else  callback && callback.call(this);
+      }
+    } catch (e) {
+      debug('【SuperView._one】' + JSON.stringify(name), {type: 'alert'});
     }
   },
   /**
