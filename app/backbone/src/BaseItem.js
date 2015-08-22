@@ -566,7 +566,7 @@ var BaseItem = SuperView.extend({
     }
     app.addData('delItemDialog', BaseUtils.initConfirm({
       title: '温馨提示',
-      content: '<div style="padding:20px;">是否删除?</div>',
+      content: '<div class="item-delete-confirm">是否删除?</div>',
       target: e && this._getTarget(e).get(0),
       success: function (resp) {
         context.model.destroy({

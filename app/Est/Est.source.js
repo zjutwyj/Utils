@@ -1978,7 +1978,7 @@
    * @author wyj on 14/6/23
    * @example
    *      var list = [1, 2, 3];
-   *      var result = Est.map(list, function(value, list, index){
+   *      var result = Est.map(list, function(value, index, list){
    *        return list[index] + 1;
    *      }); => [2, 3, 4]
    */
@@ -3589,6 +3589,8 @@
 
   /**
    * 节流函数，控制函数执行频率
+   *
+   * @method [模式] - throttle ( 节流函数 )
    * @param {Object} fn 执行函数
    * @param {Object} delay 执行间隔
    * @param {Object} mustRunDelay 必须执行间隔
