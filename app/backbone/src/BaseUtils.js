@@ -851,7 +851,7 @@ var BaseUtils = {
           } });
       }
       options = Est.extend({
-        id: 'dialog' + Est.nextUid(),
+        id: options.id || options.moduleId || Est.nextUid('dialog'),
         title: '对话框',
         width: 150, content: '',
         button: button
@@ -966,6 +966,9 @@ var BaseUtils = {
        *        target: this.$('.name').get(0),
        *        content: '是否删除?',
        *        success: function(){
+       *          ...
+       *        },
+       *        cancel: function(){
        *          ...
        *        }
        *      });

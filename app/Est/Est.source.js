@@ -1684,7 +1684,7 @@
    * @return {String} 返回新字符串
    * @author wyj on 14/5/6
    * @example
-   *     Est.allTrim('a b c'); => 'abc'
+   *     Est.deepTrim('a b c'); => 'abc'
    */
   function deepTrim(str) {
     return str.toString().replace(/\s*/gm, '');
@@ -2947,6 +2947,64 @@
   }
 
   Est.getUrlParam = getUrlParam;
+
+  /**
+   * 设置浏览器参数
+   *
+   * @method [浏览器] - setUrlParam ( 设置浏览器参数 )
+   * @param name
+   * @param value
+   * @param url
+   * @return {string}
+   * @example
+   *    var url = Est.setUrlParam('belongId', 'aaa', window.location.href);
+   */
+  function setUrlParam(name, value, url) {
+    var str = "";
+    if (url.indexOf('?') != -1)
+      str = url.substr(url.indexOf('?') + 1);
+    else
+      return url + "?" + name + "=" + value;
+    var returnurl = "";
+    var setparam = "";
+    var arr;
+    var modify = "0";
+    if (str.indexOf('&') != -1) {
+      arr = str.split('&');
+      each(arr, function(item){
+        if (item.split('=')[0] == name) {
+          setparam = value;
+          modify = "1";
+        }else {
+          setparam = item.split('=')[1];
+        }
+        returnurl = returnurl + item.split('=')[0] + "=" + setparam + "&";
+      });
+      returnurl = returnurl.substr(0, returnurl.length - 1);
+      if (modify == "0")
+        if (returnurl == str)
+          returnurl = returnurl + "&" + name + "=" + value;
+    } else {
+      if (str.indexOf('=') != -1) {
+        arr = str.split('=');
+        if (arr[0] == name) {
+          setparam = value;
+          modify = "1";
+        } else {
+          setparam = arr[1];
+        }
+        returnurl = arr[0] + "=" + setparam;
+        if (modify == "0")
+          if (returnurl == str)
+            returnurl = returnurl + "&" + name + "=" + value;
+      }
+      else
+        returnurl = name + "=" + value;
+    }
+    return url.substr(0, url.indexOf('?')) + "?" + returnurl;
+  }
+
+  Est.setUrlParam = setUrlParam;
 
   /**
    * @description 过滤地址

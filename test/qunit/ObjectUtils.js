@@ -32,7 +32,7 @@ QUnit.test('Est.getValue', function (assert) {
   var result2 = Est.getValue(object, 'item.ent');
   assert.equal(result, 'aaa', 'passed');
   assert.deepEqual(object, object2, 'passed');
-  assert.equal(result2, 'undefined', 'passed');
+  assert.equal(result2, undefined, 'passed');
 });
 QUnit.test('Est.setValue', function (assert) {
   var object = {

@@ -39,6 +39,8 @@ var SuperView = Backbone.View.extend({
    * @param options
    * @author wyj 15.1.22
    * @example
+   *        // 获取对话框
+            app.getDialog('moduleId || id');
    *        this._dialog({
                     moduleId: 'SeoDetail', // 模块ID
                     title: 'Seo修改', // 对话框标题

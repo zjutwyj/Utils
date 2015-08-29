@@ -111,6 +111,7 @@ QUnit.test('Est.proxy', function (assert) {
   assert.equal(result, 'person', 'me.test 成功代理到you.test');
   assert.equal(result2, 'zombie', '成功把me.type传递到you.type的参数列表中');
 });
+/*
 QUnit.test('Est.interface', function (assert) {
   var test = new Est.interface('test', ['details', 'age']);
   var properties = {
@@ -177,4 +178,4 @@ QUnit.test('Est.interface', function (assert) {
 
   assert.equal(object.add(), 'add', 'passed');
 
-});
+});*/

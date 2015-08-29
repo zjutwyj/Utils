@@ -401,6 +401,7 @@ gulp.task('UserManagement_base.min', function () {
 
 paths['UserManagement_doc'] = { doc: { source: [
   'app/backbone/src/*.*',
+  'app/handlebars/HandlebarsHelper.js',
   'app/Est/Est.source.js',
   'app/appjs_v3/Application.js'
 ], dist: 'C:/software/WebstormProjects/UserManagement/doc' } }
@@ -505,17 +506,13 @@ gulp.task('UserManagement_mobileManagement', ['UserManagement_appjs_wrap'], func
 //===============================================================================================================
 paths['Leaflet_doc'] = { doc: { source: [
   'app/backbone/src/*.*',
+  'app/handlebars/HandlebarsHelper.js',
   'app/Est/Est.source.js'
 ], dist: 'C:/software/WebstormProjects/Leaflet/doc' } }
 gulp.task('Leaflet_doc', [], function () {
   doTask('Leaflet_doc', false);
 });
-gulp.task('Leaflet_styles', ['Leaflet_doc'], function () {
-  return gulp.src(SRCDIR + '/backbone/styles/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/styles'));
-});
-gulp.task('Leaflet_ui', ['Leaflet_styles'], function () {
-  return gulp.src(SRCDIR + '/backbone/ui/**').pipe(gulp.dest(DISTDIR + '/Leaflet/app/ui'));
-});
+
 paths['Leaflet_base'] = { scripts: { source: [
   'app/vendor/seajs/sea.js',
   'app/vendor/seajs/seajs-text-debug.js',
@@ -540,10 +537,10 @@ paths['Leaflet_base'] = { scripts: { source: [
   'app/backbone/src/BaseDetail.js'
 
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/Leaflet/app/scripts' } };
-gulp.task('Leaflet_base', ['Leaflet_ui'], function () {
+gulp.task('Leaflet_base', ['Leaflet_doc'], function () {
   doTask('Leaflet_base', true);
 });
-gulp.task('Leaflet_base.min', ['Leaflet_ui'], function () {
+gulp.task('Leaflet_base.min', ['Leaflet_doc'], function () {
   doTask('Leaflet_base', false);
 });
 // 静态页面
