@@ -811,7 +811,7 @@ var BaseUtils = {
    * @param options [title: ][width: ][height: ][target: ][success: 确定按钮回调]
    * @author wyj 14.12.18
    * @example
-   *      Utils.initDialog({
+   *      Utils.dialog({
        *         id: 'copyDialog',
        *         title: '复制图片',
        *         target: '.btn-email-bind',
