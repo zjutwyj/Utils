@@ -1,13 +1,37 @@
 /**
  * @description 列表视图
- *
- *  - el: 目标元素Id 如 "#jhw-main"
- *  - viewId 标识符， 推荐添加， 将提升性能及更多功能
- *  - page: parseInt(Est.cookie('productList_page')) || 1,
- *  - pageSize: parseInt(Est.cookie('productList_pageSize')) || 16
- *
  * @class BaseList - 列表视图
  * @author yongjin<zjut_wyj@163.com> 2014/12/8
+ *    // 定义类
+ *    var ProductList = BaseList.extend({
+ *        initialize: function(){
+ *          this._initialize({
+ *            model: model,
+ *            collection: collection,
+ *            item: item,
+ *            beforeRender: this.beforeRender,
+ *            afterRender: this.afterRender
+ *          });
+ *        },
+ *        beforeRender: fucntion(){},// 渲染前回调
+ *        afterRender: function(){ // 渲染后回调
+ *         ...
+ *        },
+ *        render: function(){ // 可省略
+ *          this._render();
+ *        }
+ *    });
+ *  // 实例化类
+ *  app.addPanel('main', {
+ *    el: '#jhw-min', // 目标元素Id
+ *    template: '<div class="jhw-main-inner"></div>'
+ *  }).addView('productList', new ProductList({
+ *    el: '.jhw-main-inner',
+ *    viewId: 'productList', // 标识符， 推荐添加， 将提升性能及更多功能
+ *    page: parseInt(Est.cookie('productList_page')) || 1,
+ *    pageSize: parseInt(Est.cookie('productList_pageSize')) || 16
+ *  }));
+ *
  */
 
 
@@ -51,6 +75,7 @@ var BaseList = SuperView.extend({
        *        sortField: 'sort', // 上移下移字段名称， 默认为sort
        *        itemId: 'Category_00000000000123', // 当需要根据某个ID查找列表时， 启用此参数， 方便
        *        filter: [ {key: 'name', value: this.searchKey }] // 过滤结果
+       *        toolTip: true, // 是否显示title提示框   html代码： <div class="tool-tip" title="提示内容">内容</div>
        *        clearDialog: true, // 清除所有的对话框， 默认为true
        *        beforeLoad: function(collection){ // collection载入列表前执行
        *            this.setCategoryId(options.categoryId); // collection载入后执行
@@ -130,7 +155,7 @@ var BaseList = SuperView.extend({
   /**
    * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面
    *
-   * @method [private] - _initTemplate
+   * @method [private] - _initTemplate ( 待优化， 模板缓存 )
    * @private
    * @author wyj 15.1.12
    */
@@ -148,10 +173,11 @@ var BaseList = SuperView.extend({
       }
       this.template = Handlebars.compile(Est.isEmpty(this._options.itemTemp) ? options.template :
         this.$template.html());
-      if (this._options.append)
+      if (this._options.append) {
         this.$el.append(this.template(options.data));
-      else
+      } else {
         this.$el.html(this.template(options.data));
+      }
     }
     return this._data;
   },
@@ -366,6 +392,7 @@ var BaseList = SuperView.extend({
   _finally: function () {
     if (this._options.afterRender)
       this._options.afterRender.call(this, this._options);
+    if (this._options.toolTip) this._initToolTip();
     BaseUtils.removeLoading();
   },
   /**
@@ -593,7 +620,7 @@ var BaseList = SuperView.extend({
       itemView._setViewId(this._options.viewId || app.getCurrentView());
 
       if (arg2 && arg2.at < this.dx - 1) {
-        this.collection.models[arg2.at - 1].view.$el.after(itemView._render().el);
+        this.collection.models[arg2.at === 0 ? 0 : arg2.at - 1].view.$el.after(itemView._render().el);
       } else {
         this.list.append(itemView._render().el);
       }
@@ -602,32 +629,49 @@ var BaseList = SuperView.extend({
   },
   /**
    * 向列表中添加数据
-   * @method [集合] - _push
+   * @method [集合] - _push ( 向列表中添加数据 )
    * @param model
    * @param opts
    * @author wyj 15.6.10
    * @example
    *        this._push(new model());
-   *        this._push(new model(), {at: 0});
-   *        this._push(new pictureModel(model), {at: this._findIndex(curModel) + 1});
+   *        this._push(new model(), 0); // 表示在第一个元素后面添加新元素
+   *        this._push(new pictureModel(model), this._findIndex(curModel) + 1);
    */
-  _push: function (model, opts) {
-    opts = opts || {};
-    var obj;
-    obj = Est.typeOf(model) === 'array' ? Est.pluck(model, function (item) {
-      return item.attributes;
-    }) : model.attributes;
-    if (Est.typeOf(opts.at) === 'number') {
-      this._options.items && this._options.items.splice(opts.at = opts.at + 1, 0, obj);
-    } else {
-      this._options.items && this._options.items.push(obj);
+  _push: function (model, index) {
+    debug('【BaseList】_push');
+    // 判断第二个参数是否是数字， 否-> 取当前列表的最后一个元素的索引值
+    // 判断index是否大于列表长度
+    // 若存在items， 则相应插入元素
+    var obj, index = Est.typeOf(index) === 'number' ? index + 1 : this.collection.models.length === 0 ? 0 : this.collection.models.length;
+    var opts = {at: index > this.collection.models.length + 1 ?
+      this.collection.models.length : index};
+    if (this._options.items) {
+      obj = Est.typeOf(model) === 'array' ? Est.pluck(model, function (item) {
+        return item.attributes;
+      }) : model.attributes;
+      this._options.items.splice(opts.at - 1, 0, obj);
     }
     this.collection.push(model, opts);
-    debug('【BaseList】_push');
+    this._resetDx();
+  },
+  /**
+   * 重新排序dx列表
+   * @method [private] - _resetDx
+   * @private
+   * @author wyj 15.9.3
+   */
+  _resetDx: function () {
+    debug('【BaseList】_resetDx');
+    var _dx = 0;
+    Est.each(this.collection.models, function (item) {
+      item.set('dx', _dx);
+      _dx++;
+    });
   },
   /**
    * 获取当前模型类在集合类中的索引值
-   * @method [集合] - _findIndex
+   * @method [集合] - _findIndex ( 索引值 )
    * @param model
    * @return {number}
    * @author wyj 15.6.10
@@ -646,6 +690,7 @@ var BaseList = SuperView.extend({
    *        this._reload();
    */
   _reload: function () {
+    debug('【BaseList】_reload');
     this._clear.apply(this, arguments);
     this._load();
   },
@@ -657,6 +702,7 @@ var BaseList = SuperView.extend({
    * @author wyj 15.1.10
    */
   _filterCollection: function () {
+    debug('【BaseList】_filterCollection');
     this._filter(this._options.filter, this._options);
   },
   /**
@@ -667,6 +713,7 @@ var BaseList = SuperView.extend({
    * @author wyj 15.1.8
    */
   _renderListByPagination: function () {
+    debug('【BaseList】_renderListByPagination');
     this.page = this.collection.paginationModel.get('page');
     this.pageSize = this.collection.paginationModel.get('pageSize');
     this.startIndex = (this.page - 1) * this.pageSize;
@@ -691,7 +738,7 @@ var BaseList = SuperView.extend({
    */
   _empty: function () {
     this.dx = 0;
-    debug('- BaseList._empty');
+    debug('【BaseList】_empty');
     if (this.collection) {
       var len = this.collection.length;
       while (len > -1) {
@@ -723,6 +770,7 @@ var BaseList = SuperView.extend({
    *        this._clear();
    */
   _clear: function () {
+    debug('【BaseList】_clear');
     this._empty.call(this);
     this.list.empty();
     this.collection.models.length = 0;
@@ -735,7 +783,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.11.16
    */
   _addAll: function () {
-    debug('BaseList._addAll and call this._empty');
+    debug('【BaseList】._addAll and call this._empty');
     this._empty();
     this.collection.each(this._addOne, this);
   },
@@ -761,6 +809,7 @@ var BaseList = SuperView.extend({
        *       }});
    */
   _search: function (options) {
+    debug('【BaseList】_search');
     var ctx = this;
     this._clear();
     this.filter = true;
@@ -787,6 +836,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.8
    */
   _filter: function (array, options) {
+    debug('【BaseList】_filter');
     var ctx = this;
     var result = [];
     var len = ctx.collection.models.length;
@@ -838,6 +888,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.8
    */
   _filterItems: function (array, options) {
+    debug('【BaseList】_filterItems');
     var ctx = this;
     var result = [];
     var items = Est.cloneDeep(ctx._options.items);
@@ -899,7 +950,7 @@ var BaseList = SuperView.extend({
        *      });
    */
   _detail: function (options) {
-    debug('1.BaseList._detail');
+    debug('【BaseList】_detail');
     options = options || {};
     if (options.end) {
       options.end = '?' + options.end + '&';
@@ -984,6 +1035,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.11.16
    */
   _toggleAllChecked: function () {
+    debug('【BaseList】_toggleAllChecked');
     var checked = this.allCheckbox.checked;
     this.collection.each(function (product) {
       product.set('checked', checked);
@@ -997,7 +1049,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.4
    */
   _saveSort: function (model) {
-    var sortOpt = { id: model.get('id') }
+    var sortOpt = { id: model.get('id') };
     sortOpt[this._options.sortField || 'sort'] = model.get(this._options.sortField);
     model._saveField(sortOpt, this, { async: false, hideTip: true});
   },
@@ -1060,7 +1112,7 @@ var BaseList = SuperView.extend({
        *      })._moveUp(this.model);
    */
   _moveUp: function (model) {
-    debug('_moveUp');
+    debug('【BaseList】_moveUp');
     var ctx = this;
     var first = this.collection.indexOf(model);
     var last, parentId;
@@ -1105,7 +1157,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.4
    */
   _moveDown: function (model) {
-    debug('_moveDown');
+    debug('【BaseList】_moveDown');
     var ctx = this;
     var first = this.collection.indexOf(model);
     var last, parentId;

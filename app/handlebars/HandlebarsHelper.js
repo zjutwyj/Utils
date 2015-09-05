@@ -236,11 +236,19 @@ Handlebars.registerHelper('CONST', function (name, options) {
  * @example
  *        {{PIC 'upload/'}}
  */
-Handlebars.registerHelper('PIC', function (name, options) {
-  if (!name) return CONST.PIC_URL + '/' + CONST.PIC_NONE;
-  if (Est.startsWidth(name, 'upload')) return CONST.PIC_URL + '/' + name;
+Handlebars.registerHelper('PIC', function (name, number, options) {
+  if (!name) return '/' + CONST.PIC_NONE;
+  if (Est.startsWidth(name, 'upload'))
+    return arguments.length < 3 ? CONST.PIC_URL + '/' + name :
+      Handlebars.helpers['picUrl'].apply(this, [name, number, options]);
   return CONST.DOMAIN + name;
 });
+
+/*Handlebars.registerHelper('PIC', function (name, options) {
+ if (!name) return CONST.PIC_URL + '/' + CONST.PIC_NONE;
+ if (Est.startsWidth(name, 'upload')) return CONST.PIC_URL + '/' + name;
+ return CONST.DOMAIN + name;
+ });*/
 
 /**
  * 判断是否为空

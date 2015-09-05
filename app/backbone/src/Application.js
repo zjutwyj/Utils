@@ -11,7 +11,7 @@ var Application = function (options) {
 };
 Est.extend(Application.prototype, {
   initialize: function () {
-    this.data = { itemActiveList: [] };
+    this.data = { itemActiveList: [], sessionId: ''};
     this.instance = {};
     this.modules = {};
     this.routes = {};
@@ -268,7 +268,7 @@ Est.extend(Application.prototype, {
    */
   addData: function (name, data) {
     if (name in this['data']) {
-      console.log('重新赋值' + name);
+      debug('重新赋值' + name);
     }
     this['data'][name] = data;
   },
@@ -298,7 +298,7 @@ Est.extend(Application.prototype, {
    */
   addModule: function (name, val) {
     if (name in this['modules']) {
-      console.log('已存在的模块：' + name);
+      debug('已存在的模块：' + name);
     }
     this['modules'][name] = val;
   },
@@ -374,7 +374,7 @@ Est.extend(Application.prototype, {
    *      App.addSession('__USER__', {username: 'ggggfj'});
    */
   addSession: function (name, value) {
-    localStorage['___JHW_BACKBONE__' + name] = value;
+    localStorage['___JHW_BACKBONE__' + this.data.sessionId + name] = value;
     return value;
   },
   /**
@@ -387,7 +387,7 @@ Est.extend(Application.prototype, {
    *      App.getSession('__USER__'); => {username: 'ggggfj'}
    */
   getSession: function (name) {
-    return localStorage['___JHW_BACKBONE__' + name];
+    return localStorage['___JHW_BACKBONE__' + this.data.sessionId + name];
   },
   addTpl: function (name, fn) {
     try {

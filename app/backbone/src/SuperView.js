@@ -20,6 +20,9 @@ var SuperView = Backbone.View.extend({
       this._initialize(this.init);
     Backbone.View.apply(this, arguments);
   },
+  initialize: function () {
+    this._initialize();
+  },
   /**
    * 导航
    *
@@ -425,8 +428,28 @@ var SuperView = Backbone.View.extend({
   _require: function (dependent, callback) {
     seajs.use(dependent, Est.proxy(callback, this));
   },
-  initialize: function () {
-    this._initialize();
+  /**
+   * title提示
+   * @method [提示] - _initToolTip ( title提示 )
+   * @author wyj 15.9.5
+   * @example
+   *      <div class="tool-tip" title="提示内容">content</div>
+   *      this._initToolTip();
+   */
+  _initToolTip: function () {
+    this.$('.tool-tip').hover(function (e) {
+      var title = $(this).attr('title');
+      BaseUtils.initDialog({
+        id: Est.hash(title),
+        title: null,
+        align: 'top',
+        content: '<div style="padding: 5px;font-size: 12px;">'+title+'</div>',
+        hideCloseBtn: true,
+        target: $(this).get(0)
+      });
+    }, function () {
+      app.getDialog(Est.hash($(this).attr('title'))).close();
+    });
   },
   render: function () {
     this._render();

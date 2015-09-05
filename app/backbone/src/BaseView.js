@@ -32,6 +32,7 @@ var BaseView = SuperView.extend({
        *         // 可选
        *         enterRender: 执行回车后的按钮点击的元素选择符 如 #submit .btn-search
        *         append: false // 视图是否是追加,
+       *         toolTip: true, // 是否显示title提示框   html代码： <div class="tool-tip" title="提示内容">内容</div>
        *         beforeRender: function(){},
        *         afterRender: function(){}
        *      });
@@ -113,6 +114,9 @@ var BaseView = SuperView.extend({
     }
     if (this._options.afterRender) {
       this._options.afterRender.call(this, this._options);
+    }
+    if (this._options.toolTip) {
+      this._initToolTip();
     }
     BaseUtils.removeLoading();
   },

@@ -131,15 +131,14 @@ var BaseItem = SuperView.extend({
    * @author wyj 15.2.14
    */
   _initStyle: function (options) {
-    var ctx = this;
     if (options.speed > 1) {
-      var item_id = this.model.get('id') ? (this.model.get('id') + '') : (this.model.get('dx') + 1) + '';
+      var item_id = this.model.get('id') ? (this.model.get('id') + '') : (this.model.get('dx') + 1 + '');
       if (this.model.get('dx') % 2 === 0) this.$el.addClass('bui-grid-row-even');
       this.$el.addClass('_item_el_' + (this._options.viewId || '') + '_' + item_id.replace(/^[^1-9]+/, ""));
       this.$el.hover(function () {
-        ctx.$el.addClass('hover');
+        $(this).addClass('hover');
       }, function () {
-        ctx.$el.removeClass('hover');
+        $(this).removeClass('hover');
       });
     }
   },
@@ -377,13 +376,15 @@ var BaseItem = SuperView.extend({
       app.addData('itemActiveList' + this._options.viewId, []);
     var list = app.getData('itemActiveList' + this._options.viewId);
     if (!options.add) {
-      Est.each(list, function (selecter) {
-        var node = $('.' + selecter);
+      debug('【BaseItem】_itemActive');
+      Est.each(list, Est.proxy(function (selecter) {
+        var node = $('.' + selecter, app.getView(this._options.viewId) ?
+          app.getView(this._options.viewId).$el : $("body"));
         //TODO 当为单选时
         //node.find('.toggle:first').click();
         node.removeClass('item-active');
         //node.find('.toggle').click();
-      });
+      }, this));
       list.length = 0;
     }
     this.$el.addClass('item-active');
@@ -595,9 +596,11 @@ var BaseItem = SuperView.extend({
    *      this._removeFromItems(context.model.get('dx'));
    */
   _removeFromItems: function (dx) {
-    if (app.getView(this._options.viewId) &&
-      app.getView(this._options.viewId)._options.items) {
-      Est.removeAt(app.getView(this._options.viewId)._options.items, dx);
+    if (app.getView(this._options.viewId)) {
+      if (app.getView(this._options.viewId)._options.items) {
+        Est.removeAt(app.getView(this._options.viewId)._options.items, dx);
+      }
+      app.getView(this._options.viewId)._resetDx();
     }
   },
   /**

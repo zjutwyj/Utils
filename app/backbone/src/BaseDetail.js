@@ -23,6 +23,7 @@ var BaseDetail = SuperView.extend({
        *         autoHide: true, // 保存成功后是否自动隐藏提示对话框
        *         enterRender: '#submit' // 执行回车后的按钮点击的元素选择符
        *         modelBind: true, // 表单元素与模型类 双向绑定
+       *         toolTip: true, // 是否显示title提示框   html代码： <div class="tool-tip" title="提示内容">内容</div>
        *         id: ctx.model.get('id'), // 当不是以dialog形式打开的时候， 需要传递ID值
                  page: ctx._getPage() // 点击返回按钮且需要定位到第几页时， 传入page值，
                  data: {} // 附加数据  获取方法为  _data.name
@@ -104,6 +105,7 @@ var BaseDetail = SuperView.extend({
     if (this._options.afterRender) {
       this._options.afterRender.call(this, this._options);
     }
+    if (this._options.toolTip) this._initToolTip();
     BaseUtils.removeLoading();
   },
   /**
