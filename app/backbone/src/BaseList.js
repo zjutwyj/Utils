@@ -126,6 +126,7 @@ var BaseList = SuperView.extend({
   _init: function (collection, options) {
 
     this._initOptions(options);
+    this._initDataModel(Backbone.Model.extend({}));
     this._initTemplate(this._options);
     this._initEnterEvent(this._options, this);
     this._initList(this._options);
@@ -151,6 +152,17 @@ var BaseList = SuperView.extend({
     this._options.sortField = 'sort';
     this._options.max = this._options.max || 99999;
     this._options.speed = this._options.speed || 9;
+  },
+  /**
+   * 初始化模型类, 设置index索引
+   *
+   * @method [private] - _initDataModel
+   * @private
+   * @param model
+   * @author wyj 14.11.20
+   */
+  _initDataModel: function (model) {
+    this.model = new model(this._options.data);
   },
   /**
    * 初始化模板， 若传递一个Template模板字符中进来， 则渲染页面

@@ -112,9 +112,6 @@ var BaseView = SuperView.extend({
     if (this._options.afterRender) {
       this._options.afterRender.call(this, this._options);
     }
-    if (this._options.afterRender) {
-      this._options.afterRender.call(this, this._options);
-    }
     if (this._options.toolTip) {
       this._initToolTip();
     }

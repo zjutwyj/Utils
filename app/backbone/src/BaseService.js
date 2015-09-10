@@ -33,6 +33,7 @@ BaseService.prototype = {
       type: 'post',
       url: options.url,
       async: false,
+      cache: options.cache,
       data: data,
       success: function (result) {
       }
@@ -146,13 +147,32 @@ BaseService.prototype = {
   factory: function (options) {
     var ctx = this;
     var $q = Est.promise;
+    var params = '';
+    var cacheId = '';
+    var result = null;
     options = Est.extend({ select: false, extend: false,
-      defaults: true, tree: false, defaultValue: null}, options);
+      defaults: true, tree: false, defaultValue: null, cache: false}, options);
+
+    for (var key in options) {
+      params += options[key];
+    }
+    cacheId = '_hash' + Est.hash(params + CONST.APP_VERSION);
+
+    // localStorage缓存
+    if (options.session) {
+      result = app.getSession(cacheId);
+      if (result) {
+        return new $q(function (topResolve, topReject) {
+          topResolve(JSON.parse(result));
+        });
+      }
+    }
     return new $q(function (topResolve, topReject) {
-      if (CONST.DEBUG_LOCALSERVICE){
+      if (CONST.DEBUG_LOCALSERVICE) {
         topResolve([]);
-      } else{
+      } else {
         ctx.ajax(options).done(function (result) {
+          var list = null;
           if (result.attributes) {
             ctx.initTree(options, result);
             ctx.initSelect(options, result);
@@ -162,7 +182,11 @@ BaseService.prototype = {
             result.attributes.data = [];
           }
           ctx.initDefault(options, result);
-          topResolve(result.attributes ? result.attributes.data : result);
+          list = result.attributes ? result.attributes.data : result;
+          if (options.session && result.attributes) {
+            app.addSession(cacheId, JSON.stringify(list));
+          }
+          topResolve(list);
         });
       }
     });

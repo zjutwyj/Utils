@@ -442,13 +442,20 @@ var SuperView = Backbone.View.extend({
       BaseUtils.initDialog({
         id: Est.hash(title),
         title: null,
+        width: 'auto',
         align: 'top',
         content: '<div style="padding: 5px;font-size: 12px;">'+title+'</div>',
         hideCloseBtn: true,
         target: $(this).get(0)
       });
+      $(window).one('click', Est.proxy(function(){
+        app.getDialog(Est.hash($(this).attr('title'))).close();
+      }, this));
     }, function () {
-      app.getDialog(Est.hash($(this).attr('title'))).close();
+      try{
+        app.getDialog(Est.hash($(this).attr('title'))).close();
+      }catch(e){
+      }
     });
   },
   render: function () {
