@@ -2971,11 +2971,11 @@
     var modify = "0";
     if (str.indexOf('&') != -1) {
       arr = str.split('&');
-      each(arr, function(item){
+      each(arr, function (item) {
         if (item.split('=')[0] == name) {
           setparam = value;
           modify = "1";
-        }else {
+        } else {
           setparam = item.split('=')[1];
         }
         returnurl = returnurl + item.split('=')[0] + "=" + setparam + "&";
@@ -3656,19 +3656,19 @@
    */
   function throttle(fn, delay, mustRunDelay, scope) {
     var start = new Date();
-    !mustRunDelay || (mustRunDelay = 5000);
-    return function () {
-      var context = scope || this;
+    if (!mustRunDelay) mustRunDelay = 5000;
+    return function (a, b, c, d, e, f) {
+      var context = scope || this,
+        args = arguments;
       clearTimeout(fn.timer);
       var end = new Date();
       if (end - start >= mustRunDelay) {
         clearTimeout(fn.timer);
-        fn.apply(context, arguments);
-      }
-      else {
+        fn.apply(context, args);
+      } else {
         fn.timer = setTimeout(function () {
           start = new Date();
-          fn.apply(context, arguments);
+          fn.apply(context, args);
         }, delay || 20);
       }
     };
