@@ -1,10 +1,10 @@
 /**
  * @description 基础集合类
  *
- * - url: CONST.API + '/product/list', // 如果是function形式构建的时候，记得带上page 与pageSize;
- * - batchDel: CONST.API + '/product/batch/del',
+ * - url: CONST.API + '/product/list', // 如果是function形式构建的时候，记得带上page 与pageSize; // 可选
+ * - batchDel: CONST.API + '/product/batch/del', // 可选
  * - model: ProductModel,
- * - initialize: function(){this._initialize();}
+ * - initialize: function(){this._initialize();} // 可选
  *
  * @class BaseCollection 集合类
  * @author yongjin<zjut_wyj@163.com> 2014/11/6

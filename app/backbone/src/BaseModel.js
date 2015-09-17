@@ -1,11 +1,11 @@
 /**
  * @description 模型类
  *
- *    - initialize 实现父类_initialize
+ *    - initialize (可选) 实现父类_initialize // 可选
  *    - defaults (可选) 默认值  如 Est.extend({}, BaseModel.prototype.defaults);
  *    - baseId (可选) ID标识符 如 productId
- *    - baseUrl (可选) 服务器交互地址
- *    - params (可选) 附加参数 如  mobile=true&type=01
+ *    - baseUrl (可选) 服务器交互地址 // 可选
+ *    - params (可选) 附加参数 如  mobile=true&type=01 // 可选
  *    - validate (可选) 当需要实现单个字段保存时， 需要调用父类_validation, 参照ProductModel
  *
  * @class BaseModel - 模型类

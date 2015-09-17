@@ -60,7 +60,10 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
   App.getBeforeStackItem = function () {
     var page = null;
     //debugger
-    if (App._CustomStack && App._CustomStack.length > 0) {
+    if (App._Stack.size() > 1){
+      page = App._Stack.get()[App._Stack.size() - 2];
+    }
+    else if (App._CustomStack && App._CustomStack.length > 0) {
       page = App._CustomStack.pop();
     }
     else if (App._Stack.size() > 0) {

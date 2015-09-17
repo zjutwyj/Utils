@@ -43,7 +43,7 @@ var SuperView = Backbone.View.extend({
    * @author wyj 15.1.22
    * @example
    *        // 获取对话框
-            app.getDialog('moduleId || id');
+   app.getDialog('moduleId || id');
    *        this._dialog({
                     moduleId: 'SeoDetail', // 模块ID
                     title: 'Seo修改', // 对话框标题
@@ -99,7 +99,8 @@ var SuperView = Backbone.View.extend({
       content: options.content || '<div id="' + viewId + '"></div>',
       viewId: viewId,
       onshow: function () {
-        options.onShow && options.onShow.call(this, options);
+        var result = options.onShow && options.onShow.call(this, options);
+        if (typeof result !== 'undefined' && !result) return;
         if (Est.typeOf(options.moduleId) === 'function') {
           app.addPanel(options.id, {
             el: '#' + options.id,
@@ -444,17 +445,23 @@ var SuperView = Backbone.View.extend({
         title: null,
         width: 'auto',
         align: 'top',
-        content: '<div style="padding: 5px;font-size: 12px;">'+title+'</div>',
+        content: '<div style="padding: 5px;font-size: 12px;">' + title + '</div>',
         hideCloseBtn: true,
         target: $(this).get(0)
       });
-      $(window).one('click', Est.proxy(function(){
-        app.getDialog(Est.hash($(this).attr('title'))).close();
+      if (!app.getData('toolTipList')) app.addData('toolTipList', []);
+      app.getData('toolTipList').push(Est.hash(title));
+
+      $(window).one('click', Est.proxy(function () {
+        Est.each(app.getData('toolTipList'), function (item) {
+          app.getDialog(item).close();
+        });
+        app.addData('toolTipList', []);
       }, this));
     }, function () {
-      try{
+      try {
         app.getDialog(Est.hash($(this).attr('title'))).close();
-      }catch(e){
+      } catch (e) {
       }
     });
   },

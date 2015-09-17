@@ -117,6 +117,9 @@ var BaseView = SuperView.extend({
     }
     BaseUtils.removeLoading();
   },
+  render: function(){
+    this._render();
+  },
   /**
    * 移除事件
    *
