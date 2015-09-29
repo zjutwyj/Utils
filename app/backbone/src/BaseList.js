@@ -631,8 +631,10 @@ var BaseList = SuperView.extend({
       //TODO 优先级 new对象里的viewId > _options > getCurrentView()
       itemView._setViewId(this._options.viewId || app.getCurrentView());
 
-      if (arg2 && arg2.at < this.dx - 1) {
-        this.collection.models[arg2.at === 0 ? 0 : arg2.at - 1].view.$el.after(itemView._render().el);
+      if (arg2 && arg2.at < this.dx - 1 &&
+        this.collection.models.length > 1) {
+        this.collection.models[arg2.at === 0 ? 0 :
+          arg2.at - 1].view.$el.after(itemView._render().el);
       } else {
         this.list.append(itemView._render().el);
       }
@@ -1064,6 +1066,24 @@ var BaseList = SuperView.extend({
     var sortOpt = { id: model.get('id') };
     sortOpt[this._options.sortField || 'sort'] = model.get(this._options.sortField);
     model._saveField(sortOpt, this, { async: false, hideTip: true});
+  },
+  /**
+   * 插序 常用于sortable
+   *
+   * @method [移动] - _insertOrder
+   * @param begin
+   * @param end
+   * @author wyj 15.9.26
+   * @example
+   *    this._insertOrder(1, 6);
+   */
+  _insertOrder: function (begin, end) {
+    if (begin< end){
+      end++;
+    }
+    Est.arrayInsert(this.collection.models, begin, end, {callback: function (list) {
+    }});
+    this._resetDx();
   },
   /**
    * 交换位置

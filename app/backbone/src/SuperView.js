@@ -100,14 +100,14 @@ var SuperView = Backbone.View.extend({
       viewId: viewId,
       onshow: function () {
         var result = options.onShow && options.onShow.call(this, options);
-        if (typeof result !== 'undefined' && !result) return;
+        if (typeof result !== 'undefined' && !result)
+          return;
         if (Est.typeOf(options.moduleId) === 'function') {
           app.addPanel(options.id, {
             el: '#' + options.id,
             template: '<div id="base_item_dialog' + options.id + '"></div>'
           }).addView(options.id, new options.moduleId(options));
-        }
-        else if (Est.typeOf(options.moduleId) === 'string') {
+        } else if (Est.typeOf(options.moduleId) === 'string') {
           seajs.use([options.moduleId], function (instance) {
             app.addPanel(options.moduleId, {
               el: '#' + options.moduleId,

@@ -343,7 +343,7 @@ var BaseItem = SuperView.extend({
         add: this._checkAppend
       });
     } else {
-      this.$el.removeClass('item-active');
+      //this.$el.removeClass('item-active');
     }
     //TODO shift + 多选
     if (e && e.shiftKey) {

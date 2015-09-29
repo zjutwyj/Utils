@@ -156,10 +156,10 @@ BaseService.prototype = {
     for (var key in options) {
       params += options[key];
     }
-    cacheId = '_hash' + Est.hash(params + CONST.APP_VERSION);
+    cacheId = '_hash' + Est.hash(params);
 
     // localStorage缓存
-    if (options.session) {
+    if (options.session && !app.getData('versionUpdated')) {
       result = app.getSession(cacheId);
       if (result) {
         return new $q(function (topResolve, topReject) {

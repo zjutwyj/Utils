@@ -251,7 +251,7 @@ Est.extend(Application.prototype, {
    */
   emptyDialog: function () {
     Est.each(this.dialog, function (item) {
-      if (item.close) {
+      if (item && item.close) {
         item.close().remove();
       }
     });
@@ -443,7 +443,7 @@ Est.extend(Application.prototype, {
   /**
    * 添加状态数据
    *
-   * @method [状态] - addStatus ( 添加状态数据 )
+   * @method [状态] - SSaatus ( 添加状态数据 )
    * @param name
    * @param value
    * @author wyj 15.1.7
@@ -461,6 +461,26 @@ Est.extend(Application.prototype, {
    */
   getStatus: function (name) {
     return this['status'][name];
+  },
+  /**
+   * 添加参数配置对象
+   *
+   * @method [配置] - addOption ( 添加配置对象 )
+   * @author wyj 15.9.19
+   */
+  addOption: function (name, value) {
+    this['options'][name] = value;
+  },
+  /**
+   * 获取参数配置对象
+   *
+   * @method [配置] - getOption ( 获取配置对象 )
+   * @param name
+   * @return {*}
+   * @author wyj 15.9.19
+   */
+  getOption: function (name) {
+    return Est.cloneDeep(this['options'][name]);
   },
   /**
    * 获取所有状态数据

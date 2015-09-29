@@ -1501,6 +1501,7 @@ Application.prototype = {
    *      App.checkLogin(); => true/false
    */
   checkLogin: function (authenticate) {
+    App.addSession('beforeLoginHref', document.location.href);
     //return true;
     if (authenticate && !App.isLogin) {
       //查询是否已经登录
