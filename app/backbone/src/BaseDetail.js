@@ -335,6 +335,9 @@ var BaseDetail = SuperView.extend({
       debug('XxxModel模型类未设置url参数！', {type: 'error'});
       return;
     }
+    if (this.model.attributes._response){
+      delete this.model.attributes._response;
+    }
     this.model.save(null, {
       wait: true,
       success: function (response) {

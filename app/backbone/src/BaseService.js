@@ -116,6 +116,7 @@ BaseService.prototype = {
   },
   /**
    * 基础工厂类 - 工厂模式，通过不同的url请求不同的数据
+   * 注意：这个方法获取的数据是list类型的， 适合列表或下拉框使用
    *
    * @method factory
    * @param options
@@ -124,6 +125,11 @@ BaseService.prototype = {
    * @example
    *      new BaseService().factory({
               url: '', // 请求地址
+              data: { // 表单参数
+              },
+              session: true, // 永久记录，除非软件版本号更新
+              cache: true // 暂时缓存， 浏览器刷新后需重新请求
+
               select: true, // 是否构建下拉框
               tree: true, // 是否构建树
               extend: true, // 是否全部展开
@@ -187,6 +193,58 @@ BaseService.prototype = {
             app.addSession(cacheId, JSON.stringify(list));
           }
           topResolve(list);
+        });
+      }
+    });
+  },
+  /**
+   * 基础工厂类 - 工厂模式，通过不同的url请求不同的数据
+   * 注意：这个方法获取的数据是从任何类型的
+   *
+   * @method query
+   * @param options
+   * @return {Est.promise}
+   * @author wyj 15.1.26
+   * @example
+   *      new BaseService().query({
+              url: '', // 请求地址
+              data: { // 表单参数
+              },
+              session: true, // 永久记录，除非软件版本号更新
+              cache: true // 暂时缓存， 浏览器刷新后需重新请求
+            });
+   */
+  query: function (options) {
+    var ctx = this;
+    var $q = Est.promise;
+    var params = '';
+    var cacheId = '';
+    var result = null;
+    options = Est.extend({ cache: false}, options);
+
+    for (var key in options) {
+      params += options[key];
+    }
+    cacheId = '_hash' + Est.hash(params);
+
+    // localStorage缓存
+    if (options.session && !app.getData('versionUpdated')) {
+      result = app.getSession(cacheId);
+      if (result) {
+        return new $q(function (topResolve, topReject) {
+          topResolve(JSON.parse(result));
+        });
+      }
+    }
+    return new $q(function (topResolve, topReject) {
+      if (CONST.DEBUG_LOCALSERVICE) {
+        topResolve([]);
+      } else {
+        ctx.ajax(options).done(function (result) {
+          if (options.session && result) {
+            app.addSession(cacheId, JSON.stringify(result));
+          }
+          topResolve(result);
         });
       }
     });

@@ -377,14 +377,18 @@ var BaseList = SuperView.extend({
           /*if (ctx.options.instance)
            app.addData(ctx.options.instance, result.models);*/
           ctx.list.find('.no-result').remove();
-          if (Est.isEmpty(result) || result.attributes.data.length === 0) {
-            ctx._options.append ? ctx.list.append('<div class="no-result">已全部加载</div>') :
-              ctx.list.append('<div class="no-result">暂无数据</div>');
-            debug(function () {
-              return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
-                Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
-                ctx.collection.url + '查看数据');
-            });
+          try{
+            if (Est.isEmpty(result) || result.attributes.data.length === 0) {
+              ctx._options.append ? ctx.list.append('<div class="no-result">已全部加载</div>') :
+                ctx.list.append('<div class="no-result">暂无数据</div>');
+              debug(function () {
+                return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
+                  Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
+                  ctx.collection.url + '查看数据');
+              });
+            }
+          }catch(e){
+            Est.trigger('login', result.attributes.data);
           }
           if (ctx._options.subRender)  ctx._filterRoot();
           if (ctx._options.filter) ctx._filterCollection();
