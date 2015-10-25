@@ -93,6 +93,8 @@ var BaseList = SuperView.extend({
                       this.addOne();
                     }
        *        },
+       *        cache: true, // 数据缓存到内存中
+       *        session: true, // 数据缓存到浏览器中，下次打开浏览器，请求的数据直接从浏览器缓存中读取
        *        // 以下为树型列表时 需要的参数
        *        subRender: '.node-tree', // 下级分类的容器选择符
        *        collapse: '.node-collapse' 展开/收缩元素选择符
@@ -377,17 +379,19 @@ var BaseList = SuperView.extend({
           /*if (ctx.options.instance)
            app.addData(ctx.options.instance, result.models);*/
           ctx.list.find('.no-result').remove();
-          try{
-            if (Est.isEmpty(result) || result.attributes.data.length === 0) {
+          try {
+            if (Est.isEmpty(result) || Est.isEmpty(result.attributes) || result.attributes.data.length === 0) {
               ctx._options.append ? ctx.list.append('<div class="no-result">已全部加载</div>') :
                 ctx.list.append('<div class="no-result">暂无数据</div>');
+
+              Est.trigger('resultListNone' + ctx._options.viewId, {});
               debug(function () {
                 return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
                   Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
                   ctx.collection.url + '查看数据');
               });
             }
-          }catch(e){
+          } catch (e) {
             Est.trigger('login', result.attributes.data);
           }
           if (ctx._options.subRender)  ctx._filterRoot();
@@ -1082,7 +1086,7 @@ var BaseList = SuperView.extend({
    *    this._insertOrder(1, 6);
    */
   _insertOrder: function (begin, end) {
-    if (begin< end){
+    if (begin < end) {
       end++;
     }
     Est.arrayInsert(this.collection.models, begin, end, {callback: function (list) {

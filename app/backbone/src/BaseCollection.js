@@ -170,7 +170,7 @@ var BaseCollection = Backbone.Collection.extend({
       debug('5.collection reset');
       context.collection._reset();
       context._empty();
-    }});
+    }, cacheData: this.options.cache,session: this.options.session});
     /* var $q = Est.promise;
      return new $q(function (resolve) {
 

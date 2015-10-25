@@ -24,6 +24,7 @@ Est.extend(Application.prototype, {
     this.models = [];
     this.compileTemps = {};
     this.filters = { navigator: [], form: [] };
+    this.cache = {};
   },
   /**
    * 返回当前应用底层使用的是backbone版本
@@ -201,6 +202,7 @@ Est.extend(Application.prototype, {
   addDialog: function (dialog, id) {
     this.dialog.push(dialog);
     if (id) {
+      app.addData('_curDialog', id);
       this.dialogs[id] = dialog;
     }
     return dialog;
@@ -223,6 +225,18 @@ Est.extend(Application.prototype, {
   getDialog: function (id) {
     if (Est.isEmpty(id)) return this.dialogs;
     return this.dialogs[id];
+  },
+  /**
+   * 获取最后打开的dialog对话框
+   * @method [对话框] - getCurrentDialog ( 获取当前对话框 )
+   * @return {*}
+   * @author wyj 15.10.25
+   */
+  getCurrentDialog: function () {
+    if (app.getData('_curDialog')) {
+      return this.dialogs[app.getData('_curDialog')];
+    }
+    return null;
   },
   /**
    * 添加模型类
@@ -537,6 +551,64 @@ Est.extend(Application.prototype, {
    */
   getCookies: function () {
     return this.cookies;
+  },
+  /**
+   * 获取参数hash值
+   *
+   * @method [cache] - getParamsHash ( 获取参数hash值 )
+   * @param options
+   * @author wyj 15.10.25
+   */
+  getParamsHash: function (options) {
+    var params = '',
+      cacheId = '';
+
+    for (var key in options) {
+      params += options[key];
+    }
+    cacheId = '_hash' + Est.hash(params);
+
+    return cacheId;
+  },
+  /**
+   * 缓存数据
+   * @method [cache] - addCache ( 数据缓存 )
+   * @param options
+   * @author wyj 15.10.25
+   */
+  addCache: function (options, result) {
+    try{
+      var cacheId = this.getParamsHash(options);
+      if (options.session && result) {
+
+        app.addSession(cacheId, JSON.stringify(result));
+      } else {
+        this.cache[cacheId] = result;
+      }
+    }catch(e){
+      debug('Error:at 575 ==>' + e);
+    }
+  },
+  /**
+   * 获取缓存数据
+   *
+   * @method [cache] - getCache ( 获取缓存数据 )
+   * @param options
+   * @author wyj 15.10.25
+   * @return {*}
+   */
+  getCache: function (options) {
+    var result = null;
+    var cacheId = this.getParamsHash(options);
+    // localStorage缓存
+    if (options.session && !app.getData('versionUpdated')) {
+      result = app.getSession(cacheId);
+      if (result) {
+        return JSON.parse(result);
+      }
+    } else {
+      return this.cache[cacheId];
+    }
   }
 });
 /**

@@ -437,8 +437,9 @@ var SuperView = Backbone.View.extend({
    *      <div class="tool-tip" title="提示内容">content</div>
    *      this._initToolTip();
    */
-  _initToolTip: function ($parent) {
-    var $tip = $parent ?  $('.tool-tip', $parent) : this.$('.tool-tip');
+  _initToolTip: function ($parent, className) {
+    var className = className || '.tool-tip';
+    var $tip = $parent ?  $(className, $parent) : this.$(className);
     $tip.hover(function (e) {
       var title = $(this).attr('title');
       BaseUtils.initDialog({

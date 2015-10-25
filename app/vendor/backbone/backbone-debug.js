@@ -1089,6 +1089,32 @@
   // Set the default implementation of `Backbone.ajax` to proxy through to `$`.
   // Override this if you'd like to use a different library.
   Backbone.ajax = function() {
+    var result = null;
+    var response = null;
+    var options = {};
+
+    if (arguments[0].cacheData || arguments[0].session){
+      options.data = arguments[0].data;
+      options.url = arguments[0].url;
+      options.cache = arguments[0].cacheData;
+      options.session = arguments[0].session;
+      result = app.getCache(options);
+      if (!result){
+        function beforeTest(result) {
+          app.addCache(options, result);
+              return new Est.setArguments(arguments); // 如果return false; 则不执行doTest方法
+        };
+        arguments[0].success = Est.inject(arguments[0].success, beforeTest, function(){});
+      } else{
+        arguments[0].success.call(this,result);
+        return {done: function(){
+          return function(){
+            this.call(this, result);
+          }
+        }}
+      }
+    }
+
     return Backbone.$.ajax.apply(Backbone.$, arguments);
   };
   // Backbone.Router
