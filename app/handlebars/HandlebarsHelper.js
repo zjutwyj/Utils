@@ -19,9 +19,13 @@ window.ckToggleClass = function (selecter) {
  <a href="javascript:;">{{this}}</a></li>
  {{/pagination}}
  */
-Handlebars.registerHelper('pagination', function (page, totalPage, block) {
-  var accum = '';
-  var pages = Est.getPaginationNumber(page, totalPage, 9);
+Handlebars.registerHelper('pagination', function (page, totalPage, sum, block) {
+  var accum = '', block = block, sum = sum;
+  if (arguments.length === 3){
+    block = sum;
+    sum = 9;
+  }
+  var pages = Est.getPaginationNumber(page, totalPage, sum);
   for (var i = 0, len = pages.length; i < len; i++) {
     accum += block.fn(pages[i]);
   }

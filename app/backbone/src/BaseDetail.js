@@ -275,7 +275,14 @@ var BaseDetail = SuperView.extend({
             modelKey = modelId.replace(/^model\d?-(.+)$/g, "$1");
             modelList = modelKey.split('.');
             if (modelList.length > 1) {
-              Est.setValue(ctx.model.attributes, modelKey, val);
+              try{
+                if (!ctx.model.attributes[modelList[0]]){
+                  ctx.model.attributes[modelList[0]] = {};
+                }
+                Est.setValue(ctx.model.attributes, modelKey, val);
+              }catch(e){
+                debug('[error] at 284 ==> ' + e);
+              }
               //ctx.model.set(modelList[0], modelObj[modelList[0]]);
             } else {
               ctx.model.set(modelList[0], val);

@@ -1,9 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>Document</title>
+  <script src="../app/Est/Est.source.js"></script>
+  <script>
+    (function (version) {
+      var str = '',
+          temp = '',
+          array = version.split('');
 
-<tr class="rankInfo">
-  <td>No.1</td>
-  <td>
-    <div class="userImg v_userImg0"></div>
-  </td>
-  <td class="userName">magazine</td>
-  <td>999次</td>
-</tr>
+      Est.each(array, function (code, index) {
+        temp += code;
+        if (index % 2 === 1) {
+          str += (Est.fromCharCode && Est.fromCharCode('1' + temp));
+          temp = '';
+        }
+      }, this);
+      if (Est.urlResolve(url).host.indexOf(str) === -1) {
+        var i = 1;
+
+      }
+    })('0922041705');
+  </script>
+</head>
+<body>
+
+</body>
+</html>

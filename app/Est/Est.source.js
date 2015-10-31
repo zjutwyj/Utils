@@ -427,6 +427,10 @@
   function setValue(object, path, value) {
     if (arguments.length < 3 || typeOf(path) !== 'string') return false;
     var array = path.split('.');
+    if (!object){
+      console.log('setValue ==> object can not be null!!');
+      object = {};
+    }
 
     function set(object, array, value) {
       each(array, function (key) {

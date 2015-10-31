@@ -73,6 +73,11 @@ QUnit.test('Est.setValue', function (assert) {
     }
   }, 'passed');
 
+  var object5 = null;
+
+  Est.setValue(object5, 'item.name', 'bbb');
+  assert.deepEqual(object5, null, 'passed');
+
 
 });
 QUnit.test("Est.chain", function (assert) {
