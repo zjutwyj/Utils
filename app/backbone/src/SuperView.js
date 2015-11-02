@@ -443,7 +443,7 @@ var SuperView = Backbone.View.extend({
     $tip.hover(function (e) {
       var title = $(this).attr('title');
       BaseUtils.initDialog({
-        id: Est.hash(title),
+        id: Est.hash(title || 'error:446'),
         title: null,
         width: 'auto',
         align: 'top',

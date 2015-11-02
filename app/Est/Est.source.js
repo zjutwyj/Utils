@@ -427,7 +427,7 @@
   function setValue(object, path, value) {
     if (arguments.length < 3 || typeOf(path) !== 'string') return false;
     var array = path.split('.');
-    if (!object){
+    if (!object) {
       console.log('setValue ==> object can not be null!!');
       object = {};
     }
@@ -585,11 +585,15 @@
    *        Est.hash('aaaaa');
    */
   function hash(str) {
-    var hash = 5381,
-      i = str.length
-    while (i)
-      hash = (hash * 33) ^ str.charCodeAt(--i)
-    return hash >>> 0;
+    try {
+      var hash = 5381,
+        i = str.length;
+      while (i)
+        hash = (hash * 33) ^ str.charCodeAt(--i)
+      return hash >>> 0;
+    } catch (e) {
+      debug('error:595 the arguments of Est.hash must be string ==>' + e);
+    }
   }
 
   Est.hash = hash;
@@ -2965,6 +2969,7 @@
    */
   function setUrlParam(name, value, url) {
     var str = "";
+    url = url || window.location.href;
     if (url.indexOf('?') != -1)
       str = url.substr(url.indexOf('?') + 1);
     else
@@ -3589,17 +3594,17 @@
 
   function off(token) {
     for (var m in topics) {
-      if (m === token){
+      if (m === token) {
         delete topics[m];
       }
       /*if (topics[m]) {
-        for (var i = 0, j = topics[m].length; i < j; i++) {
-          if (topics[m][i].token === token) {
-            topics[m].splice(i, 1);
-            return token;
-          }
-        }
-      }*/
+       for (var i = 0, j = topics[m].length; i < j; i++) {
+       if (topics[m][i].token === token) {
+       topics[m].splice(i, 1);
+       return token;
+       }
+       }
+       }*/
     }
     return this;
   }

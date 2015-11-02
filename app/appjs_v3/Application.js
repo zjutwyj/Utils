@@ -141,7 +141,7 @@ var Application = function (options) {
 };
 Application.prototype = {
   initialize: function () {
-    this.data = { itemActiveList: [] };
+    this.data = { itemActiveList: [], sessionId: '' };
     this.modules = {};
     this.status = {};
     this.templates = {};
@@ -1439,6 +1439,7 @@ Application.prototype = {
   },
   /**
    * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
+   * * 当需要区分用户唯一性时， 在设置前先设置sessionId   app.addData('sessionId', 'Enterprise_0000000000000000032');
    *
    * @method [会话] - addSession ( 添加session会话 )
    * @param name
@@ -1448,8 +1449,13 @@ Application.prototype = {
    * @example
    *      App.addSession('__USER__', {username: 'ggggfj'});
    */
-  addSession: function (name, value) {
-    localStorage['___JHW_APPJS__' + name] = value;
+  addSession: function (name, value, isSession) {
+    try{
+      var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
+      localStorage['___JHW_APPJS__' + Est.hash(sessionId + name)] = value;
+    }catch(e){
+      debug('error:394 ==>' + e);
+    }
     return value;
   },
   /**
@@ -1457,12 +1463,14 @@ Application.prototype = {
    *
    * @method [会话] - getSession ( 读取session会话 )
    * @param name
+   * @param isSession 是否会话
    * @return {Object}
    * @example
-   *      App.getSession('__USER__'); => {username: 'ggggfj'}
+   *      App.getSession('__USER__', false); => {username: 'ggggfj'}
    */
-  getSession: function (name) {
-    return localStorage['___JHW_APPJS__' + name];
+  getSession: function (name, isSession) {
+    var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
+    return localStorage['___JHW_APPJS__' + Est.hash(sessionId + name)];
   },
   /**
    * 添加查询延迟定时器， 以访多次重复查询

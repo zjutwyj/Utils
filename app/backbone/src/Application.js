@@ -378,6 +378,7 @@ Est.extend(Application.prototype, {
   },
   /**
    * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
+   * 当需要区分用户唯一性时， 在设置前先设置sessionId   app.addData('sessionId', 'Enterprise_0000000000000000032');
    *
    * @method [会话] - addSession ( 添加session会话 )
    * @param name
@@ -387,8 +388,13 @@ Est.extend(Application.prototype, {
    * @example
    *      App.addSession('__USER__', {username: 'ggggfj'});
    */
-  addSession: function (name, value) {
-    localStorage['___JHW_BACKBONE__' + this.data.sessionId + name] = value;
+  addSession: function (name, value, isSession) {
+    try{
+      var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
+      localStorage['___JHW_BACKBONE__' + Est.hash(sessionId + name)] = value;
+    }catch(e){
+      debug('error:394 ==>' + e);
+    }
     return value;
   },
   /**
@@ -401,7 +407,8 @@ Est.extend(Application.prototype, {
    *      App.getSession('__USER__'); => {username: 'ggggfj'}
    */
   getSession: function (name) {
-    return localStorage['___JHW_BACKBONE__' + this.data.sessionId + name];
+    var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
+    return localStorage['___JHW_BACKBONE__' + Est.hash(sessionId + name)];
   },
   addTpl: function (name, fn) {
     try {

@@ -232,7 +232,8 @@ var BaseDetail = SuperView.extend({
    * @example
    *        this._form()._validate()._init({
        *            onBeforeSave: function(){},
-       *            onAfterSave: function(){}
+       *            onAfterSave: function(){},
+       *            onErrorSave: function(){}
        *        });
    *
    *
@@ -307,6 +308,8 @@ var BaseDetail = SuperView.extend({
             options.onAfterSave.call(ctx, response);
           }
           $button.html(preText);
+        }, function(response){
+          options.onErrorSave.call(ctx, response);
         });
         setTimeout(function(){
           $button.html(preText);
@@ -323,8 +326,8 @@ var BaseDetail = SuperView.extend({
    * @private
    * @author wyj 14.11.18
    */
-  _save: function (callback) {
-    this._saveItem(callback);
+  _save: function (callback, error) {
+    this._saveItem(callback, error);
   },
   /**
    * 保存表单
@@ -335,7 +338,7 @@ var BaseDetail = SuperView.extend({
    * @param context
    * @author wyj 14.11.15
    */
-  _saveItem: function (callback, context) {
+  _saveItem: function (callback, error) {
     debug('- BaseDetail._saveItem');
     if (Est.typeOf(this.model.url) === 'string') debug('XxxModel模型类中的baseUrl未设置', {type: 'error'});
     if (Est.isEmpty(this.model.url())) {
@@ -354,7 +357,11 @@ var BaseDetail = SuperView.extend({
           top.model = response.attributes;
         }
         if (callback && typeof callback === 'function')
-          callback.call(context, response);
+          callback.call(this, response);
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        if (error && typeof error === 'function')
+          error.call(this, XMLHttpRequest, textStatus, errorThrown);
       }
     });
   },
