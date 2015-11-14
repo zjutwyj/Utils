@@ -385,6 +385,9 @@ var BaseList = SuperView.extend({
                 ctx.list.append('<div class="no-result">暂无数据</div>');
 
               Est.trigger('resultListNone' + ctx._options.viewId, {});
+              if (result.msg === '未登录'){
+                Est.trigger('checkLogin');
+              }
               debug(function () {
                 return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
                   Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
@@ -392,7 +395,8 @@ var BaseList = SuperView.extend({
               });
             }
           } catch (e) {
-            Est.trigger('login', result.attributes.data);
+            Est.trigger('checkLogin');
+            debug('【Error】：396 服务器返回数据格式不正确 ，检查result.attributes里的data是否正在？' + result.msg);
           }
           if (ctx._options.subRender)  ctx._filterRoot();
           if (ctx._options.filter) ctx._filterCollection();

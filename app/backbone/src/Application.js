@@ -389,10 +389,10 @@ Est.extend(Application.prototype, {
    *      App.addSession('__USER__', {username: 'ggggfj'});
    */
   addSession: function (name, value, isSession) {
-    try{
+    try {
       var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
       localStorage['___JHW_BACKBONE__' + Est.hash(sessionId + name)] = value;
-    }catch(e){
+    } catch (e) {
       debug('error:394 ==>' + e);
     }
     return value;
@@ -406,7 +406,7 @@ Est.extend(Application.prototype, {
    * @example
    *      App.getSession('__USER__'); => {username: 'ggggfj'}
    */
-  getSession: function (name) {
+  getSession: function (name, isSession) {
     var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
     return localStorage['___JHW_BACKBONE__' + Est.hash(sessionId + name)];
   },
@@ -584,15 +584,18 @@ Est.extend(Application.prototype, {
    * @author wyj 15.10.25
    */
   addCache: function (options, result) {
-    try{
-      var cacheId = this.getParamsHash(options);
-      if (options.session && result) {
+    try {
+      var cacheId = '';
 
+      if (!result.success) return;
+      cacheId = this.getParamsHash(options);
+
+      if (options.session && result) {
         app.addSession(cacheId, JSON.stringify(result));
       } else {
         this.cache[cacheId] = result;
       }
-    }catch(e){
+    } catch (e) {
       debug('Error:at 575 ==>' + e);
     }
   },

@@ -441,7 +441,7 @@ var SuperView = Backbone.View.extend({
     var className = className || '.tool-tip';
     var $tip = $parent ?  $(className, $parent) : this.$(className);
     $tip.hover(function (e) {
-      var title = $(this).attr('title');
+      var title = $(this).attr('data-title') || $(this).attr('title');
       BaseUtils.initDialog({
         id: Est.hash(title || 'error:446'),
         title: null,
@@ -462,7 +462,7 @@ var SuperView = Backbone.View.extend({
       }, this));
     }, function () {
       try {
-        app.getDialog(Est.hash($(this).attr('title'))).close();
+        app.getDialog(Est.hash($(this).attr('data-title')|| $(this).attr('title'))).close();
       } catch (e) {
       }
     });

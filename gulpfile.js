@@ -550,7 +550,8 @@ paths['Leaflet_website_base'] = { scripts: { source: [
   'app/Est/Est.source.js',
   'app/backbone/src/Application.js',
   'app/vendor/handlebars/handlebars-debug.js',
-  'app/handlebars/HandlebarsHelper.js'
+  'app/handlebars/HandlebarsHelper.js',
+  'app/vendor/zepto/zepto.min.js'
 ], name: 'base.js', dist: 'C:/software/WebstormProjects/Leaflet/app/modules/website/scripts' } };
 gulp.task('Leaflet_website_base', ['Leaflet_base'], function () {
   doTask('Leaflet_website_base', true);
