@@ -89,6 +89,9 @@ var BaseModel = Backbone.Model.extend({
       BaseUtils.initTooltip('数据异常, 稍后请重试！');
       return false;
     }
+    if (response && response.msg && response.msg === '权限验证失败'){
+      Utils.tip('权限不够！', {time: 2000});
+    }
     // 当服务器有返回msg消息 并参数设置hideTip为false时  弹出提示信息
     // 成功保存后 当为添加元素时 添加“继续添加”按钮， 点击继续添加按钮， 重新设置id为null, baseId为null, 使其变为新对象
     // 当参数hideOkBtn为false时添加 “确定”按钮， 当点击按钮地， 触发_dialog_submit_callback事件， 关闭_dialog对话框，

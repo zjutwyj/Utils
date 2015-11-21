@@ -193,6 +193,7 @@ var BaseList = SuperView.extend({
         this.$el.html(this.template(options.data));
       }
     }
+    if (this._options.modelBind) this._modelBind();
     return this._data;
   },
   /**
@@ -376,6 +377,9 @@ var BaseList = SuperView.extend({
       // 数据载入
       ctx.collection._load(ctx.collection, ctx, model).
         done(function (result) {
+          if (result && result.msg && result.msg === '权限验证失败'){
+            Utils.tip('权限不够！', {time: 2000});
+          }
           /*if (ctx.options.instance)
            app.addData(ctx.options.instance, result.models);*/
           ctx.list.find('.no-result').remove();
