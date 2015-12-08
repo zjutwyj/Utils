@@ -138,7 +138,7 @@ App._Custom = function (window, document, Clickable, Scrollable, App, Utils, Eve
       }
     } catch (e) {
       debug('【Error】App.back' + e);
-      App.load('home');
+      App.goToRootPage();
     }
     return new App.setArguments(arguments, pageName);
   }, function (pageName, callback, append) {

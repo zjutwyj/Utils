@@ -37,7 +37,8 @@ App._Stack = function (window, document, App, Utils, Scroll, Pages) {
 				break;
 			case 'number':
 				if (Math.abs(startIndex) > stackSize) {
-					throw TypeError('absolute start index cannot be greater than stack size, got ' + startIndex);
+          App.goToRootPage();
+					console.error('absolute start index cannot be greater than stack size, got ' + startIndex);
 				}
 				if (startIndex < 0) {
 					startIndex = stackSize + startIndex;

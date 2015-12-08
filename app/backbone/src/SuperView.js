@@ -109,10 +109,14 @@ var SuperView = Backbone.View.extend({
           }).addView(options.id, new options.moduleId(options));
         } else if (Est.typeOf(options.moduleId) === 'string') {
           seajs.use([options.moduleId], function (instance) {
-            app.addPanel(options.moduleId, {
-              el: '#' + options.moduleId,
-              template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
-            }).addView(options.moduleId, new instance(options));
+            try {
+              app.addPanel(options.moduleId, {
+                el: '#' + options.moduleId,
+                template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
+              }).addView(options.moduleId, new instance(options));
+            } catch (e) {
+
+            }
           });
         }
       },
@@ -139,7 +143,7 @@ var SuperView = Backbone.View.extend({
     var _self = this;
     $(selector).change(function () {
       var val, pass;
-      var modelId = $(this).attr('id');
+      var modelId = window._singleBindId = $(this).attr('id');
       if (modelId && modelId.indexOf('model') !== -1) {
         switch (this.type) {
           case 'radio':
@@ -244,7 +248,8 @@ var SuperView = Backbone.View.extend({
       _self._modelBind(item);
       if (modelId in temp_obj) return;
       _self.model.on('change:' + (temp_obj[modelId] = modelId.split('.')[0]), function () {
-        _self._viewReplace(selector, _self.model, callback);
+        if (item === '#' + window._singleBindId)
+          _self._viewReplace(selector, _self.model, callback);
       });
     });
   },
@@ -430,6 +435,22 @@ var SuperView = Backbone.View.extend({
     seajs.use(dependent, Est.proxy(callback, this));
   },
   /**
+   * 延迟执行
+   * @method [加载] - _delay
+   *
+   * @param time
+   * @author wyj 15.12.3
+   * @example
+   *  this._delay(function(){}, 5000);
+   */
+  _delay: function (fn, time) {
+    setTimeout(Est.proxy(function () {
+      setTimeout(Est.proxy(function () {
+        fn && fn.call(this);
+      }, this), time);
+    }, this), 0);
+  },
+  /**
    * title提示
    * @method [提示] - _initToolTip ( title提示 )
    * @author wyj 15.9.5
@@ -439,7 +460,7 @@ var SuperView = Backbone.View.extend({
    */
   _initToolTip: function ($parent, className) {
     var className = className || '.tool-tip';
-    var $tip = $parent ?  $(className, $parent) : this.$(className);
+    var $tip = $parent ? $(className, $parent) : this.$(className);
     $tip.hover(function (e) {
       var title = $(this).attr('data-title') || $(this).attr('title');
       BaseUtils.initDialog({
@@ -462,7 +483,7 @@ var SuperView = Backbone.View.extend({
       }, this));
     }, function () {
       try {
-        app.getDialog(Est.hash($(this).attr('data-title')|| $(this).attr('title'))).close();
+        app.getDialog(Est.hash($(this).attr('data-title') || $(this).attr('title'))).close();
       } catch (e) {
       }
     });

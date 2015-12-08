@@ -507,14 +507,15 @@ gulp.task('UserManagement_mobileManagement', ['UserManagement_appjs_wrap'], func
 paths['Leaflet_doc'] = { doc: { source: [
   'app/backbone/src/*.*',
   'app/handlebars/HandlebarsHelper.js',
-  'app/Est/Est.source.js'
+  'app/Est/Est.source.js',
+  'C:/software/WebstormProjects/Leaflet/app/modules/design/controllers/DesignCenter.js'
 ], dist: 'C:/software/WebstormProjects/Leaflet/doc' } }
 gulp.task('Leaflet_doc', [], function () {
   doTask('Leaflet_doc', false);
 });
 
 paths['Leaflet_base'] = { scripts: { source: [
-  'app/vendor/seajs/sea.js',
+  'app/vendor/seajs/sea-debug.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/vendor/json3/json3.js',
 
