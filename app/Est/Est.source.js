@@ -1757,6 +1757,42 @@
 
   Est.arrayRemove = arrayRemove;
   /**
+   * 从数组中移除
+   * @method [数组] - remove ( 数组中移除数组 )
+   * @param {array} targetList 原数组
+   * @param {array} removeList 待移除数组
+   * @param callback 两元素比较  返回true/false
+   * @return {array}
+   * @example
+   *       var targetList = [{key: '11', value: '11'}, {key: '22', value: '22'}, {key: '33', value: '33'}];
+   *       var removeList = [{key: '11'}];
+   *       Est.remove(targetList, removeList, function(targetItem, removeItem){
+   *          return targetItem.key === removeItem.key;
+   *       });
+   *       ==> [{key: '22', value: '22'}, {key: '33', value: '33'}];
+   */
+  function remove(targetList, removeList, callback) {
+    var i = 0;
+    if (typeOf(targetList) !== 'array' || typeOf(removeList) !== 'array') {
+      debug('targetList is not a array or removeList is not a array', {type: 'error'});
+      return targetList;
+    }
+    i = targetList.length;
+    while (i > 0) {
+      var item = targetList[i - 1];
+      Est.each(removeList, function (model) {
+        if (callback.call(this, item, model)) {
+          targetList.splice(i - 1, 1);
+          return false;
+        }
+      });
+      i--;
+    }
+    return targetList;
+  }
+
+  Est.remove = remove;
+  /**
    * @description 获取对象的所有KEY值
    * @method [数组] - keys ( 获取对象的所有KEY值 )
    * @param {Object} obj 目标对象

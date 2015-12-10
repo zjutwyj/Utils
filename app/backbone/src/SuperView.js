@@ -93,7 +93,7 @@ var SuperView = Backbone.View.extend({
           return false;
         }, autofocus: true});
     }
-    var viewId = Est.typeOf(options.moduleId) === 'string' ? options.moduleId : options.id;
+    var viewId = Est.typeOf(options.id) === 'string' ? options.id : options.moduleId;
     options = Est.extend(options, {
       el: '#base_item_dialog' + viewId,
       content: options.content || '<div id="' + viewId + '"></div>',
@@ -110,10 +110,10 @@ var SuperView = Backbone.View.extend({
         } else if (Est.typeOf(options.moduleId) === 'string') {
           seajs.use([options.moduleId], function (instance) {
             try {
-              app.addPanel(options.moduleId, {
-                el: '#' + options.moduleId,
-                template: '<div id="base_item_dialog' + options.moduleId + '"></div>'
-              }).addView(options.moduleId, new instance(options));
+              app.addPanel(options.viewId, {
+                el: '#' + options.viewId,
+                template: '<div id="base_item_dialog' + options.viewId + '"></div>'
+              }).addView(options.viewId, new instance(options));
             } catch (e) {
 
             }
@@ -218,7 +218,7 @@ var SuperView = Backbone.View.extend({
     Est.each(selector.split(','), Est.proxy(function (item) {
       if (!Est.isEmpty(item)) {
         this['h_temp_' + Est.hash(item)] = this['h_temp_' + Est.hash(item)] ||
-          Handlebars.compile(this.$template.find(selector).wrapAll('<div>').parent().html());
+          Handlebars.compile($(this.$template).find(selector).wrapAll('<div>').parent().html());
         this.$(item).replaceWith(this['h_temp_' + Est.hash(item)](model.toJSON()));
       }
       callback && callback.call(this, model);

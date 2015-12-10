@@ -58,7 +58,7 @@ var BaseDetail = SuperView.extend({
     this._data = options.data = options.data || {};
     if (options.template) {
       this.template = Handlebars.compile(options.template);
-      this.$template = $(options.template);
+      this.$template = '<div>' + options.template + '</div>';
       //this.$el.append(this.template(options.data));
     }
     return this._data;

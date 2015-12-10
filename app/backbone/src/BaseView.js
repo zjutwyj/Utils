@@ -65,7 +65,7 @@ var BaseView = SuperView.extend({
   _initTemplate: function (options) {
     if (options.template) {
       this.template = Handlebars.compile(options.template);
-      this.$template = $(options.template);
+      this.$template = '<div>'+ options.template + '</div>';
     }
   },
   /**

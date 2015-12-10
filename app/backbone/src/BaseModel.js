@@ -202,12 +202,12 @@ var BaseModel = Backbone.Model.extend({
       newModel.save(null, {
         success: function (model, result) {
           if (typeof options.success != 'undefined') {
-            options.success.call(ctx, keyValue, result);
+            options.success && options.success.call(ctx, keyValue, result);
           }
         }, wait: wait
       });
     } else{
-      options.success.call(ctx, keyValue, {});
+      options.success && options.success.call(ctx, keyValue, {});
     }
   },
   /**

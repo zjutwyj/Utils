@@ -87,6 +87,7 @@ var BaseItem = SuperView.extend({
   _initTemplate: function (options) {
     options.template = options.template || options.itemTemp;
     if (options.template) {
+      this.$template = '<div>' + options.template + '</div>';
       if (options.viewId) {
         if (!app.getCompileTemp(options.viewId))
           app.addCompileTemp(options.viewId, Handlebars.compile(options.template));
