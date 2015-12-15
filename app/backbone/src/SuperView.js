@@ -43,34 +43,36 @@ var SuperView = Backbone.View.extend({
    * @author wyj 15.1.22
    * @example
    *        // 获取对话框
-   app.getDialog('moduleId || id');
-   *        this._dialog({
-                    moduleId: 'SeoDetail', // 模块ID
-                    title: 'Seo修改', // 对话框标题
-                    id: this.model.get('id'), // 初始化模块时传入的ID， 如productId
-                    width: 600, // 对话框宽度
-                    height: 250, // 对话框高度
-                    skin: 'form-horizontal', // className
-                    hideSaveBtn: false, // 是否隐藏保存按钮， 默认为false
-                    autoClose: true, // 提交后按确定按钮  自动关闭对话框
-                    quickClose: true, // 点击空白处关闭对话框
-                    button: [ // 自定义按钮
-                      {
-                        value: '保存',
-                        callback: function () {
-                        this.title('正在提交..');
-                        $("#SeoDetail" + " #submit").click(); // 弹出的对话ID选择符为moduleId值
-                        app.getView('SeoDetail'); // 视图为moduleId
-                        return false; // 去掉此行将直接关闭对话框
-                      }}
-                    ],
-                    onShow: function(){}, // 对话框弹出后调用
-                    onClose: function(){
-                        this._reload(); // 列表刷新
-                        this.collection.push(Est.cloneDeep(app.getModels())); // 向列表末尾添加数据, 注意必须要深复制
-                        this.model.set(app.getModels().pop()); // 修改模型类
-                    }
-                }, this);
+   *          app.getDialog('moduleId || id');
+   *          this._dialog({
+   *                moduleId: 'SeoDetail', // 模块ID
+   *                title: 'Seo修改', // 对话框标题
+   *                id: this.model.get('id'), // 初始化模块时传入的ID， 如productId
+   *                width: 600, // 对话框宽度
+   *                height: 250, // 对话框高度
+   *                skin: 'form-horizontal', // className
+   *                hideSaveBtn: false, // 是否隐藏保存按钮， 默认为false
+   *                autoClose: true, // 提交后按确定按钮  自动关闭对话框
+   *                quickClose: true, // 点击空白处关闭对话框
+   *                button: [ // 自定义按钮
+   *                  {
+   *                    value: '保存',
+   *                    callback: function () {
+   *                    this.title('正在提交..');
+   *                    $("#SeoDetail" + " #submit").click(); // 弹出的对话ID选择符为moduleId值
+   *                    app.getView('SeoDetail'); // 视图为moduleId
+   *                    return false; // 去掉此行将直接关闭对话框
+   *                  }}
+   *                ],
+   *                onShow: function(){ // 对话框弹出后调用   [注意，当调用show方法时， 对话框会重新渲染模块视图，若想只渲染一次， 可以在这里返回false]
+   *                    return true;
+   *                },
+   *                onClose: function(){
+   *                    this._reload(); // 列表刷新
+   *                    this.collection.push(Est.cloneDeep(app.getModels())); // 向列表末尾添加数据, 注意必须要深复制
+   *                    this.model.set(app.getModels().pop()); // 修改模型类
+   *                }
+   *            }, this);
    */
   _dialog: function (options, context) {
     var ctx = context || this;
@@ -214,14 +216,16 @@ var SuperView = Backbone.View.extend({
    *      this._viewReplace('#model-name', this.model);
    */
   _viewReplace: function (selector, model, callback) {
-    debug('【双向绑定】selector: ' + selector);
+    debug('【局部渲染】selector: ' + selector);
+    var result = callback && callback.call(this, model);
+    if (Est.typeOf(result) !== 'undefined' && !result) return;
     Est.each(selector.split(','), Est.proxy(function (item) {
       if (!Est.isEmpty(item)) {
         this['h_temp_' + Est.hash(item)] = this['h_temp_' + Est.hash(item)] ||
           Handlebars.compile($(this.$template).find(selector).wrapAll('<div>').parent().html());
         this.$(item).replaceWith(this['h_temp_' + Est.hash(item)](model.toJSON()));
+        this._modelBind(item);
       }
-      callback && callback.call(this, model);
     }, this));
   },
   /**
@@ -308,8 +312,8 @@ var SuperView = Backbone.View.extend({
    * @author wyj 14.12.12
    * @example
    *      app.getView('categoryList')._setOption({
-       *        sortField: 'orderList'
-       *      })._moveUp(this.model);
+   *          sortField: 'orderList'
+   *      })._moveUp(this.model);
    */
   _setOption: function (obj) {
     Est.extend(this._options, obj);
@@ -404,9 +408,15 @@ var SuperView = Backbone.View.extend({
    * @param callback
    * @author wyj 15.6.14
    * @example
-   *      this._one('_pageRender', function(){
-   *        ....
-   *      });
+   *      this._one(['AwardList'], function (AwardList) {
+   *          app.addPanel('main', {
+   *          el: '#Award',
+   *          template: '<div class="leaflet-award"></div>'
+   *      }).addView('awardList', new AwardList({
+   *          el: '.leaflet-award',
+   *          viewId: 'awardList'
+   *      }));
+   *  });
    */
   _one: function (name, callback) {
     try {

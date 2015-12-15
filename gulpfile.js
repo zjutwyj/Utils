@@ -567,9 +567,56 @@ gulp.task('Leaflet.min', ['Leaflet_website_base.min'], function () {
 });
 
 
+// 手机外观设计
+paths['MobileSite_doc'] = { doc: { source: [
+  'app/backbone/src/*.*',
+  'app/handlebars/HandlebarsHelper.js',
+  'app/Est/Est.source.js',
+  'C:/software/WebstormProjects/MobileSite/app/modules/design/controllers/DesignCenter.js'
+], dist: 'C:/software/WebstormProjects/MobileSite/doc' } }
+gulp.task('MobileSite_doc', [], function () {
+  doTask('MobileSite_doc', false);
+});
+
+paths['MobileSite_base'] = { scripts: { source: [
+  'app/vendor/seajs/sea-debug.js',
+  'app/vendor/seajs/seajs-text-debug.js',
+  'app/vendor/json3/json3.js',
+
+  'app/vendor/jquery/jquery-1.10.2.js',
+  'app/Est/Est.source.js',
+  'app/vendor/underscore/underscore.js',
+  'app/vendor/backbone/backbone-debug.js',
+  'app/vendor/handlebars/handlebars-debug.js',
+  'app/handlebars/HandlebarsHelper.js',
+
+  'app/backbone/src/Application.js',
+  'app/backbone/src/BaseUtils.js',
+  'app/backbone/src/BaseService.js',
+  'app/backbone/src/SuperView.js',
+  'app/backbone/src/BaseView.js',
+  'app/backbone/src/BaseList.js',
+  'app/backbone/src/BaseItem.js',
+  'app/backbone/src/BaseCollection.js',
+  'app/backbone/src/BaseModel.js',
+  'app/backbone/src/BaseDetail.js'
+
+], name: 'base.js', dist: 'C:/software/WebstormProjects/MobileSite/app/scripts' } };
+gulp.task('MobileSite_base', ['MobileSite_doc'], function () {
+  doTask('MobileSite_base', true);
+});
+gulp.task('MobileSite_base.min', ['MobileSite_doc'], function () {
+  doTask('MobileSite_base', false);
+});
+gulp.task('MobileSite', ['MobileSite_base'], function () {
+});
+gulp.task('MobileSite.min', ['MobileSite_base.min'], function () {
+});
+
 // [0].Est工具类库 Est.min
 // [1].用户后台 UserManagement.min
 // [2].微传单 UserManagement_leaflet.min
 // [3].微传单 第二版 UserManagement_leaflet_v2.min
 // [4].手机后台 UserManagement_mobileManagement.min
 // [5].微传单与微手机网站 Leaflet.min
+// [6].手机外观设计 MobileSite.min
