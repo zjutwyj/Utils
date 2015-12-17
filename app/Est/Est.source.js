@@ -3121,6 +3121,12 @@
    * @param value
    * @param options
    * @author wyj 15.1.8
+   * @example
+   *      Est.cookie('the_cookie'); // 读取 cookie
+   *      Est.cookie('the_cookie', 'the_value'); // 存储 cookie
+   *      Est.cookie('the_cookie', 'the_value', { expires: 7 }); // 存储一个带7天期限的 cookie
+   *      Est.cookie('the_cookie', '', { expires: -1 }); // 删除 cookie
+   *      Est.cookie(’name’, ‘value’, {expires: 7, path: ‘/’, domain: ‘jquery.com’, secure: true}); //新建一个cookie 包括有效期 路径 域名等
    */
   function cookie(key, value, options) {
     var pluses = /\+/g;

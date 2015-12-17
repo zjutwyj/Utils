@@ -59,7 +59,7 @@ var SuperView = Backbone.View.extend({
    *                    value: '保存',
    *                    callback: function () {
    *                    this.title('正在提交..');
-   *                    $("#SeoDetail" + " #submit").click(); // 弹出的对话ID选择符为moduleId值
+   *                    $("#SeoDetail" + " #submit").click(); // 弹出的对话ID选择符为id (注：当不存在id时，为moduleId值)
    *                    app.getView('SeoDetail'); // 视图为moduleId
    *                    return false; // 去掉此行将直接关闭对话框
    *                  }}
@@ -76,6 +76,7 @@ var SuperView = Backbone.View.extend({
    */
   _dialog: function (options, context) {
     var ctx = context || this;
+    var viewId = Est.typeOf(options.id) === 'string' ? options.id : options.moduleId;
 
     options.width = options.width || 700;
     options.cover = Est.typeOf(options.cover) === 'boolean' ? options.cover : true;
@@ -86,40 +87,48 @@ var SuperView = Backbone.View.extend({
       options.button.push(
         {value: '提交', callback: function () {
           Utils.addLoading();
-          $('#' + options.moduleId + ' #submit').click();
-          if (options.autoClose) {
-            Est.on('_dialog_submit_callback', Est.proxy(function () {
-              this.close().remove();
-            }, this));
+          $('#' + viewId + ' #submit').click();
+          try{
+            if (options.autoClose) {
+              Est.on('_dialog_submit_callback', Est.proxy(function () {
+                this.close().remove();
+              }, this));
+            }
+          }catch(e){
+            console.log(e);
           }
           return false;
         }, autofocus: true});
     }
-    var viewId = Est.typeOf(options.id) === 'string' ? options.id : options.moduleId;
+
     options = Est.extend(options, {
       el: '#base_item_dialog' + viewId,
       content: options.content || '<div id="' + viewId + '"></div>',
       viewId: viewId,
       onshow: function () {
-        var result = options.onShow && options.onShow.call(this, options);
-        if (typeof result !== 'undefined' && !result)
-          return;
-        if (Est.typeOf(options.moduleId) === 'function') {
-          app.addPanel(options.id, {
-            el: '#' + options.id,
-            template: '<div id="base_item_dialog' + options.id + '"></div>'
-          }).addView(options.id, new options.moduleId(options));
-        } else if (Est.typeOf(options.moduleId) === 'string') {
-          seajs.use([options.moduleId], function (instance) {
-            try {
-              app.addPanel(options.viewId, {
-                el: '#' + options.viewId,
-                template: '<div id="base_item_dialog' + options.viewId + '"></div>'
-              }).addView(options.viewId, new instance(options));
-            } catch (e) {
-
-            }
-          });
+        try{
+          var result = options.onShow && options.onShow.call(this, options);
+          if (typeof result !== 'undefined' && !result)
+            return;
+          if (Est.typeOf(options.moduleId) === 'function') {
+            app.addPanel(options.id, {
+              el: '#' + options.id,
+              template: '<div id="base_item_dialog' + options.id + '"></div>'
+            }).addView(options.id, new options.moduleId(options));
+          } else if (Est.typeOf(options.moduleId) === 'string') {
+            seajs.use([options.moduleId], function (instance) {
+              try {
+                app.addPanel(options.viewId, {
+                  el: '#' + options.viewId,
+                  template: '<div id="base_item_dialog' + options.viewId + '"></div>'
+                }).addView(options.viewId, new instance(options));
+              } catch (e) {
+                  console.log(e);
+              }
+            });
+          }
+        }catch(e){
+          console.log(e);
         }
       },
       onclose: function () {

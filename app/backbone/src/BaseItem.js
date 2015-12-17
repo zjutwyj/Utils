@@ -162,7 +162,7 @@ var BaseItem = SuperView.extend({
     if (this._options.modelBind) this._modelBind();
     //TODO 判断是否存在子元素
     var modelOptions = this.model.get('_options');
-    if (modelOptions._subRender && this.model.get('children') &&
+    if (modelOptions && modelOptions._subRender && this.model.get('children') &&
 
       this.model.get('children').length > 0) {
       // Build child views, insert and render each
