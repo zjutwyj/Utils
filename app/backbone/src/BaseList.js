@@ -377,7 +377,7 @@ var BaseList = SuperView.extend({
       // 数据载入
       ctx.collection._load(ctx.collection, ctx, model).
         done(function (result) {
-          if (result && result.msg && result.msg === '权限验证失败'){
+          if (result && result.msg && result.msg === '权限验证失败') {
             Utils.tip('权限不够！', {time: 2000});
           }
           /*if (ctx.options.instance)
@@ -389,7 +389,7 @@ var BaseList = SuperView.extend({
                 ctx.list.append('<div class="no-result">暂无数据</div>');
 
               Est.trigger('resultListNone' + ctx._options.viewId, {});
-              if (result.msg === '未登录'){
+              if (result.msg === '未登录') {
                 Est.trigger('checkLogin');
               }
               debug(function () {
@@ -404,7 +404,9 @@ var BaseList = SuperView.extend({
           }
           if (ctx._options.subRender)  ctx._filterRoot();
           if (ctx._options.filter) ctx._filterCollection();
-
+          if (result.attributes && result.attributes.model) {
+            ctx._options.data= Est.extend(ctx._options.data, result.attributes.model);
+          }
           ctx._afterLoad(options);
         });
     } else {

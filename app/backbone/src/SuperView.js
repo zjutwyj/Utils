@@ -81,6 +81,7 @@ var SuperView = Backbone.View.extend({
     options.width = options.width || 700;
     options.cover = Est.typeOf(options.cover) === 'boolean' ? options.cover : true;
     options.button = options.button || [];
+    options.quickClose = options.cover ? false : options.quickClose;
 
     if (typeof options.hideSaveBtn === 'undefined' ||
       (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
@@ -88,13 +89,13 @@ var SuperView = Backbone.View.extend({
         {value: '提交', callback: function () {
           Utils.addLoading();
           $('#' + viewId + ' #submit').click();
-          try{
+          try {
             if (options.autoClose) {
               Est.on('_dialog_submit_callback', Est.proxy(function () {
                 this.close().remove();
               }, this));
             }
-          }catch(e){
+          } catch (e) {
             console.log(e);
           }
           return false;
@@ -106,7 +107,7 @@ var SuperView = Backbone.View.extend({
       content: options.content || '<div id="' + viewId + '"></div>',
       viewId: viewId,
       onshow: function () {
-        try{
+        try {
           var result = options.onShow && options.onShow.call(this, options);
           if (typeof result !== 'undefined' && !result)
             return;
@@ -118,16 +119,19 @@ var SuperView = Backbone.View.extend({
           } else if (Est.typeOf(options.moduleId) === 'string') {
             seajs.use([options.moduleId], function (instance) {
               try {
+                if (!instance) {
+                  console.error('module is not defined')
+                }
                 app.addPanel(options.viewId, {
                   el: '#' + options.viewId,
                   template: '<div id="base_item_dialog' + options.viewId + '"></div>'
                 }).addView(options.viewId, new instance(options));
               } catch (e) {
-                  console.log(e);
+                console.log(e);
               }
             });
           }
-        }catch(e){
+        } catch (e) {
           console.log(e);
         }
       },
@@ -482,11 +486,12 @@ var SuperView = Backbone.View.extend({
     var $tip = $parent ? $(className, $parent) : this.$(className);
     $tip.hover(function (e) {
       var title = $(this).attr('data-title') || $(this).attr('title');
+      if (Est.isEmpty(title))return;
       BaseUtils.initDialog({
         id: Est.hash(title || 'error:446'),
         title: null,
         width: 'auto',
-        align: 'top',
+        align:  $(this).attr('data-align') || 'top',
         content: '<div style="padding: 5px;font-size: 12px;">' + title + '</div>',
         hideCloseBtn: true,
         target: $(this).get(0)

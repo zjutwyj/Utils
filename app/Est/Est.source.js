@@ -3129,56 +3129,62 @@
    *      Est.cookie(’name’, ‘value’, {expires: 7, path: ‘/’, domain: ‘jquery.com’, secure: true}); //新建一个cookie 包括有效期 路径 域名等
    */
   function cookie(key, value, options) {
-    var pluses = /\+/g;
+    var parseCookieValue = null;
+    var read = null;
+    try{
+      var pluses = /\+/g;
 
-    function parseCookieValue(s) {
-      if (s.indexOf('"') === 0) {
-        s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      parseCookieValue = function(s) {
+        if (s.indexOf('"') === 0) {
+          s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+        }
+        try {
+          s = decodeURIComponent(s.replace(pluses, ' '));
+          return s;
+        } catch (e) {
+        }
       }
-      try {
-        s = decodeURIComponent(s.replace(pluses, ' '));
-        return s;
-      } catch (e) {
+
+      read = function(s, converter) {
+        var value = parseCookieValue(s);
+        return typeOf(converter) === 'function' ? converter(value) : value;
       }
+
+      // 写入
+      if (arguments.length > 1 && typeOf(value) !== 'function') {
+        options = Est.extend({}, options);
+
+        if (typeof options.expires === 'number') {
+          var days = options.expires, t = options.expires = new Date();
+          t.setTime(+t + days * 864e+5);
+        }
+        return (document.cookie = [
+          encodeURIComponent(key), '=', encodeURIComponent(value),
+          options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+          options.path ? '; path=' + options.path : '',
+          options.domain ? '; domain=' + options.domain : '',
+          options.secure ? '; secure' : ''
+        ].join(''));
+      }
+      // 读取
+      var result = key ? undefined : {};
+      var cookies = document.cookie ? document.cookie.split('; ') : [];
+      each(cookies, function (item) {
+        var parts = item.split('=');
+        var name = decodeURIComponent(parts.shift());
+        var cookie = parts.join('=');
+        if (key && key === name) {
+          result = read(cookie, value);
+          return false;
+        }
+        if (!key && (cookie = read(cookie)) !== undefined) {
+          result[name] = cookie;
+        }
+      });
+      return result;
+    }catch(e){
+      return;
     }
-
-    function read(s, converter) {
-      var value = parseCookieValue(s);
-      return typeOf(converter) === 'function' ? converter(value) : value;
-    }
-
-    // 写入
-    if (arguments.length > 1 && typeOf(value) !== 'function') {
-      options = Est.extend({}, options);
-
-      if (typeof options.expires === 'number') {
-        var days = options.expires, t = options.expires = new Date();
-        t.setTime(+t + days * 864e+5);
-      }
-      return (document.cookie = [
-        encodeURIComponent(key), '=', encodeURIComponent(value),
-        options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-        options.path ? '; path=' + options.path : '',
-        options.domain ? '; domain=' + options.domain : '',
-        options.secure ? '; secure' : ''
-      ].join(''));
-    }
-    // 读取
-    var result = key ? undefined : {};
-    var cookies = document.cookie ? document.cookie.split('; ') : [];
-    each(cookies, function (item) {
-      var parts = item.split('=');
-      var name = decodeURIComponent(parts.shift());
-      var cookie = parts.join('=');
-      if (key && key === name) {
-        result = read(cookie, value);
-        return false;
-      }
-      if (!key && (cookie = read(cookie)) !== undefined) {
-        result[name] = cookie;
-      }
-    });
-    return result;
   }
 
   Est.cookie = cookie;
