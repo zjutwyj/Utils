@@ -56,6 +56,10 @@ QUnit.test("Est.startsWidth('aaa', 'aa', true); => true", function (assert) {
   assert.equal(result2, false, "Est.startsWidth('aaa', 'Aa', false); => " + Est.startsWidth('aaa', 'Aa', false));
   var result3 = Est.startsWidth('aaa', 'Aa', true);
   assert.equal(result3, true, "Est.startsWidth('aaa', 'Aa', true); => " + Est.startsWidth('aaa', 'Aa', true));
+  var result4 = Est.startsWidth(null, 'aa', true);
+  assert.equal(result4, false, 'null passed');
+  var result5 = Est.startsWidth(undefined, 'aa', true);
+  assert.equal(result5, false, 'undefined passed');
 });
 
 QUnit.test("Est.endsWidth('aaa', 'aa', true); => true", function (assert) {

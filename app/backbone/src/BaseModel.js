@@ -35,7 +35,7 @@ var BaseModel = Backbone.Model.extend({
     if (this.isNew() && Est.isEmpty(this.id)) return base + sep + this.params;
     _url = base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id + sep + this.params;
     debug(function () {
-      return ('【Query】' + _url);
+      return ('[Query]' + _url);
     });
     return _url;
   },
@@ -82,15 +82,17 @@ var BaseModel = Backbone.Model.extend({
     var ctx = this, buttons = [],
       _isNew = false;
     if ('msg' in response) Utils.removeLoading();
-
     if (Est.isEmpty(response)) {
       var url = Est.typeOf(this.url) === 'function' ? this.url() : this.url;
-      debug('服务器返回的数据为空， 点击' + url + '是否返回数据？无？ 检查XxxModel中的baseUrl、baseId参数是否配置正确？还无？联系王进');
+      debug('Error25 url' + url);
       BaseUtils.initTooltip('数据异常, 稍后请重试！');
       return false;
     }
     if (response && response.msg && response.msg === '权限验证失败'){
       Utils.tip('权限不够！', {time: 2000});
+    }
+    if (response.msg === '未登录') {
+      Est.trigger('checkLogin');
     }
     // 当服务器有返回msg消息 并参数设置hideTip为false时  弹出提示信息
     // 成功保存后 当为添加元素时 添加“继续添加”按钮， 点击继续添加按钮， 重新设置id为null, baseId为null, 使其变为新对象
@@ -139,7 +141,7 @@ var BaseModel = Backbone.Model.extend({
         app.getDialog('dialog_msg').close().remove();
       }, 2000);
     } else if ('msg' in response && Est.isEmpty(response.msg)) {
-      debug('服务器返回的msg为空! 因此无弹出框信息。 url：' + this.baseUrl);
+      debug('Error26 ' + this.baseUrl);
     }
     // 当success为false时， 直接返回服务器错误的response信息
     if (Est.typeOf(response.success) === 'boolean' && !response.success) {
@@ -196,11 +198,14 @@ var BaseModel = Backbone.Model.extend({
     newModel.hideOkBtn = true;
     newModel.set('editField', true);
     debug(function () {
-      if (!newModel.baseUrl) return '当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl';
+      if (!newModel.baseUrl) return 'Error27';
     }, {type: 'console'});
     if (newModel.baseUrl) {
       newModel.save(null, {
         success: function (model, result) {
+          if (result.msg === '未登录') {
+            Est.trigger('checkLogin');
+          }
           if (typeof options.success != 'undefined') {
             options.success && options.success.call(ctx, keyValue, result);
           }

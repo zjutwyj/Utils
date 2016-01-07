@@ -1107,10 +1107,8 @@
         arguments[0].success = Est.inject(arguments[0].success, beforeTest, function(){});
       } else{
         arguments[0].success.call(this,result);
-        return {done: function(){
-          return function(){
-            this.call(this, result);
-          }
+        return {done: function(callback){
+          callback.call(this, result);
         }}
       }
     }

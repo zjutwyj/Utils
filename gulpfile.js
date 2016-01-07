@@ -508,7 +508,14 @@ paths['Leaflet_doc'] = { doc: { source: [
   'app/backbone/src/*.*',
   'app/handlebars/HandlebarsHelper.js',
   'app/Est/Est.source.js',
-  'C:/software/WebstormProjects/Leaflet/app/modules/design/controllers/DesignCenter.js'
+  'C:/software/WebstormProjects/Leaflet/app/modules/design/controllers/DesignCenter.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/tab/controllers/Tab.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/select/controllers/Select.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/item_check/controllers/ItemCheck.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/drop_down/controllers/DropDown.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/district/controllers/District.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/color_picker/controllers/ColorPicker.js',
+  'C:/software/WebstormProjects/Leaflet/app/ui/class_change/controllers/ClassChange.js'
 ], dist: 'C:/software/WebstormProjects/Leaflet/doc' } }
 gulp.task('Leaflet_doc', [], function () {
   doTask('Leaflet_doc', false);

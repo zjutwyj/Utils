@@ -69,7 +69,7 @@ var BaseCollection = Backbone.Collection.extend({
     if (Est.isEmpty(resp)) {
       debug(function () {
         var url = Est.typeOf(ctx.url) === 'function' ? ctx.url() : ctx.url;
-        return ('服务器返回的数据为空， 点击' + url + '是否返回数据？无？ 检查XxxCollection中的url参数是否配置正确？');
+        return 'Error:14 ' + url;
       }, {type: 'error'});
       return [];
     }
@@ -168,9 +168,8 @@ var BaseCollection = Backbone.Collection.extend({
     return instance.fetch({success: function () {
       //resolve(instance);
       debug('5.collection reset');
-      context.collection._reset();
       context._empty();
-    }, cacheData: this.options.cache,session: this.options.session});
+    }, cacheData: this.options.cache, session: this.options.session});
     /* var $q = Est.promise;
      return new $q(function (resolve) {
 
@@ -187,7 +186,7 @@ var BaseCollection = Backbone.Collection.extend({
    */
   _setItemId: function (itemId) {
     this._itemId = itemId;
-    debug('- 根据ID查列表' + this._itemId);
+    debug('- get list by itemId ' + this._itemId);
   },
   /**
    * 清空列表

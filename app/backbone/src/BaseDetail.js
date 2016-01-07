@@ -77,10 +77,7 @@ var BaseDetail = SuperView.extend({
       this.list = $(options.render);
     debug(function () {
       if (!ctx.list || ctx.list.size() === 0) {
-        return ('当前' + ctx.options.viewId + '视图无法找到选择符， 检查XxxDetail中的_initialize方法中是否定义render或 ' +
-          '实例化对象(new XxxDetail({...}))中是否存入el; ' +
-          '或template模板是否引入， 或是否是iframe对话框中未重新实例化Application对象， 或检查template模板是否存在' +
-          (ctx._options.render ? ctx._options.render : ctx.el));
+        return 'Error15 viewId=' + ctx.options.viewId + (ctx._options.render ? ctx._options.render : ctx.el);
       }
     }, {type: 'error'});
     return this.list;
@@ -94,7 +91,7 @@ var BaseDetail = SuperView.extend({
    *        this._render();
    */
   _render: function () {
-    if (this._options.beforeRender){
+    if (this._options.beforeRender) {
       this._options.beforeRender.call(this, this._options);
     }
     this.list.append(this.template(this.model.toJSON()));
@@ -122,18 +119,19 @@ var BaseDetail = SuperView.extend({
   _initModel: function (model, ctx) {
 
     debug(function () {
-      if (!model) {
-        return 'XxxDetail未找到模型类， 请检查继承BaseDetail时是否设置model参数，如XxxDetail = BaseDetail.extend({' +
-          'model: XxxModel, initialize: function(){..}})';
-      }
+      if (!model) return 'Error16';
     }, {type: 'error'});
+
     ctx.passId = this.options.id || Est.getUrlParam('id', window.location.href);
 
     if (!Est.isEmpty(this.passId)) {
       ctx.model = new model();
       ctx.model.set('id', ctx.passId);
       ctx.model.set('_data', ctx._options.data);
-      ctx.model.fetch().done(function () {
+      ctx.model.fetch().done(function (response) {
+        if (response.msg === CONST.LANG.NOT_LOGIN) {
+          Est.trigger('checkLogin');
+        }
         ctx.model.set('_isAdd', ctx._isAdd = false), ctx.render();
       });
     } else {
@@ -204,7 +202,7 @@ var BaseDetail = SuperView.extend({
           app.addData(field, ctx.formValidate.getField(field));
           debug(function () {
             if (!ctx.formValidate.getField(field)) {
-              return '字段不匹配，检查input元素name值是否以vali-开头？';
+              return 'Error17';
             }
           }, {type: 'error'});
           app.getData(field).set('remote', {
@@ -276,13 +274,13 @@ var BaseDetail = SuperView.extend({
             modelKey = modelId.replace(/^model\d?-(.+)$/g, "$1");
             modelList = modelKey.split('.');
             if (modelList.length > 1) {
-              try{
-                if (!ctx.model.attributes[modelList[0]]){
+              try {
+                if (!ctx.model.attributes[modelList[0]]) {
                   ctx.model.attributes[modelList[0]] = {};
                 }
                 Est.setValue(ctx.model.attributes, modelKey, val);
-              }catch(e){
-                debug('[error] at 284 ==> ' + e);
+              } catch (e) {
+                debug('Error18 ' + e);
               }
               //ctx.model.set(modelList[0], modelObj[modelList[0]]);
             } else {
@@ -295,7 +293,7 @@ var BaseDetail = SuperView.extend({
         if (typeof options.onBeforeSave !== 'undefined')
           isPassed = options.onBeforeSave.call(ctx);
         if (Est.typeOf(isPassed) !== 'undefined' && !isPassed) return false;
-        $button.html('提交中...');
+        $button.html(CONST.LANG.SUBMIT);
         $button.prop('disabled', true);
         ctx._save(function (response) {
           if (options.onAfterSave) {
@@ -308,10 +306,13 @@ var BaseDetail = SuperView.extend({
             options.onAfterSave.call(ctx, response);
           }
           $button.html(preText);
-        }, function(response){
+        }, function (response) {
+          if (respnse.msg === CONST.LANG.NOT_LOGIN) {
+            Est.trigger('checkLogin');
+          }
           options.onErrorSave.call(ctx, response);
         });
-        setTimeout(function(){
+        setTimeout(function () {
           $button.html(preText);
           $button.prop('disabled', false);
         }, 5000);
@@ -342,10 +343,10 @@ var BaseDetail = SuperView.extend({
     debug('- BaseDetail._saveItem');
     if (Est.typeOf(this.model.url) === 'string') debug('XxxModel模型类中的baseUrl未设置', {type: 'error'});
     if (Est.isEmpty(this.model.url())) {
-      debug('XxxModel模型类未设置url参数！', {type: 'error'});
+      debug('Error19', {type: 'error'});
       return;
     }
-    if (this.model.attributes._response){
+    if (this.model.attributes._response) {
       delete this.model.attributes._response;
     }
     this.model.save(null, {
@@ -359,7 +360,7 @@ var BaseDetail = SuperView.extend({
         if (callback && typeof callback === 'function')
           callback.call(this, response);
       },
-      error: function(XMLHttpRequest, textStatus, errorThrown){
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
         if (error && typeof error === 'function')
           error.call(this, XMLHttpRequest, textStatus, errorThrown);
       }

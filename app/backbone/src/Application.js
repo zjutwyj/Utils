@@ -122,16 +122,43 @@ Est.extend(Application.prototype, {
    *      app.addView('productList', new ProductList());
    */
   addView: function (name, instance) {
-    if (name in this['instance']) {
-      this.removeView(name);
-      //console.log('已存在该视图对象' + name + '， 请先移除该视图再创建, app.removeView("XxxView")');
-    }
+    if (name in this['instance']) this.removeView(name);
     this['instance'][name] = instance;
     this.setCurrentView(name);
     return this['instance'][name];
   },
   add: function (name, instance) {
     return this.addView(name, instance);
+  },
+  /**
+   * 视图添加， 当重新添加时会调用destroy方法
+   *
+   * @method [视图] - addRegion ( 添加视图[推荐使用] )
+   * @param name
+   * @param instance
+   * @return {*}
+   * @example
+   *      app.addRegion('productList', ProductList, {
+   *        el: '',
+   *        args: args
+   *      });
+   */
+  addRegion: function (name, instance, options) {
+    var panel = Est.nextUid('region');
+    var $region = $('<div class="' + panel + '"></div>');
+
+    if (name in this['instance']) {
+      this.removeView(name);
+      this.removePanel(name);
+    }
+    this.addPanel(name, {
+      el: options.el,
+      template: $region
+    });
+    options.el = $region;
+    options.viewId = name;
+
+    return this.addView(name, new instance(options));
   },
   /**
    * 设置当前视图
@@ -181,6 +208,7 @@ Est.extend(Application.prototype, {
     var view = this.getView(name);
     try {
       if (view) {
+        view.destroy && view.destroy();
         view._empty();
         view.stopListening();
         view.$el.off().remove();
@@ -282,7 +310,7 @@ Est.extend(Application.prototype, {
    */
   addData: function (name, data) {
     if (name in this['data']) {
-      debug('重新赋值' + name);
+      debug('has key in data' + name);
     }
     this['data'][name] = data;
   },
@@ -312,7 +340,7 @@ Est.extend(Application.prototype, {
    */
   addModule: function (name, val) {
     if (name in this['modules']) {
-      debug('已存在的模块：' + name);
+      debug('Error10 module=' + name);
     }
     this['modules'][name] = val;
   },
@@ -343,7 +371,7 @@ Est.extend(Application.prototype, {
    */
   addRoute: function (name, fn) {
     if (name in this['routes']) {
-      console.log('已存在的路由:' + name);
+      debug('Error13 ' + name);
     }
     this['routes'][name] = fn;
   },
@@ -372,9 +400,30 @@ Est.extend(Application.prototype, {
    */
   addTemplate: function (name, fn) {
     if (name in this['templates']) {
-      console.log('已存在的模板：' + name);
+      debug('Error11 template name:' + name);
     }
     this['templates'][name] = fn;
+  },
+  addTpl: function (name, fn) {
+    try {
+      var _hash = Est.hash(name);
+      if (name in this['templates']) {
+        debug('exits template' + name);
+      }
+      if (localStorage) {
+        if (!localStorage['___JHW_APP__' + _hash]) {
+          localStorage['___JHW_APP__' + _hash] = value;
+        } else {
+        }
+        fn = Est.inject(function () {
+        }, function (require, exports, module) {
+          module.exports = localStorage['___JHW_APP__' + _hash];
+        });
+      }
+      this['templates'][name] = fn;
+    } catch (e) {
+
+    }
   },
   /**
    * 添加session会话   登录成功后会添加__USER__ 用户信息会话， 获取：App.getSession('__USER__');
@@ -393,7 +442,7 @@ Est.extend(Application.prototype, {
       var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
       localStorage['___JHW_BACKBONE__' + Est.hash(sessionId + name)] = value;
     } catch (e) {
-      debug('error:394 ==>' + e);
+      debug('Error9 ' + e);
     }
     return value;
   },
@@ -409,27 +458,6 @@ Est.extend(Application.prototype, {
   getSession: function (name, isSession) {
     var sessionId = Est.typeOf(isSession) === 'undefined' ? '' : isSession ? this.data.sessionId : '';
     return localStorage['___JHW_BACKBONE__' + Est.hash(sessionId + name)];
-  },
-  addTpl: function (name, fn) {
-    try {
-      var _hash = Est.hash(name);
-      if (name in this['templates']) {
-        console.log('已存在的模板：' + name);
-      }
-      if (localStorage) {
-        if (!localStorage['___JHW_APP__' + _hash]) {
-          localStorage['___JHW_APP__' + _hash] = value;
-        } else {
-        }
-        fn = Est.inject(function () {
-        }, function (require, exports, module) {
-          module.exports = localStorage['___JHW_APP__' + _hash];
-        });
-      }
-      this['templates'][name] = fn;
-    } catch (e) {
-
-    }
   },
   /**
    * 获取所有模板
@@ -596,7 +624,7 @@ Est.extend(Application.prototype, {
         this.cache[cacheId] = result;
       }
     } catch (e) {
-      debug('Error:at 575 ==>' + e);
+      debug('Error12' + e);
     }
   },
   /**
@@ -619,6 +647,25 @@ Est.extend(Application.prototype, {
     } else {
       return this.cache[cacheId];
     }
+  },
+  /**
+   * 清除缓存数据
+   *
+   * @method [cache] - removeCache ( 清除缓存数据 )
+   * @param options
+   * @author wyj 15.10.25
+   * @example
+   *      app.removeCache();
+   *      app.removeCache(options);
+   */
+  removeCache: function (options) {
+    var cacheId = null;
+    if (options) {
+      cacheId = this.getParamsHash(options);
+      delete this.cache[cacheId];
+      return;
+    }
+    this.cache = {};
   }
 });
 /**

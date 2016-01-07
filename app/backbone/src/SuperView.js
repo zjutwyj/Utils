@@ -229,7 +229,7 @@ var SuperView = Backbone.View.extend({
    *      this._viewReplace('#model-name', this.model);
    */
   _viewReplace: function (selector, model, callback) {
-    debug('【局部渲染】selector: ' + selector);
+    debug('_viewReplace selector: ' + selector);
     var result = callback && callback.call(this, model);
     if (Est.typeOf(result) !== 'undefined' && !result) return;
     Est.each(selector.split(','), Est.proxy(function (item) {
@@ -416,6 +416,17 @@ var SuperView = Backbone.View.extend({
     return e.target ? $(e.target) : $(e.currentTarget);
   },
   /**
+   * 获取绑定事件源对象
+   * @method [事件] - _getEventTarget
+   * @param e
+   * @return {*|jQuery|HTMLElement}
+   *  @example
+   *      this._getEventTarget(e);
+   */
+  _getEventTarget: function(e){
+    return e.currentTarget ? $(e.currentTarget) : $(e.target);
+  },
+  /**
    * 单次执行
    * @method [事件] - _one
    * @param callback
@@ -434,13 +445,19 @@ var SuperView = Backbone.View.extend({
   _one: function (name, callback) {
     try {
       var _name, isArray = Est.typeOf(name) === 'array';
+      var _nameList = [];
       _name = isArray ? name.join('_') : name;
       if (this['_one_' + _name] = Est.typeOf(this['_one_' + _name]) === 'undefined' ? true : false) {
-        if (isArray)  this._require(name, callback);
+        if (isArray)  {
+          Est.each(name, function(item){
+            _nameList.push(item.replace(/^(.+)-\d?$/g, "$1"));
+          });
+          this._require(_nameList, callback);
+        }
         else  callback && callback.call(this);
       }
     } catch (e) {
-      debug('【SuperView._one】' + JSON.stringify(name), {type: 'alert'});
+      debug('SuperView._one ' + JSON.stringify(name), {type: 'alert'});
     }
   },
   /**
@@ -486,14 +503,18 @@ var SuperView = Backbone.View.extend({
     var $tip = $parent ? $(className, $parent) : this.$(className);
     $tip.hover(function (e) {
       var title = $(this).attr('data-title') || $(this).attr('title');
+      var offset = $(this).attr('data-offset') || 0;
       if (Est.isEmpty(title))return;
       BaseUtils.initDialog({
         id: Est.hash(title || 'error:446'),
         title: null,
         width: 'auto',
+        offset: parseInt(offset, 10),
+        skin: 'tool-tip-dilog',
         align:  $(this).attr('data-align') || 'top',
         content: '<div style="padding: 5px;font-size: 12px;">' + title + '</div>',
         hideCloseBtn: true,
+        autofocus: false,
         target: $(this).get(0)
       });
       if (!app.getData('toolTipList')) app.addData('toolTipList', []);

@@ -181,7 +181,7 @@ var BaseItem = SuperView.extend({
         }
         debug(function () {
           if (Est.isEmpty(newmodel)) {
-            return '相关的模型类中是否正确定义baseId？ 如拼写错误、未定义等';
+            return 'Error20';
           }
         }, {type: 'error'});
         newmodel.set('_options', modelOptions);
@@ -291,6 +291,7 @@ var BaseItem = SuperView.extend({
    * @author wyj 14.12.3
    */
   _onAfterRender: function () {
+    if (this._options.toolTip) this._initToolTip();
     this._options.afterRender && this._options.afterRender.call(this, this.model);
   },
   /**
@@ -335,7 +336,7 @@ var BaseItem = SuperView.extend({
       if (this._options.viewId) {
         app.getView(this._options.viewId) && app.getView(this._options.viewId)._clearChecked();
       } else {
-        debug('您当前选择的是不追加选择， 请检查XxxList的options中添加viewId?', {type: 'error'});
+        debug('Error21', {type: 'error'});
       }
     }
     this.model.attributes['checked'] = !checked;
@@ -377,7 +378,7 @@ var BaseItem = SuperView.extend({
       app.addData('itemActiveList' + this._options.viewId, []);
     var list = app.getData('itemActiveList' + this._options.viewId);
     if (!options.add) {
-      debug('【BaseItem】_itemActive');
+      debug('BaseItem._itemActive');
       Est.each(list, Est.proxy(function (selecter) {
         var node = $('.' + selecter, app.getView(this._options.viewId) ?
           app.getView(this._options.viewId).$el : $("body"));
@@ -404,7 +405,7 @@ var BaseItem = SuperView.extend({
     this._itemActive();
     this.collapsed = true;
     if (!this._options.viewId) {
-      debug('当前视图viewId不存在，无法完成上移操作，检查new XxxList({})options中的viewId是否定义？', { type: 'error' });
+      debug('Error22', { type: 'error' });
       return false;
     }
     app.getView(this._options.viewId)._moveUp(this.model);
@@ -421,7 +422,7 @@ var BaseItem = SuperView.extend({
     this._itemActive();
     this.collapsed = true;
     if (!this._options.viewId) {
-      debug('当前视图viewId不存在，无法完成下移操作，检查new XxxList({})options中的viewId是否定义？', {
+      debug('Error23', {
         type: 'error'
       });
       return false;
@@ -641,7 +642,7 @@ var BaseItem = SuperView.extend({
         }, this);
       }
     } catch (e) {
-      debug('【Error: BaseItem._edit】' + e);
+      debug('Error24' + e);
     }
   }
 });

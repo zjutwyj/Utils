@@ -1023,7 +1023,7 @@ var BaseUtils = {
       window.$loading = $('<div class="loading"></div>');
       $('body').append(window.$loading);
     } catch (e) {
-      debug('【Error】' + e);
+      debug('Error28' + e);
     }
     return window.$loading;
   },
@@ -1087,7 +1087,7 @@ var BaseUtils = {
      *      }, this);
    */
   execute: function (name) {
-    debug('- 调用工具类方法：' + name);
+    debug('- BaseUtils.execute ' + name);
     return BaseUtils[name] && BaseUtils[name].apply(BaseUtils, [].slice.call(arguments, 1));
   }
 }

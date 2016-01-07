@@ -21,7 +21,7 @@ window.ckToggleClass = function (selecter) {
  */
 Handlebars.registerHelper('pagination', function (page, totalPage, sum, block) {
   var accum = '', block = block, sum = sum;
-  if (arguments.length === 3){
+  if (arguments.length === 3) {
     block = sum;
     sum = 9;
   }
@@ -241,6 +241,9 @@ Handlebars.registerHelper('CONST', function (name, options) {
  *        {{PIC 'upload/'}}
  */
 Handlebars.registerHelper('PIC', function (name, number, options) {
+  if (name && Est.startsWidth(name, 'CONST')) {
+    name = Handlebars.helpers['CONST'].apply(this, [name.replace('CONST.', ''), options]);
+  }
   if (!name) return CONST.DOMAIN + CONST.PIC_NONE;
   if (Est.startsWidth(name, 'upload'))
     return arguments.length < 3 ? CONST.PIC_URL + '/' + name :

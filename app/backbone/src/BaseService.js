@@ -8,7 +8,7 @@ var BaseService = function () {
   if (typeof BaseService.instance === 'object') {
     return BaseService.instance;
   }
-  debug('- 创建BaseService实例');
+  debug('build BaseService instance');
   BaseService.instance = this;
 }
 
@@ -241,6 +241,9 @@ BaseService.prototype = {
         topResolve([]);
       } else {
         ctx.ajax(options).done(function (result) {
+          if (result.msg === '未登录') {
+            Est.trigger('checkLogin');
+          }
           if (options.session && result) {
             app.addSession(cacheId, JSON.stringify(result));
           }

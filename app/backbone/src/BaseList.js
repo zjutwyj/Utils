@@ -2,36 +2,6 @@
  * @description 列表视图
  * @class BaseList - 列表视图
  * @author yongjin<zjut_wyj@163.com> 2014/12/8
- *    // 定义类
- *    var ProductList = BaseList.extend({
- *        initialize: function(){
- *          this._initialize({
- *            model: model,
- *            collection: collection,
- *            item: item,
- *            beforeRender: this.beforeRender,
- *            afterRender: this.afterRender
- *          });
- *        },
- *        beforeRender: fucntion(){},// 渲染前回调
- *        afterRender: function(){ // 渲染后回调
- *         ...
- *        },
- *        render: function(){ // 可省略
- *          this._render();
- *        }
- *    });
- *  // 实例化类
- *  app.addPanel('main', {
- *    el: '#jhw-min', // 目标元素Id
- *    template: '<div class="jhw-main-inner"></div>'
- *  }).addView('productList', new ProductList({
- *    el: '.jhw-main-inner',
- *    viewId: 'productList', // 标识符， 推荐添加， 将提升性能及更多功能
- *    page: parseInt(Est.cookie('productList_page')) || 1,
- *    pageSize: parseInt(Est.cookie('productList_pageSize')) || 16
- *  }));
- *
  */
 
 
@@ -109,11 +79,6 @@ var BaseList = SuperView.extend({
     debug('1.BaseList._initialize');
     this.dx = 0;
     this.views = [];
-    /*if (typeof options.clearDialog === 'undefined' || options.clearDialog) {
-     app.emptyDialog();
-     }*/
-    /*setTimeout(function () {
-     }, 50);*/
     return this._init(options.collection, options);
   },
   /**
@@ -150,7 +115,7 @@ var BaseList = SuperView.extend({
    * @author wyj 15.1.12
    */
   _initOptions: function (options) {
-    this._options = Est.extend(options || {}, this.options);
+    this._options = Est.extend(this.options, options || {});
     this._options.sortField = 'sort';
     this._options.max = this._options.max || 99999;
     this._options.speed = this._options.speed || 9;
@@ -188,6 +153,7 @@ var BaseList = SuperView.extend({
       this.template = Handlebars.compile(Est.isEmpty(this._options.itemTemp) ? options.template :
         this.$template.html());
       if (this._options.append) {
+        this.$el.empty();
         this.$el.append(this.template(options.data));
       } else {
         this.$el.html(this.template(options.data));
@@ -227,10 +193,7 @@ var BaseList = SuperView.extend({
 
     debug(function () {
       if (!ctx.list || ctx.list.size() === 0) {
-        return ('当前' + ctx.options.viewId + '视图无法找到选择符， 检查XxxList中的_initialize方法中是否定义render或 ' +
-          '实例化对象(new XxxList({...}))中是否存入el; ' +
-          '或template模板是否引入， 或是否是iframe对话框中未重新实例化Application对象，或检查template模板是否存在' +
-          (ctx._options.render ? ctx._options.render : ctx.el));
+        return  'Error1';
       }
     }, {type: 'error'});
     this.allCheckbox = this.$('#toggle-all')[0];
@@ -247,8 +210,7 @@ var BaseList = SuperView.extend({
   _initCollection: function (options, collection) {
     debug(function () {
       if (!options.model) {
-        return 'XxxList中的_initialize({})参数中未添加模型类，XxxList头部是否require请求引入？ ' +
-          '或检查config.js/main.js中是否配置app.addModule("XxxModel")';
+        return 'Error2';
       }
     }, {type: 'error'});
     if (!this.collection) this.collection = new collection(options);
@@ -312,7 +274,8 @@ var BaseList = SuperView.extend({
     }
   },
   /**
-   * 获取集合数据
+   * 获取集合数据 当append为true时，只追加数据。
+   * 类似有个_reload  这个方法无论append是否为true， 都会清空列表重新加载
    *
    * @method [渲染] - _load ( 获取集合数据 )
    * @param options [beforeLoad: 载入前方法][page: 当前页][pageSize: 每页显示条数]
@@ -371,7 +334,7 @@ var BaseList = SuperView.extend({
         ctx.collection.paginationModel.set('pageSize', 9000);
       }
       debug(function () {
-        return ('【Query】' + (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
+        return ('[Query]' + (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
           ctx.collection.url));
       });
       // 数据载入
@@ -388,30 +351,44 @@ var BaseList = SuperView.extend({
               ctx._options.append ? ctx.list.append('<div class="no-result">已全部加载</div>') :
                 ctx.list.append('<div class="no-result">暂无数据</div>');
 
-              Est.trigger('resultListNone' + ctx._options.viewId, {});
+              ctx.collection.paginationModel.get('page') === 1 && Est.trigger('resultListNone' + ctx._options.viewId, {});
               if (result.msg === '未登录') {
                 Est.trigger('checkLogin');
               }
               debug(function () {
-                return ('从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数， 点击' +
-                  Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
-                  ctx.collection.url + '查看数据');
+                return 'Error3 '+ (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
+                  ctx.collection.url);
               });
             }
           } catch (e) {
             Est.trigger('checkLogin');
-            debug('【Error】：396 服务器返回数据格式不正确 ，检查result.attributes里的data是否正在？' + result.msg);
+            debug('Error4 ' + result.msg);
           }
           if (ctx._options.subRender)  ctx._filterRoot();
           if (ctx._options.filter) ctx._filterCollection();
           if (result.attributes && result.attributes.model) {
-            ctx._options.data= Est.extend(ctx._options.data, result.attributes.model);
+            ctx._options.data = Est.extend(ctx._options.data, result.attributes.model);
           }
           ctx._afterLoad(options);
         });
     } else {
       ctx._afterLoad(options);
     }
+  },
+  /**
+   * 刷新列表 会清空已存在的数据
+   *
+   * @method [渲染] - _reload ( 刷新列表 )
+   * @author wyj 15.1.24
+   * @example
+   *        this._reload();
+   */
+  _reload: function (options) {
+    debug('BaseList_reload');
+    this._empty.call(this);      // 清空视图
+    this.collection.reset();     // 清空collection
+    this.list.empty();           // 清空DOM
+    this._load(options);         // 重新加载数据
   },
   /**
    * 初始化完成后执行
@@ -549,12 +526,10 @@ var BaseList = SuperView.extend({
     Est.each(ctx.collection.models, function (item) {
       debug(function () {
         if (Est.typeOf(item['attributes'][ctx._options.categoryId]) === 'undefined') {
-          return '分类ID错误， 检查XxxList中的_initialize({})配置中的categoryId跟api是否一致？当前ID为' +
-            ctx._options.categoryId + '点击' + ctx.collection.url + '查看API';
+          return 'Error5 currentId = ' + ctx._options.categoryId + ';url=' + ctx.collection.url;
         }
         if (Est.typeOf(item['attributes'][ctx._options.parentId]) === 'undefined') {
-          return '父分类ID错误， 检查XxxList中的_initialize({})配置中的parentId跟api是否一致？当前父ID为' +
-            ctx._options.parentId + '点击' + ctx.collection.url + '查看API';
+          return  'Error6 currentId=' + ctx._options.parentId + ';url=' + ctx.collection.url;
         }
       }, {type: 'error'});
       temp.push({
@@ -604,7 +579,6 @@ var BaseList = SuperView.extend({
     Est.each(roots, function (model) {
       ctx._addOne(model);
     });
-    //debug(ctx.collection);
   },
   /**
    * 向视图添加元素
@@ -671,7 +645,7 @@ var BaseList = SuperView.extend({
    *        this._push(new pictureModel(model), this._findIndex(curModel) + 1);
    */
   _push: function (model, index) {
-    debug('【BaseList】_push');
+    debug('BaseList._push');
     // 判断第二个参数是否是数字， 否-> 取当前列表的最后一个元素的索引值
     // 判断index是否大于列表长度
     // 若存在items， 则相应插入元素
@@ -694,7 +668,7 @@ var BaseList = SuperView.extend({
    * @author wyj 15.9.3
    */
   _resetDx: function () {
-    debug('【BaseList】_resetDx');
+    debug('BaseList._resetDx');
     var _dx = 0;
     Est.each(this.collection.models, function (item) {
       item.set('dx', _dx);
@@ -714,19 +688,6 @@ var BaseList = SuperView.extend({
     return Est.findIndex(this.collection.models, {cid: model.cid});
   },
   /**
-   * 刷新列表
-   *
-   * @method [集合] - _reload ( 刷新列表 )
-   * @author wyj 15.1.24
-   * @example
-   *        this._reload();
-   */
-  _reload: function () {
-    debug('【BaseList】_reload');
-    this._clear.apply(this, arguments);
-    this._load();
-  },
-  /**
    * 过滤集合
    *
    * @method [private] - _filterCollection
@@ -734,7 +695,7 @@ var BaseList = SuperView.extend({
    * @author wyj 15.1.10
    */
   _filterCollection: function () {
-    debug('【BaseList】_filterCollection');
+    debug('BaseList._filterCollection');
     this._filter(this._options.filter, this._options);
   },
   /**
@@ -745,7 +706,7 @@ var BaseList = SuperView.extend({
    * @author wyj 15.1.8
    */
   _renderListByPagination: function () {
-    debug('【BaseList】_renderListByPagination');
+    debug('BaseList._renderListByPagination');
     this.page = this.collection.paginationModel.get('page');
     this.pageSize = this.collection.paginationModel.get('pageSize');
     this.startIndex = (this.page - 1) * this.pageSize;
@@ -765,13 +726,18 @@ var BaseList = SuperView.extend({
    *
    * @method [集合] - _empty ( 清空列表 )
    * @author wyj 14.11.16
+   * @private
    * @example
    *      this._empty();
    */
   _empty: function () {
     this.dx = 0;
-    debug('【BaseList】_empty');
+    debug('BaseList._empty');
+    if (this._options.append) {
+      return this.collection;
+    }
     if (this.collection) {
+      this.collection._reset && this.collection._reset();
       var len = this.collection.length;
       while (len > -1) {
         this.collection.remove(this.collection[len]);
@@ -798,11 +764,12 @@ var BaseList = SuperView.extend({
    *
    * @method [集合] - _clear ( 清空DOM列表 )
    * @author wyj 15.1.24
+   * @private
    * @example
    *        this._clear();
    */
   _clear: function () {
-    debug('【BaseList】_clear');
+    debug('BaseList._clear');
     this._empty.call(this);
     this.list.empty();
     this.collection.models.length = 0;
@@ -815,7 +782,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.11.16
    */
   _addAll: function () {
-    debug('【BaseList】._addAll and call this._empty');
+    debug('BaseList._addAll and call this._empty');
     this._empty();
     this.collection.each(this._addOne, this);
   },
@@ -841,7 +808,7 @@ var BaseList = SuperView.extend({
        *       }});
    */
   _search: function (options) {
-    debug('【BaseList】_search');
+    debug('BaseList._search');
     var ctx = this;
     this._clear();
     this.filter = true;
@@ -868,7 +835,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.8
    */
   _filter: function (array, options) {
-    debug('【BaseList】_filter');
+    debug('BaseList._filter');
     var ctx = this;
     var result = [];
     var len = ctx.collection.models.length;
@@ -920,7 +887,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.8
    */
   _filterItems: function (array, options) {
-    debug('【BaseList】_filterItems');
+    debug('BaseList._filterItems');
     var ctx = this;
     var result = [];
     var items = Est.cloneDeep(ctx._options.items);
@@ -982,7 +949,7 @@ var BaseList = SuperView.extend({
        *      });
    */
   _detail: function (options) {
-    debug('【BaseList】_detail');
+    debug('BaseList._detail');
     options = options || {};
     if (options.end) {
       options.end = '?' + options.end + '&';
@@ -1016,8 +983,7 @@ var BaseList = SuperView.extend({
       buttons.push({ value: '关闭' });
       debug(function () {
         if (Est.isEmpty(ctx._options.detail) && Est.isEmpty(options.url)) {
-          return '您请求的详细页网址是：' + (options.url || ctx._options.detail + options.end) +
-            '页面不显示？ 点击链接是否访问正常？检查XxxList中的_initialize配置是否设置detail参数？若正常， 忽略本信息';
+          return 'Error7  url=' + (options.url || ctx._options.detail + options.end);
         }
       }, {type: 'error'});
       window.detailDialog = dialog({
@@ -1067,7 +1033,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.11.16
    */
   _toggleAllChecked: function () {
-    debug('【BaseList】_toggleAllChecked');
+    debug('BaseList._toggleAllChecked');
     var checked = this.allCheckbox.checked;
     this.collection.each(function (product) {
       product.set('checked', checked);
@@ -1162,7 +1128,7 @@ var BaseList = SuperView.extend({
        *      })._moveUp(this.model);
    */
   _moveUp: function (model) {
-    debug('【BaseList】_moveUp');
+    debug('BaseList._moveUp');
     var ctx = this;
     var first = this.collection.indexOf(model);
     var last, parentId;
@@ -1194,7 +1160,7 @@ var BaseList = SuperView.extend({
           thisNode.stopCollapse = false;
           nextNode.stopCollapse = false;
         } else {
-          debug('模型类中不存在id, 检查XxxModel中的baseId是否正确？');
+          debug('Error8');
         }
       }
     });
@@ -1207,7 +1173,7 @@ var BaseList = SuperView.extend({
    * @author wyj 14.12.4
    */
   _moveDown: function (model) {
-    debug('【BaseList】_moveDown');
+    debug('BaseList._moveDown');
     var ctx = this;
     var first = this.collection.indexOf(model);
     var last, parentId;
@@ -1239,7 +1205,7 @@ var BaseList = SuperView.extend({
           thisNode.stopCollapse = false;
           nextNode.stopCollapse = false;
         } else {
-          debug('模型类中不存在id, 检查XxxModel中的baseId是否正确？');
+          debug('Error8');
         }
       }
     });
