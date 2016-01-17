@@ -106,7 +106,7 @@ Handlebars.registerHelper('compare', function (v1, operator, v2, options) {
         return options.inverse(this);
     }
   } catch (e) {
-    console.log('【Errow】: hbs.compare v1=' + v1 + ';v2=' + v2 + e);
+    console.log('Errow: hbs.compare v1=' + v1 + ';v2=' + v2 + e);
   }
 });
 
@@ -234,21 +234,26 @@ Handlebars.registerHelper('CONST', function (name, options) {
 });
 
 /**
- * 返回图片地址常量
+ * 返回图片地址常量（返回添加图片域名的图片地址, 推荐使用）
  * @method [常量] - PIC
  * @author wyj 14.12.17
  * @example
- *        {{PIC 'upload/'}}
+ *        {{PIC pic}}   ==> http://img.jihui88.com/upload/a/a1/picture/2015/12/20/pic.jpg?v=2015-12-20_12:30
+ *        {{PIC pic 5}} ==> http://img.jihui88.com/upload/a/a1/picture/2015/12/20/pic_5.jpg?v=2015-12-20_12:30
  */
 Handlebars.registerHelper('PIC', function (name, number, options) {
-  if (name && Est.startsWidth(name, 'CONST')) {
-    name = Handlebars.helpers['CONST'].apply(this, [name.replace('CONST.', ''), options]);
+  var version = '';
+  if (name) {
+    version += (name.indexOf('?') > -1 ? ('&v=' + CONST.APP_VERSION) : '?v=' + CONST.APP_VERSION);
+    if (Est.startsWidth(name, 'CONST')) {
+      name = Handlebars.helpers['CONST'].apply(this, [name.replace('CONST.', ''), options]);
+    }
   }
-  if (!name) return CONST.DOMAIN + CONST.PIC_NONE;
+  if (!name) return CONST.DOMAIN + CONST.PIC_NONE + version;
   if (Est.startsWidth(name, 'upload'))
-    return arguments.length < 3 ? CONST.PIC_URL + '/' + name :
-      Handlebars.helpers['picUrl'].apply(this, [name, number, options]);
-  return CONST.DOMAIN + name;
+    return arguments.length < 3 ? CONST.PIC_URL + '/' + name + version:
+      Handlebars.helpers['_picUrl'].apply(this, [name, number, options]) + version;
+  return CONST.DOMAIN + name + version;
 });
 
 /*Handlebars.registerHelper('PIC', function (name, options) {
@@ -270,7 +275,7 @@ Handlebars.registerHelper('isEmpty', function (value, options) {
 });
 
 /**
- * 图片尺寸
+ * 图片尺寸 （返回不带图片域名的地址）
  * @method [图片] - picUrl
  * @author wyj 2014-03-31
  * @example
@@ -284,7 +289,9 @@ Handlebars.registerHelper('picUrl', function (src, number, opts) {
   url = url.substring(0, url.lastIndexOf(".")) + "_" + number + "." + url2;
   return url ? url : '';
 });
-
+Handlebars.registerHelper('_picUrl', function (src, number, opts) {
+  return CONST.PIC_URL + '/' + Handlebars.helpers['picUrl'].apply(this, [src, number, opts]);
+});
 /**
  * radio标签
  *

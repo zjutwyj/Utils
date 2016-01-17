@@ -11,7 +11,7 @@
  *  @example
  *      Error: 1 ==> 当前视图无法找到选择符， 检查XxxList中的_initialize方法中是否定义render或实例化对象(new XxxList({...}))中是否存入el;或template模板是否引入， 或是否是iframe对话框中未重新实例化Application对象，或检查template模板是否存在
  *      Error: 2 ==> XxxList中的_initialize({})参数中未添加模型类，XxxList头部是否require请求引入？或检查config.js/main.js中是否配置app.addModule("XxxModel")
- *      Error: 3 ==> 从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数
+ *      Warm3: 3 ==> 从服务器上传回来的列表为空！检查XxxCollection中是否配置url参数
  *      Error: 4 ==> 396 服务器返回数据格式不正确 ，检查result.attributes里的data是否正在？
  *      Error: 5 ==> 分类ID错误， 检查XxxList中的_initialize({})配置中的categoryId跟api是否一致？
  *      Error: 6 ==> 父分类ID错误， 检查XxxList中的_initialize({})配置中的parentId跟api是否一致？
@@ -37,8 +37,17 @@
  *      Error: 26 ==> 服务器返回的msg为空! 因此无弹出框信息。
  *      Error: 27 ==> 当前模型类未找到baseUrl, 请检查XxxModel中的baseUrl
  *      Error: 28 ==> BaseUtils.addLoading
- *      Error: 29 ==>
+ *      Error: 29 ==> XxxModel模型类中的baseUrl未设置
  *      Error: 30 ==>
+ *      Error: 31 ==>
+ *      Error: 32 ==>
+ *      Error: 33 ==>
+ *      Error: 34 ==>
+ *      Error: 35 ==>
+ *      Error: 36 ==>
+ *      Error: 37 ==>
+ *      Error: 38 ==>
+ *      Error: 39 ==>
  */
 var BaseError = function () {
 }

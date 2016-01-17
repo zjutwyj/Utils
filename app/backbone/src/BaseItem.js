@@ -516,11 +516,11 @@ var BaseItem = SuperView.extend({
       seajs.use(['dialog-plus'], function (dialog) {
         var oldName = ctx.model.attributes[options.field];
         var d = dialog({
-          title: options.title || '修改',
+          title: options.title || CONST.LANG.EDIT,
           content: '<div style="padding: 20px;"><input id="property-returnValue-demo" type="text" class="text" value="' + (oldName || '') + '" /></div>',
           button: [
             {
-              value: '确定',
+              value: CONST.LANG.CONFIRM,
               autofocus: true,
               callback: function () {
                 var value = $('#property-returnValue-demo').val();
@@ -561,25 +561,25 @@ var BaseItem = SuperView.extend({
     app.getData('delItemDialog') && app.getData('delItemDialog').close();
     if (context.model.get('children').length > 0) {
       BaseUtils.initConfirm({
-        title: '提示',
+        title: CONST.LANG.TIP,
         width: 300,
-        content: '该分类下还有子分类， 请先删除！ 提示：当存在与之相关联的产品、新闻等等，也无法删除'
+        content: CONST.LANG.DEL_TIP
       });
       return;
     }
     app.addData('delItemDialog', BaseUtils.initConfirm({
-      title: '温馨提示',
-      content: '<div class="item-delete-confirm">是否删除?</div>',
+      title: CONST.LANG.WARM_TIP,
+      content: '<div class="item-delete-confirm">'+CONST.LANG.DEL_CONFIRM+'</div>',
       target: e && this._getTarget(e).get(0),
       success: function (resp) {
         context.model.destroy({
           wait: true,
           error: function (model, resp) {
             var buttons = [];
-            buttons.push({ value: '确定', callback: function () {
+            buttons.push({ value: CONST.LANG.CONFIRM, callback: function () {
               this.close();
             }, autofocus: true });
-            BaseUtils.initDialog({ title: '提示：', content: resp.msg, width: 250, button: buttons });
+            BaseUtils.initDialog({ title: CONST.LANG.TIP + '：', content: resp.msg, width: 250, button: buttons });
           },
           success: function () {
             context._removeFromItems(context.model.get('dx'));
@@ -630,7 +630,7 @@ var BaseItem = SuperView.extend({
         // 当detail为moduleId时， 以对话框的形式打开
         this._dialog({
           moduleId: options.detail, // 模块ID
-          title: '修改', // 对话框标题
+          title: CONST.LANG.EDIT, // 对话框标题
           id: this.model.get('id'), // 初始化模块时传入的ID
           width: 1000, // 对话框宽度
           height: 'auto', // 对话框高度

@@ -213,7 +213,7 @@ var BaseList = SuperView.extend({
         return 'Error2';
       }
     }, {type: 'error'});
-    if (!this.collection) this.collection = new collection(options);
+    if (!this.collection || (this.collection && !this.collection.remove)) this.collection = new collection(options);
     if (options.itemId) this.collection._setItemId(options.itemId);
     //TODO 分类过滤
     if (options.subRender && !(options.items)) this.composite = true;
@@ -340,23 +340,23 @@ var BaseList = SuperView.extend({
       // 数据载入
       ctx.collection._load(ctx.collection, ctx, model).
         done(function (result) {
-          if (result && result.msg && result.msg === '权限验证失败') {
-            Utils.tip('权限不够！', {time: 2000});
+          if (result && result.msg && result.msg === CONST.LANG.AUTH_FAILED) {
+            Utils.tip(CONST.LANG.AUTH_LIMIT + '！', {time: 2000});
           }
           /*if (ctx.options.instance)
            app.addData(ctx.options.instance, result.models);*/
           ctx.list.find('.no-result').remove();
           try {
             if (Est.isEmpty(result) || Est.isEmpty(result.attributes) || result.attributes.data.length === 0) {
-              ctx._options.append ? ctx.list.append('<div class="no-result">已全部加载</div>') :
-                ctx.list.append('<div class="no-result">暂无数据</div>');
+              ctx._options.append ? ctx.list.append('<div class="no-result">'+CONST.LANG.LOAD_ALL+'</div>') :
+                ctx.list.append('<div class="no-result">'+CONST.LANG.NO_RESULT+'</div>');
 
               ctx.collection.paginationModel.get('page') === 1 && Est.trigger('resultListNone' + ctx._options.viewId, {});
-              if (result.msg === '未登录') {
+              if (result.msg === CONST.LANG.NOT_LOGIN) {
                 Est.trigger('checkLogin');
               }
               debug(function () {
-                return 'Error3 '+ (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
+                return 'Warm3 list.length=0'+ (Est.typeOf(ctx.collection.url) === 'function' ? ctx.collection.url() :
                   ctx.collection.url);
               });
             }
@@ -736,8 +736,11 @@ var BaseList = SuperView.extend({
     if (this._options.append) {
       return this.collection;
     }
+    if (this.collection &&!this.collection.remove){
+      debugger
+    }
+    this.collection._reset && this.collection._reset();
     if (this.collection) {
-      this.collection._reset && this.collection._reset();
       var len = this.collection.length;
       while (len > -1) {
         this.collection.remove(this.collection[len]);
@@ -962,7 +965,7 @@ var BaseList = SuperView.extend({
       var buttons = [];
       if (!options.hideSaveBtn) {
         buttons.push({
-          value: '保存',
+          value: CONST.LANG.SAVE,
           callback: function () {
             this.title(CONST.SUBMIT_TIP);
             this.iframeNode.contentWindow.$("#submit").click();
@@ -980,7 +983,7 @@ var BaseList = SuperView.extend({
        }
        });
        }*/
-      buttons.push({ value: '关闭' });
+      buttons.push({ value: CONST.LANG.CLOSE });
       debug(function () {
         if (Est.isEmpty(ctx._options.detail) && Est.isEmpty(options.url)) {
           return 'Error7  url=' + (options.url || ctx._options.detail + options.end);
@@ -988,7 +991,7 @@ var BaseList = SuperView.extend({
       }, {type: 'error'});
       window.detailDialog = dialog({
         id: 'detail-dialog',
-        title: options.title || '添加',
+        title: options.title || CONST.LANG.ADD,
         height: options.height || 'auto',
         width: options.width || 850,
         padding: options.padding || 0,
@@ -1288,11 +1291,11 @@ var BaseList = SuperView.extend({
   _batch: function (options) {
     var ctx = this;
     options = Est.extend({
-      tip: '操作成功！'
+      tip: CONST.LANG.SUCCESS + '！'
     }, options);
     this.checkboxIds = this._getCheckboxIds();
     if (this.checkboxIds.length === 0) {
-      BaseUtils.initTip('请至少选择一项！');
+      BaseUtils.initTip(CONST.LANG.SELECT_ONE + '！');
       return;
     }
     $.ajax({
@@ -1322,14 +1325,14 @@ var BaseList = SuperView.extend({
     var ctx = this;
     this.checkboxIds = this._getCheckboxIds();
     if (this.checkboxIds && this.checkboxIds.length === 0) {
-      BaseUtils.initTip('至少选择一项');
+      BaseUtils.initTip(CONST.LANG.SELECT_ONE);
       return;
     }
     BaseUtils.initConfirm({
       success: function () {
         ctx._batch({
           url: ctx.collection.batchDel,
-          tip: '删除成功'
+          tip: CONST.LANG.DEL_SUCCESS
         });
       }
     });

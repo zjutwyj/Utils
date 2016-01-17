@@ -37,6 +37,39 @@ Est.extend(Application.prototype, {
     return 'backbone';
   },
   /**
+   * 视图添加， 当重新添加时会调用destroy方法
+   *
+   * @method [视图] - addRegion ( 添加视图[推荐使用] )
+   * @param name
+   * @param instance
+   * @return {*}
+   * @example
+   *      app.addRegion('productList', ProductList, {
+   *        viewId: 'productList',     // 可省略
+   *        el: '',
+   *        args: args
+   *      });
+   */
+  addRegion: function (name, instance, options) {
+    var panel = Est.nextUid('region');
+
+    if (!options.__panelId) {
+      options.__panelId = options.el;
+    }
+    this.addPanel(name, {
+      el: options.__panelId,
+      template: '<div class="' + panel + '"></div>'
+    }, options);
+    if (!options.viewId) {
+      options.viewId = name;
+    }
+    if (options.viewId in this['instance']) {
+      this.removeView(options.viewId);
+    }
+
+    return this.addView(name, new instance(options));
+  },
+  /**
    * 添加面板
    *
    * @method [面板] - addPanel ( 添加面板 )
@@ -53,29 +86,19 @@ Est.extend(Application.prototype, {
    *          viewId: 'alipayView'
    *        }));
    */
-  addPanel: function (name, panel) {
+  addPanel: function (name, panel, options) {
     var isObject = Est.typeOf(panel.cid) === 'string' ? false : true;
     if (isObject) {
       this.removePanel(name, panel);
-      var $template = $(panel.template);
-      $template.addClass('__panel_' + name);
-      $(panel.el).append($template);
+      panel.$template = $(panel.template);
+      if (options) {
+        options.el = panel.$template;
+      }
+      panel.$template.addClass('__panel_' + name);
+      $(panel.el).append(panel.$template);
     }
     this.panels[name] = panel;
     return isObject ? this : panel;
-  },
-  panel: function (name, panel) {
-    return this.addPanel(name, panel);
-  },
-  /**
-   * 显示视图
-   *
-   * @method [面板] - show ( 显示视图 )
-   * @param view
-   * @author wyj 14.12.29
-   */
-  show: function (view) {
-    this.addView(this.currentView, view);
   },
   /**
    * 移除面板
@@ -99,19 +122,6 @@ Est.extend(Application.prototype, {
     }
   },
   /**
-   * 获取面板
-   *
-   * @method [面板] - getPanel ( 获取面板 )
-   * @param name
-   * @return {*}
-   * @author wyj 14.12.28
-   * @example
-   *      app.getPanelf('panel');
-   */
-  getPanel: function (name) {
-    return this.panels[name];
-  },
-  /**
    * 视图添加
    *
    * @method [视图] - addView ( 添加视图 )
@@ -127,39 +137,63 @@ Est.extend(Application.prototype, {
     this.setCurrentView(name);
     return this['instance'][name];
   },
+  /**
+   * 视图移除， 移除视图绑定的事件及所有itemView的绑定事件,
+   * 并移除所有在此视图创建的对话框
+   *
+   * @method [视图] - removeView ( 移除视图 )
+   * @param name
+   * @return {Application}
+   * @example
+   *        app.removeView('productList');
+   */
+  removeView: function (name) {
+    try {
+      if (this.getView(name)) {
+        this.getView(name).destroy && this.getView(name).destroy();
+        this.getView(name)._empty();
+        this.getView(name).stopListening();
+        this.getView(name).$el.off().remove();
+      }
+      delete this['instance'][name];
+    } catch (e) {
+    }
+    return this;
+  },
+
+
+  panel: function (name, panel) {
+    return this.addPanel(name, panel);
+  },
+  /**
+   * 显示视图
+   *
+   * @method [面板] - show ( 显示视图 )
+   * @param view
+   * @author wyj 14.12.29
+   */
+  show: function (view) {
+    this.addView(this.currentView, view);
+  },
+
+  /**
+   * 获取面板
+   *
+   * @method [面板] - getPanel ( 获取面板 )
+   * @param name
+   * @return {*}
+   * @author wyj 14.12.28
+   * @example
+   *      app.getPanelf('panel');
+   */
+  getPanel: function (name) {
+    return this.panels[name];
+  },
+
   add: function (name, instance) {
     return this.addView(name, instance);
   },
-  /**
-   * 视图添加， 当重新添加时会调用destroy方法
-   *
-   * @method [视图] - addRegion ( 添加视图[推荐使用] )
-   * @param name
-   * @param instance
-   * @return {*}
-   * @example
-   *      app.addRegion('productList', ProductList, {
-   *        el: '',
-   *        args: args
-   *      });
-   */
-  addRegion: function (name, instance, options) {
-    var panel = Est.nextUid('region');
-    var $region = $('<div class="' + panel + '"></div>');
 
-    if (name in this['instance']) {
-      this.removeView(name);
-      this.removePanel(name);
-    }
-    this.addPanel(name, {
-      el: options.el,
-      template: $region
-    });
-    options.el = $region;
-    options.viewId = name;
-
-    return this.addView(name, new instance(options));
-  },
   /**
    * 设置当前视图
    * @method [视图] - setCurrentView ( 设置当前视图 )
@@ -193,30 +227,6 @@ Est.extend(Application.prototype, {
    */
   getView: function (name) {
     return this['instance'][name];
-  },
-  /**
-   * 视图移除， 移除视图绑定的事件及所有itemView的绑定事件,
-   * 并移除所有在此视图创建的对话框
-   *
-   * @method [视图] - removeView ( 移除视图 )
-   * @param name
-   * @return {Application}
-   * @example
-   *        app.removeView('productList');
-   */
-  removeView: function (name) {
-    var view = this.getView(name);
-    try {
-      if (view) {
-        view.destroy && view.destroy();
-        view._empty();
-        view.stopListening();
-        view.$el.off().remove();
-      }
-      delete this['instance'][name];
-    } catch (e) {
-    }
-    return this;
   },
   /**
    * 添加对话框
@@ -310,7 +320,7 @@ Est.extend(Application.prototype, {
    */
   addData: function (name, data) {
     if (name in this['data']) {
-      debug('has key in data' + name);
+      debug('reset data ' + name);
     }
     this['data'][name] = data;
   },

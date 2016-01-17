@@ -111,7 +111,7 @@ BaseService.prototype = {
    */
   initDefault: function (options, result) {
     if (result.attributes && options.defaults && Est.typeOf(result.attributes.data) === 'array') {
-      result.attributes.data.unshift({text: '请选择', value: options.defaultValue});
+      result.attributes.data.unshift({text: CONST.LANG.SELECT_DEFAULT, value: options.defaultValue});
     }
   },
   /**
@@ -241,7 +241,7 @@ BaseService.prototype = {
         topResolve([]);
       } else {
         ctx.ajax(options).done(function (result) {
-          if (result.msg === '未登录') {
+          if (result.msg === CONST.LANG.NOT_LOGIN) {
             Est.trigger('checkLogin');
           }
           if (options.session && result) {

@@ -341,7 +341,7 @@ var BaseDetail = SuperView.extend({
    */
   _saveItem: function (callback, error) {
     debug('- BaseDetail._saveItem');
-    if (Est.typeOf(this.model.url) === 'string') debug('XxxModel模型类中的baseUrl未设置', {type: 'error'});
+    if (Est.typeOf(this.model.url) === 'string') debug('Error29', {type: 'error'});
     if (Est.isEmpty(this.model.url())) {
       debug('Error19', {type: 'error'});
       return;

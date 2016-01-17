@@ -3372,7 +3372,7 @@
       for (var j = 0, methodsLen = thisInterface.methods.length; j < methodsLen; j++) {
         var method = thisInterface.methods[j];
         if (!object[method] || typeof object[method] !== 'function') {
-          throw new Error("当前类未实现父类'" + thisInterface.name + "'的接口'" + method + "'.");
+          throw new Error("not extend super implememnt'" + thisInterface.name + "''" + method + "'.");
         }
       }
     }

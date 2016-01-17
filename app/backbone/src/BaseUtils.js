@@ -421,9 +421,9 @@ var BaseUtils = {
               });
    */
   openUpload: function (options) {
-    if (typeof options === 'undefined') console.error('图片上传配置不能为空');
+    if (typeof options === 'undefined') console.error(CONST.LANG.UPLOAD_OPTION_REQUIRE);
 
-    options = Est.extend({ title: '上传图片', width: 650, height: 350, albumId: '', padding: 5, username: '', attId: '', auto: false, replace: false, type: 'local' }, options);
+    options = Est.extend({ title: CONST.LANG.UPLOAD_IMG, width: 650, height: 350, albumId: '', padding: 5, username: '', attId: '', auto: false, replace: false, type: 'local' }, options);
     options.url = CONST.HOST + '/upload.html?albumId=' + options.albumId + '&username=' + options.username + '&replace=' + (options.replace ? '01' : '00') + '&attId=' + options.attId + '&auto=' + options.auto + '&uploadType=' + options.type + '&max=';
 
     return options;
@@ -443,10 +443,10 @@ var BaseUtils = {
     var allPlugin = {
       contact: {
         c: 'xheContact',
-        t: '插入联系方式',
+        t: CONST.LANG.INSERT_CONTACT,
         e: function () {
           var _this = this;
-          _this.showIframeModal('插入联系方式',
+          _this.showIframeModal(CONST.LANG.INSERT_CONTACT,
               CONST.DOMAIN + '/user_v2/enterprise/updateuser/getUserBySession',
             function (v) {
               _this.loadBookmark();
@@ -456,10 +456,10 @@ var BaseUtils = {
       },
       abbccMap: {
         c: 'xheBtnMap',
-        t: '选择Google/Baidu地圖',
+        t:CONST.LANG.SELECT_MAP,
         e: function () {
           var _this = this;
-          _this.showIframeModal('选择Google/Baidu地圖',
+          _this.showIframeModal(CONST.LANG.SELECT_MAP,
               CONST.HOST + '/vendor/xheditor/xheditor-tools/abbcc-map/index.html',
             function (v) {
               _this.loadBookmark();
@@ -469,10 +469,10 @@ var BaseUtils = {
       },
       abbccLayout: {
         c: 'xheBtnLayout',
-        t: '选择模版',
+        t: CONST.LANG.SEELCT_TPL,
         e: function () {
           var _this = this;
-          _this.showIframeModal('选择模版',
+          _this.showIframeModal(CONST.LANG.SELECT_TPL,
               CONST.HOST + '/vendor/xheditor/xheditor-tools/abbcc-layout/index.html',
             function (v) {
               _this.loadBookmark();
@@ -482,10 +482,10 @@ var BaseUtils = {
       },
       abbccQrcode: {
         c: 'xheBtnQrcode',
-        t: '生成二维码',
+        t: CONST.LANG.BUILD_QRCODE,
         e: function () {
           var _this = this;
-          _this.showIframeModal('生成二维码',
+          _this.showIframeModal(CONST.LANG.BUILD_QRCODE,
               CONST.HOST + '/vendor/xheditor/xheditor-tools/abbcc-qrcode/index.html',
             function (v) {
               _this.loadBookmark();
@@ -495,7 +495,7 @@ var BaseUtils = {
       },
       abbccImages: {
         c: 'xheIcon xheBtnImg',
-        t: '选择图片',
+        t: CONST.LANG.SELECT_IMG,
         s: 'ctrl+8',
         e: function () {
           var _this = this;
@@ -535,7 +535,7 @@ var BaseUtils = {
         s: 'ctrl+7',
         e: function () {
           var _this = this;
-          _this.showIframeModal('选择flash',
+          _this.showIframeModal(CONST.LANG.SELECT_FLASH,
             '/user/album/albumshowFlashPage?pageType=xheditor',
             function (v) {
               _this.loadBookmark();
@@ -545,11 +545,11 @@ var BaseUtils = {
       },
       abbccQQ: {
         c: 'xheBtnQQ',
-        t: '选择QQ/MSN/Skype/阿里旺旺/淘宝旺旺',
+        t: CONST.LANG.SELECT_QQ,
         s: 'ctrl+9',
         e: function () {
           var _this = this;
-          _this.showIframeModal('选择QQ/MSN/Skype/阿里旺旺/淘宝旺旺',
+          _this.showIframeModal(CONST.LANG.SELECT_QQ,
               CONST.DOMAIN + '/user_v2/qq/index.jsp',
             function (v) {
               _this.loadBookmark();
@@ -570,7 +570,7 @@ var BaseUtils = {
               skin: 'vista',
               layerShadow: 2,
               html5Upload: false,
-              upBtnText: '浏览',
+              upBtnText: CONST.LANG.VIEW,
               upLinkExt: 'jpg,png,bmp',
               upImgUrl: '/fileUpload/uploadByJson',
               upFlashUrl: '/fileUpload/uploadByJson',
@@ -837,7 +837,7 @@ var BaseUtils = {
     var button = options.button || [];
     seajs.use(['dialog-plus'], function (dialog) {
       if (options.success) {
-        button.push({ value: '确定', autofocus: true,
+        button.push({ value: CONST.LANG.CONFIRM, autofocus: true,
           callback: function () {
             options.success.apply(this, arguments);
           }
@@ -845,14 +845,14 @@ var BaseUtils = {
       }
       if (!options.hideCloseBtn) {
         button.push({
-          value: '关闭',
+          value:CONST.LANG.CLOSE,
           callback: function () {
             this.close().remove();
           } });
       }
       options = Est.extend({
         id: options.id || options.moduleId || Est.nextUid('dialog'),
-        title: '对话框',
+        title: CONST.LANG.DIALOG_TIP,
         width: 150, content: '',
         button: button
       }, options);
@@ -900,21 +900,21 @@ var BaseUtils = {
     var button = [];
     if (options.success) {
       button.push({
-        value: '确定',
+        value: CONST.LANG.CONFIRM,
         autofocus: true,
         callback: function () {
           options.success.call(this);
         }});
     }
     button.push({
-      value: '关闭',
+      value: CONST.LANG.CLOSE,
       callback: function () {
         this.close().remove();
       }
     });
     options = Est.extend({
       id: 'dialog',
-      title: '窗口',
+      title: CONST.LANG.WIN_TIP,
       url: '',
       width: 150,
       height: 'auto',
@@ -940,7 +940,7 @@ var BaseUtils = {
        *      });
    */
   initTip: function (msg, options) {
-    options = options || {time: 3000, title: '提示信息：'};
+    options = options || {time: 3000, title: CONST.LANG.INFO_TIP};
     seajs.use(['dialog-plus'], function (dialog) {
       window.tipsDialog && window.tipsDialog.close().remove();
       window.tipsDialog = app.addDialog(dialog({
@@ -975,8 +975,8 @@ var BaseUtils = {
    */
   initConfirm: function (opts) {
     var options = {
-      title: '温馨提示：',
-      content: '是否删除!',
+      title: CONST.LANG.WARM_TIP,
+      content: CONST.LANG.DEL_CONFIRM,
       success: function () {
       },
       target: null
@@ -990,13 +990,13 @@ var BaseUtils = {
         width: options.width || 200,
         button: [
           {
-            value: '确定',
+            value: CONST.LANG.CONFIRM,
             autofocus: true,
             callback: function () {
               options.success && options.success.call(this);
             }},
           {
-            value: '取消',
+            value: CONST.LANG.CANCEL,
             callback: function () {
               window.comfirmDialog.close().remove();
               options.cancel && options.cancel.call(this);

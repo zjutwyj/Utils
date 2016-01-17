@@ -86,7 +86,7 @@ var SuperView = Backbone.View.extend({
     if (typeof options.hideSaveBtn === 'undefined' ||
       (Est.typeOf(options.hideSaveBtn) === 'boolean' && !options.hideSaveBtn)) {
       options.button.push(
-        {value: '提交', callback: function () {
+        {value: CONST.LANG.COMMIT, callback: function () {
           Utils.addLoading();
           $('#' + viewId + ' #submit').click();
           try {
@@ -113,9 +113,9 @@ var SuperView = Backbone.View.extend({
             return;
           if (Est.typeOf(options.moduleId) === 'function') {
             app.addPanel(options.id, {
-              el: '#' + options.id,
-              template: '<div id="base_item_dialog' + options.id + '"></div>'
-            }).addView(options.id, new options.moduleId(options));
+             el: '#' + options.id,
+             template: '<div id="base_item_dialog' + options.id + '"></div>'
+             }).addView(options.id, new options.moduleId(options));
           } else if (Est.typeOf(options.moduleId) === 'string') {
             seajs.use([options.moduleId], function (instance) {
               try {
@@ -123,9 +123,9 @@ var SuperView = Backbone.View.extend({
                   console.error('module is not defined')
                 }
                 app.addPanel(options.viewId, {
-                  el: '#' + options.viewId,
-                  template: '<div id="base_item_dialog' + options.viewId + '"></div>'
-                }).addView(options.viewId, new instance(options));
+                 el: '#' + options.viewId,
+                 template: '<div id="base_item_dialog' + options.viewId + '"></div>'
+                 }).addView(options.viewId, new instance(options));
               } catch (e) {
                 console.log(e);
               }
@@ -281,7 +281,7 @@ var SuperView = Backbone.View.extend({
    */
   _stringifyJSON: function (array) {
     var keys, result;
-    if (!JSON.stringify) alert('您的浏览器版本过低， 请升级到IE9及以上或下载谷歌浏览器(https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html)！');
+    if (!JSON.stringify) alert(CONST.LANG.JSON_TIP);
     Est.each(array, function (item) {
       keys = item.split('.');
       if (keys.length > 1) {
@@ -301,7 +301,7 @@ var SuperView = Backbone.View.extend({
   _parseJSON: function (array) {
     var keys, result;
     var parse = JSON.parse || $.parseJSON;
-    if (!parse) alert('您的浏览器版本过低， 请升级到IE9及以上或下载谷歌浏览器(https://www.google.com/intl/zh-CN/chrome/browser/desktop/index.html)！');
+    if (!parse) alert(CONST.LANG.JSON_TIP);
     Est.each(array, function (item) {
       keys = item.split('.');
       if (keys.length > 1) {
@@ -423,7 +423,7 @@ var SuperView = Backbone.View.extend({
    *  @example
    *      this._getEventTarget(e);
    */
-  _getEventTarget: function(e){
+  _getEventTarget: function (e) {
     return e.currentTarget ? $(e.currentTarget) : $(e.target);
   },
   /**
@@ -448,8 +448,8 @@ var SuperView = Backbone.View.extend({
       var _nameList = [];
       _name = isArray ? name.join('_') : name;
       if (this['_one_' + _name] = Est.typeOf(this['_one_' + _name]) === 'undefined' ? true : false) {
-        if (isArray)  {
-          Est.each(name, function(item){
+        if (isArray) {
+          Est.each(name, function (item) {
             _nameList.push(item.replace(/^(.+)-\d?$/g, "$1"));
           });
           this._require(_nameList, callback);
@@ -511,8 +511,8 @@ var SuperView = Backbone.View.extend({
         width: 'auto',
         offset: parseInt(offset, 10),
         skin: 'tool-tip-dilog',
-        align:  $(this).attr('data-align') || 'top',
-        content: '<div style="padding: 5px;font-size: 12px;">' + title + '</div>',
+        align: $(this).attr('data-align') || 'top',
+        content: '<div style="padding: 5px 6px;;font-size: 12px;">' + title + '</div>',
         hideCloseBtn: true,
         autofocus: false,
         target: $(this).get(0)

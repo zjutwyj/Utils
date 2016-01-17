@@ -85,13 +85,13 @@ var BaseModel = Backbone.Model.extend({
     if (Est.isEmpty(response)) {
       var url = Est.typeOf(this.url) === 'function' ? this.url() : this.url;
       debug('Error25 url' + url);
-      BaseUtils.initTooltip('数据异常, 稍后请重试！');
+      BaseUtils.initTooltip(CONST.LANG.REQUIRE_FAILED);
       return false;
     }
-    if (response && response.msg && response.msg === '权限验证失败'){
-      Utils.tip('权限不够！', {time: 2000});
+    if (response && response.msg && response.msg === CONST.LANG.AUTH_FAILED){
+      Utils.tip(CONST.LANG.AUTH_LIMIT, {time: 2000});
     }
-    if (response.msg === '未登录') {
+    if (response.msg === CONST.LANG.NOT_LOGIN) {
       Est.trigger('checkLogin');
     }
     // 当服务器有返回msg消息 并参数设置hideTip为false时  弹出提示信息
@@ -101,13 +101,13 @@ var BaseModel = Backbone.Model.extend({
     if (response.msg && !this.hideTip) {
       if (response.success) {
         if (ctx.isNew() && !this.autoHide && !this.hideAddBtn) {
-          buttons.push({ value: '继续添加', callback: function () {
+          buttons.push({ value: CONST.LANG.ADD_CONTINUE, callback: function () {
             ctx.set('id', null);
             ctx.set(ctx.baseId, null);
           }});
           _isNew = true;
         }
-        !this.hideOkBtn && buttons.push({ value: '确定', callback: function () {
+        !this.hideOkBtn && buttons.push({ value: CONST.LANG.CONFIRM, callback: function () {
           Est.trigger('_dialog_submit_callback');
           this.autoBack = Est.typeOf(this.autoBack) === 'undefined' ? true : this.autoBack;
           if (typeof window.topDialog != 'undefined') {
@@ -124,14 +124,14 @@ var BaseModel = Backbone.Model.extend({
           this.close();
         }, autofocus: true });
       } else {
-        buttons.push({ value: '确定', callback: function () {
+        buttons.push({ value: CONST.LANG.CONFIRM, callback: function () {
           this.close();
         }, autofocus: true });
       }
       this.hideOkBtn && Est.trigger('_dialog_submit_callback');
       var dialog_msg = BaseUtils.initDialog({
         id: 'dialog_msg',
-        title: '提示：',
+        title: CONST.LANG.TIP,
         content: '<div style="padding: 20px;">' + response.msg + '</div>',
         width: 250,
         button: buttons
@@ -140,8 +140,6 @@ var BaseModel = Backbone.Model.extend({
         app.getDialog('dialog_msg') && (ctx.autoHide || !_isNew) &&
         app.getDialog('dialog_msg').close().remove();
       }, 2000);
-    } else if ('msg' in response && Est.isEmpty(response.msg)) {
-      debug('Error26 ' + this.baseUrl);
     }
     // 当success为false时， 直接返回服务器错误的response信息
     if (Est.typeOf(response.success) === 'boolean' && !response.success) {
@@ -203,7 +201,7 @@ var BaseModel = Backbone.Model.extend({
     if (newModel.baseUrl) {
       newModel.save(null, {
         success: function (model, result) {
-          if (result.msg === '未登录') {
+          if (result.msg === CONST.LANG.NOT_LOGIN) {
             Est.trigger('checkLogin');
           }
           if (typeof options.success != 'undefined') {
