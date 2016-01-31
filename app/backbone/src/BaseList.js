@@ -154,9 +154,9 @@ var BaseList = SuperView.extend({
         this.$template.html());
       if (this._options.append) {
         this.$el.empty();
-        this.$el.append(this.template(options.data));
+        this.$el.append(this.template(this.model.toJSON()));
       } else {
-        this.$el.html(this.template(options.data));
+        this.$el.html(this.template(this.model.toJSON()));
       }
     }
     if (this._options.modelBind) this._modelBind();

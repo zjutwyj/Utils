@@ -315,6 +315,82 @@ gulp.task('ueditor', function () {
 gulp.task('ueditor.min', function () {
   doTask('ueditor', false);
 });
+paths['umeditor'] = { scripts: { source: [
+  'app/vendor/umeditor/_src/pre.js',
+  'app/vendor/umeditor/_src/editor.js',
+  'app/vendor/umeditor/umeditor.config.js',
+  'app/vendor/umeditor/_src/core/browser.js',
+  'app/vendor/umeditor/_src/core/utils.js',
+  'app/vendor/umeditor/_src/core/EventBase.js',
+  'app/vendor/umeditor/_src/core/dtd.js',
+  'app/vendor/umeditor/_src/core/domUtils.js',
+  'app/vendor/umeditor/_src/core/Range.js',
+  'app/vendor/umeditor/_src/core/Selection.js',
+  'app/vendor/umeditor/_src/core/Editor.js',
+  'app/vendor/umeditor/_src/core/filterword.js',
+  'app/vendor/umeditor/_src/core/node.js',
+  'app/vendor/umeditor/_src/core/htmlparser.js',
+  'app/vendor/umeditor/_src/core/filternde.js',
+
+  'app/vendor/umeditor/_src/plugins/inserthtml.js',    // 插入内容
+  //'app/vendor/umeditor/_src/plugins/image.js',       // 插入图片
+  'app/vendor/umeditor/_src/plugins/justify.js',       // 文字对齐
+  'app/vendor/umeditor/_src/plugins/font.js',          // 字体
+  'app/vendor/umeditor/_src/plugins/link.js',          // 超链接
+  //'app/vendor/umeditor/_src/plugins/print.js',          // 打印
+  //'app/vendor/umeditor/_src/plugins/paragraph.js',          // 段落样式
+  //'app/vendor/umeditor/_src/plugins/horizontal.js',          // 分割线
+  //'app/vendor/umeditor/_src/plugins/cleardoc.js',          // 清空文档
+  'app/vendor/umeditor/_src/plugins/undo.js',          // 撤销和重做
+  'app/vendor/umeditor/_src/plugins/paste.js',          // 粘贴
+  //'app/vendor/umeditor/_src/plugins/list.js',          // 有序列表,无序列表
+  //'app/vendor/umeditor/_src/plugins/serialize.js',          // 查看源码
+  'app/vendor/umeditor/_src/plugins/enterkey.js',          // 设置回车标签p或br
+  //'app/vendor/umeditor/_src/plugins/preview.js',          // 预览编辑器内容
+  'app/vendor/umeditor/_src/plugins/basestyle.js',          // 加粗,斜体,上标,下标
+  'app/vendor/umeditor/_src/plugins/video.js',          // 视频
+  //'app/vendor/umeditor/_src/plugins/selectall.js',          // 全选
+  //'app/vendor/umeditor/_src/plugins/removeformat.js',          // 清除格式
+  'app/vendor/umeditor/_src/plugins/keystrokes.js',          // 处理特殊键的兼容性问题
+  //'app/vendor/umeditor/_src/plugins/autosave.js',          // 自动保存草稿
+  //'app/vendor/umeditor/_src/plugins/autoupload.js',          // 1.拖放文件到编辑区域，自动上传并插入到选区2.插入粘贴板的图片，自动上传并插入到选区
+  //'app/vendor/umeditor/_src/plugins/formula.js',          // 公式插件
+
+  'app/vendor/umeditor/_src/ui/widget.js',          // 对jquery ui的扩展
+  'app/vendor/umeditor/_src/ui/button.js',          // button 类
+  'app/vendor/umeditor/_src/ui/toolbar.js',          // toolbar 类
+  'app/vendor/umeditor/_src/ui/menu.js',          // menu 类
+  'app/vendor/umeditor/_src/ui/dropmenu.js',          // dropmenu 类
+  'app/vendor/umeditor/_src/ui/splitbutton.js',          // splitbutton 类  require button
+  'app/vendor/umeditor/_src/ui/colorsplitbutton.js',          // Created with JetBrains PhpStorm.
+  'app/vendor/umeditor/_src/ui/popup.js',          // popup 类
+  'app/vendor/umeditor/_src/ui/scale.js',          // scale 类
+  'app/vendor/umeditor/_src/ui/colorpicker.js',          // colorpicker 类
+  'app/vendor/umeditor/_src/ui/combobox.js',          // combobox 类
+  'app/vendor/umeditor/_src/ui/buttoncombobox.js',          // Combox 抽象基类
+  'app/vendor/umeditor/_src/ui/modal.js',          // modal类
+  'app/vendor/umeditor/_src/ui/tooltip.js',          // tooltip类
+  'app/vendor/umeditor/_src/ui/tab.js',          // tab
+  'app/vendor/umeditor/_src/ui/separator.js',          // separator
+
+  'app/vendor/umeditor/_src/adapter/adapter.js',          // separator
+  'app/vendor/umeditor/_src/adapter/button.js',          // separator
+  'app/vendor/umeditor/_src/adapter/fullscreen.js',          // 全屏组件
+  'app/vendor/umeditor/_src/adapter/dialog.js',          //
+  'app/vendor/umeditor/_src/adapter/popup.js',          //
+  'app/vendor/umeditor/_src/adapter/imagescale.js',          //
+  'app/vendor/umeditor/_src/adapter/autofloat.js',          //
+  'app/vendor/umeditor/_src/adapter/source.js',          //
+  'app/vendor/umeditor/_src/adapter/combobox.js',          //
+
+  'app/vendor/umeditor/_src/end.js'
+], name: 'umeditor.all.min.js', dist: './app/vendor/umeditor' } };
+gulp.task('umeditor', [], function () {
+  doTask('umeditor', true);
+});
+gulp.task('umeditor.min', [], function () {
+  doTask('umeditor', false);
+});
 
 //** seditor */
 paths['seditor'] = { scripts: { source: [
@@ -575,17 +651,17 @@ gulp.task('Leaflet.min', ['Leaflet_website_base.min'], function () {
 
 
 // 手机外观设计
-paths['MobileSite_doc'] = { doc: { source: [
+paths['Mobile_doc'] = { doc: { source: [
   'app/backbone/src/*.*',
   'app/handlebars/HandlebarsHelper.js',
   'app/Est/Est.source.js',
-  'C:/software/WebstormProjects/MobileSite/app/modules/design/controllers/DesignCenter.js'
-], dist: 'C:/software/WebstormProjects/MobileSite/doc' } }
-gulp.task('MobileSite_doc', [], function () {
-  doTask('MobileSite_doc', false);
+  'C:/software/SublimeTextProjects/Mobile/app/modules/design/controllers/DesignCenter.js'
+], dist: 'C:/software/SublimeTextProjects/Mobile/doc' } }
+gulp.task('Mobile_doc', [], function () {
+  doTask('Mobile_doc', false);
 });
 
-paths['MobileSite_base'] = { scripts: { source: [
+paths['Mobile_base'] = { scripts: { source: [
   'app/vendor/seajs/sea-debug.js',
   'app/vendor/seajs/seajs-text-debug.js',
   'app/vendor/json3/json3.js',
@@ -608,16 +684,16 @@ paths['MobileSite_base'] = { scripts: { source: [
   'app/backbone/src/BaseModel.js',
   'app/backbone/src/BaseDetail.js'
 
-], name: 'base.js', dist: 'C:/software/WebstormProjects/MobileSite/app/scripts' } };
-gulp.task('MobileSite_base', ['MobileSite_doc'], function () {
-  doTask('MobileSite_base', true);
+], name: 'base.js', dist: 'C:/software/SublimeTextProjects/Mobile/app/scripts' } };
+gulp.task('Mobile_base', ['Mobile_doc'], function () {
+  doTask('Mobile_base', true);
 });
-gulp.task('MobileSite_base.min', ['MobileSite_doc'], function () {
-  doTask('MobileSite_base', false);
+gulp.task('Mobile_base.min', ['Mobile_doc'], function () {
+  doTask('Mobile_base', false);
 });
-gulp.task('MobileSite', ['MobileSite_base'], function () {
+gulp.task('Mobile', ['Mobile_base'], function () {
 });
-gulp.task('MobileSite.min', ['MobileSite_base.min'], function () {
+gulp.task('Mobile.min', ['Mobile_base.min'], function () {
 });
 
 // [0].Est工具类库 Est.min
@@ -626,4 +702,4 @@ gulp.task('MobileSite.min', ['MobileSite_base.min'], function () {
 // [3].微传单 第二版 UserManagement_leaflet_v2.min
 // [4].手机后台 UserManagement_mobileManagement.min
 // [5].微传单与微手机网站 Leaflet.min
-// [6].手机外观设计 MobileSite.min
+// [6].手机外观设计 Mobile.min

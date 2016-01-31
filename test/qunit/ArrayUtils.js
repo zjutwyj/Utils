@@ -84,10 +84,10 @@ QUnit.test("Est.hasKey", function (assert) {
   assert.ok(result, 'Est.hasKey(object1, "name"); => true');
 });
 
-QUnit.test("Est.makeMap", function (assert) {
+/*QUnit.test("Est.makeMap", function (assert) {
   var map = Est.makeMap("a,a,aa,a,ah,a");
   assert.deepEqual(map, { "a": true, "aa": true, "ah": true }, 'passed!');
-});
+});*/
 
 QUnit.test("Est.indexOf", function (assert) {
   var list = ['a', 'b'];
@@ -95,12 +95,12 @@ QUnit.test("Est.indexOf", function (assert) {
   assert.equal(has, 1, "passed!");
 });
 
-QUnit.test("Est.arrayRemove", function (assert) {
+/*QUnit.test("Est.arrayRemove", function (assert) {
   var list = ['a', 'b', 'b'];
   var result = Est.arrayRemove(list, 'b');
   assert.deepEqual(list, ['a', 'b'], 'passed!');
 });
-
+*/
 QUnit.test("Est.map", function (assert) {
   var list = [1, 2, 3];
   var result = Est.map(list, function (value, index, list) {
@@ -230,17 +230,31 @@ QUnit.test('Est.remove', function (assert) {
     {key: '22', value: '22'},
     {key: '33', value: '33'}
   ];
-  var removeList = [
-    {key: '11'}
-  ];
+
+  var targetList2 = [1, 2, 3, 4, 5];
+  var result = Est.remove(targetList2, 2);
+  assert.deepEqual(result, [1, 3, 4, 5], 'remove number');
+
+  var targetList3 = [1, '2', 3, 4, 5];
+  var result = Est.remove(targetList3, '2');
+  assert.deepEqual(result, [1, 3, 4, 5], 'remove string');
+
+  var targetList4 = [{key: '11', value: '11'},{key: '11', value: '33'}, {key: '22', value: '22'}, {key: '33', value: '33'}];
+  var result = Est.remove(targetList4, {key: '11'});
+  assert.deepEqual(result, [{key: '22', value: '22'}, {key: '33', value: '33'}], 'remove one item');
+
+  var targetList5 = [{key: '11', value: '11'},{key: '11', value: '33'}, {key: '22', value: '22'}, {key: '33', value: '33'}];
+  var result = Est.remove(targetList5, {key: '11', value: '33'});
+  assert.deepEqual(result, [{key: '11', value: '11'},{key: '22', value: '22'}, {key: '33', value: '33'}], 'remove two item');
+
+
+
+
+  var removeList = [{key: '11'} ];
   var result = Est.remove(targetList, removeList, function (targetItem, removeItem) {
     return targetItem.key === removeItem.key;
   });
-
-  assert.deepEqual(result, [
-    {key: '22', value: '22'},
-    {key: '33', value: '33'}
-  ], 'passed!');
+  assert.deepEqual(result, [{key: '22', value: '22'}, {key: '33', value: '33'} ], 'remove list');
 
   var targetList = [];
   var removeList = [];

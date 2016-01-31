@@ -4,12 +4,12 @@
  * @author yongjin on 2014/6/18
  */
 QUnit.module("【PatternsUtils】");
-QUnit.test("Est.inherit", function (assert) {
+/*QUnit.test("Est.inherit", function (assert) {
   var target = {x: 'dont change me'};
   var newObject = Est.inherit(target);
 
   assert.equal(newObject.x, target.x, "newObject inherit from target!");
-});
+});*/
 QUnit.asyncTest('Est.promise', function (assert) {
   var str = '';
   var result = function () {
@@ -42,7 +42,7 @@ QUnit.test("Est.inject", function (assert) {
   var result = doTest(2);
   assert.equal(result, 10, "passed!");
 });
-QUnit.test("Est.define", function (assert) {
+/*QUnit.test("Est.define", function (assert) {
   var result = 2;
   Est.define('moduleA', [], function () {
     return {
@@ -65,7 +65,7 @@ QUnit.test("Est.define", function (assert) {
   });
   Est.use('moduleC');
   assert.equal(result, 1, 'passed!');
-});
+});*/
 QUnit.asyncTest('Est.on', function (assert) {
   var result = '';
   var result2 = '';

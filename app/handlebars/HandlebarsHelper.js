@@ -250,10 +250,28 @@ Handlebars.registerHelper('PIC', function (name, number, options) {
     }
   }
   if (!name) return CONST.DOMAIN + CONST.PIC_NONE + version;
-  if (Est.startsWidth(name, 'upload'))
-    return arguments.length < 3 ? CONST.PIC_URL + '/' + name + version:
+  if (Est.startsWidth(name, 'http') && name.indexOf('upload') > -1){
+        name = name.substring(name.indexOf('upload'), name.length);
+  }
+  if (Est.startsWidth(name, 'upload')){
+     return arguments.length < 3 ? CONST.PIC_URL + '/' + name + version:
       Handlebars.helpers['_picUrl'].apply(this, [name, number, options]) + version;
-  return CONST.DOMAIN + name + version;
+  }
+
+  return Est.startsWidth(name, 'http') ? name + version : CONST.DOMAIN + name + version;
+});
+
+/**
+ * 返回background-image: url();
+ *
+ * @method [样式] - BackgroundImage
+ * @param  {string} name       图片地址
+ * @param  {int} number     压缩尺寸
+ * @param  {object} options
+ * @return {string}     => background-image: url(http://img.jihui88.com/upload/u/u2/.......png);
+ */
+Handlebars.registerHelper('BackgroundImage', function (name, number, options) {
+  return ('background-image: url(' + Handlebars.helpers['PIC'].apply(this, Array.prototype.slice.call(arguments)) + ');');
 });
 
 /*Handlebars.registerHelper('PIC', function (name, options) {

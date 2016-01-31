@@ -1016,6 +1016,12 @@ Application.prototype = {
     localStorage['__APPJS_PARAMS__'] = JSON.stringify({});
     window.location.href = App.getSession('rootPage');
   },
+  disableHashChange: function(){
+    app.addData('disableHashChange', true);
+  },
+  enableHashChange: function(){
+    app.addData('disableHashChange', false);
+  },
   /**
    * 页面载入后初始化， 比如hashchange, 用户session会话， 进入前的网址记录， stacks, 参数提取
    *
@@ -1041,6 +1047,7 @@ Application.prototype = {
               else App.load(_page);
               return;
             }
+            if (App.getData('disableHashChange')){return;}
             if (_page === 'undefined') App.load('home');
             // 如果自定义寨为空  App._Stack.size为0或1， 且不为登录页面
             if (App._CustomStack.length === 0 && _page !== 'login' && App._Stack.size() < 2) App.load(_page);

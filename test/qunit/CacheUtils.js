@@ -6,7 +6,7 @@
 QUnit.module( "【CacheUtils】" );
 
 
-QUnit.test("Est.getCache", function(assert){
+/*QUnit.test("Est.getCache", function(assert){
     var session = {},
         cache_data = {name:1};
     Est.getCache('uId', session, {
@@ -17,4 +17,4 @@ QUnit.test("Est.getCache", function(assert){
     });
     var result = session.cache.dd['uId']['name'];
     assert.equal(result, 1, 'passed!');
-});
+});*/

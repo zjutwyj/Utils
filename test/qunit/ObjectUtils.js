@@ -92,7 +92,7 @@ QUnit.test("Est.chain", function (assert) {
     .pluck('age').value();
   // → 'pebbles is 1'
   assert.equal(youngest, 1, 'passed!');
-  var youngesttwo = Est(characters).sortBy('age').take().pluck('age').value();
+  var youngesttwo = Est.chain(characters).sortBy('age').take().pluck('age').value();
   assert.equal(youngesttwo, 1, 'passed!');
 });
 QUnit.test("Est.pick", function (assert) {

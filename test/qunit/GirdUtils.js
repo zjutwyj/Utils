@@ -3,7 +3,7 @@
  * @namespace GirdUtils
  * @author yongjin on 2014/6/30
  */
-var justifyCont = $("#gird");
+/*var justifyCont = $("#gird");
 var justifylist = $("li", justifyCont);
 var justifyOpts = {
     containerWidth: justifyCont.width(),
@@ -20,4 +20,4 @@ $(window).bind("resize", function () {
         justifyOpts.containerWidth = justifyCont.width();
         Est.girdJustify(justifyOpts);
     }, 1);
-});
+});*/

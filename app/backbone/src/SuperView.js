@@ -113,9 +113,9 @@ var SuperView = Backbone.View.extend({
             return;
           if (Est.typeOf(options.moduleId) === 'function') {
             app.addPanel(options.id, {
-             el: '#' + options.id,
-             template: '<div id="base_item_dialog' + options.id + '"></div>'
-             }).addView(options.id, new options.moduleId(options));
+              el: '#' + options.id,
+              template: '<div id="base_item_dialog' + options.id + '"></div>'
+            }).addView(options.id, new options.moduleId(options));
           } else if (Est.typeOf(options.moduleId) === 'string') {
             seajs.use([options.moduleId], function (instance) {
               try {
@@ -123,9 +123,9 @@ var SuperView = Backbone.View.extend({
                   console.error('module is not defined')
                 }
                 app.addPanel(options.viewId, {
-                 el: '#' + options.viewId,
-                 template: '<div id="base_item_dialog' + options.viewId + '"></div>'
-                 }).addView(options.viewId, new instance(options));
+                  el: '#' + options.viewId,
+                  template: '<div id="base_item_dialog' + options.viewId + '"></div>'
+                }).addView(options.viewId, new instance(options));
               } catch (e) {
                 console.log(e);
               }
@@ -156,27 +156,33 @@ var SuperView = Backbone.View.extend({
    */
   _singleBind: function (selector, model, changeFn) {
     var _self = this;
-    $(selector).change(function () {
-      var val, pass;
-      var modelId = window._singleBindId = $(this).attr('id');
-      if (modelId && modelId.indexOf('model') !== -1) {
-        switch (this.type) {
-          case 'radio':
-            val = $(this).is(":checked") ? $(this).val() : pass = true;
-            break;
-          case 'checkbox':
-            val = $(this).is(':checked') ? (Est.isEmpty($(this).attr('true-value')) ? true : $(this).attr('true-value')) :
-              (Est.isEmpty($(this).attr('false-value')) ? false : $(this).attr('false-value'));
-            break;
-          default :
-            val = $(this).val();
-            break;
-        }
-        if (!pass) {
-          _self._setValue(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
-          changeFn && changeFn.call(this, model);
-        }
+    $(selector).each(function () {
+      var bindType = $(this).attr('data-bind-type');
+      if (Est.isEmpty(bindType)) {
+        bindType = 'change';
       }
+      $(this).on(bindType,function () {
+        var val, pass;
+        var modelId = window._singleBindId = $(this).attr('id');
+        if (modelId && modelId.indexOf('model') !== -1) {
+          switch (this.type) {
+            case 'radio':
+              val = $(this).is(":checked") ? $(this).val() : pass = true;
+              break;
+            case 'checkbox':
+              val = $(this).is(':checked') ? (Est.isEmpty($(this).attr('true-value')) ? true : $(this).attr('true-value')) :
+                (Est.isEmpty($(this).attr('false-value')) ? false : $(this).attr('false-value'));
+              break;
+            default :
+              val = $(this).val();
+              break;
+          }
+          if (!pass) {
+            _self._setValue(modelId.replace(/^model\d?-(.+)$/g, "$1"), val);
+            changeFn && changeFn.call(this, model);
+          }
+        }
+      });
     });
   },
   /**
@@ -237,7 +243,7 @@ var SuperView = Backbone.View.extend({
         this['h_temp_' + Est.hash(item)] = this['h_temp_' + Est.hash(item)] ||
           Handlebars.compile($(this.$template).find(selector).wrapAll('<div>').parent().html());
         this.$(item).replaceWith(this['h_temp_' + Est.hash(item)](model.toJSON()));
-        this._modelBind(item);
+        //this._modelBind(item);
       }
     }, this));
   },
@@ -249,7 +255,8 @@ var SuperView = Backbone.View.extend({
    * @param callback
    * @author wyj 15.7.20
    * @example
-   *      this._watch('name', '#model-name,.model-name', function(){
+   *      <input id="model-link" data-bind-type="keyup" type="text"  value="{{link}}"> // data-bind-type="keydown" 绑定方式，默认为change
+   *      this._watch(['#model-name'], '#model-name,.model-name', function(){
    *
    *      });
    */
@@ -262,7 +269,7 @@ var SuperView = Backbone.View.extend({
     else list.push(name);
     Est.each(list, function (item) {
       modelId = item.replace(/^#model\d?-(.+)$/g, "$1");
-      _self._modelBind(item);
+      if (!_self._options.modelBind) _self._modelBind(item);
       if (modelId in temp_obj) return;
       _self.model.on('change:' + (temp_obj[modelId] = modelId.split('.')[0]), function () {
         if (item === '#' + window._singleBindId)

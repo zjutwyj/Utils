@@ -44,7 +44,7 @@ var BaseDetail = SuperView.extend({
    * @author wyj 15.1.12
    */
   _initOptions: function (options) {
-    this._options = Est.extend(options || {}, this.options);
+    this._options = Est.extend(this.options, options || {});
     this._options.speed = this._options.speed || 9;
   },
   /**

@@ -1,30 +1,175 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN" id="jhw" class="wcd-static wcd-type-{{_wcdType}}">
 <head>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-  <title>Document</title>
-  <script src="../app/Est/Est.source.js"></script>
   <script>
-    (function (version) {
-      var str = '',
-          temp = '',
-          array = version.split('');
+    document.documentElement.className = document.documentElement.className.replace('no-javascript', 'javascript');
+  </script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta id="eqMobileViewport" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" servergenerated="true">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="MobileOptimized" content="width">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="renderer" content="webkit">
 
-      Est.each(array, function (code, index) {
-        temp += code;
-        if (index % 2 === 1) {
-          str += (Est.fromCharCode && Est.fromCharCode('1' + temp));
-          temp = '';
-        }
-      }, this);
-      if (Est.urlResolve(url).host.indexOf(str) === -1) {
-        var i = 1;
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+  <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT">
+  <meta http-equiv="expires" content="0">
 
-      }
-    })('0922041705');
+  <title>{{seoTitle}}</title>
+  <meta name="keywords" content="{{seoKey}} ">
+  <meta name="description" content="{{seoDesc}} ">
+  <link rel="shortcut icon" href="http://wcd.jihui88.com/leaflet/images/favicon.ico">
+  <link rel="stylesheet" href="http://img.jihui88.com/wcdn/leaflet/styles/default/wcd_v2-e4950c97.css">
+  {{{pluginRequire}}}
+  <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+  <script type="text/javascript">
+    // 微传单相关参数
+    window.wcdVersion = "{{version}}";
+    window.enterpriseId = "{{enterpriseId}}";
+    window.wcdId = "{{wcdId}}";
+    window.wcdName = "{{name}}";
+    window.wcdEntName = "{{USER.name}}";
+    window.wcdUrl = "";
+    window.seoTitle = "{{seoTitle}}";
+    window.seoDesc = "{{seoDesc}}";
+    window.sharePic = "{{sharepic}}";
+    window.scdScope = "{{scope}}";
+    window.wcdType = "{{type}}";
+    window.wcdMusic = "{{baseLayout.music}}";
+    window.userName = "{{username}}";
+    window.loginType = "{{loginType}}";
+    window.staticPage = true;
+    // 微信相关参数
+    window.appid = null;
+    window.openid = null;
+    window.belongid = null;
+    window.groupid = null;
+    window.grouptype = null;
+    window.appSecret = null;
+    window.appdomain = null;
+    window.timestamp = null;
+    window.nonceStr = null;
+    window.signature = null;
+    window.view = null;
+    window.mobile = null;
+    window.isShared = false;
+    window.wxNick = null;
+    window.wxHeadImg = null;
+    // 全局DOM元素
+    window.$tipboxs = [];
+    window.$canvas = null;
+    // 浏览器判断
+    window.is_mobi = navigator.userAgent.toLowerCase().match(/(iPad|ipod|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|win ce)/i) != null;
+    window.is_linux = navigator.userAgent.indexOf('PhantomJS') > -1 ? true : false;
   </script>
 </head>
-<body>
+<body style="zoom: 1">
+<!--加载动画-->
+<div id="Loading01" style="opacity: 0.9;display: block;{{welcome baseLayout.welcome}}">
+  <div class="loadbox">
+    <div class="loadlogo" style="{{PIC sharepic}}"></div>
+    <div class="loadbg" style="background-image: url({{CONST 'PIC_URL'}}/upload/j/j2/jihui88/picture/2016/01/30/5debdbda-9804-4625-b0b1-9dff7b9061cc.png)"></div>
+  </div>
+  <div class="brand-logo" style="visibility: visible"></div>
+</div>
+<script> if (window.is_linux) document.getElementById('Loading').style.display = 'none'; </script>
 
+{{{content}}}
+
+{{#isEmpty baseLayout.music}}
+{{else}}
+<div style="height: 0;display: none">
+  <audio class="bgm-audio" autoplay="autoplay" loop="loop" src="" id="booklet-bgm-control" controls="" style="width: 296px;display:none"></audio>
+</div>
+{{/isEmpty}}
+
+<script type="text/x-handlebars-template" id="template-pc-view-code">
+  <div id="pc-view-code">
+    <div class="pc-view-code-t">扫一扫, 分享给朋友</div>
+    <div style="text-align: center;background:#fff;" id="pc-view-codeImg"></div>
+    <div id="pc-view-share" class="pc-view-share">
+      <div class="bdsharebuttonbox">
+        <a href="#" class="bds_more" data-cmd="more"></a>
+        <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+        <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+        <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+        <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+        <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+      </div>
+    </div>
+    <div id="pc-view-req">这么漂亮的传单&nbsp;→
+      <span><a target="_blank"
+               href="http://wcd.jihui88.com/leaflet/index.html#/design_clone/{{wcdId}}">我也来制作</a></span>
+    </div>
+    <div id="pc-view-evaluate" style="margin-top: 6px;">
+      <i class="heart-off" style="margin-right: 2px;">点赞</i>
+      <i class="hand-off"><a href="http://www.jihui88.com/wcd/html/86.html?wcdId={{wcdId}}" target="_self"
+                             style="color:#fff; text-decoration: none;">举报</a></i>
+    </div>
+    <div id="pc-view-support" class="clearfix"><a href="http://wcd.jihui88.com/index.html#/register"
+                                                  style="float:left;">立即免费注册</a> <a target="_blank"
+                                                                                    style="float: right;"
+                                                                                    href="http://www.jihui88.com/weidm.html">机汇网技术支持</a>
+    </div>
+  </div>
+</script>
+<script type="text/x-handlebars-template" id="template-wcd-footer">
+  <div style="position: relative;z-index: 9999999999999999999;">
+    <p style="text-align: center; padding: 1%; float: left; border-top: 1px solid #dfdfdf; width: 98%; line-height: 1.5em; background-color: rgb(239, 239, 239);">
+      <span>浏览量：</span><span id="wcd-ft-view">0</span>&nbsp;<span>被转发数：</span><span id="wcd-ft-share">0</span>&nbsp;<a
+        href="javascript:;"
+        class="btn-praise"
+        style="color: rgb(63, 63, 63); text-decoration: none;"><img
+        src="http://www.jihui88.com/wcd/html/styles/default/img/static_pc/heart_on.png"
+        style="height: 1em; vertical-align: middle;"/>点赞</a>&nbsp;<a
+        href="http://www.jihui88.com/wcd/html/86.html?wcdId={{wcdId}}" target="_self"
+        style="color: rgb(63, 63, 63); text-decoration: none;"><img
+        src="http://www.jihui88.com/wcd/html/styles/default/img/static_pc/hand_on.png"
+        style="height: 1em; vertical-align: middle;"/><span style="color: rgb(63, 63, 63);">举报</span></a></p>
+
+    <p style="line-height: 1.5em; float: left; width: 98%; padding: 0 1% 0; text-align: center; background-color: rgb(239, 239, 239);">
+      <a href="http://www.jihui88.com/wcd/html/250.html" target="_self"
+         style="color: rgb(63, 63, 63); text-decoration: none;"><span style="color: rgb(63, 63, 63);">立即免费注册</span></a>&nbsp;<a
+        href="http://www.jihui88.com/wcd/html/250.html" target="_self"
+        style="color: rgb(127, 127, 127); text-decoration: none;"><span
+        style="color: rgb(127, 127, 127);">机汇网【微传单】</span></a></p>
+  </div>
+
+</script>
+<script src="http://img.jihui88.com/wcdn/leaflet/scripts/wcd_v2-44c08bd8.js"></script>
+<script type="text/javascript">
+  try {
+    window.laymodStr = "{{laymodList}}";
+    window.animateSectionStr = "{{animateSectionList}}";
+    window.plugins = "{{plugins}}";
+  } catch (e) {
+    console.log('parseError ==> ' + e);
+  }
+</script>
+
+{{#if hasSlideModule}}
+<script type="text/javascript" src="http://wcd.jihui88.com/leaflet/modules/website/modules/SlideModule.js?v={{version}}"></script>
+{{/if}}
+{{#if hasMapModule}}
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=1.4&ak=&services"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+<script type="text/javascript" src="http://wcd.jihui88.com/leaflet/modules/website/modules/MapModule.js?v={{version}}"></script>
+{{/if}}
+{{#if hasMessageModule}}
+<script type="text/javascript" src="http://wcd.jihui88.com/leaflet/modules/website/modules/MessageModule.js?v={{version}}"></script>
+{{/if}}
+{{#if hasOrganizeModule}}
+<script type="text/javascript" src="http://wcd.jihui88.com/leaflet/modules/website/modules/OrganizeModule.js?v={{version}}"></script>
+{{/if}}
+{{#if hasActiveModule}}
+<script type="text/javascript" src="http://wcd.jihui88.com/leaflet/modules/website/modules/ActiveModule.js?v={{version}}"></script>
+{{/if}}
+
+<script type="text/javascript" src="http://wcd.jihui88.com/leaflet/modules/website/scripts/app_v2.js?v={{version}}"></script>
 </body>
 </html>

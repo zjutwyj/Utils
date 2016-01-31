@@ -60,7 +60,7 @@ var BaseItem = SuperView.extend({
    * @author wyj 15.1.12
    */
   _initOptions: function (options) {
-    this._options = Est.extend(options || {}, this.options);
+    this._options = Est.extend(this.options, options || {});
     this._options.speed = this._options.speed || 9;
   },
   /**
@@ -367,10 +367,11 @@ var BaseItem = SuperView.extend({
    *
    * @method [选取] - _itemActive ( 设置为选中状态 )
    * @param options [add: true 是否为添加模式]
-   * @private
    * @author wyj 14.12.13
    * @example
-   *        this._itemActive();
+   *        this._itemActive({
+   *          add: true         //是否为添加模式
+   *        });
    */
   _itemActive: function (options) {
     options = options || {};

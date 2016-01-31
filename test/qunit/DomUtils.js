@@ -5,11 +5,11 @@
  */
 QUnit.module( "【DomUtils】" );
 
-QUnit.test("Est.clearAllNode", function(assert){
+/*QUnit.test("Est.clearAllNode", function(assert){
     Est.clearAllNode(document.getElementById("clearAllNodeDiv"));
     var size = $("#clearAllNodeDiv span").size();
     assert.equal(size,  0, 'passed!');
-});
+});*/
 
 QUnit.test("Est.center", function(assert){
 	var result = Est.center(1000, 800, 100, 50);
