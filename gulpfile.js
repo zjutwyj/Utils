@@ -450,7 +450,7 @@ paths['UserManagement_base'] = { scripts: { source: [
   'app/vendor/json3/json3.js',
 
   'app/vendor/jquery/jquery-1.10.2.js',
-  'app/Est/Est.min.js',
+  'app/UserManagement/Est.min.js',
   'app/vendor/underscore/underscore.js',
   'app/vendor/backbone/backbone-debug.js',
   'app/vendor/handlebars/handlebars-debug.js',
@@ -702,4 +702,3 @@ gulp.task('Mobile.min', ['Mobile_base.min'], function () {
 // [3].微传单 第二版 UserManagement_leaflet_v2.min
 // [4].手机后台 UserManagement_mobileManagement.min
 // [5].微传单与微手机网站 Leaflet.min
-// [6].手机外观设计 Mobile.min
